@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>959079453967-8ltujlpkudin0a30ev9it2efrb1oid5q.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.959079453967-8ltujlpkudin0a30ev9it2efrb1oid5q</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAbEPwQIarBr7oevkzrl4R4kG0Pfpmd0kE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>959079453967</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.tripStorys.tripStory</string>
+	<key>PROJECT_ID</key>
+	<string>tripstory-14935</string>
+	<key>STORAGE_BUCKET</key>
+	<string>tripstory-14935.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:959079453967:ios:e61bb3fa16b8c687335a7a</string>
+</dict>
+</plist>
