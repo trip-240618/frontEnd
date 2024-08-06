@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'package:tripStory/component/dialog.dart';
+import 'package:tripStory/screen/login/loginPage.dart';
 import '../api/plustImage.dart';
 
 
@@ -36,7 +37,7 @@ class _SplashPageState extends State<SplashPage> {
     if (jailbroken) {
       return DialogExample();
     } else {
-      return DemoApp();
+      return LoginPage();
     }
   }
 }

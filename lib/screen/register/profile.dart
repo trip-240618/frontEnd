@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -10,6 +10,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  TextEditingController nameCon = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 109,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Color(0xff666666)
+                        color: Color(0xffD9D9D9)
                       ),
                     ),
                   ),
@@ -41,12 +42,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     right: 0,
                     bottom: 0,
                     child: Container(
-                      width: 36,
+                      width: 40,
                       height: 36,
                       decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xffECECEC)),
                           shape: BoxShape.circle,
-                          color: Colors.red
+                          color: Colors.white
                       ),
+                      child: SvgPicture.asset('assets/icon/camera.svg',fit: BoxFit.none),
                     ),
                   )
                 ],),
@@ -54,12 +57,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 32),
             Container(
               width: Get.width,
-              height: 60,
               decoration: BoxDecoration(
                   border: Border.all(color: Color(0xffE0E0E0)),
                   borderRadius: BorderRadius.circular(12)
               ),
-              child: Center(child: Text('서비스 이용약관 전체 동의')),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left:12,top: 8),
+                    child: Text('닉네임',style: TextStyle(fontSize: 14),),
+                  ),
+                  TextFormField(
+                    controller: nameCon,
+                    textAlignVertical: TextAlignVertical.center,
+                    style: TextStyle(fontSize: 16),
+                    decoration: InputDecoration(
+                      contentPadding:EdgeInsets.symmetric(horizontal: 12),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                      // hintText: hintText,
+                      // hintStyle: f14w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
             Spacer(),
             GestureDetector(
@@ -75,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 child: Center(child: Text('다음으로')),
               ),
-            )
+              ),
           ],
         ),
       ),
