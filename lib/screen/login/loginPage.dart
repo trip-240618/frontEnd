@@ -1,0 +1,44 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:tripStory/component/snsContainer.dart';
+import 'package:tripStory/controller/userState.dart';
+import 'package:tripStory/screen/register/term.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final us = Get.put(UserState());
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(left: 20,right: 20,top: 81,bottom: 50),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('가장 편한 방법으로'),
+            Text('빠르게 시작해 보세요!'),
+            Spacer(),
+            Center(child: Text('10초면 됩니다. 여행이 편해질 거예요!')),
+            const SizedBox(height: 18),
+            KakaoContainer(onTap: ()async{
+              Get.to(()=>TermPage());
+              // await us.kakaoLogin();
+            }),
+            const SizedBox(height: 18),
+            GoogleContainer(onTap: (){}),
+            const SizedBox(height: 18),
+            AppleContainer(onTap: (){})
+          ],
+        ),
+      ),
+    );
+  }
+}

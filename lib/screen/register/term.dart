@@ -1,16 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-
+import 'package:tripStory/screen/register/profile.dart';
 import '../../component/termsForm.dart';
 
-class ApplyPage extends StatefulWidget {
-  const ApplyPage({Key? key}) : super(key: key);
+class TermPage extends StatefulWidget {
+  const TermPage({Key? key}) : super(key: key);
 
   @override
-  State<ApplyPage> createState() => _ApplyPageState();
+  State<TermPage> createState() => _TermPageState();
 }
 
-class _ApplyPageState extends State<ApplyPage> {
+class _TermPageState extends State<TermPage> {
   bool policyCheck = false; // 이용약관 체크
   bool privatePolicyCheck = false; // 개인정보 처리방침 체크
   @override
@@ -32,7 +34,14 @@ class _ApplyPageState extends State<ApplyPage> {
                   border: Border.all(color: Color(0xffE0E0E0)),
                   borderRadius: BorderRadius.circular(12)
               ),
-              child: Center(child: Text('서비스 이용약관 전체 동의')),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset('assets/icon/check.svg'),
+                  const SizedBox(width: 10),
+                  Text('서비스 이용약관 전체 동의'),
+                ],
+              ),
             ),
             const SizedBox(height: 46),
             Container(
@@ -102,17 +111,20 @@ class _ApplyPageState extends State<ApplyPage> {
                   }),
             ),
             Spacer(),
-            Container(
-              width: Get.width,
-              height: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Color(0xffEEEEEE)
+            GestureDetector(
+              onTap: (){
+                Get.to(()=>ProfileScreen());
+              },
+              child: Container(
+                width: Get.width,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Color(0xffEEEEEE)
+                ),
+                child: Center(child: Text('다음으로')),
               ),
-              child: Center(child: Text('다음으로')),
             )
-
-
           ],
         ),
       ),
