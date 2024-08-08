@@ -58,7 +58,8 @@ const TextStyle f16Gray500w500 = TextStyle(
   fontSize: 16,
   color: gray500,
   fontWeight: FontWeight.w500,
-  fontFamily: 'Pretendard',
+  fontFamily: 'Pretendard');
+
 const TextStyle f14gray600w500 = TextStyle(
   fontSize: 14,
   color: gray600,

@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfilePage> {
                     child: TextFormField(
                       controller: nameCon,
                       textAlignVertical: TextAlignVertical.center,
-                      style: f16Gray800w600,
+                      style: f16gray800w600,
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding:EdgeInsets.symmetric(vertical: 8,horizontal: 12),
