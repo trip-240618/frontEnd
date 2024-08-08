@@ -67,6 +67,13 @@ const TextStyle f14gray600w500 = TextStyle(
   height: 1.5,
 );
 
+const TextStyle f10w500 = TextStyle(
+  fontSize: 10,
+  fontWeight: FontWeight.w500,
+  fontFamily: 'Pretendard',
+  height: 1.4,
+);
+
 /// SemiBold
 
 const TextStyle f16darkGray3w600 = TextStyle(
