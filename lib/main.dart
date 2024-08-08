@@ -6,8 +6,6 @@ import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/component/splashScreen.dart';
 
-import 'bottomNavigator.dart';
-
 
 void main() async{
    WidgetsFlutterBinding.ensureInitialized();
@@ -44,7 +42,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(color: Colors.white,surfaceTintColor: Colors.white)
       ),
-      home: BottomNavigator()
+      home: SplashPage()
     );
   }
 }
