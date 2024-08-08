@@ -41,7 +41,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen> {
                   TextFormField(
                     controller: tripName,
                     textAlignVertical: TextAlignVertical.center,
-                    style: f16Gray800w600,
+                    style: f16gray800w600,
                     decoration: InputDecoration(
                       isDense: true,
                       contentPadding:EdgeInsets.symmetric(vertical: 15,horizontal: 16),
@@ -81,7 +81,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen> {
                   TextFormField(
                     controller: tripDestination,
                     textAlignVertical: TextAlignVertical.center,
-                    style: f16Gray800w600,
+                    style: f16gray800w600,
                     decoration: InputDecoration(
                       isDense: true,
                       contentPadding:EdgeInsets.symmetric(vertical: 15,horizontal: 16),
@@ -105,7 +105,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen> {
                   TextFormField(
                     controller: tripDate,
                     textAlignVertical: TextAlignVertical.center,
-                    style: f16Gray800w600,
+                    style: f16gray800w600,
                     scrollPadding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                     decoration: InputDecoration(
                       isDense: true,
