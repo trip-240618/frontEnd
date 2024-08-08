@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/component/bottomContainer.dart';
 import 'package:tripStory/screen/register/profile.dart';
-import '../../component/termsForm.dart';
+import '../../component/register/termsForm.dart';
+import '../../util/font.dart';
 
 class TermPage extends StatefulWidget {
   const TermPage({Key? key}) : super(key: key);
@@ -24,8 +25,14 @@ class _TermPageState extends State<TermPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('트립스토리'),
-            Text('약관 동의가 필요해요'),
+            Text('트립스토리',style: f24gray900w700,),
+            RichText(
+                text: TextSpan(
+                    children: [
+                      TextSpan(text: '약관 동의', style:f24mainRedw700),
+                      TextSpan(text: '가 필요해요',style: f24gray900w700),
+                    ])
+            ),
             const SizedBox(height: 30),
             Container(
               width: Get.width,
@@ -39,7 +46,7 @@ class _TermPageState extends State<TermPage> {
                 children: [
                   SvgPicture.asset('assets/icon/check.svg'),
                   const SizedBox(width: 10),
-                  Text('서비스 이용약관 전체 동의'),
+                  Text('서비스 이용약관 전체 동의',style: f16Gray500w600),
                 ],
               ),
             ),
@@ -111,20 +118,9 @@ class _TermPageState extends State<TermPage> {
                   }),
             ),
             Spacer(),
-            GestureDetector(
-              onTap: (){
-                Get.to(()=>ProfileScreen());
-              },
-              child: Container(
-                width: Get.width,
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Color(0xffEEEEEE)
-                ),
-                child: Center(child: Text('다음으로')),
-              ),
-            )
+            BottomContainer(onTap: (){
+              Get.to(()=>ProfilePage());
+            })
           ],
         ),
       ),

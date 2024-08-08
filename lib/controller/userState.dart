@@ -7,8 +7,6 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 class UserState extends GetxController{
   final userList =[].obs; /// 유저 정보 리스트
 
-
-
   /// 카카오 로그인
   Future<void> kakaoLogin() async {
     // 카카오 로그인 구현 예제

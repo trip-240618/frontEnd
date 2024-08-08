@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../util/font.dart';
+
 /// 약관 폼
 class termsForm extends StatelessWidget {
   final VoidCallback? onPressed1;
@@ -35,7 +37,7 @@ class termsForm extends StatelessWidget {
           ),
           Text(
             text,
-            // style:  value == true? f14bw700 : f14w600,
+            style: value == true? f16Gray500w500 : f16Gray500w500,
           ),
           Spacer(),
           GestureDetector(
