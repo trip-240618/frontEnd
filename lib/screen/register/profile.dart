@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+import '../../component/bottomContainer.dart';
+import '../../util/font.dart';
+
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfilePage> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfilePage> {
   TextEditingController nameCon = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -20,10 +23,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('트립스토리에서 활동할'),
-            Text('프로필을 등록해봐요'),
+            Text('트립스토리에서 활동할',style: f24gray900w700,),
+            Text('프로필을 등록해봐요',style: f24gray900w700,),
             const SizedBox(height: 14),
-            Text('프로필 사진은 나중에도 등록 가능해요.'),
+            Text('프로필 사진은 나중에도 등록 가능해요.',style: f14Gray500w500,),
             const SizedBox(height: 32),
             Center(
               child: Stack(
@@ -57,6 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 32),
             Container(
               width: Get.width,
+              // height: 64,
               decoration: BoxDecoration(
                   border: Border.all(color: Color(0xffE0E0E0)),
                   borderRadius: BorderRadius.circular(12)
@@ -66,40 +70,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left:12,top: 8),
-                    child: Text('닉네임',style: TextStyle(fontSize: 14),),
+                    padding: const EdgeInsets.only(left:12,top: 8,),
+                    child: Text('닉네임',style: f14Gray500w400,),
                   ),
-                  TextFormField(
-                    controller: nameCon,
-                    textAlignVertical: TextAlignVertical.center,
-                    style: TextStyle(fontSize: 16),
-                    decoration: InputDecoration(
-                      contentPadding:EdgeInsets.symmetric(horizontal: 12),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
+                  Container(
+                    child: TextFormField(
+                      controller: nameCon,
+                      textAlignVertical: TextAlignVertical.center,
+                      style: f16Gray800w600,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding:EdgeInsets.symmetric(vertical: 8,horizontal: 12),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: '닉네임을 입력해주세요',
+                        hintStyle: f14Gray500w400,
                       ),
-                      // hintText: hintText,
-                      // hintStyle: f14w600,
                     ),
                   ),
                 ],
               ),
             ),
             Spacer(),
-            GestureDetector(
-              onTap: (){
-                Get.to(()=>ProfileScreen());
-              },
-              child: Container(
-                width: Get.width,
-                height: 60,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Color(0xffEEEEEE)
-                ),
-                child: Center(child: Text('다음으로')),
-              ),
-              ),
+            BottomContainer(onTap: (){
+              // Get.to(()=>ProfileScreen());
+            }),
           ],
         ),
       ),

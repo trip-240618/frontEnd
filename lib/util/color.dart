@@ -5,6 +5,7 @@ const mainLightRed = Color(0xffFFEFF3);
 
 const gray900 = Color(0xff212121);
 const gray800 = Color(0xff424242);
+const gray700 = Color(0xff616161);
 const gray600 = Color(0xff757575);
 const gray500 = Color(0xff9E9E9E);
 const gray400 = Color(0xffBDBDBD);

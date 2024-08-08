@@ -19,3 +19,4 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     return Scaffold();
   }
 }
+
