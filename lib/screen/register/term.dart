@@ -120,7 +120,7 @@ class _TermPageState extends State<TermPage> {
             Spacer(),
             BottomContainer(onTap: (){
               Get.to(()=>ProfilePage());
-            })
+            },title: '다음으로')
           ],
         ),
       ),

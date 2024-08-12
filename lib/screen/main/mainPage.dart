@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/dialog.dart';
 import 'package:tripStory/controller/mainState.dart';
-import 'package:tripStory/screen/main/tripRoomAdd.dart';
+import 'package:tripStory/screen/main/tripAdd/tripRoomAdd.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
 
@@ -19,7 +19,11 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final ms = Get.put(MainState());
 
-
+@override
+  void dispose() {
+    print('조옹');
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

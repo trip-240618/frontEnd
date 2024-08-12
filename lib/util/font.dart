@@ -77,6 +77,12 @@ const TextStyle f10w500 = TextStyle(
 
 /// SemiBold
 
+const TextStyle f16gray300w600 = TextStyle(
+  fontSize: 16,
+  color: gray300,
+  fontWeight: FontWeight.w600,
+  fontFamily: 'Pretendard',
+);
 const TextStyle f16darkGray3w600 = TextStyle(
   fontSize: 16,
   color: darkGray3,
@@ -84,14 +90,12 @@ const TextStyle f16darkGray3w600 = TextStyle(
   fontFamily: 'Pretendard',
   height: 1.5,
 );
-
 const TextStyle f16Gray900w600 = TextStyle(
   fontSize: 16,
   color: gray900,
   fontWeight: FontWeight.w600,
   fontFamily: 'Pretendard',
 );
-
 const TextStyle f16gray800w600 = TextStyle(
   fontSize: 16,
   color: gray800,
@@ -135,6 +139,13 @@ const TextStyle f14redw600 = TextStyle(
 
 
 /// Bold
+const TextStyle f12gray400W700 = TextStyle(
+  fontSize: 12,
+  color: gray400,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Pretendard',
+  // height: 1.5,
+);
 const TextStyle f12Whitew700 = TextStyle(
   fontSize: 12,
   color: Colors.white,
@@ -142,7 +153,6 @@ const TextStyle f12Whitew700 = TextStyle(
   fontFamily: 'Pretendard',
   // height: 1.5,
 );
-
 const TextStyle f14Whitew700 = TextStyle(
   fontSize: 14,
   color: Colors.white,
@@ -152,6 +162,12 @@ const TextStyle f14Whitew700 = TextStyle(
 );
 const TextStyle f14gray400w700 = TextStyle(
   fontSize: 14,
+  color: gray400,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Pretendard',
+);
+const TextStyle f16gray400w700 = TextStyle(
+  fontSize: 16,
   color: gray400,
   fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
@@ -169,6 +185,21 @@ const TextStyle f16gray600w700 = TextStyle(
   fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
   height: 1.4,
+);
+const TextStyle f20gray600w700 = TextStyle(
+  fontSize: 20,
+  color: gray600,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Pretendard',
+  height: 1.4,
+);
+const TextStyle f40gray600w700 = TextStyle(
+  fontSize: 40,
+  color: gray600,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Pretendard',
+  height: 1.4,
+  letterSpacing: 8
 );
 const TextStyle f20gray800w700 = TextStyle(
   fontSize: 20,
