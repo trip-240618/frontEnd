@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/util/font.dart';
 
+import '../util/color.dart';
+
 class BottomContainer extends StatelessWidget {
   final VoidCallback onTap;
-  BottomContainer({Key? key, required this.onTap}) : super(key: key);
-
+  final String title;
+  BottomContainer({Key? key, required this.onTap, required this.title}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -17,7 +19,7 @@ class BottomContainer extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             color: Color(0xffEEEEEE)
         ),
-        child: Center(child: Text('다음으로',style: f16Gray600w600)),
+        child: Center(child: Text('${title}',style: f16Gray600w600)),
       ),
     );
   }

@@ -19,3 +19,5 @@ const darkGray3 = Color(0xff999999);
 const lightGray1 = Color(0xffF4F4F4);
 const lightGray2 = Color(0xffCBCBCB);
 
+const greyColor = Color(0xffCCCCCC);
+

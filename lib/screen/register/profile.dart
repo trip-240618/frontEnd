@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfilePage> {
             Spacer(),
             BottomContainer(onTap: (){
               // Get.to(()=>ProfileScreen());
-            }),
+            },title: '여행 떠나기',),
           ],
         ),
       ),

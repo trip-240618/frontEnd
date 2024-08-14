@@ -1,14 +1,13 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-
-import '../util/color.dart';
-import '../util/font.dart';
+import 'package:tripStory/bottomNavigator.dart';
+import 'package:tripStory/controller/mainState.dart';
+import '../../util/color.dart';
+import '../../util/font.dart';
 
 /// 메세지만 있는 확인용 다이얼로그
 showConfirmTapDialog(
@@ -144,8 +143,11 @@ InviteDialog(BuildContext context, String title, VoidCallback onTap) {
               TextFormField(
                 controller: con,
                 keyboardType: TextInputType.number,
-                maxLength: 6,
                 textAlignVertical: TextAlignVertical.center,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(6),
+                ],
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(15, 17.5, 15, 15),
                   border: OutlineInputBorder(
@@ -188,6 +190,144 @@ InviteDialog(BuildContext context, String title, VoidCallback onTap) {
                       )),
                 ),
               ),
+            )
+          ],
+        );
+      });
+}
+
+CodeDialog(BuildContext context) {
+  final ms = Get.find<MainState>();
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 24,horizontal:20 ),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // GestureDetector(
+              //   onTap: (){
+              //     Get.back();
+              //   },
+              //   child: Align(
+              //     alignment: Alignment.centerRight, // 오른쪽 끝으로 정렬
+              //     child: SvgPicture.asset('assets/icon/close.svg'),
+              //   ),
+              // ),
+              const SizedBox(height: 20),
+              Center(
+                child: Text(
+                  '초대코드 생성',
+                  textAlign: TextAlign.center,
+                  style: f20gray600w700,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Center(child: Text('245860',style: f40gray600w700,)),
+              const SizedBox(height: 18),
+              Text('초대코드로 친구를 초대해보세요.',style: f14Gray400w500,),
+              Text('방 생성 이후에도 초대코드를',style: f14Gray400w500,),
+              Text('공유할 수 있습니다.',style: f14Gray400w500,),
+              const SizedBox(height: 50)
+            ],
+          ),
+          actions: [
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: (){
+                    ms.kakaoShare();
+                  },
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                        color: gray200,
+                        borderRadius: BorderRadius.circular(4)
+                    ),
+                    child: SvgPicture.asset('assets/icon/send.svg',fit: BoxFit.none,),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: (){
+                      ms.roomReset();
+                      Get.back();
+                      Get.back();
+                      Get.to(()=>BottomNavigator());
+                    },
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      width: Get.width,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          color: gray500,
+                          borderRadius: BorderRadius.circular(4)
+                      ),
+                      child: Center(
+                          child: Text(
+                            '여행방 이동',
+                            style: f16Whitew600,
+                          )),
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        );
+      });
+}
+
+/// 확인버튼 함수 주는거
+showOnlyConfirmTapDialog(BuildContext context, String title, VoidCallback confirmTap) {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          contentPadding: const EdgeInsets.only(top: 35, bottom: 35),
+          content: Container(
+            width: Get.width,
+            child: Text(
+              '${title}',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          actions: [
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: confirmTap,
+                    behavior: HitTestBehavior.opaque,
+                    child: Center(
+                      child: Container(
+                        width: Get.width,
+                        height: 42,
+                        decoration: BoxDecoration( borderRadius: BorderRadius.circular(8)),
+                        child: Center(
+                            child: Text(
+                              '확인',
+                            )),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             )
           ],
         );

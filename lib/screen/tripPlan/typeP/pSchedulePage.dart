@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
+import 'package:get/get.dart';
+
 
 class PSchedulePage extends StatefulWidget {
   const PSchedulePage({super.key});
@@ -123,10 +125,7 @@ class _PSchedulePageState extends State<PSchedulePage> {
             ),
           ],
         ),
-
-
       ),
-
     );
   }
 }
