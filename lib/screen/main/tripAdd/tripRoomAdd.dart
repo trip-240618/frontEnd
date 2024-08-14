@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomModals.dart';
-import 'package:tripStory/component/dialog.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/main/typeChoose.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/util/color.dart';
@@ -21,14 +21,7 @@ class TripRoomAddScreen extends StatefulWidget {
 
 class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
   final ms = Get.put(MainState());
-  @override
-  void initState() {
-    super.initState();
-  }
-  @override
-  void dispose() {
-    super.dispose();
-  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -52,7 +45,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                 children: [
                   Obx(()=>GestureDetector(
                     onTap: (){
-                      ms.getSingleImage(ImageSource.gallery);
+                      ms.getSingleImage(ImageSource.gallery,context);
                     },
                     child: ms.pickedImage.value!=null
                         ? ClipRRect(

@@ -10,7 +10,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>ko</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>App needs access to photo lib for profile images</string>
+    <string>카메라 접근 허용 시 원하는 사진으로 프로필 등록이 가능합니다 접근을 허용하시겠습니까?  </string>
     <key>NSCameraUsageDescription</key>
     <string>To capture profile photo please grant camera access</string>
     <key>FirebaseAppDelegateProxyEnabled</key>
