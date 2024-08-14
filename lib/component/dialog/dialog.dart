@@ -5,8 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/bottomNavigator.dart';
-import '../util/color.dart';
-import '../util/font.dart';
+import 'package:tripStory/controller/mainState.dart';
+import '../../util/color.dart';
+import '../../util/font.dart';
 
 /// 메세지만 있는 확인용 다이얼로그
 showConfirmTapDialog(
@@ -142,8 +143,11 @@ InviteDialog(BuildContext context, String title, VoidCallback onTap) {
               TextFormField(
                 controller: con,
                 keyboardType: TextInputType.number,
-                maxLength: 6,
                 textAlignVertical: TextAlignVertical.center,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(6),
+                ],
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(15, 17.5, 15, 15),
                   border: OutlineInputBorder(
@@ -193,7 +197,7 @@ InviteDialog(BuildContext context, String title, VoidCallback onTap) {
 }
 
 CodeDialog(BuildContext context) {
-  TextEditingController con = TextEditingController();
+  final ms = Get.find<MainState>();
   showDialog(
       context: context,
       barrierDismissible: false,
@@ -239,7 +243,9 @@ CodeDialog(BuildContext context) {
             Row(
               children: [
                 GestureDetector(
-                  onTap: (){},
+                  onTap: (){
+                    ms.kakaoShare();
+                  },
                   child: Container(
                     width: 60,
                     height: 60,
@@ -254,7 +260,10 @@ CodeDialog(BuildContext context) {
                 Expanded(
                   child: GestureDetector(
                     onTap: (){
-                      Get.offAll(()=>BottomNavigator());
+                      ms.roomReset();
+                      Get.back();
+                      Get.back();
+                      Get.to(()=>BottomNavigator());
                     },
                     behavior: HitTestBehavior.opaque,
                     child: Container(
@@ -272,6 +281,52 @@ CodeDialog(BuildContext context) {
                     ),
                   ),
                 )
+              ],
+            )
+          ],
+        );
+      });
+}
+
+/// 확인버튼 함수 주는거
+showOnlyConfirmTapDialog(BuildContext context, String title, VoidCallback confirmTap) {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          contentPadding: const EdgeInsets.only(top: 35, bottom: 35),
+          content: Container(
+            width: Get.width,
+            child: Text(
+              '${title}',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          actions: [
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: confirmTap,
+                    behavior: HitTestBehavior.opaque,
+                    child: Center(
+                      child: Container(
+                        width: Get.width,
+                        height: 42,
+                        decoration: BoxDecoration( borderRadius: BorderRadius.circular(8)),
+                        child: Center(
+                            child: Text(
+                              '확인',
+                            )),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             )
           ],

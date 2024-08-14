@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:permission_handler/permission_handler.dart';
+import '../app/permission/permission.dart';
+import '../component/dialog/dialog.dart';
 
 class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   final selectIdx = 0.obs; /// (탭바 클릭)
@@ -25,16 +29,17 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   }
 
   @override
-  void dispose() {
+  void onClose() {
     tripName.dispose();
     tabController.dispose();
     tripCitySearchCon.dispose();
     tripDirectSearchCon.dispose();
-    super.dispose();
+    super.onClose();
   }
 
   /// 여행방 만들기 변수 초기화
   Future<void> roomReset()async{
+    tripName.text='';
     selectedCity = '';
     tripLeaveType.value = '';
     pickedImage.value =null;
@@ -69,11 +74,14 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     }
   }
   /// 사진 넣기
-  Future getSingleImage(ImageSource imageSource) async {
-    final XFile? pickedFile = await _picker.pickImage(source: imageSource);
-    if (pickedFile != null) {
-      pickedImage.value = XFile(pickedFile.path);
-      print('??? ${pickedImage.value?.path}');
+  Future getSingleImage(ImageSource imageSource,BuildContext context) async {
+    bool requestCheck = await requestCameraPermission(context);
+    if(requestCheck){
+      final XFile? pickedFile = await _picker.pickImage(source: imageSource);
+      if (pickedFile != null) {
+        pickedImage.value = XFile(pickedFile.path);
+        print('??? ${pickedImage.value?.path}');
+      }
     }
   }
 
@@ -89,5 +97,31 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
      print('여행방 만들기');
      return true;
    }
+  }
+
+  ///카카오 공유하기
+  void kakaoShare()async{
+    /// 사용자 정의 템플릿 ID
+    int templateId = 109315;
+    /// 카카오톡 실행 가능 여부 확인
+    bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
+
+    if (isKakaoTalkSharingAvailable) {
+      try {
+        Uri uri = await ShareClient.instance.shareCustom(templateId: templateId,templateArgs: {'key1': '땃땃슈22!'});
+        await ShareClient.instance.launchKakaoTalk(uri);
+        print('카카오톡 공유 완료');
+      } catch (error) {
+        print('카카오톡 공유 실패 $error');
+      }
+    } else {
+      try {
+        Uri shareUrl = await WebSharerClient.instance.makeCustomUrl(
+            templateId: templateId, templateArgs: {'key1': 'value1'});
+        await launchBrowserTab(shareUrl, popupOpen: true);
+      } catch (error) {
+        print('카카오톡 공유 실패 $error');
+      }
+    }
   }
 }

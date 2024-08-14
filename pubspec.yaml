@@ -8,7 +8,6 @@ version: 1.0.0+1
 environment:
   sdk: '>=3.3.4 <4.0.0'
 
-
 dependencies:
   flutter:
     sdk: flutter
@@ -33,6 +32,8 @@ dependencies:
   path_provider: ^2.1.3
   flutter_native_splash: ^2.4.0
   flutter_svg: ^2.0.10+1
+  permission_handler: ^11.3.1
+  google_maps_flutter: ^2.6.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -44,6 +45,7 @@ flutter:
     - assets/
     - assets/sns/
     - assets/icon/
+    - assets/bottomNavi/
   fonts:
     - family: Pretendard
       fonts:
