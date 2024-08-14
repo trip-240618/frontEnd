@@ -39,7 +39,20 @@ const TextStyle f16darkGray2w400 = TextStyle(
 );
 
 /// Medium
-
+const TextStyle f12gray300w500 = TextStyle(
+  fontSize: 12,
+  color: gray400,
+  fontWeight: FontWeight.w500,
+  fontFamily: 'Pretendard',
+  height: 1.4
+);
+const TextStyle f12gray400w500 = TextStyle(
+  fontSize: 12,
+  color: gray400,
+  fontWeight: FontWeight.w500,
+  fontFamily: 'Pretendard',
+  height: 1.4,
+);
 const TextStyle f14Gray400w500 = TextStyle(
   fontSize: 14,
   color: gray400,
