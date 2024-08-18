@@ -125,18 +125,18 @@ class _JSchedulePageState extends State<JSchedulePage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  height:25,
+                  height:24,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 5,
+                    itemCount: 10,
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) {
                       return Row(
                         children: [
                           Container(
-                            width: 25,
-                            height: 25,
+                            width: 24,
+                            height: 24,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle
                             ),
@@ -285,7 +285,11 @@ class _JSchedulePageState extends State<JSchedulePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        SvgPicture.asset('assets/icon/sort.svg'),
+                        SvgPicture.asset('assets/icon/sort.svg',colorFilter:
+                        ColorFilter.mode(
+                          js.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
+                          BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
+                        ),),
                         Text('편집',style: js.isSorting.value?f12Gray600w600:f12Gray400w500,)
                       ],
                     ),
@@ -303,6 +307,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                           children: [
                             ReorderableDragStartListener(
                               index:index,
+                              enabled: js.isSorting.value?true:false,
                               child: Container(
                                 width:Get.width,
                                 child: Row(
