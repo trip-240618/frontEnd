@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:permission_handler/permission_handler.dart';
 import '../app/permission/permission.dart';
-import '../component/dialog/dialog.dart';
 
 class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   final selectIdx = 0.obs; /// (탭바 클릭)

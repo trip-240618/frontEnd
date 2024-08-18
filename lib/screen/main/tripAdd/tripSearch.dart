@@ -16,16 +16,6 @@ class _TripSearchPageState extends State<TripSearchPage> {
   final ms = Get.put(MainState());
 
   @override
-  void initState() {
-    ms.tripCitySearchCon = TextEditingController();
-    super.initState();
-  }
-  @override
-  void dispose() {
-    ms.tripCitySearchCon.dispose();
-    super.dispose();
-  }
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
