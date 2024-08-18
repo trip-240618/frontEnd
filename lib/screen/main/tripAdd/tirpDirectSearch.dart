@@ -15,16 +15,7 @@ class TripDirectSearchPage extends StatefulWidget {
 
 class _TripSearchPageState extends State<TripDirectSearchPage> {
   final ms = Get.put(MainState());
-  @override
-  void initState() {
-    ms.tripDirectSearchCon = TextEditingController();
-    super.initState();
-  }
-  @override
-  void dispose() {
-    ms.tripDirectSearchCon.dispose();
-    super.dispose();
-  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
