@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/screen/tripHistory/tripHistoryMain.dart';
+import 'package:tripStory/screen/tripPlan/typeJ/jSchedulePage.dart';
+import 'package:tripStory/screen/tripPlan/typeP/pSchedulePage.dart';
 import 'package:tripStory/screen/tripPlan/typeP/pPlanPage.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
@@ -20,6 +22,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
 
   @override
   void initState() {
+
     _widgetOptions = [PPlanPage(), PPlanPage(), TripHistoryMainPage()];
     _bottomTabController = TabController(length: 3, vsync: this,initialIndex: 0);
     _currentIndex = 0;
@@ -29,15 +32,15 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('5월 도쿄 여행방'),
-        leading: GestureDetector(
-          onTap: () {
-            Get.back();
-          },
-          child: Icon(Icons.arrow_back_ios_new_outlined),
-        ),
-      ),
+      // appBar: AppBar(
+      //   title: Text('5월 도쿄 여행방'),
+      //   leading: GestureDetector(
+      //     onTap: () {
+      //       Get.back();
+      //     },
+      //     child: Icon(Icons.arrow_back_ios_new_outlined),
+      //   ),
+      // ),
       body: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         children: _widgetOptions,

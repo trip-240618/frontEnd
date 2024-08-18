@@ -11,7 +11,7 @@ const gray500 = Color(0xff9E9E9E);
 const gray400 = Color(0xffBDBDBD);
 const gray300 = Color(0xffE0E0E0);
 const gray200 = Color(0xffEEEEEE);
-const gray50 = Color(0xffFAFAFA);
+const gray100 = Color(0xffF5F5F5);
 
 const darkGray1 = Color(0xff333333);
 const darkGray2 = Color(0xff666666);
