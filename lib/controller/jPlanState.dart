@@ -15,6 +15,8 @@ class JPlanState extends GetxController{
     longitude.value = 127.34170655688537;
     super.onInit();
   }
+
+
   @override
   void dispose() {
     isGoogleExpanded.value = true;

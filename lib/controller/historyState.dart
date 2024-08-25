@@ -6,6 +6,7 @@ class HistoryState extends GetxController{
   final Completer<GoogleMapController> mapController = Completer<GoogleMapController>();
   final latitude = 0.0.obs;
   final longitude = 0.0.obs;
+  final isListScroll = false.obs;
 
   @override
   void onInit() {

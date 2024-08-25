@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/controller/historyState.dart';
+import 'package:tripStory/util/color.dart';
 import '../../component/history/customMarker.dart';
+import '../../imageTest.dart';
 import '../../util/font.dart';
 
 class TripHistoryMainPage extends StatefulWidget {
@@ -18,10 +21,17 @@ class TripHistoryMainPage extends StatefulWidget {
 
 class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   final hs = Get.put(HistoryState());
+  DraggableScrollableController scrollableController = DraggableScrollableController();
+  ScrollController listScrollCon = ScrollController();
+  final GlobalKey<ScaffoldState> modelScaffoldKey = GlobalKey<ScaffoldState>();
   Set<Marker> _markers = {};
+  double currentHeight = 0.4;
+  bool isInitialCameraMove = true;
+  bool isListScroller = false;
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
+      BottomSheets();
       await addMarker(LatLng(36.35475233611197, 127.34170655688537));
       setState(() {});
     });
@@ -31,13 +41,9 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   Future<BitmapDescriptor> getCustomIcon(int index, String imageUrl) async {
     final double iconSize = 300.0;
 
-    // 1. 다운로드하여 캐시에 저장
     final File imageFile = await DefaultCacheManager().getSingleFile(imageUrl);
     final Uint8List imageBytes = await imageFile.readAsBytes();
 
-    final imageProvider = MemoryImage(imageBytes);
-    print('??? ${imageFile}');
-    // 3. 위젯을 정의합니다.
     final widget = SizedBox(
       width: iconSize,
       height: 400,
@@ -179,9 +185,16 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
       });
     }
   }
+
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: modelScaffoldKey,
       body: Column(
         children: [
           GestureDetector(
@@ -189,23 +202,256 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
               changeMarker();
             },
               child: Text('313121')),
-          Container(
-            height: 300,
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(hs.latitude.value, hs.longitude.value),
-                zoom: 14.4746,
+          Expanded(
+            child: Container(
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(hs.latitude.value, hs.longitude.value),
+                  zoom: 14.4746,
+                ),
+                markers: _markers.toSet(),
+                onCameraMove: (CameraPosition position){
+                  if(!isInitialCameraMove){
+                    // scrollableController.animateTo(
+                    //     0.05,
+                    //     duration: const Duration(milliseconds: 1),
+                    //     curve: Curves.linear);
+                  }
+                  isInitialCameraMove = false;
+                  setState(() {});
+                },
+                onMapCreated: (GoogleMapController controller) {
+                  if (!hs.mapController.isCompleted) {
+                    hs.mapController.complete(controller);
+                  }
+                },
               ),
-              markers: _markers.toSet(),
-              onMapCreated: (GoogleMapController controller) {
-                if (!hs.mapController.isCompleted) {
-                  hs.mapController.complete(controller);
-                }
-              },
             ),
           )
         ],
       ),
     );
   }
+
+  PersistentBottomSheetController BottomSheets() {
+    return modelScaffoldKey.currentState!.showBottomSheet(
+          backgroundColor: Colors.white,
+          (context) => DraggableScrollableSheet(
+            initialChildSize: currentHeight,
+            minChildSize: 0.1,
+            maxChildSize: 0.8,
+            expand: false,
+            shouldCloseOnMinExtent: false,
+            snap: true,
+            controller: scrollableController,
+            snapSizes: [0.1, 0.4, 0.8],
+          builder: (context, scrollController) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
+            ),
+            child: CustomScrollView(
+              controller: scrollController,
+              physics: const ClampingScrollPhysics(),
+              slivers: [
+                SliverPersistentHeader(
+                  pinned: true,
+                  floating: false,
+                  delegate: CustomSliverPersistentHeaderDelegate(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(24),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 54,
+                              height: 5,
+                              decoration: BoxDecoration(
+                                  color: greyColor,
+                                  borderRadius: BorderRadius.circular(30)),
+                            ),
+                            const SizedBox(height: 27),
+                            Row(
+                              children: [
+                                Text('도쿄 즉흥 여행'),
+                                Spacer(),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      border: Border.all(color: gray500)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 4),
+                                    child: Text('기록 추가'),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      childCount: 10,
+                            (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 20, right: 20),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: Get.width,
+                                      height: 244,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(color: gray200),
+                                        borderRadius: BorderRadius.circular(15),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.05),
+                                            offset: Offset(0, 0),
+                                            blurRadius: 13.3,
+                                            spreadRadius: 0,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text('Day ${index + 1}'),
+                                                const SizedBox(width: 9),
+                                                Text('2024.08.12'),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 18),
+                                            Expanded(
+                                              child: ListView.builder(
+                                                  itemCount: 10,
+                                                  shrinkWrap: true,
+                                                  scrollDirection: Axis.horizontal,
+                                                  itemBuilder: (context, index) {
+                                                    return Row(
+                                                      children: [
+                                                        Container(
+                                                          width: 120,
+                                                          child: Stack(
+                                                            children: [
+                                                              Positioned(
+                                                                child: CachedNetworkImage(
+                                                                  imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2F1EjyruHeHaU6ZQpNe22L?alt=media',
+                                                                  imageBuilder: (context, imageProvider) => Container(
+                                                                    decoration: BoxDecoration(
+                                                                      borderRadius: BorderRadius.circular(4),
+                                                                      image: DecorationImage(
+                                                                          image: imageProvider,
+                                                                          fit: BoxFit.fill
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                 top:12,
+                                                                  left:12,
+                                                                  child: Container(
+                                                                      width:25,
+                                                                      height:25,
+                                                                      decoration:BoxDecoration(
+                                                                        color: Color(0xff56BBE6),
+                                                                        shape: BoxShape.circle
+                                                                      ),
+                                                                      child: Center(child: Text('${index}',style: f14Whitew700,)))
+                                                              ),
+                                                              Positioned(
+                                                                  bottom: 32,
+                                                                  left:10,
+                                                                  child:  Container(
+                                                                    width: 16,
+                                                                    height: 16,
+                                                                    decoration: BoxDecoration(
+                                                                        shape: BoxShape.circle
+                                                                    ),
+                                                                    child: ClipOval(
+                                                                      child: CachedNetworkImage(
+                                                                        imageUrl: 'https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287',
+                                                                        imageBuilder: (context, imageProvider) => Container(
+                                                                          decoration: BoxDecoration(
+                                                                            image: DecorationImage(
+                                                                                image: imageProvider,
+                                                                                fit: BoxFit.fill
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        placeholder: (context, url) => const CircularProgressIndicator(),
+                                                                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                              ),
+                                                              Positioned(
+                                                                left:10,
+                                                                bottom:10,
+                                                                child: Wrap(
+                                                                  direction: Axis.horizontal,
+                                                                  alignment: WrapAlignment.start,
+                                                                  spacing: 5,
+                                                                  runSpacing: 5,
+                                                                  children: ['벚꽃', '벚꽃여행dasdsa'].map((item) {
+                                                                    return Container(
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(30),
+                                                                      ),
+                                                                      child: Text(
+                                                                        '#${item}',
+                                                                        style: f12whitew500,
+                                                                      ),
+                                                                    );
+                                                                  }).toList(
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        const SizedBox(width: 8)
+                                                      ],
+                                                    );
+                                                  }
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                  ],
+                                ),
+                              );
+                            })),
+
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+
 }
+

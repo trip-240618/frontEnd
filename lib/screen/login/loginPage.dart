@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/app/sns/snsLogin.dart';
 import 'package:tripStory/component/login/snsContainer.dart';
 import 'package:tripStory/controller/userState.dart';
-import 'package:tripStory/screen/register/term.dart';
 import '../../util/font.dart';
 import '../main/mainPage.dart';
 
@@ -30,12 +30,14 @@ class _LoginPageState extends State<LoginPage> {
             Center(child: Text('10초면 됩니다. 여행이 편해질 거예요!',style: f14Gray500w500,)),
             const SizedBox(height: 18),
             KakaoContainer(onTap: ()async{
-              Get.to(()=>MainPage());
+              print('3123');
+              await kakaoLogin();
+              // Get.to(()=>MainPage());
               // await us.kakaoLogin();
             }),
             const SizedBox(height: 18),
             GoogleContainer(onTap: (){
-              Get.to(()=>TermPage());
+              Get.to(()=>MainPage());
             }),
             const SizedBox(height: 18),
             AppleContainer(onTap: (){})
