@@ -195,24 +195,19 @@ class _MyPageState extends State<MyPage> {
               thickness: 11,
               color: lightGray1,
             ),
-            /// 친구초대
+            /// 앱초대
             Padding(
               padding: const EdgeInsets.only(top: 28, left: 20, right: 31, bottom: 38),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('친구초대', style: f20gray800w700,),
+                  Text('앱 초대', style: f20gray800w700,),
                   const SizedBox(height: 28,),
                   SettingArrowRow(
-                      title: '추천하기',
-                      onTap: (){print('추천하기');
+                      title: '초대 링크 보내기',
+                      onTap: (){print('초대 링크 보내기');
                   }),
-                  SizedBox(height: 20,),
-                  SettingArrowRow(
-                      title: '초대코드 입력',
-                      onTap: (){print('초대코드 입력');
-                      }),
                 ],
               ),
             ),
@@ -232,11 +227,6 @@ class _MyPageState extends State<MyPage> {
                   SettingArrowRow(
                       title: '공지사항',
                       onTap: (){print('공지사항');
-                      }),
-                  const SizedBox(height: 20,),
-                  SettingArrowRow(
-                      title: '이벤트',
-                      onTap: (){print('이벤트');
                       }),
                   const SizedBox(height: 20,),
                   SettingArrowRow(
