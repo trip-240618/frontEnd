@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/login/loginPage.dart';
 import '../../component/appbar.dart';
+import '../../component/dialog/dialog.dart';
 import '../../component/setting/settingArrowRow.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
@@ -61,6 +62,7 @@ class _SettingPageState extends State<SettingPage> {
                   SettingArrowRow(
                       title: '회원 탈퇴',
                       onTap: (){print('회원 탈퇴');
+                      showConfirmCancelTapDialog(context, '회원탈퇴', '정말 회원탈퇴를 하시겠습니까?', (){print('확인눌럿슴');});
                       }),
                 ],
               ),
