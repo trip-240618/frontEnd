@@ -32,9 +32,7 @@ class _KakaoLoginState extends State<KakaoLogin> {
   }
 
   Future<void> kakaoLogin() async {
-    // 카카오 로그인 구현 예제
-    // 카카오톡 실행 가능 여부 확인
-    // 카카오톡 실행이 가능하면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
+
     if (await isKakaoTalkInstalled()) {
       try {
         final oauthToken= await UserApi.instance.loginWithKakaoTalk();
@@ -73,7 +71,6 @@ class _KakaoLoginState extends State<KakaoLogin> {
     User user;
     try {
       user = await UserApi.instance.me();
-      // print('31231${user}');
     } catch (error) {
       print('사용자 정보 요청 실패 $error');
       return;
@@ -150,7 +147,6 @@ class _KakaoLoginState extends State<KakaoLogin> {
       print('서버에 토큰 전송 실패: ${response.statusCode}');
     }
   }
-
   Future<void> hasTokens()async{
     if (await AuthApi.instance.hasToken()) {
       try {

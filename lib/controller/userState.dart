@@ -4,8 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
+import '../app/api/userApi.dart';
+import '../app/config/dio_client.dart';
+
 class UserState extends GetxController{
   final userList =[].obs; /// 유저 정보 리스트
+  final dioClient = DioClient();
+  final apiUserClient = ApiUserClient(DioClient());
 
   /// 카카오 로그인
   Future<void> kakaoLogin() async {
@@ -156,4 +161,14 @@ class UserState extends GetxController{
       }
     }
   }
+
+  /// 로그아웃
+  Future<void> logOut()async{
+    apiUserClient.logOut();
+  }
+  /// 자동로그인
+  Future<void> autoLogin()async{
+    apiUserClient.autoLogin();
+  }
+
 }

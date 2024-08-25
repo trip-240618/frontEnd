@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/controller/userState.dart';
+import 'package:tripStory/screen/login/loginPage.dart';
 import '../../component/appbar.dart';
 import '../../component/setting/settingArrowRow.dart';
 import '../../util/color.dart';
@@ -14,6 +16,7 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  final us = Get.put(UserState());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +135,8 @@ class _SettingPageState extends State<SettingPage> {
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 46),
               child: GestureDetector(
                 onTap: () {
-                  setState(() {});
+                  us.logOut();
+                  Get.offAll(()=>LoginPage());
                 },
                 child: Container(
                   width: Get.width,

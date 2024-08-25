@@ -94,7 +94,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                         const SizedBox(width: 4),
                         Flexible(
                           child: Text(
-                            '오사카 일본 여행아니지',
+                            '오사카 일본 여행아니지ㅇㄴㅁㅇㅁㄴㅇㅁㄴㄴㅁ',
                             style: f16gray600w700,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -373,6 +373,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                       },
                     ),
                   ),
+                  const SizedBox(height: 20,)
                 ],
               ),
             ),

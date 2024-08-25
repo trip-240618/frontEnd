@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/app/api/testApi.dart';
+import 'package:tripStory/app/api/userApi.dart';
 import 'package:tripStory/bottomNavigator.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/main/tripAdd/tripRoomAdd.dart';
 import 'package:tripStory/screen/myPage/myPage.dart';
+import '../../app/config/dio_client.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
 
@@ -18,7 +21,14 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   MainState ms = Get.put(MainState());
-
+  final dioClient = DioClient();
+  final apiUserClient = ApiUserClient(DioClient());
+  final apiTestCli = ApiTestClient(DioClient());
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

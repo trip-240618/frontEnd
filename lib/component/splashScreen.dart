@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:get/get.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
+import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/login/loginPage.dart';
-
+import 'package:tripStory/screen/main/mainPage.dart';
 
 
 class SplashPage extends StatefulWidget {
@@ -16,9 +19,13 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   bool jailbroken = false;
   bool developerMode = false;
+  final us = Get.put(UserState());
+  bool isLoading = true;
+
   @override
   void initState() {
-    initPlatformState();
+    // initPlatformState();
+
     super.initState();
   }
 
@@ -28,16 +35,29 @@ class _SplashPageState extends State<SplashPage> {
     } on PlatformException {
       jailbroken = true;
     }
-    if (!mounted) return;
-    setState(() {});
+    final cookies = await us.apiUserClient.dioClient.getCookies();
+    if (cookies != null) {
+      await us.apiUserClient.autoLogin();
+    }
+    Future.delayed(Duration(seconds: 1), () {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (jailbroken) {
-      return DialogExample();
-    } else {
-      return LoginPage();
+    if(isLoading){
+      return Container(color: Colors.white);
+    }else{
+      if (jailbroken) {
+        return DialogExample();
+      } else {
+        // FlutterNativeSplash.remove();
+        return us.userList.isNotEmpty?MainPage():LoginPage();
+      }
     }
   }
 }
