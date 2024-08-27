@@ -58,7 +58,7 @@ const TextStyle f12Gray500w500 = TextStyle(
   fontWeight: FontWeight.w500,
   fontFamily: 'Pretendard',
 );
-const TextStyle f12Gray600w600 = TextStyle(
+const TextStyle f12Gray600w500 = TextStyle(
   fontSize: 12,
   color: gray600,
   fontWeight: FontWeight.w500,
@@ -112,6 +112,12 @@ const TextStyle f12gray400w500 = TextStyle(
   fontFamily: 'Pretendard',
   height: 1.4,
 );
+const TextStyle f12gray900w500 = TextStyle(
+  fontSize: 12,
+  color: gray900,
+  fontWeight: FontWeight.w500,
+  fontFamily: 'Pretendard',
+);
 /// SemiBold
 
 const TextStyle f16gray300w600 = TextStyle(
@@ -130,6 +136,12 @@ const TextStyle f16darkGray3w600 = TextStyle(
 const TextStyle f16Gray900w600 = TextStyle(
   fontSize: 16,
   color: gray900,
+  fontWeight: FontWeight.w600,
+  fontFamily: 'Pretendard',
+);
+const TextStyle f14gray800w600 = TextStyle(
+  fontSize: 14,
+  color: gray800,
   fontWeight: FontWeight.w600,
   fontFamily: 'Pretendard',
 );
@@ -244,6 +256,13 @@ const TextStyle f20whitew700 = TextStyle(
   fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
   height: 1.5,
+);
+const TextStyle f16gray800w700 = TextStyle(
+  fontSize: 16,
+  color: gray800,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Pretendard',
+  height: 1.2,
 );
 const TextStyle f20gray800w700 = TextStyle(
   fontSize: 20,
