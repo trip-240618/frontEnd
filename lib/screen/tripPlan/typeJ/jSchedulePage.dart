@@ -290,7 +290,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                           js.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
                           BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
                         ),),
-                        Text('편집',style: js.isSorting.value?f12Gray600w600:f12Gray400w500,)
+                        Text('편집',style: js.isSorting.value?f12Gray600w500:f12Gray400w500,)
                       ],
                     ),
                   ),
