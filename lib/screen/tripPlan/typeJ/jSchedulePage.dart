@@ -56,64 +56,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        titleSpacing: 0,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: (){
-                      Get.back();
-                    },
-                      child: SvgPicture.asset('assets/icon/home.svg')),
-                  Expanded(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,  // Row의 수직 정렬을 가운데로
-                      mainAxisAlignment: MainAxisAlignment.center,    // Row의 수평 정렬을 가운데로
-                      children: [
-                        Container(
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: gray200,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              'J',
-                              style: f12gray400W700,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            '오사카 일본 여행아니지ㅇㄴㅁㅇㅁㄴㅇㅁㄴㄴㅁ',
-                            style: f16gray600w700,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                      width: 24,
-                      child: SvgPicture.asset('assets/icon/dot.svg')),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Text('2024.05.10 ~ 2024.05.14',style: f12Gray500w500,)
-            ],
-          ),
-        ),
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,7 +213,9 @@ class _JSchedulePageState extends State<JSchedulePage> {
             },
               child: Center(
                   child: Container(
-                      child: SvgPicture.asset('assets/icon/wideUnderArrow.svg')))
+                      width: 100,
+                      height: 15,
+                      child: SvgPicture.asset('assets/icon/wideUnderArrow.svg',fit: BoxFit.none,)))
           ),
           Obx(()=>Expanded(
             child: Padding(

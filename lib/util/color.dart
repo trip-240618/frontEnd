@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const mainRed = Color(0xffFF6187);
 const mainLightRed = Color(0xffFFEFF3);
 const pastelBlue = Color(0xff647AED);
-
+const blueColor = Color(0xff56BBE6);
 const gray900 = Color(0xff212121);
 const gray800 = Color(0xff424242);
 const gray700 = Color(0xff616161);

@@ -20,64 +20,6 @@ class _ScrapPageState extends State<ScrapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        titleSpacing: 0,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                      onTap: (){
-                        Get.back();
-                      },
-                      child: SvgPicture.asset('assets/icon/home.svg')),
-                  Expanded(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,  // Row의 수직 정렬을 가운데로
-                      mainAxisAlignment: MainAxisAlignment.center,    // Row의 수평 정렬을 가운데로
-                      children: [
-                        Container(
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: gray200,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              'J',
-                              style: f12gray400W700,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            '도쿄 여행방',
-                            style: f16gray600w700,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                      width: 24,
-                      child: SvgPicture.asset('assets/icon/dot.svg')),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Text('2024.05.10 ~ 2024.05.14',style: f12Gray500w500,)
-            ],
-          ),
-        ),
-      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
         child: Column(
