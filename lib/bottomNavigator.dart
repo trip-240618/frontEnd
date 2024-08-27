@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:tripStory/screen/locker/scrap/scrapPage.dart';
 import 'package:tripStory/screen/tripHistory/tripHistoryMain.dart';
 import 'package:tripStory/screen/tripPlan/typeJ/jSchedulePage.dart';
 import 'package:tripStory/util/color.dart';
@@ -20,7 +22,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   @override
   void initState() {
 
-    _widgetOptions = [JSchedulePage(), JSchedulePage(), TripHistoryMainPage()];
+    _widgetOptions = [JSchedulePage(), ScrapPage(), TripHistoryMainPage()];
     _bottomTabController = TabController(length: 3, vsync: this,initialIndex: 0);
     _currentIndex = 0;
     super.initState();
@@ -29,6 +31,64 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _currentIndex==2?null:AppBar(
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                      onTap: (){
+                        Get.back();
+                      },
+                      child: SvgPicture.asset('assets/icon/home.svg')),
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,  // Row의 수직 정렬을 가운데로
+                      mainAxisAlignment: MainAxisAlignment.center,    // Row의 수평 정렬을 가운데로
+                      children: [
+                        Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: gray200,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'J',
+                              style: f12gray400W700,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            '도쿄 여행방',
+                            style: f16gray600w700,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                      width: 24,
+                      child: SvgPicture.asset('assets/icon/dot.svg')),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text('2024.05.10 ~ 2024.05.14',style: f12Gray500w500,)
+            ],
+          ),
+        ),
+      ),
       // appBar: AppBar(
       //   title: Text('5월 도쿄 여행방'),
       //   leading: GestureDetector(

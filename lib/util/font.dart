@@ -264,6 +264,13 @@ const TextStyle f20whitew700 = TextStyle(
   fontFamily: 'Pretendard',
   height: 1.5,
 );
+const TextStyle f28whitew700 = TextStyle(
+  fontSize: 28,
+  color: Colors.white,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Pretendard',
+  height: 1.5,
+);
 const TextStyle f16gray800w700 = TextStyle(
   fontSize: 16,
   color: gray800,

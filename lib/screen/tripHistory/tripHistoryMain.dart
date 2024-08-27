@@ -60,10 +60,13 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: blueColor,
                     shape: BoxShape.circle,
                   ),
-                  child: Center(child: Text('$index', style: f20whitew700)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: Center(child: Text('$index', style: f28whitew700)),
+                  ),
                 ),
               ),
             ),
