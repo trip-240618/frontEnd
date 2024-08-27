@@ -5,12 +5,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
+import 'package:get/get.dart';
 
 class AddScrapPage extends StatefulWidget {
   const AddScrapPage({super.key});
@@ -20,18 +23,19 @@ class AddScrapPage extends StatefulWidget {
 }
 
 class _AddScrapPageState extends State<AddScrapPage> {
+  TextEditingController titleCon = TextEditingController();
   QuillController _controller = QuillController.basic();
   final FocusNode _focusNode = FocusNode();
 
 
   @override
   void initState() {
-    jsonD();
+    //jsonD();
     super.initState();
   }
 
   void jsonD() {
-    var myJson = jsonDecode(r'[{"insert":"Ddfsdfd\nㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ"},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":"\nㅇ\n\nㅇㄹㅇㄹㄴㄹ"},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":"\n"}]');
+    var myJson = jsonDecode(r'[{"insert":"Ddfsdfd\nㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ"},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":"\n"}]');
     _controller = QuillController(
       document: Document.fromJson(myJson),
       selection: TextSelection.collapsed(offset: 0),
@@ -89,70 +93,104 @@ class _AddScrapPageState extends State<AddScrapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('테스트'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
+    return GestureDetector(
+      onTap: (){
+        FocusScope.of(context).unfocus();
+        setState(() {
+        });
+      },
+      child: Scaffold(
+        appBar: BackAppBar(text: '스크랩 메모', onTap: (){Get.back();}),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: titleCon,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.zero,
+                  hintText: '제목',
+                  hintStyle: f14gray400w700,
+                  border: InputBorder.none,
 
-            Container(
-              height: 500,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: gray200
                 ),
-                borderRadius: BorderRadius.circular(4),
-
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: QuillEditor.basic(
-                  focusNode: _focusNode,
-                  controller: _controller,
-                  configurations: QuillEditorConfigurations(
-                    showCursor: true,
-                    customStyles: DefaultStyles(color: Colors.red),
-                    embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(),
-                    autoFocus: true
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      width: 1,
+                      color: gray200
+                  ),
+                  borderRadius: BorderRadius.circular(4),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 500,
+                        child: QuillEditor.basic(
+                          focusNode: _focusNode,
+                          controller: _controller,
+                          configurations: QuillEditorConfigurations(
+                            showCursor: true,
+                            customStyles: DefaultStyles(color: Colors.red),
+                            embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(),
+                            autoFocus: true
+                          ),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                            },
+                            child: SvgPicture.asset('assets/icon/brush.svg',),
+                          ),
+                          const SizedBox(width: 8,),
+                          GestureDetector(
+                            onTap: (){
+                              _onPressedHandler(context);
+                            },
+                            child: SvgPicture.asset('assets/bottomNavi/tripHistory.svg',),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
+              // Container(
+              //   height: 100,
+              //   child: QuillSimpleToolbar(
+              //     controller: _controller,
+              //     configurations: const QuillSimpleToolbarConfigurations(),
+              //   ),
+              // ),
 
+            ],
+          ),
+        ),
+        bottomSheet: GestureDetector(
+          onTap: (){
+            scrapSave();
+          },
+          child: Container(
+            height: 60,
+            decoration: BoxDecoration(
+              color: gray500
             ),
-            // Container(
-            //   height: 100,
-            //   child: QuillSimpleToolbar(
-            //     controller: _controller,
-            //     configurations: const QuillSimpleToolbarConfigurations(),
-            //   ),
-            // ),
-            GestureDetector(
-              onTap: (){
-                _onPressedHandler(context);
-                },
-              child: Text('이미지 add'),
+            child: Center(
+              child: Text('저장',style: f16Whitew600,),
             ),
-            GestureDetector(
-              onTap: (){
-                scrapSave();
-
-              },
-              child: Container(
-                width: 100,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: gray500
-                ),
-                child: Center(child: Text('저장')),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
+
     );
   }
 
