@@ -195,6 +195,13 @@ const TextStyle f12gray400W700 = TextStyle(
   fontFamily: 'Pretendard',
   // height: 1.5,
 );
+const TextStyle f12gray600W700 = TextStyle(
+  fontSize: 12,
+  color: gray600,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Pretendard',
+  height: 1.3,
+);
 const TextStyle f12Whitew700 = TextStyle(
   fontSize: 12,
   color: Colors.white,
