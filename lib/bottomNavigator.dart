@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tripStory/screen/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/screen/tripHistory/tripHistoryMain.dart';
 import 'package:tripStory/screen/tripPlan/typeJ/jSchedulePage.dart';
-import 'package:tripStory/screen/tripPlan/typeP/pPlanPage.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
