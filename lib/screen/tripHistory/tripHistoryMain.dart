@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/controller/historyState.dart';
+import 'package:tripStory/screen/tripHistory/album/albumPage.dart';
 import 'package:tripStory/util/color.dart';
 import '../../component/history/customMarker.dart';
 import '../../util/bottomSheetHeader.dart';
@@ -271,14 +273,22 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                     children: [
                                       Text('도쿄 즉흥 여행',style: f16gray800w700,),
                                       Spacer(),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(100),
-                                            border: Border.all(color: gray500)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 4),
-                                          child: Text('기록 추가',style: f12gray900w500,),
+                                      GestureDetector(
+                                        onTap: ()async{
+                                          bool isRequest = await requestPhotoMangerPermission(context);
+                                          if(isRequest){
+                                            Get.to(()=>AlbumPage());
+                                          }
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(100),
+                                              border: Border.all(color: gray500)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 4),
+                                            child: Text('기록 추가',style: f12gray900w500,),
+                                          ),
                                         ),
                                       )
                                     ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:photo_manager/photo_manager.dart';
 import '../../component/dialog/dialog.dart';
 
 /// 권한 요청
@@ -30,3 +31,22 @@ Future<bool> requestCameraPermission(BuildContext context) async {
   }
 }
 
+
+Future<bool> requestPhotoMangerPermission(BuildContext context) async {
+  final ps = await PhotoManager.requestPermissionExtend();
+  if (ps.isAuth) {
+    // 권한이 이미 승인되었다면 true 반환
+    return true;
+  } else {
+    // 권한이 승인되지 않았다면 설정으로 안내
+    await showOnlyConfirmTapDialog(
+      context,
+      '권한을 설정해주시기 바랍니다',
+          () {
+        PhotoManager.openSetting();
+        Get.back();
+      },
+    );
+    return false;
+  }
+}
