@@ -1,4 +1,3 @@
-import 'package:photo_manager/photo_manager.dart';
 import 'package:json_annotation/json_annotation.dart'; // Make sure to import this
 
 part 'albumModel.g.dart';
