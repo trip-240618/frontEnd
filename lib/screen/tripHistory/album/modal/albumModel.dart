@@ -1,8 +1,5 @@
-import 'package:json_annotation/json_annotation.dart'; // Make sure to import this
-
 part 'albumModel.g.dart';
 
-@JsonSerializable()
 class AlbumModel {
   final String id;
   final String name;
@@ -19,4 +16,5 @@ class AlbumModel {
 
   /// Connect the generated `toJson` method to the `AlbumModel` class.
   Map<String, dynamic> toJson() => _$AlbumModelToJson(this);
+
 }

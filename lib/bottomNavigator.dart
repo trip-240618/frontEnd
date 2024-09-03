@@ -49,8 +49,8 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                       child: SvgPicture.asset('assets/icon/home.svg')),
                   Expanded(
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,  // Row의 수직 정렬을 가운데로
-                      mainAxisAlignment: MainAxisAlignment.center,    // Row의 수평 정렬을 가운데로
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
                           width: 20,
