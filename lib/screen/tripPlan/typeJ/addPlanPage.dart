@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/appbar.dart';
-
 import '../../../util/color.dart';
 import '../../../util/font.dart';
 
@@ -122,4 +121,5 @@ class _AddPlanPageState extends State<AddPlanPage> {
       ),
     );
   }
+
 }

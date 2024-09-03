@@ -45,6 +45,12 @@ const TextStyle f12whitew500 = TextStyle(
   fontWeight: FontWeight.w500,
   fontFamily: 'Pretendard',
 );
+const TextStyle f12non400w500 = TextStyle(
+  fontSize: 12,
+  color: Color(0xff666666),
+  fontWeight: FontWeight.w500,
+  fontFamily: 'Pretendard',
+);
 const TextStyle f12Gray400w500 = TextStyle(
   fontSize: 12,
   color: gray400,
@@ -219,6 +225,12 @@ const TextStyle f14Whitew700 = TextStyle(
 const TextStyle f14gray400w700 = TextStyle(
   fontSize: 14,
   color: gray400,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Pretendard',
+);
+const TextStyle f14gray800w700 = TextStyle(
+  fontSize: 14,
+  color: gray800,
   fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
 );

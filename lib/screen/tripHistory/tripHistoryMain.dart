@@ -14,6 +14,7 @@ import 'package:tripStory/util/color.dart';
 import '../../component/history/customMarker.dart';
 import '../../util/bottomSheetHeader.dart';
 import '../../util/font.dart';
+import 'album/albumListPage.dart';
 
 class TripHistoryMainPage extends StatefulWidget {
   const TripHistoryMainPage({super.key});
@@ -355,7 +356,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                         decoration: BoxDecoration(
                                                                           borderRadius: BorderRadius.circular(4),
                                                                           image: DecorationImage(
-                                                                              image: imageProvider,
+                                                                             image: imageProvider,
                                                                               fit: BoxFit.fill
                                                                           ),
                                                                         ),
