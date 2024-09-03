@@ -38,7 +38,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
     DateFormat dateFormat = DateFormat('yyyy-MM-dd');
     DateTime startDate = dateFormat.parse(startTime);
     DateTime endDate = dateFormat.parse(endTime);
-
     // 날짜 사이의 차이 계산
     totalDateLength = endDate.difference(startDate).inDays + 1;
     setState(() {});
@@ -54,6 +53,12 @@ class _JSchedulePageState extends State<JSchedulePage> {
       duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
