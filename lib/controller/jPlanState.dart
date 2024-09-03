@@ -9,6 +9,12 @@ class JPlanState extends GetxController{
   final isGoogleExpanded = true.obs;
   final isSorting = false.obs;
 
+  /// AddPlan에서 추가하려는 장소 정보
+  final placeLat = 0.0.obs;
+  final placeLng = 0.0.obs;
+  final placeName = ''.obs;
+
+
   @override
   void onInit() {
     latitude.value = 36.35475233611197;

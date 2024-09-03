@@ -151,6 +151,7 @@ const TextStyle f14gray800w600 = TextStyle(
   fontWeight: FontWeight.w600,
   fontFamily: 'Pretendard',
 );
+
 const TextStyle f16gray800w600 = TextStyle(
   fontSize: 16,
   color: gray800,
@@ -247,6 +248,13 @@ const TextStyle f16gray900w700 = TextStyle(
   fontFamily: 'Pretendard',
   height: 1.5,
 );
+const TextStyle f16Whitew700 = TextStyle(
+  fontSize: 16,
+  color: Colors.white,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Pretendard',
+  height: 1.5,
+);
 const TextStyle f16gray600w700 = TextStyle(
   fontSize: 16,
   color: gray600,
@@ -296,6 +304,13 @@ const TextStyle f20gray800w700 = TextStyle(
   fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
   height: 1.2,
+);
+const TextStyle f20gray900w700 = TextStyle(
+  fontSize: 20,
+  color: gray900,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Pretendard',
+  height: 1.5,
 );
 const TextStyle f24gray400w700 = TextStyle(
   fontSize: 24,

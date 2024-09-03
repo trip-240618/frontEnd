@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/controller/jPlanState.dart';
+import 'package:tripStory/screen/tripPlan/typeJ/addPlanPage.dart';
 import 'package:tripStory/util/color.dart';
+import '../../../component/button.dart';
 import '../../../util/font.dart';
 
 class JSchedulePage extends StatefulWidget {
@@ -329,6 +331,11 @@ class _JSchedulePageState extends State<JSchedulePage> {
           ))
         ],
       ),
+        floatingActionButton: PlusFloatingButton(
+          backgroundColor: gray600,
+          onPressed: ()  {
+            Get.to(()=>AddPlanPage());
+          },)
     );
   }
 }
