@@ -1,5 +1,3 @@
-import 'package:json_annotation/json_annotation.dart'; // Make sure to import this
-
 part 'albumModel.g.dart';
 
 class AlbumModel {
