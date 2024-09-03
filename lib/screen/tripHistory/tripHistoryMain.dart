@@ -14,7 +14,7 @@ import 'package:tripStory/util/color.dart';
 import '../../component/history/customMarker.dart';
 import '../../util/bottomSheetHeader.dart';
 import '../../util/font.dart';
-import 'album/albumListPage.dart';
+
 
 class TripHistoryMainPage extends StatefulWidget {
   const TripHistoryMainPage({super.key});
