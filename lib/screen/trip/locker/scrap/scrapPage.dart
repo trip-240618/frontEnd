@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/button.dart';
-import 'package:tripStory/screen/locker/scrap/addScrapPage.dart';
 
-import '../../../component/cachedImage.dart';
-import '../../../util/color.dart';
-import '../../../util/font.dart';
+import '../../../../component/cachedImage.dart';
+import '../../../../util/color.dart';
+import '../../../../util/font.dart';
+import 'addScrapPage.dart';
 
 class ScrapPage extends StatefulWidget {
   const ScrapPage({super.key});

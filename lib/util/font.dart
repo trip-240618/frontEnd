@@ -9,6 +9,7 @@ import 'color.dart';
 /// Light
 
 /// Regular
+
 const TextStyle f14Gray500w400 = TextStyle(
   fontSize: 14,
   color: gray500,
@@ -39,6 +40,14 @@ const TextStyle f16darkGray2w400 = TextStyle(
 );
 
 /// Medium
+const TextStyle f12Gray800w500 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 12,
+  fontWeight: FontWeight.w500,
+  height: 16.01 / 12,
+  letterSpacing: 0.0252 * 12,
+);
+
 const TextStyle f12whitew500 = TextStyle(
   fontSize: 12,
   color: Colors.white,
@@ -125,7 +134,22 @@ const TextStyle f12gray900w500 = TextStyle(
   fontFamily: 'Pretendard',
 );
 /// SemiBold
-
+const TextStyle f12gray600w600 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 12,
+  color: gray600,
+  fontWeight: FontWeight.w600,
+  height: 16.01 / 12,
+  letterSpacing: 0.0252 * 12,
+);
+const TextStyle f15gray800w600 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 15,
+  color: gray800,
+  fontWeight: FontWeight.w600,
+  height: 22.01 / 15,
+  letterSpacing: 0.0096 * 15,
+);
 const TextStyle f16gray300w600 = TextStyle(
   fontSize: 16,
   color: gray300,
@@ -216,12 +240,34 @@ const TextStyle f12Whitew700 = TextStyle(
   fontFamily: 'Pretendard',
   // height: 1.5,
 );
+const TextStyle f12gray900w700 = TextStyle(
+  fontSize: 12,
+  color: gray900,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Pretendard',
+);
+const TextStyle f14gray600w700 =TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 14,
+  color: gray600,
+  fontWeight: FontWeight.w700,  // Bold corresponds to FontWeight.w700
+  height: 20.01 / 14,  // line-height divided by font-size
+  letterSpacing: 0.0145 * 14,  // letter-spacing in logical pixels
+);
 const TextStyle f14Whitew700 = TextStyle(
   fontSize: 14,
   color: Colors.white,
   fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
   height: 1.5,
+);
+const TextStyle f14Greenw700 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 14,
+  color: greenColor,
+  fontWeight: FontWeight.w700,  // 700 corresponds to 'Bold'
+  height: 20.01 / 14,  // line-height divided by font-size
+  letterSpacing: 0.0145 * 14,  // letter-spacing in logical pixels
 );
 const TextStyle f14gray400w700 = TextStyle(
   fontSize: 14,

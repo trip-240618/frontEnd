@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/screen/locker/scrap/scrapPage.dart';
-import 'package:tripStory/screen/tripHistory/tripHistoryMain.dart';
-import 'package:tripStory/screen/tripPlan/typeJ/jSchedulePage.dart';
+import 'package:tripStory/screen/trip/tripHistory/tripHistoryMain.dart';
+import 'package:tripStory/screen/trip/tripPlan/typeJ/jSchedulePage.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
+
+import 'locker/scrap/scrapPage.dart';
 
 class BottomNavigator extends StatefulWidget {
   const BottomNavigator({super.key});

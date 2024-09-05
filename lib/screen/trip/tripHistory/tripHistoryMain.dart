@@ -9,11 +9,11 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/controller/historyState.dart';
-import 'package:tripStory/screen/tripHistory/album/albumPage.dart';
 import 'package:tripStory/util/color.dart';
-import '../../component/history/customMarker.dart';
-import '../../util/bottomSheetHeader.dart';
-import '../../util/font.dart';
+import '../../../component/history/customMarker.dart';
+import '../../../imageTest.dart';
+import '../../../util/font.dart';
+import 'album/albumPage.dart';
 
 
 class TripHistoryMainPage extends StatefulWidget {

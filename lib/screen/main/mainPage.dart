@@ -1,9 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/app/api/testApi.dart';
 import 'package:tripStory/app/api/userApi.dart';
-import 'package:tripStory/bottomNavigator.dart';
+import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/main/tripAdd/tripRoomAdd.dart';
@@ -129,116 +130,132 @@ class _MainPageState extends State<MainPage> {
                           children: [
                             Container(
                               width: Get.width,
-                              height: 120,
+                              height: 140,
                               decoration: BoxDecoration(
                                   borderRadius:BorderRadius.circular(4)
                               ),
-                              child: Row(
+                              child: Stack(
                                 children: [
-                                  Stack(
-                                      children:[
-                                        Container(
-                                          width: 120,
-                                          height: 120,
-                                          decoration: BoxDecoration(
-                                            color: gray300,
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(4),
-                                              bottomLeft: Radius.circular(4),
+                                  SvgPicture.asset('assets/icon/ticket.svg',
+                                      width: Get.width,
+                                      height:Get.height,
+                                      fit: BoxFit.fill),
+                                  Positioned(
+                                      left: 16,
+                                      top: 8,
+                                      right: 16,
+                                      child: Container(
+                                        width: Get.width,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: greenColor, // #67E299 색상
+                                                    width: 1.5, // 1.5px 두께
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(100)
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
+                                                child: Text('D-31',style: f14Greenw700,),
+                                              ),
                                             ),
-                                          ),
+                                            const SizedBox(width: 6),
+                                            Text('2024.04.01 ~ 2024.04.07',style: f12Gray800w500,),
+                                            Spacer(),
+                                            GestureDetector(
+                                              onTap: (){
+                                              },
+                                                child: SvgPicture.asset('assets/icon/send.svg',color: gray900)),
+                                            const SizedBox(width: 12),
+                                            SvgPicture.asset('assets/icon/bookmark.svg'),
+                                          ],
                                         ),
-                                        Positioned(
-                                          left: 10,
-                                          top: 10,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: gray400,
-                                                borderRadius: BorderRadius.circular(100)
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
-                                              child: Text('D-31',style: f12Whitew700,),
-                                            ),
-                                          ),
-                                        )
-                                      ]
+                                      )
                                   ),
-                                  Expanded(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          top: BorderSide(width: 1.0, color: gray200),
-                                          right: BorderSide(width: 1.0, color: gray200),
-                                          bottom: BorderSide(width: 1.0, color: gray200),
-                                        ),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(4),
-                                          bottomRight: Radius.circular(4),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left:10,right: 10,top: 12,bottom: 10),
-                                        child: Column(
+                                  Positioned(
+                                      left: 16,
+                                      top: 58,
+                                      right: 16,
+                                      bottom: 14,
+                                      child: Container(
+                                        width: Get.width,
+                                        child: Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Row(
+                                            Container(
+                                              width:66,
+                                              height: 66,
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(4),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2F6sYlEQ7iIBAkqplhqe3E?alt=media',
+                                                  imageBuilder: (context, imageProvider) => Container(
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          image: imageProvider,
+                                                          fit: BoxFit.fill
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  // placeholder: (context, url) => const CircularProgressIndicator(),
+                                                  // errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top: 6),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text('5월 도쿄 여행방'),
-                                                      Text('24.04.01 ~ 24.04.07')
-                                                    ],
-                                                  ),
-                                                ),
-                                                Spacer(),
                                                 Row(
                                                   children: [
-                                                    SvgPicture.asset('assets/icon/send.svg',width: 20,),
-                                                    const SizedBox(width: 12),
-                                                    SvgPicture.asset('assets/icon/bookmark.svg',width: 16),
+                                                    Container(
+                                                      width: 20,
+                                                      height: 20,
+                                                      decoration: BoxDecoration(
+                                                        color: greenColor,
+                                                        shape: BoxShape.circle
+                                                      ),
+                                                      child: Center(child: Text('J',style: f12Whitew700,))
+                                                    ),
+                                                    const SizedBox(width: 6),
+                                                    Text('5월 도쿄 여행방',style: f15gray800w600,)
                                                   ],
-                                                )
+                                                ),
+                                                Spacer(),
+                                                Text('일본',style: f12gray600w600,),
                                               ],
                                             ),
                                             Spacer(),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            Column(
+                                              mainAxisAlignment: MainAxisAlignment.end,
                                               children: [
-                                                Text('대한민국'),
                                                 Container(
-                                                  height: 16,
-                                                  constraints: BoxConstraints(
-                                                      maxWidth: Get.width * 0.3
+                                                  decoration: BoxDecoration(
+                                                      color: gray200,
+                                                      borderRadius: BorderRadius.circular(100)
                                                   ),
-                                                  child: ListView.builder(
-                                                    scrollDirection: Axis.horizontal,
-                                                    itemCount: 5,
-                                                    shrinkWrap: true,
-                                                    physics: const ClampingScrollPhysics(),
-                                                    itemBuilder: (context, index) {
-                                                      return Row(
-                                                        children: [
-                                                          SvgPicture.asset(
-                                                            'assets/icon/user.svg',
-                                                          ),
-                                                          index==4?SizedBox():SizedBox(width: 4,)
-                                                        ],
-                                                      );
-                                                    },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 5),
+                                                    child: Row(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/icon/userIcon.svg',
+                                                        ),
+                                                        const SizedBox(width: 5),
+                                                        Text('5',style: f14gray600w700,)
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ],
                                             )
                                           ],
                                         ),
-                                      ),
-                                    ),
+                                      )
                                   )
                                 ],
                               ),

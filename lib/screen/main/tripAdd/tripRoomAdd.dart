@@ -8,6 +8,7 @@ import 'package:tripStory/component/bottomModals.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/main/typeChoose.dart';
 import 'package:tripStory/controller/mainState.dart';
+import 'package:tripStory/screen/main/tripAdd/tripCalendar.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../component/bottomContainer.dart';
 import '../../../util/font.dart';
@@ -142,6 +143,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                   const SizedBox(height: 4),
                   Obx(() => GestureDetector(
                     onTap: ()async{
+                      Get.to(()=>TripCalendar());
                       ms.tripDate.value = '11';
                     },
                     child: Container(
