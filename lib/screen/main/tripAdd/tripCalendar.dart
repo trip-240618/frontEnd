@@ -41,6 +41,8 @@ class _TripCalendarState extends State<TripCalendar> {
                       // 선택된 날짜들 사이의 색
                       dayTextStyle: f14gray800w700,
                       selectedRangeHighlightColor:gray200,
+                      todayColor: Colors.red,
+                      dayMaxWidth: 64,
                       dayBorderRadius : BorderRadius.circular(4),
                       // 오늘 날짜의 텍스트 스타일
                       todayTextStyle: f14Whitew700,

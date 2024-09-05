@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/screen/tripPlan/typeJ/searchTripPlace.dart';
+import '../../../controller/jPlanState.dart';
 import '../../../util/color.dart';
 import '../../../util/font.dart';
 
