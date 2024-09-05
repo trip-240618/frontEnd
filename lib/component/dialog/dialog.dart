@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/bottomNavigator.dart';
+import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import 'package:tripStory/controller/mainState.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';

@@ -5,8 +5,9 @@ import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import 'package:tripStory/util/color.dart';
-import '../../../controller/historyState.dart';
-import '../../../util/font.dart';
+import '../../../../component/bottomContainer.dart';
+import '../../../../controller/historyState.dart';
+import '../../../../util/font.dart';
 import 'albumListPage.dart';
 
 class AlbumPage extends StatefulWidget {
@@ -91,7 +92,7 @@ class _AlbumPageState extends State<AlbumPage> {
                   crossAxisCount: 3,
                   crossAxisSpacing: 4,
                   mainAxisSpacing: 4,
-                  childAspectRatio: 0.82,
+                  childAspectRatio: 1,
                 ),
                 shrinkWrap: true,
                 itemCount: hs.albums.isEmpty||hs.albums[hs.selectAlbumIndex.value].images.length==0?0:hs.albums[hs.selectAlbumIndex.value].images.length,
@@ -165,67 +166,75 @@ class _AlbumPageState extends State<AlbumPage> {
       ),
       bottomNavigationBar:Obx(()=>Container(
         width: Get.width,
-        decoration: BoxDecoration(),
-        height: hs.selectAlbumList.length==0?120:240,
+        decoration: BoxDecoration(
+        ),
+        height: hs.selectAlbumList.length==0?120:250,
         child: hs.selectAlbumList.length==0
             ?Center(child: Text('최대 0장을 여행 기록으로 업로드 가능해요.',style: f14Gray500w400,))
             : Padding(
-              padding: const EdgeInsets.only(left: 20,right: 20,top: 17),
+              padding: const EdgeInsets.only(left: 0,right: 0,top: 17,bottom: 34),
               child: Column(
                 children: [
-                  Container(
-                    width: Get.width,
-                    height: 100,
-                    child: ReorderableListView.builder(
-                      itemCount: hs.selectAlbumList.length,
-                      scrollDirection: Axis.horizontal,
-                      onReorder: (int oldIndex, int newIndex) {
-                        if (newIndex > oldIndex) {
-                          newIndex -= 1;
-                        }
-                        final item = hs.selectAlbumList.removeAt(oldIndex);
-                        hs.selectAlbumList.insert(newIndex, item);
-                      },
-                      itemBuilder: (context, index) {
-                        return Row(
-                          key: ValueKey(hs.selectAlbumList[index]), // ReorderableListView requires a unique key
-                          children: [
-                            Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(4),
-                                  child: AssetEntityImage(
-                                    gaplessPlayback: true,
-                                    filterQuality: FilterQuality.high,
-                                    isOriginal: false,
-                                    width: 80,
-                                    height: 100,
-                                    thumbnailSize: ThumbnailSize.square(isScoll ? 500 : 25),
-                                    thumbnailFormat: ThumbnailFormat.png,
-                                    hs.selectAlbumList[index],
-                                    fit: BoxFit.cover,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20,right: 20),
+                    child: Container(
+                      width: Get.width,
+                      height: 100,
+                      child: ReorderableListView.builder(
+                        itemCount: hs.selectAlbumList.length,
+                        scrollDirection: Axis.horizontal,
+                        onReorder: (int oldIndex, int newIndex) {
+                          if (newIndex > oldIndex) {
+                            newIndex -= 1;
+                          }
+                          final item = hs.selectAlbumList.removeAt(oldIndex);
+                          hs.selectAlbumList.insert(newIndex, item);
+                        },
+                        itemBuilder: (context, index) {
+                          return Row(
+                            key: ValueKey(hs.selectAlbumList[index]), // ReorderableListView requires a unique key
+                            children: [
+                              Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(4),
+                                    child: AssetEntityImage(
+                                      gaplessPlayback: true,
+                                      filterQuality: FilterQuality.high,
+                                      isOriginal: false,
+                                      width: 80,
+                                      height: 80,
+                                      thumbnailSize: ThumbnailSize.square(isScoll ? 500 : 25),
+                                      thumbnailFormat: ThumbnailFormat.png,
+                                      hs.selectAlbumList[index],
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                Positioned(
-                                  top: 6,
-                                  right: 6,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      hs.removeFromSelectedAlbum(hs.selectAlbumList[index]);
-                                    },
-                                    child: SvgPicture.asset('assets/icon/xicon.svg'),
+                                  Positioned(
+                                    top: 6,
+                                    right: 6,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        hs.removeFromSelectedAlbum(hs.selectAlbumList[index]);
+                                      },
+                                      child: SvgPicture.asset('assets/icon/xicon.svg'),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 8),
-                          ],
-                        );
-                      },
+                                ],
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 8),
                   Text('길게 눌러 순서를 변경할 수 있어요.', style: f14Gray500w400),
+                  const SizedBox(height: 8),
+                  Spacer(),
+                  BlackCountContainer(onTap: (){},title: '선택완료',count: hs.selectAlbumList.length,),
+
                 ],
               ),
             )

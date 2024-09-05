@@ -2,7 +2,8 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:tripStory/screen/tripHistory/album/modal/albumModel.dart';
+import '../screen/trip/tripHistory/album/modal/albumModel.dart';
+
 
 class HistoryState extends GetxController{
   AlbumModel? albumModel;

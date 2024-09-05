@@ -5,10 +5,12 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/controller/jPlanState.dart';
-import 'package:tripStory/screen/tripPlan/typeJ/addPlanPage.dart';
 import 'package:tripStory/util/color.dart';
-import '../../../component/button.dart';
-import '../../../util/font.dart';
+
+import '../../../../component/button.dart';
+import '../../../../util/font.dart';
+import 'addPlanPage.dart';
+
 
 class JSchedulePage extends StatefulWidget {
   const JSchedulePage({super.key});

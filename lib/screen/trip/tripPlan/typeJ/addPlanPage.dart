@@ -4,10 +4,12 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/appbar.dart';
-import 'package:tripStory/screen/tripPlan/typeJ/searchTripPlace.dart';
-import '../../../controller/jPlanState.dart';
-import '../../../util/color.dart';
-import '../../../util/font.dart';
+import 'package:tripStory/screen/trip/tripPlan/typeJ/searchTripPlace.dart';
+import '../../../../controller/jPlanState.dart';
+import '../../../../util/color.dart';
+import '../../../../util/font.dart';
+
+
 
 class AddPlanPage extends StatefulWidget {
   const AddPlanPage({super.key});
@@ -123,7 +125,6 @@ class _AddPlanPageState extends State<AddPlanPage> {
                 GestureDetector(
                   onTap: (){
                     Get.to(()=>SearchTripPlace());
-          
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -175,20 +176,26 @@ class _AddPlanPageState extends State<AddPlanPage> {
                   padding: const EdgeInsets.only(left: 16,bottom: 4),
                   child: Text('일정 입력', style: f14gray400w700,),
                 ),
-                TextFormField(
-                  controller: planTitleCon,
-                  textAlignVertical: TextAlignVertical.center,
-                  style: f16gray800w600,
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    isDense: true,
-                    contentPadding:EdgeInsets.symmetric(vertical: 15,horizontal: 16),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: gray200),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: gray200),
+                GestureDetector(
+                  onTap: (){
+                    print('3123');
+                  },
+                  child:
+                  TextFormField(
+                    controller: planTitleCon,
+                    textAlignVertical: TextAlignVertical.center,
+                    style: f16gray800w600,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      isDense: true,
+                      contentPadding:EdgeInsets.symmetric(vertical: 15,horizontal: 16),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: gray200),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: gray200),
+                      ),
                     ),
                   ),
                 ),

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
-
 import '../../../component/bottomContainer.dart';
 
 class TripCalendar extends StatefulWidget {
@@ -44,12 +43,15 @@ class _TripCalendarState extends State<TripCalendar> {
                       todayColor: Colors.red,
                       dayMaxWidth: 64,
                       dayBorderRadius : BorderRadius.circular(4),
+                      controlsHeight: 0,
                       // 오늘 날짜의 텍스트 스타일
                       todayTextStyle: f14Whitew700,
                       monthTextStyle: f16gray800w700,
                       selectedDayTextStyle: f14Whitew700,
+                      controlsTextStyle: f12gray900w700,
                       hideScrollViewTopHeader: true,
                       weekdayLabels: ['일', '월', '화', '수', '목', '금', '토'],
+                        weekdayLabelTextStyle: f12gray900w700,
                         calendarViewScrollPhysics: const ScrollPhysics(),
                         calendarType: CalendarDatePicker2Type.range,
                      calendarViewMode: CalendarDatePicker2Mode.scroll,

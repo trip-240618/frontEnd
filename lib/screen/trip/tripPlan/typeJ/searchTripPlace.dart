@@ -5,10 +5,9 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/controller/jPlanState.dart';
-import 'package:tripStory/screen/tripPlan/typeJ/addPlanPage.dart';
 import 'package:tripStory/util/color.dart';
+import '../../../../util/font.dart';
 
-import '../../../util/font.dart';
 
 class SearchTripPlace extends StatefulWidget {
   const SearchTripPlace({super.key});
@@ -39,7 +38,6 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: GooglePlaceAutoCompleteTextField(
         textStyle: f14gray600w500,
-
         textEditingController: controller,
         googleAPIKey: "AIzaSyCbQF5gcJSoIrrWO1NWK5eNuFZHRzo-cpc",
         inputDecoration: InputDecoration(
