@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:popover/popover.dart';
 import 'package:tripStory/app/api/testApi.dart';
 import 'package:tripStory/app/api/userApi.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
@@ -121,7 +122,7 @@ class _MainPageState extends State<MainPage> {
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
                     itemCount: 5,
-                    itemBuilder: (context, index) {
+                    itemBuilder: (contexts, index) {
                       return GestureDetector(
                         onTap: (){
                           Get.to(()=>BottomNavigator());
@@ -230,28 +231,48 @@ class _MainPageState extends State<MainPage> {
                                               ],
                                             ),
                                             Spacer(),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      color: gray200,
-                                                      borderRadius: BorderRadius.circular(100)
-                                                  ),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 5),
-                                                    child: Row(
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          'assets/icon/userIcon.svg',
+                                            Builder(
+                                              builder: (context) {
+                                                return Column(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap:(){
+                                                        showPopover(
+                                                          context: context,
+
+                                                          bodyBuilder: (context) =>  ListItems(),
+                                                          onPop: () => print('Popover was popped!'),
+                                                          direction: PopoverDirection.bottom,
+                                                          backgroundColor: Colors.white,
+                                                          width: 200,
+                                                          height: 400,
+                                                          arrowHeight: 15,
+                                                          arrowWidth: 30,
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: gray200,
+                                                            borderRadius: BorderRadius.circular(100)
                                                         ),
-                                                        const SizedBox(width: 5),
-                                                        Text('5',style: f14gray600w700,)
-                                                      ],
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 5),
+                                                          child: Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                'assets/icon/userIcon.svg',
+                                                              ),
+                                                              const SizedBox(width: 5),
+                                                              Text('5',style: f14gray600w700,)
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ),
-                                              ],
+                                                  ],
+                                                );
+                                              }
                                             )
                                           ],
                                         ),
@@ -306,6 +327,61 @@ class _MainPageState extends State<MainPage> {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+class ListItems extends StatelessWidget {
+  const ListItems({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: ListView(
+        padding: const EdgeInsets.all(8),
+        children: [
+          InkWell(
+            onTap: () {
+
+            },
+            child: Container(
+              height: 50,
+              color: Colors.amber[100],
+              child: const Center(child: Text('Entry A')),
+            ),
+          ),
+          const Divider(),
+          Container(
+            height: 50,
+            color: Colors.amber[200],
+            child: const Center(child: Text('Entry B')),
+          ),
+          const Divider(),
+          Container(
+            height: 50,
+            color: Colors.amber[300],
+            child: const Center(child: Text('Entry C')),
+          ),
+          const Divider(),
+          Container(
+            height: 50,
+            color: Colors.amber[400],
+            child: const Center(child: Text('Entry D')),
+          ),
+          const Divider(),
+          Container(
+            height: 50,
+            color: Colors.amber[500],
+            child: const Center(child: Text('Entry E')),
+          ),
+          const Divider(),
+          Container(
+            height: 50,
+            color: Colors.amber[600],
+            child: const Center(child: Text('Entry F')),
+          ),
+        ],
       ),
     );
   }
