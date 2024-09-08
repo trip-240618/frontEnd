@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/textForm.dart';
 import 'package:tripStory/controller/mainState.dart';
@@ -124,6 +124,10 @@ void bottomModel(BuildContext context) {
       });
 }
 
+void sendBottomModal(BuildContext context) {
+  showModalBottomSheet(
+      context: context,
+
 void timeBottomModel(BuildContext context, DateTime selectedTime) {
   showModalBottomSheet(
       context: context,
@@ -137,6 +141,57 @@ void timeBottomModel(BuildContext context, DateTime selectedTime) {
               },
               child: Container(
                 width: Get.width,
+                height: 245,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: new BorderRadius.only(
+                        topLeft: const Radius.circular(25.0),
+                        topRight: const Radius.circular(25.0))
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20,right: 20,top: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 50,
+                          height: 5,
+                          decoration: BoxDecoration(
+                              color:greyColor
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      Text('초대 코드를 복사했어요',style: f18gray800w700,),
+                      const SizedBox(height: 20,),
+                      Container(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset('assets/icon/kakao.svg'),
+                              const SizedBox(width: 20),
+                              Text('카카오톡으로 공유하기',style: f15gray800w600,)
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset('assets/icon/copy.svg'),
+                              const SizedBox(width: 20),
+                              Text('초대 코드 복사하기',style: f15gray800w600,)
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 height: 270,
                 decoration: BoxDecoration(
                     color: Color(0xffF7F6FB),

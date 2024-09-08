@@ -1,6 +1,7 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
@@ -19,6 +20,8 @@ class _TripCalendarState extends State<TripCalendar> {
     // DateTime(1999, 5, 6),
     // DateTime(1999, 5, 21),
   ];
+  DateTime? startTime;
+  DateTime? endTime;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
