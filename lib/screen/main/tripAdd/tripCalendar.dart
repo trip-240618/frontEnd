@@ -40,7 +40,7 @@ class _TripCalendarState extends State<TripCalendar> {
                       // 선택된 날짜들 사이의 색
                       dayTextStyle: f14gray800w700,
                       selectedRangeHighlightColor:gray200,
-                      todayColor: Colors.red,
+                      todayColor: Color(0xff647AED),
                       dayMaxWidth: 64,
                       dayBorderRadius : BorderRadius.circular(4),
                       controlsHeight: 0,
@@ -51,7 +51,7 @@ class _TripCalendarState extends State<TripCalendar> {
                       controlsTextStyle: f12gray900w700,
                       hideScrollViewTopHeader: true,
                       weekdayLabels: ['일', '월', '화', '수', '목', '금', '토'],
-                        weekdayLabelTextStyle: f12gray900w700,
+                        weekdayLabelTextStyle: f12gray400w500,
                         calendarViewScrollPhysics: const ScrollPhysics(),
                         calendarType: CalendarDatePicker2Type.range,
                      calendarViewMode: CalendarDatePicker2Mode.scroll,
@@ -62,7 +62,13 @@ class _TripCalendarState extends State<TripCalendar> {
           ],
         ),
       ),
-      bottomSheet: BlackBottomContainer(onTap: (){}, title: '선택 완료')
+      bottomSheet: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
+          child: BlackBottomContainer(onTap: (){}, title: '저장'),
+        ),
+      ),
     );
   }
 }

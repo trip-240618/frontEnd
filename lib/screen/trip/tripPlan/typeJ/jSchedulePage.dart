@@ -9,7 +9,7 @@ import 'package:tripStory/util/color.dart';
 
 import '../../../../component/button.dart';
 import '../../../../util/font.dart';
-import 'addPlanPage.dart';
+import 'addPlan/addPlanPage.dart';
 
 
 class JSchedulePage extends StatefulWidget {

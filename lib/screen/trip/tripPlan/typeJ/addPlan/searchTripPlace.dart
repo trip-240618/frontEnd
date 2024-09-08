@@ -6,7 +6,7 @@ import 'package:google_places_flutter/model/prediction.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/util/color.dart';
-import '../../../../util/font.dart';
+import '../../../../../util/font.dart';
 
 
 class SearchTripPlace extends StatefulWidget {
