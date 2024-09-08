@@ -85,7 +85,14 @@ const TextStyle f14Gray400w500 = TextStyle(
   fontWeight: FontWeight.w500,
   fontFamily: 'Pretendard',
 );
-
+const TextStyle f14Gray800w500 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  height: 20.01 / 14,
+  letterSpacing: 0.0145 * 14,
+  color: gray800
+);
 const TextStyle f14Gray500w500 = TextStyle(
   fontSize: 14,
   color: gray500,
@@ -142,6 +149,14 @@ const TextStyle f12gray600w600 = TextStyle(
   height: 16.01 / 12,
   letterSpacing: 0.0252 * 12,
 );
+const TextStyle f12whitew600 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 12,
+  fontWeight: FontWeight.w600,
+  height: 16.01 / 12,
+  letterSpacing: 0.0252 * 12,
+  color:Colors.white
+);
 const TextStyle f15gray800w600 = TextStyle(
   fontFamily: 'Pretendard',
   fontSize: 15,
@@ -155,6 +170,15 @@ const TextStyle f16gray300w600 = TextStyle(
   color: gray300,
   fontWeight: FontWeight.w600,
   fontFamily: 'Pretendard',
+);
+
+const TextStyle f12gray300w600 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 12,
+  fontWeight: FontWeight.w600,
+  height: 16.01 / 12,
+  letterSpacing: 0.0252 * 12,
+  color: gray300
 );
 const TextStyle f16darkGray3w600 = TextStyle(
   fontSize: 16,
@@ -219,6 +243,14 @@ const TextStyle f14redw600 = TextStyle(
 
 
 /// Bold
+const TextStyle f12blueW700 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 12,
+  fontWeight: FontWeight.w700,
+  height: 16.01 / 12,
+  letterSpacing: 0.0252 * 12,
+  color: pastelBlue
+);
 const TextStyle f12gray400W700 = TextStyle(
   fontSize: 12,
   color: gray400,
@@ -250,36 +282,42 @@ const TextStyle f14gray600w700 =TextStyle(
   fontFamily: 'Pretendard',
   fontSize: 14,
   color: gray600,
-  fontWeight: FontWeight.w700,  // Bold corresponds to FontWeight.w700
-  height: 20.01 / 14,  // line-height divided by font-size
-  letterSpacing: 0.0145 * 14,  // letter-spacing in logical pixels
-);
-const TextStyle f14Whitew700 = TextStyle(
-  fontSize: 14,
-  color: Colors.white,
   fontWeight: FontWeight.w700,
-  fontFamily: 'Pretendard',
-  height: 1.5,
+  height: 20.01 / 14,
+  letterSpacing: 0.0145 * 14,
 );
+const TextStyle f14Whitew700 =  TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 14,
+  fontWeight: FontWeight.w700,
+  height: 20.01 / 14,
+  letterSpacing: 0.0145 * 14,
+  color: Colors.white
+);
+
 const TextStyle f14Greenw700 = TextStyle(
   fontFamily: 'Pretendard',
   fontSize: 14,
   color: greenColor,
-  fontWeight: FontWeight.w700,  // 700 corresponds to 'Bold'
-  height: 20.01 / 14,  // line-height divided by font-size
-  letterSpacing: 0.0145 * 14,  // letter-spacing in logical pixels
+  fontWeight: FontWeight.w700,
+  height: 20.01 / 14,
+  letterSpacing: 0.0145 * 14,
 );
 const TextStyle f14gray400w700 = TextStyle(
-  fontSize: 14,
-  color: gray400,
-  fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
+  fontSize: 14,
+  fontWeight: FontWeight.w700,
+  height: 20.01 / 14,
+  letterSpacing: 0.0145 * 14,
+  color: gray400
 );
+
 const TextStyle f14gray800w700 = TextStyle(
-  fontSize: 14,
-  color: gray800,
-  fontWeight: FontWeight.w700,
-  fontFamily: 'Pretendard',
+  fontFamily: 'Pretendard',            // Pretendard 폰트 적용
+  fontSize: 14,                        // 폰트 크기 14px
+  fontWeight: FontWeight.w700,         // font-weight: 700 (Bold)
+  height: 20.01 / 14,                  // line-height: 20.01px을 height로 설정
+  letterSpacing: 0.0145 * 14,          // letter-spacing을 em 단위로 변환하여 적용
 );
 const TextStyle f16gray400w700 = TextStyle(
   fontSize: 16,
@@ -343,6 +381,14 @@ const TextStyle f16gray800w700 = TextStyle(
   fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
   height: 1.2,
+);
+const TextStyle f18gray800w700 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 18,
+  fontWeight: FontWeight.w700,
+  height: 26.01 / 18,
+  letterSpacing: -0.0002 * 18,
+  color: gray800
 );
 const TextStyle f20gray800w700 = TextStyle(
   fontSize: 20,

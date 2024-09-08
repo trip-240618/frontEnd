@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/controller/mainState.dart';
-
 import '../../../component/main/typeChoose.dart';
 import '../../../component/textForm.dart';
 import '../../../util/font.dart';
