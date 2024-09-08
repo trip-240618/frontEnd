@@ -35,60 +35,43 @@ class _TripCalendarState extends State<TripCalendar> {
             Text('여행 시작일과 종료일을',style: f20gray900w700,),
             Text('설정해 주세요',style: f20gray900w700,),
             const SizedBox(height: 30,),
-            // Expanded(
-            //   child: Padding(
-            //     padding: const EdgeInsets.symmetric(horizontal: 6),
-            //     child: CalendarDatePicker2(
-            //         config: CalendarDatePicker2Config(
-            //           // 선택된 날짜들 사이의 색
-            //           dayTextStyle: f14gray800w700,
-            //           selectedRangeHighlightColor:gray200,
-            //           // todayColor: Colors.red,
-            //           dayMaxWidth: 64,
-            //           dayBorderRadius : BorderRadius.circular(4),
-            //           controlsHeight: 0,
-            //           // 오늘 날짜의 텍스트 스타일
-            //           todayTextStyle: f14Whitew700,
-            //           monthTextStyle: f16gray800w700,
-            //           selectedDayTextStyle: f14Whitew700,
-            //           controlsTextStyle: f12gray900w700,
-            //           hideScrollViewTopHeader: true,
-            //           weekdayLabels: ['일', '월', '화', '수', '목', '금', '토'],
-            //             weekdayLabelTextStyle: f12gray900w700,
-            //             calendarViewScrollPhysics: const ScrollPhysics(),
-            //             calendarType: CalendarDatePicker2Type.range,
-            //          calendarViewMode: CalendarDatePicker2Mode.scroll,
-            //         ),
-            //         value: _rangeDatePickerValueWithDefaultValue),
-            //   ),
-            // )
-        Expanded(
-          child: SfDateRangePicker(
-            onSelectionChanged: (de) {
-              // print('${de.value.startDate}');
-              // print('${de.value.endDate}');
-              startTime = de.value.startDate;
-              endTime = de.value.endDate;
-              // setState(() {});
-            },
-            selectionShape: DateRangePickerSelectionShape.circle,
-            enableMultiView: true,
-            navigationDirection: DateRangePickerNavigationDirection.vertical,
-            navigationMode: DateRangePickerNavigationMode.scroll,
-            selectionMode: DateRangePickerSelectionMode.range,
-            allowViewNavigation: false,
-            backgroundColor: Colors.transparent,
-            rangeSelectionColor: Colors.blue,
-            extendableRangeSelectionDirection: ExtendableRangeSelectionDirection.backward,
-            cellBuilder: (context, cellDetails) {
-              return Container(child: Text('${cellDetails.date.day}'));
-            },
-          ),
-        ) 
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: CalendarDatePicker2(
+                    config: CalendarDatePicker2Config(
+                      // 선택된 날짜들 사이의 색
+                      dayTextStyle: f14gray800w700,
+                      selectedRangeHighlightColor:gray200,
+                      todayColor: Color(0xff647AED),
+                      dayMaxWidth: 64,
+                      dayBorderRadius : BorderRadius.circular(4),
+                      controlsHeight: 0,
+                      // 오늘 날짜의 텍스트 스타일
+                      todayTextStyle: f14Whitew700,
+                      monthTextStyle: f16gray800w700,
+                      selectedDayTextStyle: f14Whitew700,
+                      controlsTextStyle: f12gray900w700,
+                      hideScrollViewTopHeader: true,
+                      weekdayLabels: ['일', '월', '화', '수', '목', '금', '토'],
+                        weekdayLabelTextStyle: f12gray400w500,
+                        calendarViewScrollPhysics: const ScrollPhysics(),
+                        calendarType: CalendarDatePicker2Type.range,
+                     calendarViewMode: CalendarDatePicker2Mode.scroll,
+                    ),
+                    value: _rangeDatePickerValueWithDefaultValue),
+              ),
+            )
+          ],
         ),
       ),
-      bottomSheet: BlackBottomContainer(onTap: (){}, title: '선택 완료')
+      bottomSheet: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
+          child: BlackBottomContainer(onTap: (){}, title: '저장'),
+        ),
+      ),
     );
   }
 }

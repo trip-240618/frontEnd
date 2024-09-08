@@ -13,6 +13,7 @@ class JPlanState extends GetxController{
   final placeLat = 0.0.obs;
   final placeLng = 0.0.obs;
   final placeName = ''.obs;
+  final selectIdx = 0.obs; /// (탭바 클릭)
 
 
   @override

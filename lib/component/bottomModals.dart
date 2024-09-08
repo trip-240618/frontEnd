@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -127,6 +128,10 @@ void sendBottomModal(BuildContext context) {
   showModalBottomSheet(
       context: context,
 
+void timeBottomModel(BuildContext context, DateTime selectedTime) {
+  showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
       builder: (builder) {
         return StatefulBuilder(
           builder: (context, StateSetter setState) {
@@ -187,6 +192,50 @@ void sendBottomModal(BuildContext context) {
                       )
                     ],
                   ),
+                height: 270,
+                decoration: BoxDecoration(
+                    color: Color(0xffF7F6FB),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: Get.width,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: gray900,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: Row(
+                          children: [
+                            Text('시간 입력', style: f14whitew500,),
+                            Spacer(),
+                            GestureDetector(
+                                onTap: (){Get.back();},
+                                child: SvgPicture.asset('assets/icon/close.svg', color: Colors.white,)),
+                          ],
+                        ),),
+
+                    ),
+                    Expanded(
+                      child: Container(
+                        width: Get.width,
+                        child: CupertinoDatePicker(
+                          mode: CupertinoDatePickerMode.time,
+                          initialDateTime: selectedTime,
+                          onDateTimeChanged: (DateTime newDateTime) {
+                            setState(() {
+                              selectedTime = newDateTime;
+                            });
+                          },
+                          use24hFormat: false,
+                        ),
+                      ),
+                    ),
+
+                  ],
                 ),
               ),
             );
