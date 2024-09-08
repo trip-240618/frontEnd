@@ -30,23 +30,17 @@ class BlackBottomContainer extends StatelessWidget {
   BlackBottomContainer({Key? key, required this.onTap, required this.title}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
-        child: GestureDetector(
-          onTap: onTap,
-          child: Container(
-            width: Get.width,
-            height: 58,
-            decoration: BoxDecoration(
-                color: gray900,
-                borderRadius: BorderRadius.circular(4)
-            ),
-            child: Center(child: Text(title,style: f16Whitew700,)),
-
-          ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: Get.width,
+        height: 58,
+        decoration: BoxDecoration(
+            color: gray900,
+            borderRadius: BorderRadius.circular(4)
         ),
+        child: Center(child: Text(title,style: f16Whitew700,)),
+
       ),
     );
   }
