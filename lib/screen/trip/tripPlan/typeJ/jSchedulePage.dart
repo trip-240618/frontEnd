@@ -107,12 +107,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
                               ),
                             ),
                           ),
-                          // SvgPicture.asset(
-                          //   width: 25,
-                          //   height: 25,
-                          //   fit: BoxFit.fill,
-                          //   'assets/icon/user.svg',
-                          // ),
                           index==9?SizedBox():SizedBox(width: 4)
                         ],
                       );
@@ -126,7 +120,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
           Padding(
             padding: const EdgeInsets.only(left: 20,right: 20),
             child: Container(
-              height: 72,
+              height: 54,
               child: ListView.builder(
                 controller: scrollController,
                 scrollDirection: Axis.horizontal,
@@ -138,25 +132,31 @@ class _JSchedulePageState extends State<JSchedulePage> {
                     children: [
                       selectIdx == index
                           ?  Column(
-                        children: [
-                            Text('Day ${'${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}'}',style: f16gray400w700),
-                            const SizedBox(height: 4),
-                            Expanded(
-                              child: Container(
-                              width:40,
-                              decoration: BoxDecoration(
-                                  color: gray400,
-                                  borderRadius: BorderRadius.circular(4)
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f12whitew500,),
-                                    Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f14Whitew700,)
-                                  ],
-                                ),
+                            mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                            width:36,
+                            height: 54,
+                            decoration: BoxDecoration(
+                                color: Color(0xff647AED),
+                                borderRadius: BorderRadius.circular(100)
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 4,top: 4),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f12whitew600,),
+                                  Spacer(),
+                                  Container(
+                                      width: 28,
+                                      height: 28,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white
+                                      ),
+                                      child: Center(child: Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f14gray800w700,)))
+                                ],
                               ),
                             ),
                           )
@@ -168,26 +168,28 @@ class _JSchedulePageState extends State<JSchedulePage> {
                              scrollToIndex(index);
                              setState(() {});
                             },
-                            child: Column(
-                            children: [
-                              Expanded(
-                               child: Container(
-                                width:40,
-                                color:Colors.transparent,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f12Gray400w500,),
-                                      Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f14gray400w700,)
-                                    ],
-                                  ),
+                            child: Container(
+                              width:36,
+                              height: 54,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 4,top: 4),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f12gray300w600,),
+                                    Spacer(),
+                                    Container(
+                                        width: 28,
+                                        height: 28,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: gray300
+                                        ),
+                                        child: Center(child: Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f14Whitew700,)))
+                                  ],
                                 ),
                               ),
-                             )
-                            ],
-                          ),
+                            ),
                         ),
                       const SizedBox(width: 12)
                     ],
@@ -236,14 +238,29 @@ class _JSchedulePageState extends State<JSchedulePage> {
                       js.isSorting.value = !js.isSorting.value;
                     },
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SvgPicture.asset('assets/icon/sort.svg',colorFilter:
+                        Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: pastelBlue, // #67E299 색상
+                                width: 1.5, // 1.5px 두께
+                              ),
+                              borderRadius: BorderRadius.circular(100)
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
+                            child: Text('D-31',style: f12blueW700,),
+                          ),
+                        ),
+                        Spacer(),
+                        SvgPicture.asset('assets/icon/change.svg',colorFilter:
                         ColorFilter.mode(
                           js.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
                           BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
                         ),),
-                        Text('편집',style: js.isSorting.value?f12Gray600w500:f12Gray400w500,)
+                        const SizedBox(width: 4,),
+                        Text('순서변경',style: js.isSorting.value?f12Gray600w500:f12Gray400w500,)
                       ],
                     ),
                   ),
