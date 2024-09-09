@@ -2,14 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/component/textForm.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/main/tripAdd/tirpDirectSearch.dart';
 import '../screen/main/tripAdd/tripSearch.dart';
 import '../util/color.dart';
 import '../util/font.dart';
 import 'bottomContainer.dart';
-import 'main/typeChoose.dart';
+
 
 void bottomModel(BuildContext context) {
   final ms = Get.put(MainState());
@@ -28,10 +27,10 @@ void bottomModel(BuildContext context) {
                 width: Get.width,
                 height: Get.height * 0.8,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(25.0),
-                  topRight: const Radius.circular(25.0))
+                    color: Colors.white,
+                    borderRadius: new BorderRadius.only(
+                        topLeft: const Radius.circular(25.0),
+                        topRight: const Radius.circular(25.0))
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10,bottom: 44),
@@ -44,7 +43,7 @@ void bottomModel(BuildContext context) {
                           width: 50,
                           height: 5,
                           decoration: BoxDecoration(
-                            color:greyColor
+                              color:greyColor
                           ),
                         ),
                       ),
@@ -92,7 +91,7 @@ void bottomModel(BuildContext context) {
                                 child: Center(
                                   child: Text(
                                     '직접 입력',
-                                      style: ms.tabController.index==1?f16gray600w700:f16gray300w600,
+                                    style: ms.tabController.index==1?f16gray600w700:f16gray300w600,
                                   ),
                                 ),
                               ),
@@ -112,7 +111,7 @@ void bottomModel(BuildContext context) {
                       ),
                       const SizedBox(height: 10),
                       BottomContainer(onTap: ()async{
-                       await ms.saveDestination();
+                        await ms.saveDestination();
                       },title: '저장')
                     ],
                   ),
@@ -124,14 +123,74 @@ void bottomModel(BuildContext context) {
       });
 }
 
-void sendBottomModal(BuildContext context) {
-  showModalBottomSheet(
-      context: context,
-
 void timeBottomModel(BuildContext context, DateTime selectedTime) {
   showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      builder: (builder) {
+        return StatefulBuilder(
+          builder: (context, StateSetter setState) {
+            return GestureDetector(
+              onTap: (){
+                FocusScope.of(context).unfocus();
+              },
+              child: Container(
+                width: Get.width,
+                height: 270,
+                decoration: BoxDecoration(
+                  color: Color(0xffF7F6FB),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: Get.width,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: gray900,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: Row(
+                          children: [
+                            Text('시간 입력', style: f14whitew500,),
+                            Spacer(),
+                            GestureDetector(
+                                onTap: (){Get.back();},
+                                child: SvgPicture.asset('assets/icon/close.svg', color: Colors.white,)),
+                          ],
+                        ),),
+
+                    ),
+                    Expanded(
+                      child: Container(
+                        width: Get.width,
+                        child: CupertinoDatePicker(
+                          mode: CupertinoDatePickerMode.time,
+                          initialDateTime: selectedTime,
+                          onDateTimeChanged: (DateTime newDateTime) {
+                            setState(() {
+                              selectedTime = newDateTime;
+                            });
+                          },
+                          use24hFormat: false,
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      });
+}
+void sendBottomModal(BuildContext context) {
+  showModalBottomSheet(
+      context: context,
+
       builder: (builder) {
         return StatefulBuilder(
           builder: (context, StateSetter setState) {
@@ -192,50 +251,6 @@ void timeBottomModel(BuildContext context, DateTime selectedTime) {
                       )
                     ],
                   ),
-                height: 270,
-                decoration: BoxDecoration(
-                    color: Color(0xffF7F6FB),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: Get.width,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: gray900,
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        child: Row(
-                          children: [
-                            Text('시간 입력', style: f14whitew500,),
-                            Spacer(),
-                            GestureDetector(
-                                onTap: (){Get.back();},
-                                child: SvgPicture.asset('assets/icon/close.svg', color: Colors.white,)),
-                          ],
-                        ),),
-
-                    ),
-                    Expanded(
-                      child: Container(
-                        width: Get.width,
-                        child: CupertinoDatePicker(
-                          mode: CupertinoDatePickerMode.time,
-                          initialDateTime: selectedTime,
-                          onDateTimeChanged: (DateTime newDateTime) {
-                            setState(() {
-                              selectedTime = newDateTime;
-                            });
-                          },
-                          use24hFormat: false,
-                        ),
-                      ),
-                    ),
-
-                  ],
                 ),
               ),
             );
