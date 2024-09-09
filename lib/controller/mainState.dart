@@ -9,7 +9,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
 
   /// tripRoomAdd
   late TabController tabController; /// 탭
-  TextEditingController tripName = TextEditingController();
+
   final ImagePicker _picker = ImagePicker();
   Rx<XFile?> pickedImage = Rx<XFile?>(null);
   final tripType = ''.obs; /// 여행타입 선택
@@ -28,7 +28,6 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
 
   @override
   void onClose() {
-    tripName.dispose();
     tabController.dispose();
     tripCitySearchCon.dispose();
     tripDirectSearchCon.dispose();
@@ -37,7 +36,6 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
 
   /// 여행방 만들기 변수 초기화
   Future<void> roomReset()async{
-    tripName.text='';
     selectedCity = '';
     tripLeaveType.value = '';
     pickedImage.value =null;
@@ -85,8 +83,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
 
   /// 여행방 add
   Future<bool> createRoom() async {
-   if(tripName.text.trim().isEmpty
-       || tripType.value==''
+   if(tripType.value==''
        ||tripDestination.value ==''
        ||tripDate.value==''){
      print('빈칸을 확인해주세요');

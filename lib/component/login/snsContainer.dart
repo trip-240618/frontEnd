@@ -44,7 +44,7 @@ class GoogleContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child:   Container(
+      child: Container(
           width: Get.width,
           height: 60,
           decoration: BoxDecoration(
