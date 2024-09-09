@@ -6,6 +6,9 @@ import 'package:popover/popover.dart';
 import 'package:tripStory/app/api/testApi.dart';
 import 'package:tripStory/app/api/userApi.dart';
 import 'package:tripStory/component/bottomModals.dart';
+import 'package:tripStory/screen/main/bookMark.dart';
+import 'package:tripStory/screen/main/commingTrip.dart';
+import 'package:tripStory/screen/main/pastTrip.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/mainState.dart';
@@ -112,181 +115,11 @@ class _MainPageState extends State<MainPage> {
               ],
             ),
             const SizedBox(height: 10),
-            // EmptyScreen(context),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: 5,
-                    itemBuilder: (contexts, index) {
-                      return GestureDetector(
-                        onTap: (){
-                          Get.to(()=>BottomNavigator());
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              width: Get.width,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                  borderRadius:BorderRadius.circular(4)
-                              ),
-                              child: Stack(
-                                children: [
-                                  SvgPicture.asset('assets/icon/ticket.svg',
-                                      width: Get.width,
-                                      height:Get.height,
-                                      fit: BoxFit.fill),
-                                  Positioned(
-                                      left: 16,
-                                      top: 8,
-                                      right: 16,
-                                      child: Container(
-                                        width: Get.width,
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color: greenColor, // #67E299 색상
-                                                    width: 1.5, // 1.5px 두께
-                                                  ),
-                                                  borderRadius: BorderRadius.circular(100)
-                                              ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
-                                                child: Text('D-31',style: f14Greenw700,),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 6),
-                                            Text('2024.04.01 ~ 2024.04.07',style: f12Gray800w500,),
-                                            Spacer(),
-                                            GestureDetector(
-                                              onTap: (){
-                                                print('??');
-                                                sendBottomModal(context);
-                                              },
-                                                child: SvgPicture.asset('assets/icon/send.svg',color: gray900)),
-                                            const SizedBox(width: 12),
-                                            SvgPicture.asset('assets/icon/bookmark.svg'),
-                                          ],
-                                        ),
-                                      )
-                                  ),
-                                  Positioned(
-                                      left: 16,
-                                      top: 58,
-                                      right: 16,
-                                      bottom: 14,
-                                      child: Container(
-                                        width: Get.width,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width:66,
-                                              height: 66,
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(4),
-                                                child: CachedNetworkImage(
-                                                  imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2F6sYlEQ7iIBAkqplhqe3E?alt=media',
-                                                  imageBuilder: (context, imageProvider) => Container(
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                          image: imageProvider,
-                                                          fit: BoxFit.fill
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  // placeholder: (context, url) => const CircularProgressIndicator(),
-                                                  // errorWidget: (context, url, error) => const Icon(Icons.error),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Container(
-                                                      width: 20,
-                                                      height: 20,
-                                                      decoration: BoxDecoration(
-                                                        color: greenColor,
-                                                        shape: BoxShape.circle
-                                                      ),
-                                                      child: Center(child: Text('J',style: f12Whitew700,))
-                                                    ),
-                                                    const SizedBox(width: 6),
-                                                    Text('5월 도쿄 여행방',style: f15gray800w600,)
-                                                  ],
-                                                ),
-                                                Spacer(),
-                                                Text('일본',style: f12gray600w600,),
-                                              ],
-                                            ),
-                                            Spacer(),
-                                            Builder(
-                                              builder: (context) {
-                                                return Column(
-                                                  mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap:(){
-                                                        showPopover(
-                                                          context: context,
-                                                          bodyBuilder: (context) => ListItems(),
-                                                          onPop: () => print('Popover was popped!'),
-                                                          direction: PopoverDirection.bottom,
-                                                          width: 167,
-                                                          height: 250,
-                                                          contentDyOffset: 10, // Popover를 더 가까이 붙이기
-                                                          arrowHeight: 6,
-                                                          arrowWidth: 10
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color: gray200,
-                                                            borderRadius: BorderRadius.circular(100)
-                                                        ),
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 5),
-                                                          child: Row(
-                                                            children: [
-                                                              SvgPicture.asset(
-                                                                'assets/icon/userIcon.svg',
-                                                              ),
-                                                              const SizedBox(width: 5),
-                                                              Text('5',style: f14gray600w700,)
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              }
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                  )
-                                ],
-                              ),
-                            ),
-                            index==4?SizedBox():SizedBox(height: 12)
-                          ],
-                        ),
-                      );
-                    }),
-              ),
-            ),
+            Obx(()=>ms.selectIdx.value==0
+                ? CommingTrip()
+                : ms.selectIdx.value ==1
+                ?  PastTrip()
+                :  BookMark()),
             const SizedBox(height: 10,),
             Row(
               children: [
@@ -300,10 +133,12 @@ class _MainPageState extends State<MainPage> {
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                      color: gray200,
+                      color: gray700,
                       borderRadius: BorderRadius.circular(4)
                     ),
-                    child: SvgPicture.asset('assets/icon/chain.svg',fit: BoxFit.none,),
+                    child: SvgPicture.asset('assets/icon/chain.svg'
+                      ,fit: BoxFit.none,
+                       colorFilter: ColorFilter.mode(Colors.white,BlendMode.srcIn)),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -315,10 +150,10 @@ class _MainPageState extends State<MainPage> {
                     child: Container(
                       height: 60,
                       decoration: BoxDecoration(
-                          color: gray500,
+                          color: gray900,
                           borderRadius: BorderRadius.circular(4)
                       ),
-                      child: Center(child: Text('새 여행방 생성',style: f16Whitew600,)),
+                      child: Center(child: Text('새 여행방 생성',style: f16Whitew700,)),
                     ),
                   ),
                 )
@@ -330,6 +165,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
+
 class ListItems extends StatelessWidget {
   const ListItems({Key? key}) : super(key: key);
 
@@ -342,7 +178,6 @@ class ListItems extends StatelessWidget {
       physics: const ClampingScrollPhysics(),
       itemBuilder: (context, index){
         return Container(
-          width: 167,
           child: Column(
             children: [
               Padding(
@@ -370,11 +205,11 @@ class ListItems extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12,),
-                    Text('허지우',style: f14Gray800w500,),
+                    Expanded(child: Text('허지우우우',style: f14Gray800w500,overflow: TextOverflow.ellipsis,)),
                   ],
                 ),
               ),
-              index==4?SizedBox():Divider()
+              index==4?SizedBox():Divider(color: gray200,)
             ],
           ),
         );
@@ -382,3 +217,93 @@ class ListItems extends StatelessWidget {
     );
   }
 }
+double calculateTextWidth(String text, TextStyle style) {
+  final TextPainter textPainter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    maxLines: 1,
+    textDirection: TextDirection.ltr,
+  )..layout(minWidth: 0, maxWidth: double.infinity);
+
+  return textPainter.size.width;
+}
+
+class TooltipShape extends ShapeBorder {
+  const TooltipShape({
+    this.borderColor = Colors.black,
+    this.borderWidth = 2.0, // 기본 보더 두께를 2로 설정
+    this.borderRadius = const BorderRadius.all(Radius.circular(4.0)), // 각 모서리에 4의 반경 추가
+  });
+
+  final Color borderColor;
+  final double borderWidth;
+  final BorderRadiusGeometry borderRadius;
+
+  @override
+  EdgeInsetsGeometry get dimensions => EdgeInsets.all(borderWidth);
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
+    final Path path = Path();
+    path.addRRect(
+      borderRadius.resolve(textDirection).toRRect(rect).deflate(borderWidth),
+    );
+    return path;
+  }
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+    final Paint paint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = borderWidth;
+
+    final RRect rrect = borderRadius.resolve(textDirection).toRRect(rect);
+    canvas.drawPath(getOuterPath(rect, textDirection: textDirection), paint);
+  }
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+    final Path path = Path();
+    final RRect rrect = borderRadius.resolve(textDirection).toRRect(rect);
+
+    // 화살표 부분을 포함한 경로
+    path.moveTo(50 + borderWidth, borderWidth); // 화살표 오른쪽 상단에서 시작
+    path.lineTo(40 + borderWidth, -10); // 화살표의 뾰족한 부분
+    path.lineTo(30 + borderWidth, borderWidth); // 화살표 왼쪽 상단
+    path.lineTo(borderWidth + 10, borderWidth); // 화살표 왼쪽 상단
+
+    // 왼쪽 상단 모서리 곡선 (radius 4로 설정)
+    path.quadraticBezierTo(borderWidth, borderWidth, borderWidth, 4 + borderWidth);
+
+    // 왼쪽 세로 직선
+    path.lineTo(borderWidth, rrect.height - 4 - borderWidth);
+
+    // 왼쪽 하단 모서리 곡선 (radius 4로 설정)
+    path.quadraticBezierTo(borderWidth, rrect.height - borderWidth, 4 + borderWidth, rrect.height - borderWidth);
+
+    // 하단 직선
+    path.lineTo(rrect.width - 4 - borderWidth, rrect.height - borderWidth);
+
+    // 오른쪽 하단 모서리 곡선 (radius 4로 설정)
+    path.quadraticBezierTo(rrect.width - borderWidth, rrect.height - borderWidth, rrect.width - borderWidth, rrect.height - 4 - borderWidth);
+
+    // 오른쪽 세로 직선
+    path.lineTo(rrect.width - borderWidth, 4 + borderWidth);
+
+    // 오른쪽 상단 모서리 곡선 (radius 4로 설정)
+    path.quadraticBezierTo(rrect.width - borderWidth, borderWidth, rrect.width - 4 - borderWidth, borderWidth);
+
+    // 상단 직선
+    path.lineTo(50 + borderWidth, borderWidth);
+
+    return path;
+  }
+
+  @override
+  ShapeBorder scale(double t) => TooltipShape(
+    borderColor: borderColor,
+    borderWidth: borderWidth * t,
+    borderRadius: BorderRadius.all(Radius.circular(4.0)), // BorderRadius 스케일링
+  );
+}
+
