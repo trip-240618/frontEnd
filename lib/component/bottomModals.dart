@@ -2,14 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/component/textForm.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/main/tripAdd/tirpDirectSearch.dart';
 import '../screen/main/tripAdd/tripSearch.dart';
 import '../util/color.dart';
 import '../util/font.dart';
 import 'bottomContainer.dart';
-import 'main/typeChoose.dart';
+
 
 void bottomModel(BuildContext context) {
   final ms = Get.put(MainState());
@@ -63,7 +62,7 @@ void bottomModel(BuildContext context) {
                         unselectedLabelColor: Colors.red,
                         unselectedLabelStyle: f16gray300w600,
                         controller: ms.tabController,
-                        indicatorColor: gray600,
+                        indicatorColor: gray900,
                         indicatorWeight: 2,
                         indicatorSize: TabBarIndicatorSize.tab,
                         // indicatorPadding: EdgeInsets.only(bottom: 8,top: 12),
@@ -79,7 +78,7 @@ void bottomModel(BuildContext context) {
                                 child: Center(
                                   child: Text(
                                     '여행지 검색',
-                                    style: ms.tabController.index==0?f16gray600w700:f16gray300w600,
+                                    style: ms.tabController.index==0?f16gray900w700:f16gray400w700,
                                   ),
                                 ),
                               ),
@@ -92,7 +91,7 @@ void bottomModel(BuildContext context) {
                                 child: Center(
                                   child: Text(
                                     '직접 입력',
-                                      style: ms.tabController.index==1?f16gray600w700:f16gray300w600,
+                                      style: ms.tabController.index==1?f16gray900w700:f16gray400w700,
                                   ),
                                 ),
                               ),

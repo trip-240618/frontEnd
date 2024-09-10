@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -24,7 +25,16 @@ class TripRoomAddScreen extends StatefulWidget {
 class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
   final ms = Get.put(MainState());
   TextEditingController tripName = TextEditingController(); /// 여행방 입력
+  List colorList = [pastelBlue,mainRed,yellowColor,greenColor];
+  int? selectedColor;
 
+  @override
+  void initState() {
+    Future.delayed(Duration.zero,(){
+      precacheImage(CachedNetworkImageProvider('https://opendata.mofa.go.kr:8444/fileDownload/images/country_images/flags/15/20201125_211109671.gif'), context);
+    });
+    super.initState();
+  }
   @override
   void dispose() {
     tripName.dispose();
@@ -46,9 +56,9 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
         body: Column(
           children: [
             Container(
-              color: Colors.red,
+              color: gray50,
               child: Padding(
-                padding: const EdgeInsets.only(left: 20,right: 20,top: 7),
+                padding: const EdgeInsets.only(left: 20,right: 20,top: 20),
                 child: Column(
                   children: [
                     Obx(()=>GestureDetector(
@@ -152,16 +162,16 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
               child: Container(
                 color: Colors.white,
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.only(left: 20,right: 20,top: 20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('아이콘 컬러',style: f12gray600w600,),
+                      const SizedBox(height: 12),
                       Container(
                         width: Get.width,
-                        height: 44,
-                        color: Colors.green,
+                        height: 24,
                         child: ListView.builder(
                             itemCount: 4,
                             shrinkWrap: true,
@@ -170,12 +180,29 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                             itemBuilder:(context, index) {
                               return Row(
                                 children: [
-                                  Container(
-                                    width: 24,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                        // shape: BoxShape.circle,
-                                        color: pastelBlue
+                                  GestureDetector(
+                                    onTap:(){
+                                      selectedColor = index;
+                                      setState(() {});
+                                    },
+                                    child: selectedColor==index
+                                        ? Container(
+                                          width: 24,
+                                          height: 24,
+                                          decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(color: gray900,width: 2),
+                                          color: colorList[index]
+                                        ),
+                                          child: SvgPicture.asset('assets/icon/checkIcon.svg',fit: BoxFit.none,),
+                                      )
+                                        :  Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: colorList[index]
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 12)
@@ -184,7 +211,9 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                             },
                           ),
                       ),
-                      const SizedBox(height: 20,),
+                      const SizedBox(height: 30),
+                      Text('여행방 타입',style: f12gray600w600,),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
@@ -202,9 +231,35 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                           ),
                         ],
                       ),
+
                       const SizedBox(height: 20),
-                      Text('여행지'),
-                      const SizedBox(height: 4),
+                      Text('여행 날짜',style: f12gray600w600,),
+                      const SizedBox(height: 8),
+                      Obx(() => GestureDetector(
+                        onTap: ()async{
+                          Get.to(()=>TripCalendar());
+                          ms.tripDate.value = '11';
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: gray200)
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 16),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset('assets/icon/date.svg',fit: BoxFit.none, colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
+                                const SizedBox(width: 4),
+                                ms.tripDestination.value ==''?Text('여행 날짜를 입력해 주세요',style: f15gray400w500):Text('${ms.tripDestination.value}')
+                              ],
+                            ),
+                          ),
+                        ),
+                      )),
+                      const SizedBox(height: 20),
+
+                      Text('여행지',style: f12gray600w600,),
+                      const SizedBox(height: 8),
                       Obx(() => GestureDetector(
                         onTap: ()async{
                           await ms.bottomModalReset();
@@ -218,33 +273,9 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                             padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 16),
                             child: Row(
                               children: [
-                                SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none),
+                                SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
                                 const SizedBox(width: 4),
-                                ms.tripDestination.value ==''?Text('여행지를 검색해주세요',style: f14Gray500w400):Text('${ms.tripDestination.value}')
-                              ],
-                            ),
-                          ),
-                        ),
-                      )),
-                      const SizedBox(height: 20),
-                      Text('여행일정'),
-                      const SizedBox(height: 4),
-                      Obx(() => GestureDetector(
-                        onTap: ()async{
-                          Get.to(()=>TripCalendar());
-                          ms.tripDate.value = '11';
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: gray200)
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 16),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none),
-                                const SizedBox(width: 4),
-                                ms.tripDate.value ==''?Text('여행 시작일과 종료일을 입력해주세요',style: f14Gray500w400):Text('${ms.tripDestination.value}')
+                                ms.tripDate.value ==''?Text('여행지를 입력해 주세요',style: f15gray400w500):Text('${ms.tripDestination.value}')
                               ],
                             ),
                           ),
@@ -260,13 +291,13 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
           ],
         ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 20,right: 20,bottom: 44),
-        child: BottomContainer(onTap: ()async{
-          bool isCreate = await ms.createRoom();
-          if(isCreate){
-            CodeDialog(context);
-          }
-          print('text ${isCreate}');
+        padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
+        child: BottomContainer(
+            onTap: ()async{
+              bool isCreate = await ms.createRoom();
+              if(isCreate){
+                CodeDialog(context);
+               }
           // Get.to(()=>ProfileScreen());
         },title: '저장'),
       ),

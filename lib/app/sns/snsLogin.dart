@@ -16,7 +16,7 @@ Future<void> kakaoLogin() async {
       if (error is PlatformException && error.code == 'CANCELED') {
         return;
       }
-      // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
+      /// 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
       try {
         await UserApi.instance.loginWithKakaoAccount();
       } catch (error) {
@@ -95,13 +95,10 @@ Future<void> sendTokenToServer(String accessToken,String refreshToken) async {
   /// 백엔드 서버로 토큰 전송
   var response = await http.get(
     Uri.parse('https://trip-story.site/user/oauth2/callback/kakao?token=${accessToken}'),
-    headers: {
-      HttpHeaders.authorizationHeader: 'Bearer ${accessToken}'
-    },
   );
   if (response.statusCode == 200) {
     await dioClient.saveCookies('${response.headers['set-cookie']}');
-    print('re?? ${response.headers}');
+    print('re?? ${response.body}');
   } else {
     print('서버에 토큰 전송 실패: ${response.statusCode}');
   }
