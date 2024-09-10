@@ -14,9 +14,9 @@ class BottomContainer extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: Get.width,
-        height: 60,
+        height: 58,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(4),
             color: Color(0xffEEEEEE)
         ),
         child: Center(child: Text('${title}',style: f16Gray600w600)),

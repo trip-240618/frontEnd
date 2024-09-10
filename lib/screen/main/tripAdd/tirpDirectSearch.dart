@@ -21,7 +21,7 @@ class _TripSearchPageState extends State<TripDirectSearchPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 32),
-        Text('어디로 떠나실 예정이신가요?',style: f16gray400w700,),
+        Text('여행지 선택',style: f12gray600w600,),
         const SizedBox(height: 8),
         Row(
           children: [
@@ -41,11 +41,11 @@ class _TripSearchPageState extends State<TripDirectSearchPage> {
           ],
         ),
         const SizedBox(height: 32),
-        Text('여행지를 직접 입력해주세요',style: f16gray400w700,),
+        Text('여행지 이름',style: f12gray600w600,),
         const SizedBox(height: 8),
         TextIconFormFields(
             controller: ms.tripDirectSearchCon,
-            hintText: '여행지를 입력해주세요',
+            hintText: '여행지를 직접 입력해주세요',
             icon: 'assets/icon/pencil.svg'),
       ],
     );
