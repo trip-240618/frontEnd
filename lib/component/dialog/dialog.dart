@@ -132,12 +132,9 @@ InviteDialog(BuildContext context, String title, VoidCallback onTap) {
                 ),
               ),
               const SizedBox(height: 68),
-              Center(
-                child: Text(
-                  '초대코드를 입력해주세요',
-                  textAlign: TextAlign.center,
-                  style: f16gray600w700,
-                ),
+              Text(
+                '초대 코드 입력',
+                style: f18Gray800w600,
               ),
               const SizedBox(height: 8),
               TextFormField(

@@ -220,6 +220,23 @@ const TextStyle f12gray300w600 = TextStyle(
   letterSpacing: 0.0252 * 12,
   color: gray300
 );
+const TextStyle f15gray300w600 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 15.0,
+  fontWeight: FontWeight.w600,
+  height: 22.01 / 15.0,
+  letterSpacing: 0.0096 * 15.0,
+  color: gray300
+);
+const TextStyle f15gray900w600 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 15.0,
+  fontWeight: FontWeight.w600,
+  height: 22.01 / 15.0, // line-height / font-size
+  letterSpacing: 0.0096,
+  color: gray900
+);
+
 const TextStyle f16darkGray3w600 = TextStyle(
   fontSize: 16,
   color: darkGray3,
@@ -258,6 +275,15 @@ const TextStyle f16Gray500w600 = TextStyle(
   fontWeight: FontWeight.w600,
   fontFamily: 'Pretendard',
 );
+
+const TextStyle f18Gray800w600 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 18,
+  fontWeight: FontWeight.w600,
+  height: 26.01 / 18,
+  letterSpacing: -0.0002 * 18,
+  color: gray800
+);
 const TextStyle f16Whitew600 = TextStyle(
   fontSize: 16,
   color: Colors.white,
@@ -280,6 +306,7 @@ const TextStyle f14redw600 = TextStyle(
   fontFamily: 'Pretendard',
   height: 1.5,
 );
+
 
 
 /// Bold
@@ -363,26 +390,30 @@ const TextStyle f14gray400w700 = TextStyle(
 );
 
 const TextStyle f14gray800w700 = TextStyle(
-  fontFamily: 'Pretendard',            // Pretendard 폰트 적용
-  fontSize: 14,                        // 폰트 크기 14px
-  fontWeight: FontWeight.w700,         // font-weight: 700 (Bold)
-  height: 20.01 / 14,                  // line-height: 20.01px을 height로 설정
-  letterSpacing: 0.0145 * 14,          // letter-spacing을 em 단위로 변환하여 적용
+  fontFamily: 'Pretendard',
+  fontSize: 14,
+  fontWeight: FontWeight.w700,
+  height: 20.01 / 14,
+  letterSpacing: 0.0145 * 14,
   color: gray800
 );
 const TextStyle f16gray400w700 = TextStyle(
-  fontSize: 16,
-  color: gray400,
-  fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
+  fontSize: 16,
+  fontWeight: FontWeight.w700,
+  height: 1.5,
+  letterSpacing: 0.0057 * 16,
+  color: gray400
 );
 const TextStyle f16gray900w700 = TextStyle(
-  fontSize: 16,
-  color: gray900,
-  fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
+  fontSize: 16,
+  fontWeight: FontWeight.w700,
   height: 1.5,
+  letterSpacing: 0.0057 * 16,
+  color: gray900
 );
+
 const TextStyle f16Whitew700 = TextStyle(
   fontSize: 16,
   color: Colors.white,
