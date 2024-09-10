@@ -165,6 +165,22 @@ const TextStyle f15gray400w500 = TextStyle(
   letterSpacing: 0.0096 * 15.0,
 );
 /// SemiBold
+const TextStyle f11whitew600 = TextStyle(
+    fontFamily: 'Pretendard',
+    fontSize: 11,
+    fontWeight: FontWeight.w600,
+    height: 14.0 / 11.0,
+    letterSpacing: 0.0311*11,
+    color:Colors.white
+);
+const TextStyle f11gray300w600 = TextStyle(
+    fontFamily: 'Pretendard',
+    fontSize: 11,
+    fontWeight: FontWeight.w600,
+    height: 14.0 / 11.0,
+    letterSpacing: 0.0311*11,
+    color:gray300
+);
 const TextStyle f12gray600w600 = TextStyle(
   fontFamily: 'Pretendard',
   fontSize: 12,
@@ -296,6 +312,16 @@ const TextStyle f12Whitew700 = TextStyle(
   fontFamily: 'Pretendard',
   // height: 1.5,
 );
+TextStyle f12mainw700(Color fontColor) {
+  return TextStyle(
+    fontFamily: 'Pretendard',
+    fontSize: 12.0,
+    fontWeight: FontWeight.w700,
+    height: 16.01 / 12,
+    letterSpacing: 0.0252 * 12,
+    color: fontColor,
+  );
+}
 const TextStyle f12gray900w700 = TextStyle(
   fontSize: 12,
   color: gray900,
@@ -342,6 +368,7 @@ const TextStyle f14gray800w700 = TextStyle(
   fontWeight: FontWeight.w700,         // font-weight: 700 (Bold)
   height: 20.01 / 14,                  // line-height: 20.01px을 height로 설정
   letterSpacing: 0.0145 * 14,          // letter-spacing을 em 단위로 변환하여 적용
+  color: gray800
 );
 const TextStyle f16gray400w700 = TextStyle(
   fontSize: 16,
