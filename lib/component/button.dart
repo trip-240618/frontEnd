@@ -23,7 +23,7 @@ class PlusFloatingButton extends StatelessWidget {
       height: 60,
       child: FloatingActionButton(
         onPressed: onPressed,
-        child: SvgPicture.asset('assets/icon/plus.svg'),
+        child: SvgPicture.asset('assets/icon/plus2.svg'),
         shape: CircleBorder(),
         backgroundColor: backgroundColor,
         elevation: 0,
