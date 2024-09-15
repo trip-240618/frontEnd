@@ -9,6 +9,23 @@ import 'color.dart';
 /// Light
 
 /// Regular
+const TextStyle f11Gray600w400 = TextStyle(
+  fontSize: 11,
+  color: gray600,
+  fontWeight: FontWeight.w400,
+  fontFamily: 'Pretendard',
+  height: 14 / 11,
+  letterSpacing: 0.0311,
+);
+
+const TextStyle f11Gray900w400 = TextStyle(
+  fontSize: 11,
+  color: gray900,
+  fontWeight: FontWeight.w400,
+  fontFamily: 'Pretendard',
+  height: 14 / 11,
+  letterSpacing: 0.0311,
+);
 
 const TextStyle f14Gray500w400 = TextStyle(
   fontSize: 14,
@@ -220,6 +237,22 @@ const TextStyle f12gray300w600 = TextStyle(
   letterSpacing: 0.0252 * 12,
   color: gray300
 );
+const TextStyle f11Gray400w600 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 11,
+  fontWeight: FontWeight.w600,
+  height: 14 / 11,
+  letterSpacing: 0.0311 * 11,
+  color: gray400,
+);
+const TextStyle f11Gray800w600 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 11,
+  fontWeight: FontWeight.w600,
+  height: 14 / 11,
+  letterSpacing: 0.0311 * 11,
+  color: gray800,
+);
 const TextStyle f15gray300w600 = TextStyle(
   fontFamily: 'Pretendard',
   fontSize: 15.0,
@@ -349,6 +382,13 @@ TextStyle f12mainw700(Color fontColor) {
     color: fontColor,
   );
 }
+const TextStyle f12Gray800w700 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 12,
+  fontWeight: FontWeight.w700,
+  height: 16.01 / 12,
+  letterSpacing: 0.0252 * 12,
+);
 const TextStyle f12gray900w700 = TextStyle(
   fontSize: 12,
   color: gray900,

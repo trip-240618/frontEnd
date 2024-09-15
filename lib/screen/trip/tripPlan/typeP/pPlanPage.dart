@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,7 @@ class PPlanPage extends StatefulWidget {
 }
 
 class _PPlanPageState extends State<PPlanPage> {
+  Color mainColor = Color(0xff5E91EE);
   FocusNode _focusNode = FocusNode();
   ScrollController scrollController = ScrollController();
   bool isEdit = false;
@@ -43,7 +45,7 @@ class _PPlanPageState extends State<PPlanPage> {
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
         // 포커스 해제 시 동작
-        _saveToDatabase();
+        // _saveToDatabase();
       }
     });
     super.initState();
@@ -155,10 +157,12 @@ class _PPlanPageState extends State<PPlanPage> {
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
+        isEdit = false;
         setState(() {
         });
       },
       child: Scaffold(
+        // resizeToAvoidBottomInset: false, //포커스시 바텀시트 안올라옴
         body: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
           child: Column(
@@ -246,6 +250,7 @@ class _PPlanPageState extends State<PPlanPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 8,),
               Container(
                 color: gray50,
                 child: ReorderableListView.builder(
@@ -259,7 +264,6 @@ class _PPlanPageState extends State<PPlanPage> {
                       Column(
                       key: Key('${index}'),
                       children: [
-                        const SizedBox(height: 12,),
                        Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -291,19 +295,25 @@ class _PPlanPageState extends State<PPlanPage> {
                                 GestureDetector(
                                     onTap: (){
                                       print('클릭클릭');
-                                      addPlan(index);
-                                    }, child: SvgPicture.asset('assets/icon/enabledRoundPlus.svg'),),
+                                      isEdit = true;
+                                      _focusNode.requestFocus();
+                                      //addPlan(index);
+                                      setState(() {
+
+                                      });
+                                    }, child: isEdit?SvgPicture.asset('assets/icon/disabledRoundPlus.svg'):SvgPicture.asset('assets/icon/enabledRoundPlus.svg'),),
                               ],
                             ),
                           ),
-                        )
+                        ),
+                        const SizedBox(height: 16,),
+
                       ],
                     ):
                         /// 플랜리스트
                         Column(
                           key: Key('${index}'),
                           children: [
-                            const SizedBox(height: 12,),
                             Padding(
                               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 12),
                               child:
@@ -346,7 +356,7 @@ class _PPlanPageState extends State<PPlanPage> {
                                         });
                                       },
                                       onEditingComplete: () {
-                                        _saveToDatabase();
+                                        // _saveToDatabase();
                                       },
                                         ),
                                   ),
@@ -362,23 +372,36 @@ class _PPlanPageState extends State<PPlanPage> {
                                     setState(() {
                                     });
                                   },
-                                  child: SvgPicture.asset(
-                                    plans[index]['checked']
-                                        ? 'assets/icon/checked.svg'
-                                        : 'assets/icon/unchecked.svg',
-                                  ),
+                                  child: plans[index]['checked']
+                                      ? Container(
+                                          width: 20,
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(2),
+                                            color: mainColor,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 5, right: 5, top: 7, bottom: 6),
+                                            child: SvgPicture.asset(
+                                              'assets/icon/check2.svg',
+                                            ),
+                                          ),
+                                  )
+                                      : SvgPicture.asset('assets/icon/unchecked.svg',),
                                 ),
-                                const SizedBox(width: 12,),
+                                const SizedBox(width: 8,),
                                 ReorderableDragStartListener(
                                     index : index,
-                                    child: Text('${plans[index]['content']}${index}',style: f14Gray400w500,)),
+                                    child: Text('${plans[index]['content']}${index}',style: f14Gray800w500,)),
                                 Spacer(),
                                 Container(
-                                    height: 20,
-                                    width: 20,
-                                    child: SvgPicture.asset('assets/icon/ellipsis.svg')),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 9),
+                                      child: SvgPicture.asset('assets/icon/rowEllipsis.svg'),
+                                    )),
                               ],),
-                            )
+                            ),
+                            const SizedBox(height: 12,),
                           ],
                         );
                   },
@@ -402,6 +425,89 @@ class _PPlanPageState extends State<PPlanPage> {
             ],
           ),
         ),
+        bottomSheet: isEdit?
+        Container(
+          height: 76,
+          decoration: BoxDecoration(
+            color: Colors.white, // 배경 색상
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x1AD4D4D4),
+                offset: Offset(0, -3),
+                blurRadius: 6, // 블러 정도
+              ),
+              BoxShadow(
+                color: Color(0x17D4D4D4),
+                offset: Offset(0, -10),
+                blurRadius: 10,
+              ),
+              BoxShadow(
+                color: Color(0x0DD4D4D4),
+                offset: Offset(0, -23),
+                blurRadius: 14,
+              ),
+              BoxShadow(
+                color: Color(0x03D4D4D4),
+                offset: Offset(0, -40),
+                blurRadius: 16,
+              ),
+              BoxShadow(
+                color: Color(0x00D4D4D4),
+                offset: Offset(0, -63),
+                blurRadius: 18,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+            child: Container(
+              width: Get.width,
+              decoration: BoxDecoration(
+                color: gray50,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: gray200),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        onChanged: (con){
+                          setState(() {});
+                        },
+                        cursorColor: mainColor,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                          hintText: '여행 일정을 입력해주세요',
+                          hintStyle: f15gray400w500,
+                        ),
+                        controller: _controller,
+                        focusNode: _focusNode,
+                        inputFormatters: <TextInputFormatter>[
+                          LengthLimitingTextInputFormatter(18),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 10,),
+                    Text('${_controller.text.length}', style: _controller.text.length>0?f11Gray800w600:f11Gray400w600,),
+                    Text('/18 ', style: f11Gray400w600,),
+                    const SizedBox(width: 8,),
+                    SvgPicture.asset('assets/icon/roundArrowRight.svg')
+
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ):null,
       ),
     );
   }
