@@ -34,6 +34,14 @@ const TextStyle f14Gray500w400 = TextStyle(
   fontFamily: 'Pretendard',
   height: 1.5,
 );
+const TextStyle f14Gray700w400 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  height: 20.01 / 14,
+  letterSpacing: 0.0145,
+  color: gray700
+);
 const TextStyle f16darkGray1w400 = TextStyle(
   fontSize: 16,
   color: darkGray1,
@@ -124,11 +132,12 @@ const TextStyle f16Gray500w500 = TextStyle(
   fontFamily: 'Pretendard');
 
 const TextStyle f14gray600w500 = TextStyle(
-  fontSize: 14,
-  color: gray600,
-  fontWeight: FontWeight.w500,
   fontFamily: 'Pretendard',
-  height: 1.5,
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  height: 21.99 / 14, // line-height / font-size
+  letterSpacing: 0.0145 * 14, // letter-spacing * font-size
+  color: gray600
 );
 
 const TextStyle f10w500 = TextStyle(
@@ -366,11 +375,12 @@ const TextStyle f12gray600W700 = TextStyle(
   height: 1.3,
 );
 const TextStyle f12Whitew700 = TextStyle(
-  fontSize: 12,
-  color: Colors.white,
-  fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
-  // height: 1.5,
+  fontSize: 12,
+  fontWeight: FontWeight.w700,
+  height: 16.01 / 12,
+  letterSpacing: 0.0252,
+  color: Colors.white
 );
 TextStyle f12mainw700(Color fontColor) {
   return TextStyle(
@@ -445,6 +455,22 @@ const TextStyle f16gray400w700 = TextStyle(
   letterSpacing: 0.0057 * 16,
   color: gray400
 );
+const TextStyle f16gray600w700 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 16,
+  fontWeight: FontWeight.w700, // Bold
+  height: 1.5,
+  letterSpacing: 0.0057,
+  color: gray600
+);
+const TextStyle f16sns400w700 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 16,
+  fontWeight: FontWeight.w700,
+  height: 24 / 16, // line-height / font-size
+  letterSpacing: 0.0057 * 16, // letter-spacing * font-size
+  color: Color(0xff381E21)
+);
 const TextStyle f16gray900w700 = TextStyle(
   fontFamily: 'Pretendard',
   fontSize: 16,
@@ -462,13 +488,7 @@ const TextStyle f16Whitew700 = TextStyle(
   height: 24.0 / 16.0,
   letterSpacing: 0.0057 * 16.0,
 );
-const TextStyle f16gray600w700 = TextStyle(
-  fontSize: 16,
-  color: gray600,
-  fontWeight: FontWeight.w700,
-  fontFamily: 'Pretendard',
-  height: 1.4,
-);
+
 const TextStyle f20gray600w700 = TextStyle(
   fontSize: 20,
   color: gray600,
@@ -499,11 +519,12 @@ const TextStyle f28whitew700 = TextStyle(
   height: 1.5,
 );
 const TextStyle f16gray800w700 = TextStyle(
-  fontSize: 16,
-  color: gray800,
-  fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
-  height: 1.2,
+  fontSize: 16,
+  fontWeight: FontWeight.w700,
+  height: 24 / 16, // line-height / font-size
+  letterSpacing: 0.0057 * 16, // letter-spacing * font-size
+  color: gray800
 );
 const TextStyle f18gray800w700 = TextStyle(
   fontFamily: 'Pretendard',
@@ -526,6 +547,14 @@ const TextStyle f20gray900w700 = TextStyle(
   fontWeight: FontWeight.w700,
   fontFamily: 'Pretendard',
   height: 1.5,
+);
+const TextStyle f22gray900w700 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 22,
+  fontWeight: FontWeight.w700,
+  height: 31.79 / 22,
+  letterSpacing: -0.0194 * 22,
+  color: gray900
 );
 const TextStyle f24gray400w700 = TextStyle(
   fontSize: 24,

@@ -6,6 +6,7 @@ import 'package:tripStory/component/login/snsContainer.dart';
 import 'package:tripStory/controller/userState.dart';
 import '../../util/font.dart';
 import '../main/mainPage.dart';
+import 'register/term.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,21 +21,29 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(left: 20,right: 20,top: 81,bottom: 50),
+        padding: const EdgeInsets.only(left: 20,right: 20,top: 107,bottom: 50),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('가장 편한 방법으로',style: f24gray900w700,),
-            Text('빠르게 시작해 보세요!',style: f24gray900w700,),
+            Text('이제부터',style: f22gray900w700,),
+            Text('트립스토리와',style: f22gray900w700,),
+            Text('여행을 간단하게 기록해 보세요',style: f22gray900w700,),
             Spacer(),
-            Center(child: Text('10초면 됩니다. 여행이 편해질 거예요!',style: f14Gray500w500,)),
+            Center(child: Text('트립스토리는 간편 로그인을 지원해요',style: f14gray600w500,)),
             const SizedBox(height: 18),
             KakaoContainer(onTap: ()async{
               // await UserApi.instance.unlink();
               await kakaoLogin();
+              if(us.userList[0]['type']=='register'){
+                  Get.to(()=>TermPage());
+              } else if(us.userList[0]['type']=='login'){
+                Get.offAll(()=>MainPage());
+              }
+              else{
+                print('로그인실패');
+              }
               // Get.to(()=>MainPage());
-              // await us.kakaoLogin();
             }),
             const SizedBox(height: 18),
             GoogleContainer(onTap: (){

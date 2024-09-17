@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../util/color.dart';
 import '../../util/font.dart';
 
 /// 약관 폼
@@ -21,31 +22,37 @@ class termsForm extends StatelessWidget {
           AnimatedCrossFade(
             duration: const Duration(milliseconds: 200),
             crossFadeState: value == true ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-            firstChild: SvgPicture.asset(
-              'assets/icon/check.svg',
-              width: 20,
+            firstChild: Container(
+              width:20,
               height: 20,
+              decoration: BoxDecoration(
+                  color: gray900,
+                  borderRadius: BorderRadius.circular(2)
+              ),
+              child: SvgPicture.asset('assets/icon/smallCheck.svg',fit: BoxFit.none),
             ),
-            secondChild: SvgPicture.asset(
-              'assets/icon/notcheck.svg',
-              width: 20,
+            secondChild: Container(
+              width:20,
               height: 20,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xffE0E0E0),width: 1.5),
+                  borderRadius: BorderRadius.circular(2)
+              ),
             ),
           ),
           SizedBox(
-            width: 6,
+            width: 8,
           ),
           Text(
             text,
-            style: value == true? f16Gray500w500 : f16Gray500w500,
+            style: value == true? f15gray800w500 : f15gray800w500,
           ),
           Spacer(),
           GestureDetector(
               onTap: onPressed2,
               child: SvgPicture.asset(
                 'assets/icon/arrow.svg',
-                width: 14,
-                height: 14,
                 // color:  value == true  ? Colors.black : hintColor,
               ))
         ],

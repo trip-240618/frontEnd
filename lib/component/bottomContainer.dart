@@ -7,7 +7,8 @@ import '../util/color.dart';
 class BottomContainer extends StatelessWidget {
   final VoidCallback onTap;
   final String title;
-  BottomContainer({Key? key, required this.onTap, required this.title}) : super(key: key);
+  final bool? isBlack;
+  BottomContainer({Key? key, required this.onTap, required this.title, this.isBlack}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -17,9 +18,9 @@ class BottomContainer extends StatelessWidget {
         height: 58,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
-            color: Color(0xffEEEEEE)
+            color: isBlack==true?gray900: Color(0xffEEEEEE)
         ),
-        child: Center(child: Text('${title}',style: f16Gray600w600)),
+        child: Center(child: Text('${title}',style: isBlack==true?f16Whitew700:f16gray600w700)),
       ),
     );
   }

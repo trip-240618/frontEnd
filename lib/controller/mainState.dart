@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -34,6 +35,15 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     super.onClose();
   }
 
+  /// 여행지 캐쉬 저장
+  void preCacheFlagImages(BuildContext context,List<Map<String, dynamic>> country) {
+    for (var region in country) {
+      for (var country in region['countries']) {
+        final imageUrl = country['image'];
+        precacheImage(CachedNetworkImageProvider(imageUrl), context);
+      }
+    }
+  }
   /// 여행방 만들기 변수 초기화
   Future<void> roomReset()async{
     selectedCity = '';
@@ -69,14 +79,15 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
       }
     }
   }
+
   /// 사진 넣기
-  Future getSingleImage(ImageSource imageSource,BuildContext context) async {
+  Future<XFile?> getSingleImage(ImageSource imageSource,BuildContext context, XFile? file) async {
     bool requestCheck = await requestCameraPermission(context);
     if(requestCheck){
       final XFile? pickedFile = await _picker.pickImage(source: imageSource);
       if (pickedFile != null) {
-        pickedImage.value = XFile(pickedFile.path);
-        print('??? ${pickedImage.value?.path}');
+          file = XFile(pickedFile.path);
+          return file;
       }
     }
   }

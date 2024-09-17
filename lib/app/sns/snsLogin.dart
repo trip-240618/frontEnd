@@ -1,13 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/app/config/dio_client.dart';
+import 'package:tripStory/controller/userState.dart';
 import '../api/userApi.dart';
 
 /// 카카오로그인
 Future<void> kakaoLogin() async {
   if (await isKakaoTalkInstalled()) {
+    print('카카오톡 설치');
     try {
       final oauthToken= await UserApi.instance.loginWithKakaoTalk();
       await sendTokenToServer(oauthToken.accessToken,oauthToken.refreshToken.toString());
@@ -90,6 +94,7 @@ Future<void> requestUserInfo() async {
   }
 }
 Future<void> sendTokenToServer(String accessToken,String refreshToken) async {
+  final us = Get.put(UserState());
   final dioClient = DioClient();
   final apiUserClient = ApiUserClient(dioClient);
   /// 백엔드 서버로 토큰 전송
@@ -97,8 +102,12 @@ Future<void> sendTokenToServer(String accessToken,String refreshToken) async {
     Uri.parse('https://trip-story.site/user/oauth2/callback/kakao?token=${accessToken}'),
   );
   if (response.statusCode == 200) {
-    await dioClient.saveCookies('${response.headers['set-cookie']}');
-    print('re?? ${response.body}');
+    print("?? ${response.headers}");
+    await dioClient.loginCookies('${response.headers['set-cookie']}');
+    var decodedBody = utf8.decode(response.bodyBytes);
+    var jsonResponse = jsonDecode(decodedBody);
+    us.userList.value = [jsonResponse];
+    // print('us???? ${jsonResponse}');
   } else {
     print('서버에 토큰 전송 실패: ${response.statusCode}');
   }
