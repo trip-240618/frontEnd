@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/component/splashScreen.dart';
 import 'package:tripStory/screen/login/loginPage.dart';
-
+import 'package:tripStory/screen/login/register/term.dart';
 import 'imageTest.dart';
 
 
@@ -49,6 +49,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: SplashPage()
       home: LoginPage(),
+      // home: TermPage(),
     );
   }
 }

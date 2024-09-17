@@ -52,4 +52,30 @@ class ApiUserClient {
       rethrow;
     }
   }
+
+
+  /// 유저 정보 디테일
+  Future<Map<String, dynamic>> userModify(String nickName,String profileImg) async {
+    final us = Get.put(UserState());
+    try {
+      final response = await dioClient.dio.post(
+        '/user/modify',
+        data: {
+          'nickname':'${nickName}',
+          'profileImg':'${profileImg}'
+        }
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data??? ${data}');
+        return data;
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
 }

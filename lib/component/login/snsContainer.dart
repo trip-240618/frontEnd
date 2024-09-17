@@ -26,7 +26,7 @@ class KakaoContainer extends StatelessWidget {
           children: [
             SvgPicture.asset('assets/sns/kakao.svg'),
             const SizedBox(width: 8),
-            Text('카카오로 시작하기',style: f16Gray900w600,),
+            Text('카카오로 시작하기',style: f16sns400w700,),
           ],
         ),
       ),
@@ -56,7 +56,7 @@ class GoogleContainer extends StatelessWidget {
             children: [
               SvgPicture.asset('assets/sns/google.svg'),
               const SizedBox(width: 8),
-              Text('구글로 시작하기',style: f16Gray900w600,),
+              Text('구글로 시작하기',style: f16gray800w700,),
             ],
           )
       ),
@@ -86,7 +86,7 @@ class AppleContainer extends StatelessWidget {
           children: [
             SvgPicture.asset('assets/sns/apple.svg'),
             const SizedBox(width: 8),
-            Text('Apple로 시작하기',style: f16Whitew600,),
+            Text('Apple로 시작하기',style: f16Whitew700,),
           ],
         ),
       )
