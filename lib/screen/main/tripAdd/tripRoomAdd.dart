@@ -153,6 +153,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
   List colorList = [pastelBlue,mainRed,yellowColor,greenColor];
   int? selectedColor;
   XFile? pickedImage;
+  String tripType = '';
   @override
   void initState() {
     Future.delayed(Duration.zero,(){
@@ -170,7 +171,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        FocusScope.of(context).unfocus();
+        FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -251,8 +252,9 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                             Expanded(
                               child: TextFormField(
                                 controller: tripName,
+                                autofocus: false,
                                 style: f16gray800w600,
-                                onChanged: (con){
+                                onChanged: (v){
                                   setState(() {});
                                 },
                                 inputFormatters: <TextInputFormatter>[
@@ -273,7 +275,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                               ),
                             ),
                             const SizedBox(width: 10,),
-                            Text('${tripName.text.length}/15 ')
+                            Text('${tripName.text.length}/15')
                           ],
                         ),
                       ),
@@ -343,16 +345,16 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                         children: [
                           Expanded(
                             child: TypeChoose(text: 'J형',onTap: (){
-                              ms.tripType.value = 'J형';
+                              tripType = 'J형';
                               setState(() {});
-                            },value: ms.tripType.value),
+                            },value: tripType),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: TypeChoose(text: 'P형',onTap: (){
-                              ms.tripType.value = 'P형';
+                              tripType = 'P형';
                               setState(() {});
-                            },value: ms.tripType.value,),
+                            },value: tripType),
                           ),
                         ],
                       ),
@@ -363,7 +365,6 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                       Obx(() => GestureDetector(
                         onTap: ()async{
                           Get.to(()=>TripCalendar());
-                          ms.tripDate.value = '11';
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -375,7 +376,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                               children: [
                                 SvgPicture.asset('assets/icon/date.svg',fit: BoxFit.none, colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
                                 const SizedBox(width: 4),
-                                ms.tripDestination.value ==''?Text('여행 날짜를 입력해 주세요',style: f15gray400w500):Text('${ms.tripDestination.value}')
+                                ms.tripDate.length==0?Text('여행 날짜를 입력해 주세요',style: f15gray400w500):Text('${ms.tripDestination.value}')
                               ],
                             ),
                           ),
@@ -400,14 +401,14 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                               children: [
                                 SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
                                 const SizedBox(width: 4),
-                                ms.tripDate.value ==''?Text('여행지를 입력해 주세요',style: f15gray400w500):Text('${ms.tripDestination.value}')
+                                ms.tripDestination.value ==''?Text('여행지를 입력해 주세요',style: f15gray400w500):Text('${ms.tripDestination.value}')
                               ],
                             ),
                           ),
                         ),
                       )),
                       const SizedBox(height: 20),
-                      SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+                      // SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
                     ],
                   ),
                 ),
@@ -419,11 +420,14 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
         padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
         child: BottomContainer(
             onTap: ()async{
-              bool isCreate = await ms.createRoom();
-              if(isCreate){
-                CodeDialog(context);
-               }
-          // Get.to(()=>ProfileScreen());
+              print('${tripName.text}');
+              print('${colorList[selectedColor!]}');
+              print('${tripType}');
+              // bool isCreate = await ms.createRoom(tripName.text,);
+              // if(isCreate){
+              //   CodeDialog(context);
+              //  }
+              //   Get.back();
         },title: '저장'),
       ),
       ),

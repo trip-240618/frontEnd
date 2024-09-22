@@ -16,7 +16,7 @@ class TermPage extends StatefulWidget {
 }
 
 class _TermPageState extends State<TermPage> {
-  bool allCheck = false; /// 전체 동의 체크
+  bool allCheck = true; /// 전체 동의 체크
   bool policyCheck = false; /// 이용약관 체크
   bool privatePolicyCheck = false; /// 개인정보 처리방침 체크
   bool locationCheck = false; /// 위치 정보 서비스 이용약관
@@ -194,7 +194,7 @@ class _TermPageState extends State<TermPage> {
             BottomContainer(
                 onTap: ()async{
                   if(isChecked){
-                    Get.to(()=>ProfilePage());
+                    Get.to(()=>ProfilePage(marketing: maratCheck,));
                   }else{
                     print('약관을 수락해주세요');
                   }

@@ -34,6 +34,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: gray50,
       appBar: AppBar(
        automaticallyImplyLeading: false,
@@ -105,16 +106,16 @@ class _MainPageState extends State<MainPage> {
                 )
               ],
             )),
-            const SizedBox(height: 22),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SvgPicture.asset('assets/icon/swap.svg'),
-                const SizedBox(width: 4),
-                Text('최신순',style: f12gray600w600,),
-              ],
-            ),
-            const SizedBox(height: 10),
+            // const SizedBox(height: 22),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
+            //     SvgPicture.asset('assets/icon/swap.svg'),
+            //     const SizedBox(width: 4),
+            //     Text('최신순',style: f12gray600w600,),
+            //   ],
+            // ),
+            const SizedBox(height: 32),
             Obx(()=>ms.selectIdx.value==0
                 ? CommingTrip()
                 : ms.selectIdx.value ==1

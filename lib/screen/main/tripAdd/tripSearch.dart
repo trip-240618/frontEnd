@@ -223,8 +223,8 @@ class _TripSearchPageState extends State<TripSearchPage> {
                                       width: 32,
                                       height: 24,
                                       fit: BoxFit.fill,
-                                      placeholder: (context, url) =>
-                                      const CircularProgressIndicator(),
+                                      // placeholder: (context, url) =>
+                                      // const CircularProgressIndicator(),
                                       errorWidget: (context, url, error) =>
                                       const Icon(Icons.error),
                                     ),
@@ -240,7 +240,8 @@ class _TripSearchPageState extends State<TripSearchPage> {
                               ms.selectedCity = newValue!;
                               setState(() {});
                             },
-                            dense: true,hoverColor: Colors.red,
+                            dense: true,
+                            hoverColor: gray900,
                             contentPadding: const EdgeInsets.only(left: 16, right: 16,bottom: 0),
                             controlAffinity: ListTileControlAffinity.trailing,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -249,7 +250,7 @@ class _TripSearchPageState extends State<TripSearchPage> {
                                   if (states.contains(MaterialState.disabled)) {
                                     return gray400.withOpacity(.32);
                                   } else if (states.contains(MaterialState.selected)) {
-                                    return Colors.red;
+                                    return gray900;
                                   }
                                   return gray400.withOpacity(.32);
                                 }),
