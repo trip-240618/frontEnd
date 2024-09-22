@@ -19,7 +19,7 @@ class ScrapPage extends StatefulWidget {
 
 class _ScrapPageState extends State<ScrapPage> {
   List scrapList = [
-    {'date':'2024.04.23','title':'고효율 작업을 위한 생산성 도구 추천', 'content':r'[{"insert":"이 제품은 정말 대박이에요!!! 사용하고 나서부터 생활이 편리해졌어요 강추합니다 너무 마음에 들어요!!!!!!! \n"}]','nickname':'김여행', 'color':'0xff5E91EE'},
+    {'date':'2024.04.23','title':'고효율 작업을 위한 생산성 도구 추천', 'content':r'[{"insert":"이 제품은 정말 대박이에요!!! 사용하고 나서부터 생활이 편리해졌어요 강추합니다 너무 마음에 들어요!!!!!!!!!!!!!!!!!!!!!! \n"}]','nickname':'김여행', 'color':'0xff5E91EE'},
     {'date':'2024.04.13','title':'돈키호테 쇼핑리스트', 'content':r'[{"insert":"Ddfsdfd\nㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ\n"}]','nickname':'나들이', 'color':'0xff83CF75'},
     {'date':'2024.04.13','title':'돈키호테 쇼핑리스트2', 'content':r'[{"insert":"1.멜라노CC폼클렌징\n2.하다라보 하쿠쥰\n3. 나츄리에 하또\n4. 퓨어 청포도젤리\n5. 썬스프레이\n"}]','nickname':'나들이', 'color':'0xff83CF75'},
     {'date':'2024.06.33','title':'타이틀 1줄 간격', 'content':r'[{"insert":"dddd1.멜라노CC폼클렌징\n"}]','nickname':'나들이', 'color':'0xffF2685F'},
@@ -27,6 +27,11 @@ class _ScrapPageState extends State<ScrapPage> {
     {'date':'2024.04.13','title':'드럭스토어 쇼핑리스트', 'content':r'[{"insert":"ㅇㅇㅇㅇㅇㅇㅇ\n"}]','nickname':'나들이', 'color':'0xffF4DC59'},
     {'date':'2024.04.13','title':'돈키호테 쇼핑리스트', 'content':r'[{"insert":"1.멜라노CC폼클렌징\n2.하다라보 하쿠쥰\n3. 나츄리에 하또어쩌구\n4. 퓨어 청포도젤리\n"}]','nickname':'나들이', 'color':'0xff83CF75'},
     {'date':'2024.06.33','title':'타이틀 1줄 간격', 'content':r'[{"insert":"dddd1.멜라노CC폼클렌징\n"}]','nickname':'나들이', 'color':'0xffFFFFFF'},
+    {'date':'2024.04.23','title':'고효율 작업을 위한 생산성 도구 추천', 'content':r'[{"insert":"이 제품은 정말 대박이에요!!! 사용하고 나서부터 생활이 편리해졌어요 강추합니다 너무 마음에 들어요!!!!!!! \n"}]','nickname':'김여행', 'color':'0xff5E91EE'},
+    {'date':'2024.04.13','title':'돈키호테 쇼핑리스트', 'content':r'[{"insert":"Ddfsdfd\nㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ\n"}]','nickname':'나들이', 'color':'0xff83CF75'},
+    {'date':'2024.04.13','title':'돈키호테 쇼핑리스트2', 'content':r'[{"insert":"1.멜라노CC폼클렌징\n2.하다라보 하쿠쥰\n3. 나츄리에 하또\n4. 퓨어 청포도젤리\n5. 썬스프레이\n"}]','nickname':'나들이', 'color':'0xff83CF75'},
+    {'date':'2024.06.33','title':'타이틀 1줄 간격', 'content':r'[{"insert":"dddd1.멜라노CC폼클렌징\n"}]','nickname':'나들이', 'color':'0xffF2685F'},
+    {'date':'2024.04.23','title':'공항에서 숙소 가는법', 'content':r'[{"insert":"숙소 위치에서 공항까지 가려면 아사쿠사 역에서 아사쿠사 급행노선을 타고 가야해\n"}]','nickname':'김여행', 'color':'0xff5E91EE'},
 
   ];
   @override
@@ -123,7 +128,7 @@ class _ScrapPageState extends State<ScrapPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(12),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,

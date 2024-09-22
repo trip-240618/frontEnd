@@ -427,14 +427,14 @@ class _PPlanPageState extends State<PPlanPage> {
         ),
         bottomSheet: isEdit?
         Container(
-          height: 76,
+          width: Get.width,
           decoration: BoxDecoration(
-            color: Colors.white, // 배경 색상
+            color: Colors.white,
             boxShadow: [
               BoxShadow(
                 color: Color(0x1AD4D4D4),
                 offset: Offset(0, -3),
-                blurRadius: 6, // 블러 정도
+                blurRadius: 6,
               ),
               BoxShadow(
                 color: Color(0x17D4D4D4),
@@ -501,7 +501,6 @@ class _PPlanPageState extends State<PPlanPage> {
                     Text('/18 ', style: f11Gray400w600,),
                     const SizedBox(width: 8,),
                     SvgPicture.asset('assets/icon/roundArrowRight.svg')
-
                   ],
                 ),
               ),
