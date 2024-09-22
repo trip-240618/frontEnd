@@ -351,7 +351,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                 children: [
                                                                   Positioned(
                                                                     child: CachedNetworkImage(
-                                                                      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2F1EjyruHeHaU6ZQpNe22L?alt=media',
+                                                                      imageUrl: 'https://trip-story.s3.ap-northeast-2.amazonaws.com/profile/8564dd09-bbe7-4515-9a7d-7322f4fb5cb6',
                                                                       imageBuilder: (context, imageProvider) => Container(
                                                                         decoration: BoxDecoration(
                                                                           borderRadius: BorderRadius.circular(4),

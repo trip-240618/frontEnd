@@ -3,27 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import '../app/api/tripApi.dart';
+import '../app/config/dio_client.dart';
 import '../app/permission/permission.dart';
 
 class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   final selectIdx = 0.obs; /// (탭바 클릭)
-
+  final apiTripClient = ApiTripClient(DioClient());
   /// tripRoomAdd
   late TabController tabController; /// 탭
-
   final ImagePicker _picker = ImagePicker();
   Rx<XFile?> pickedImage = Rx<XFile?>(null);
   final tripType = ''.obs; /// 여행타입 선택
   final tripDestination = ''.obs; /// 여행지 목적
-  final tripDate = ''.obs; /// 여행일정
+  final tripDate = [].obs; /// 여행일정
   TextEditingController tripCitySearchCon = TextEditingController(); /// 여행지 검색
   TextEditingController tripDirectSearchCon = TextEditingController(); /// 여행지 직접 검색
   String selectedCity = ''; /// 선택한 여행지
   final tripLeaveType = ''.obs; /// 여행타입 선택
 
+  /// trip main
+  final tripList = <dynamic>[].obs; /// 여행지 목록 리스트
   @override
   void onInit() {
     tabController = TabController(length: 2, vsync: this);
+    apiTripClient.inComingTripGet();
+    print('처음시작');
     super.onInit();
   }
 
@@ -34,6 +39,12 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     tripDirectSearchCon.dispose();
     super.onClose();
   }
+
+  /// 여행방 가져오기
+  Future<void> getComingTrip()async{
+    await apiTripClient.inComingTripGet();
+  }
+
 
   /// 여행지 캐쉬 저장
   void preCacheFlagImages(BuildContext context,List<Map<String, dynamic>> country) {
@@ -51,7 +62,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     pickedImage.value =null;
     tripType.value ='';
     tripDestination.value ='';
-    tripDate.value='';
+    tripDate.value = [];
   }
 
   /// 여행지 바텀 리셋
@@ -93,13 +104,15 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   }
 
   /// 여행방 add
-  Future<bool> createRoom() async {
+  Future<bool> createRoom(String name) async {
    if(tripType.value==''
        ||tripDestination.value ==''
        ||tripDate.value==''){
      print('빈칸을 확인해주세요');
      return false;
    }else{
+     print('name ${name}');
+     // await apiTripClient.tripCreate(name, type, startDate, endDate, country, thumnail, labelColor);
      print('여행방 만들기');
      return true;
    }

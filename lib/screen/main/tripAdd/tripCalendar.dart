@@ -6,6 +6,7 @@ import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import '../../../component/bottomContainer.dart';
+import '../../../controller/mainState.dart';
 
 class TripCalendar extends StatefulWidget {
   const TripCalendar({super.key});
@@ -15,6 +16,7 @@ class TripCalendar extends StatefulWidget {
 }
 
 class _TripCalendarState extends State<TripCalendar> {
+  final ms = Get.put(MainState());
   final _scrollController = ScrollController();
   List<DateTime?> _rangeDatePickerValueWithDefaultValue = [
     // DateTime(1999, 5, 6),
@@ -25,7 +27,9 @@ class _TripCalendarState extends State<TripCalendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BackAppBar(text: '', onTap: (){Get.back();}),
+      appBar: BackAppBar(text: '', onTap: (){
+        Get.back();
+      }),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
         child: Column(
@@ -58,6 +62,10 @@ class _TripCalendarState extends State<TripCalendar> {
                         calendarType: CalendarDatePicker2Type.range,
                      calendarViewMode: CalendarDatePicker2Mode.scroll,
                     ),
+                    onValueChanged: (value) {
+                      _rangeDatePickerValueWithDefaultValue = value;
+                      setState(() {});
+                    },
                     value: _rangeDatePickerValueWithDefaultValue),
               ),
             )
@@ -68,7 +76,10 @@ class _TripCalendarState extends State<TripCalendar> {
         color: Colors.white,
         child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
-          child: BlackBottomContainer(onTap: (){}, title: '저장'),
+          child: BlackBottomContainer(onTap: (){
+
+            print('?? ${_rangeDatePickerValueWithDefaultValue}');
+          }, title: '저장'),
         ),
       ),
     );
