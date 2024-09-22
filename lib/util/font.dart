@@ -447,6 +447,14 @@ const TextStyle f14gray800w700 = TextStyle(
   letterSpacing: 0.0145 * 14,
   color: gray800
 );
+const TextStyle f16gray300w700 = TextStyle(
+    fontFamily: 'Pretendard',
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    height: 1.5,
+    letterSpacing: 0.0057 * 16,
+    color: gray300
+);
 const TextStyle f16gray400w700 = TextStyle(
   fontFamily: 'Pretendard',
   fontSize: 16,

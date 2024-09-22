@@ -6,10 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_picker/image_picker.dart';
-
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
@@ -100,7 +96,7 @@ class _AddScrapPageState extends State<AddScrapPage> {
         });
       },
       child: Scaffold(
-        appBar: BackAppBar(text: '스크랩 메모', onTap: (){Get.back();}),
+        appBar: BackAppBar(text: '스크랩', onTap: (){Get.back();}),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -111,12 +107,13 @@ class _AddScrapPageState extends State<AddScrapPage> {
                 controller: titleCon,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.zero,
-                  hintText: '제목',
-                  hintStyle: f14gray400w700,
+                  hintText: '제목을 입력해주세요',
+                  hintStyle: f16gray300w700,
                   border: InputBorder.none,
-
+                  isDense: true,
                 ),
               ),
+              const SizedBox(height: 10,),
 
               Container(
                 decoration: BoxDecoration(
@@ -173,20 +170,6 @@ class _AddScrapPageState extends State<AddScrapPage> {
               // ),
 
             ],
-          ),
-        ),
-        bottomSheet: GestureDetector(
-          onTap: (){
-            scrapSave();
-          },
-          child: Container(
-            height: 60,
-            decoration: BoxDecoration(
-              color: gray500
-            ),
-            child: Center(
-              child: Text('저장',style: f16Whitew600,),
-            ),
           ),
         ),
       ),
