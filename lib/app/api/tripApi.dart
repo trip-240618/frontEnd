@@ -10,15 +10,13 @@ class ApiTripClient {
   ApiTripClient(this.dioClient);
 
   /// 여행 가져오기
-  Future<Map<String, dynamic>> inComingTripGet() async {
+  Future<List<dynamic>> inComingTripGet() async {
     try {
       final response = await dioClient.dio.get('/trip/list/incoming?sortField=startDate&sortDirection=DESC');
-      print('???Dad ${response.data}');
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data??? ${data}');
         if(data.length==0){
-          return {};
+          return [];
         }
         return data;
       } else {
@@ -31,27 +29,28 @@ class ApiTripClient {
   }
   /// 여행방 생성하기
   /// 유저 정보 디테일
-  Future<Map<String, dynamic>> tripCreate(
+  Future<String> tripCreate(
+      String thumnail,
       String name,
+      String labelColor,
       String type,
       String startDate,
       String endDate,
       String country,
-      String thumnail,
-      String labelColor
       ) async {
-    final us = Get.put(UserState());
+    print('lableClor ${labelColor.substring(6, labelColor.length - 1)}');
     try {
+      print('??? ${startDate.toString().split(' ')[0]}');
       final response = await dioClient.dio.post(
           '/trip/create',
           data: {
             'name':'${name}',
-            'type':'${type}',
-            'startDate':'${startDate}',
-            "endDate": '${endDate}',
+            'type':type=='J형'?'J':'P',
+            'startDate':'${startDate.toString().split(' ')[0]}',
+            "endDate": '${endDate.toString().split(' ')[0]}',
             "country": '${country}',
-            "thumnail": '${thumnail}',
-            "labelColor": '${labelColor}',
+            "thumbnail": '${thumnail}',
+            "labelColor": '${labelColor.substring(6, labelColor.length - 1)}',
           }
       );
       if (response.statusCode == 200) {

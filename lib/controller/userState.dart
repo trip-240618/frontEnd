@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter_image_compress/flutter_image_compress.dart' as imgCom;
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';

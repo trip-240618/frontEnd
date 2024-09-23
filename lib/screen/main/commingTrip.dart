@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:popover/popover.dart';
+import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import '../../component/bottomModals.dart';
@@ -19,18 +21,22 @@ class CommingTrip extends StatefulWidget {
 
 class _CommingTripState extends State<CommingTrip> {
   final ms = Get.put(MainState());
+  bool isLoading = true;
+
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
+      isLoading = false;
       await ms.getComingTrip();
-      print('??? ${ms.tripList}');
+      setState(() {});
+      print('처음 가져오기 ${ms.tripList}');
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return isLoading?Expanded(child: LoadingWidget()):Obx(()=>Expanded(
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: ListView.builder(
@@ -216,6 +222,6 @@ class _CommingTripState extends State<CommingTrip> {
               );
             }),
       ),
-    );
+    ));
   }
 }

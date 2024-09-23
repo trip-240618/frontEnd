@@ -1,22 +1,26 @@
+import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import '../app/api/fileApi.dart';
 import '../app/api/tripApi.dart';
 import '../app/config/dio_client.dart';
 import '../app/permission/permission.dart';
-
+import 'package:http/http.dart' as http;
 class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   final selectIdx = 0.obs; /// (탭바 클릭)
   final apiTripClient = ApiTripClient(DioClient());
+  final apiFileClient = ApiFileClient(DioClient());
   /// tripRoomAdd
   late TabController tabController; /// 탭
   final ImagePicker _picker = ImagePicker();
   Rx<XFile?> pickedImage = Rx<XFile?>(null);
-  final tripType = ''.obs; /// 여행타입 선택
+
   final tripDestination = ''.obs; /// 여행지 목적
-  final tripDate = [].obs; /// 여행일정
+  RxList<DateTime> tripDate = <DateTime>[].obs;
   TextEditingController tripCitySearchCon = TextEditingController(); /// 여행지 검색
   TextEditingController tripDirectSearchCon = TextEditingController(); /// 여행지 직접 검색
   String selectedCity = ''; /// 선택한 여행지
@@ -42,7 +46,8 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
 
   /// 여행방 가져오기
   Future<void> getComingTrip()async{
-    await apiTripClient.inComingTripGet();
+    tripList.clear();
+    tripList.value = await apiTripClient.inComingTripGet();
   }
 
 
@@ -60,7 +65,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     selectedCity = '';
     tripLeaveType.value = '';
     pickedImage.value =null;
-    tripType.value ='';
+
     tripDestination.value ='';
     tripDate.value = [];
   }
@@ -104,20 +109,53 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   }
 
   /// 여행방 add
-  Future<bool> createRoom(String name) async {
-   if(tripType.value==''
-       ||tripDestination.value ==''
-       ||tripDate.value==''){
+  Future<bool> createRoom(
+      String thumbnailUrl,
+      String name,
+      String color,
+      String type,
+      List tripDate,
+      String tripDestination) async {
+   if(type==''
+       ||tripDestination ==''
+       ||tripDate.length==0){
      print('빈칸을 확인해주세요');
      return false;
    }else{
-     print('name ${name}');
-     // await apiTripClient.tripCreate(name, type, startDate, endDate, country, thumnail, labelColor);
-     print('여행방 만들기');
+     String code = await apiTripClient.tripCreate(
+         thumbnailUrl,
+         name,
+         color,
+         type,
+         '${tripDate[0]}',
+         tripDate.length==1?'':'${tripDate[1]}',
+         tripDestination);
+        print('여행방 만들기 ${code}');
      return true;
    }
   }
 
+  /// 여행방 썸네일 요청
+  Future<Map<String, dynamic>> tripThumbnailUpload(XFile xfile) async {
+    final fileBytes = await xfile.readAsBytes();
+    Uint8List? compressedBytes = await FlutterImageCompress.compressWithList(
+      fileBytes,
+      quality: 10,
+      minWidth: 400,
+      minHeight: 400,
+    );
+    Map<String, dynamic> data = await apiFileClient.fileUrlGet(1);
+    for (int i = 0; i < 1; i++) {
+      final response = await http.put(
+        Uri.parse(data['preSignedUrls'][i]),
+        headers: {
+          'Content-Type': "image/jpeg",
+        },
+        body: compressedBytes,  // 압축된 이미지를 업로드
+      );
+    }
+    return data;
+  }
   ///카카오 공유하기
   void kakaoShare()async{
     /// 사용자 정의 템플릿 ID

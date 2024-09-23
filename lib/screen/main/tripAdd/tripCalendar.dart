@@ -18,7 +18,7 @@ class TripCalendar extends StatefulWidget {
 class _TripCalendarState extends State<TripCalendar> {
   final ms = Get.put(MainState());
   final _scrollController = ScrollController();
-  List<DateTime?> _rangeDatePickerValueWithDefaultValue = [
+  List<DateTime> _rangeDatePickerValueWithDefaultValue = [
     // DateTime(1999, 5, 6),
     // DateTime(1999, 5, 21),
   ];
@@ -77,7 +77,7 @@ class _TripCalendarState extends State<TripCalendar> {
         child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
           child: BlackBottomContainer(onTap: (){
-
+            ms.tripDate.value = _rangeDatePickerValueWithDefaultValue;
             print('?? ${_rangeDatePickerValueWithDefaultValue}');
           }, title: '저장'),
         ),
