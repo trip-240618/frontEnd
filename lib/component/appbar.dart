@@ -21,9 +21,12 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.only(left: 7),
         child: GestureDetector(
           onTap: onTap,
-          child: SvgPicture.asset(
-              'assets/icon/leftArrow.svg',
-            fit: BoxFit.none,
+          child: Container(
+            color: Colors.transparent,
+            child: SvgPicture.asset(
+                'assets/icon/leftArrow.svg',
+              fit: BoxFit.none,
+            ),
           ),
         ),
       ),

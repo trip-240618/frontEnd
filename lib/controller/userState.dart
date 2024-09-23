@@ -1,11 +1,11 @@
-import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter_image_compress/flutter_image_compress.dart' as imgCom;
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../app/api/fileApi.dart';
 import '../app/api/userApi.dart';
 import '../app/config/dio_client.dart';
-import 'package:http_parser/http_parser.dart';
 class UserState extends GetxController{
   final userList =[].obs; /// 유저 정보 리스트
   final dioClient = DioClient();
@@ -35,9 +35,29 @@ class UserState extends GetxController{
     }
     return data;
   }
-
+  /// 프로필 썸네일 요청
+  Future<Map<String, dynamic>> profileThumbnailUpload(XFile xfile) async {
+    final fileBytes = await xfile.readAsBytes();
+    Uint8List? compressedBytes = await imgCom.FlutterImageCompress.compressWithList(
+      fileBytes,
+      quality: 10,
+      minWidth: 100,
+      minHeight: 100,
+    );
+    Map<String, dynamic> data = await apiFileClient.fileUrlGet(1);
+    for (int i = 0; i < 1; i++) {
+      final response = await http.put(
+        Uri.parse(data['preSignedUrls'][i]),
+        headers: {
+          'Content-Type': "image/jpeg",
+        },
+        body: compressedBytes,  // 압축된 이미지를 업로드
+      );
+    }
+    return data;
+  }
   /// 프로필 상세 등록
-  Future<void> userModify(String nickName,String profileImg)async{
-    apiUserClient.userModify(nickName, profileImg);
+  Future<void> userModify(String nickName,String profileImg,String thumbnailImg,bool marketing)async{
+    apiUserClient.userModify(nickName, profileImg,thumbnailImg,marketing);
   }
 }

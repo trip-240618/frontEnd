@@ -96,13 +96,11 @@ Future<void> requestUserInfo() async {
 Future<void> sendTokenToServer(String accessToken,String refreshToken) async {
   final us = Get.put(UserState());
   final dioClient = DioClient();
-  final apiUserClient = ApiUserClient(dioClient);
   /// 백엔드 서버로 토큰 전송
   var response = await http.get(
-    Uri.parse('https://trip-story.site/user/oauth2/callback/kakao?token=${accessToken}'),
+    Uri.parse('https://trip-story.site/user/oauth2/callback/kakao?kakaoToken=${accessToken}&fcmToken=abcd')
   );
   if (response.statusCode == 200) {
-    print("?? ${response.headers}");
     await dioClient.loginCookies('${response.headers['set-cookie']}');
     var decodedBody = utf8.decode(response.bodyBytes);
     var jsonResponse = jsonDecode(decodedBody);

@@ -55,14 +55,17 @@ class ApiUserClient {
 
 
   /// 유저 정보 디테일
-  Future<Map<String, dynamic>> userModify(String nickName,String profileImg) async {
+  Future<Map<String, dynamic>> userModify(String nickName,String profileImg,String thumbnailImg,bool marketing) async {
     final us = Get.put(UserState());
     try {
+      print('dasdasda ${marketing}');
       final response = await dioClient.dio.post(
-        '/user/modify',
+        '/user/register',
         data: {
           'nickname':'${nickName}',
-          'profileImg':'${profileImg}'
+          'profileImg':'${profileImg}',
+          'thumbnail':'${thumbnailImg}',
+          "marketing": marketing
         }
       );
       if (response.statusCode == 200) {

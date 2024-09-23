@@ -8,6 +8,7 @@ import 'package:tripStory/util/color.dart';
 import '../../../../component/bottomContainer.dart';
 import '../../../../controller/historyState.dart';
 import '../../../../util/font.dart';
+import '../tripHistoryAdd.dart';
 import 'albumListPage.dart';
 
 class AlbumPage extends StatefulWidget {
@@ -233,18 +234,13 @@ class _AlbumPageState extends State<AlbumPage> {
                   Text('길게 눌러 순서를 변경할 수 있어요.', style: f14Gray500w400),
                   const SizedBox(height: 8),
                   Spacer(),
-                  BlackCountContainer(onTap: (){},title: '선택완료',count: hs.selectAlbumList.length,),
-
+                  BlackCountContainer(onTap: (){
+                    Get.to(()=>TripHistoryAddPage());
+                  },title: '선택완료',count: hs.selectAlbumList.length,),
                 ],
               ),
             )
       )),
     );
   }
-
-  printExifOf(AssetEntity entity) async {
-    final file = await entity.longitude;
-    final file2 = await entity.latitude;
-  }
-
 }

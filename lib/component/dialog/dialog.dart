@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/component/textForm.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import 'package:tripStory/controller/mainState.dart';
 import '../../util/color.dart';
@@ -107,88 +108,100 @@ class DialogExample extends StatelessWidget {
 
 InviteDialog(BuildContext context, String title, VoidCallback onTap) {
   TextEditingController con = TextEditingController();
+  bool isRegCheck = false;
+  bool isFirstCheck = false;
   showDialog(
       context: context,
       // barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 24,horizontal:20 ),
-          content: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: (){
-                  Get.back();
-                },
-                child: Align(
-                  alignment: Alignment.centerRight, // 오른쪽 끝으로 정렬
-                  child: SvgPicture.asset('assets/icon/close.svg'),
-                ),
-              ),
-              const SizedBox(height: 68),
-              Text(
-                '초대 코드 입력',
-                style: f18Gray800w600,
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: con,
-                keyboardType: TextInputType.number,
-                textAlignVertical: TextAlignVertical.center,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(6),
-                ],
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(15, 17.5, 15, 15),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFEEEEEE)), // 색상 설정
-                    borderRadius: BorderRadius.circular(4), // radius 설정
-                  ),
-                    hintText: '숫자 6자리 코드를 입력해주세요',
-                    hintStyle: f14Gray400w500,
-                    counterText:'',
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: SvgPicture.asset(
-                      'assets/icon/send.svg',
-                      width: 12,
-                      fit: BoxFit.none,
-                      color: Color(0xFFBDBDBD), // 아이콘 색상
-                    ),
-                  ),
-                  ),
-              ),
-              const SizedBox(height: 80),
-            ],
-          ),
-          actions: [
-            GestureDetector(
-              onTap: onTap,
-              behavior: HitTestBehavior.opaque,
-              child: Center(
-                child: Container(
-                  width: Get.width,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: gray500,
-                    borderRadius: BorderRadius.circular(4)
-                  ),
-                  child: Center(
-                      child: Text(
-                        '연결하기',
-                        style: f16Whitew600,
-                      )),
-                ),
-              ),
-            )
-          ],
+        return StatefulBuilder(
+         builder: (context, StateSetter setState){
+           return GestureDetector(
+             onTap: (){
+               FocusScope.of(context).unfocus();
+             },
+             child: AlertDialog(
+               backgroundColor: Colors.white,
+               shape: RoundedRectangleBorder(
+                 borderRadius: BorderRadius.circular(14),
+               ),
+               content: SingleChildScrollView(
+                 physics: const NeverScrollableScrollPhysics(),
+                 child: Column(
+                   mainAxisAlignment: MainAxisAlignment.start,
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   mainAxisSize: MainAxisSize.min,
+                   children: [
+                     GestureDetector(
+                       onTap: (){
+                         Get.back();
+                       },
+                       child: Align(
+                         alignment: Alignment.centerRight, // 오른쪽 끝으로 정렬
+                         child: SvgPicture.asset('assets/icon/close.svg'),
+                       ),
+                     ),
+                     const SizedBox(height: 68),
+                     Text(
+                       '초대 코드 입력',
+                       style: f18Gray800w600,
+                     ),
+                     const SizedBox(height: 10),
+                     TextIconFormFields2(
+                       controller: con,
+                       hintText: '영문+숫자 8자리를 입력해 주세요',
+                       icon: 'assets/icon/invitation.svg',
+                       onChanged: (values){
+
+                       },
+                       inputFormatters: [
+                         LengthLimitingTextInputFormatter(8)
+                       ],
+                     ),
+                     !isFirstCheck?SizedBox():isRegCheck==true?SizedBox():Padding(
+                       padding: const EdgeInsets.only(left: 16,top: 4),
+                       child: Text('초대 코드는 영문+숫자 8자리입니다',style: f12redw500,),
+                     ),
+                     const SizedBox(height: 80),
+                   ],
+                 ),
+               ),
+               contentPadding: const EdgeInsets.symmetric(vertical: 24,horizontal:20 ),
+               insetPadding: const EdgeInsets.symmetric(vertical: 24 ,horizontal:20 ),
+               actions: [
+                 GestureDetector(
+                   onTap: (){
+                     isFirstCheck = true;
+                     final regex = RegExp(r'^[a-zA-Z0-9]+$');
+                     if (con.text.length == 8 && regex.hasMatch(con.text)) {
+                       isRegCheck = true;
+                     }else{
+                       isRegCheck = false;
+                     }
+                     setState(() {});
+                     print('??? ${isRegCheck}');
+                   },
+                   behavior: HitTestBehavior.opaque,
+                   child: Center(
+                     child: Container(
+                       width: Get.width,
+                       height: 60,
+                       decoration: BoxDecoration(
+                           color: gray500,
+                           borderRadius: BorderRadius.circular(4)
+                       ),
+                       child: Center(
+                           child: Text(
+                             '연결하기',
+                             style: f16Whitew600,
+                           )),
+                     ),
+                   ),
+                 )
+               ],
+             ),
+           );
+         }
         );
       });
 }
