@@ -19,7 +19,7 @@ class _SuccessPageState extends State<SuccessPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(left: 20,right: 20,bottom: 50),
+        padding: const EdgeInsets.only(left: 20,right: 20,bottom: 44),
         child: Container(
           width: Get.width,
           child: Column(
