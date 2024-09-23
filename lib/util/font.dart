@@ -365,10 +365,25 @@ const TextStyle f14redw600 = TextStyle(
   fontFamily: 'Pretendard',
   height: 1.5,
 );
-
+const TextStyle f18Gray900w600 = TextStyle(
+    fontFamily: 'Pretendard',
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    height: 26.01 / 18,
+    letterSpacing: -0.0002 * 18,
+    color: gray900
+);
 
 
 /// Bold
+const TextStyle f10Whitew700 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 10,
+  fontWeight: FontWeight.w700,
+  height: 1.3,
+  color: Colors.white,
+);
+
 const TextStyle f12blueW700 = TextStyle(
   fontFamily: 'Pretendard',
   fontSize: 12,

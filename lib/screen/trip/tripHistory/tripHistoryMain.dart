@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/controller/historyState.dart';
+import 'package:tripStory/screen/trip/tripHistory/searchHistoryPage.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../component/history/customMarker.dart';
 import '../../../imageTest.dart';
@@ -229,7 +230,8 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
             child: Container(
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
-                color: Theme.of(context).canvasColor,
+                color: Colors.white,
+                //color: Theme.of(context).canvasColor,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(25),
                   topRight: Radius.circular(25),
@@ -259,7 +261,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                               ),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
+                              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                               child: Column(
                                 children: [
                                   Container(
@@ -269,10 +271,15 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                         color: greyColor,
                                         borderRadius: BorderRadius.circular(30)),
                                   ),
-                                  const SizedBox(height: 27),
+                                  const SizedBox(height: 25),
                                   Row(
                                     children: [
-                                      Text('도쿄 즉흥 여행',style: f16gray800w700,),
+                                      GestureDetector(
+                                          onTap: (){
+                                          },
+                                          child: SvgPicture.asset('assets/icon/home.svg', color: gray900,)),
+                                      Spacer(),
+                                      Text('도쿄 즉흥 여행',style: f18Gray900w600,),
                                       Spacer(),
                                       GestureDetector(
                                         onTap: ()async{
@@ -281,17 +288,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                             Get.to(()=>AlbumPage());
                                           }
                                         },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(100),
-                                              border: Border.all(color: gray500)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 4),
-                                            child: Text('기록 추가',style: f12gray900w500,),
-                                          ),
-                                        ),
-                                      )
+                                        child: SvgPicture.asset('assets/icon/enabledRoundPlus.svg')),
                                     ],
                                   ),
                                 ],
@@ -306,140 +303,186 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                             delegate: SliverChildBuilderDelegate(
                                 childCount: 10,
                                     (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(left: 20, right: 20,top: 10),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: Get.width,
-                                          height: 244,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(color: gray200),
-                                            borderRadius: BorderRadius.circular(15),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(0.05),
-                                                offset: Offset(0, 0),
-                                                blurRadius: 13.3,
-                                                spreadRadius: 0,
+                                  return Column(
+                                    children: [
+                                      Container(
+                                        width: Get.width,
+                                        height: 222,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border(
+                                            top: BorderSide(color: gray200, width: 1),
+                                            bottom: BorderSide(color: gray200, width: 0.5),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.05),
+                                              offset: Offset(0, 0),
+                                              blurRadius: 13.3,
+                                              spreadRadius: 0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 20, bottom: 16),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(top: 16,bottom: 16, right: 20),
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            border: Border.all(
+                                                                color: Color(0xff5E91EE), width: 1.5
+                                                            ),
+                                                            borderRadius: BorderRadius.circular(100)
+                                                        ),
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 12),
+                                                          child: Text('Day ${index + 1}', style: f12mainw700(Color(0xff5E91EE)),),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 6,),
+                                                      Text('2024.08.12', style: f12Gray800w500,),
+                                                      Spacer(),
+                                                      Container(
+                                                        width: 20,
+                                                          height: 20,
+                                                          decoration: BoxDecoration(
+                                                            color: Color(0xff5E91EE),
+                                                            borderRadius: BorderRadius.circular(100),
+                                                          ),
+                                                          child: Center(child: Text('5', style: f11whitew600,))),
+
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
+                                              Expanded(
+                                                child: ListView.builder(
+                                                    itemCount: 10,
+                                                    shrinkWrap: true,
+                                                    scrollDirection: Axis.horizontal,
+                                                    itemBuilder: (context, index) {
+                                                      return Row(
+                                                        children: [
+                                                          Container(
+                                                            width: 120,
+                                                            child: Stack(
+                                                              children: [
+                                                                Positioned(
+                                                                  child: CachedNetworkImage(
+                                                                    //imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2F1EjyruHeHaU6ZQpNe22L?alt=media',
+                                                                    imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/foodImage.jpeg?alt=media',
+                                                                    imageBuilder: (context, imageProvider) => Container(
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(4),
+                                                                        image: DecorationImage(
+                                                                           image: imageProvider,
+                                                                            fit: BoxFit.fill
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                                  ),
+                                                                ),
+                                                                Positioned(
+                                                                  bottom: 0,
+                                                                  left: 0,
+                                                                  right: 0,
+                                                                  child: Container(
+                                                                    height: 150,
+                                                                    decoration: BoxDecoration(
+                                                                      borderRadius: BorderRadius.circular(4),
+                                                                      gradient: LinearGradient(
+                                                                        begin: Alignment.topCenter,
+                                                                        end: Alignment.bottomCenter,
+                                                                        colors: [
+                                                                          Colors.transparent,
+                                                                          Color(0xff212121).withOpacity(0.5),
+                                                                        ],
+                                                                        stops: [0.54, 1],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Positioned(
+                                                                    top:8,
+                                                                    right:8,
+                                                                    child: Container(
+                                                                      width: 20,
+                                                                      height: 20,
+                                                                      child: CachedNetworkImage(
+                                                                        imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/profile.png?alt=media',
+                                                                        imageBuilder: (context, imageProvider) => Container(
+                                                                          decoration: BoxDecoration(
+                                                                            borderRadius: BorderRadius.circular(4),
+                                                                            image: DecorationImage(
+                                                                                image: imageProvider,
+                                                                                fit: BoxFit.fill
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                                      ),
+                                                                    ),
+                                                                ),
+                                                                Positioned(
+                                                                  left:8,
+                                                                  bottom:8,
+                                                                  child: Wrap(
+                                                                    direction: Axis.horizontal,
+                                                                    alignment: WrapAlignment.start,
+                                                                    spacing: 4,
+                                                                    runSpacing: 4,
+                                                                    children: ['긴자', '음식'].map((item) {
+                                                                      return Container(
+                                                                        decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(30),
+                                                                        ),
+                                                                        child: Row(
+                                                                          children: [
+                                                                            Container(
+                                                                              width: 14,
+                                                                              height: 14,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color(0xff83CF75),
+                                                                                borderRadius: BorderRadius.circular(100),
+                                                                              ),
+                                                                              child: Center(child: Text('#', style: f10Whitew700,)),
+                                                                            ),
+                                                                            const SizedBox(width: 2,),
+                                                                            Text(
+                                                                              '${item}',
+                                                                              style: f12whitew500,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      );
+                                                                    }).toList(
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          const SizedBox(width: 8)
+                                                        ],
+                                                      );
+                                                    }
+                                                ),
+                                              )
                                             ],
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text('Day ${index + 1}',style: f16gray800w600,),
-                                                    const SizedBox(width: 9),
-                                                    Text('2024.08.12',style: f12Gray600w500,),
-                                                  ],
-                                                ),
-                                                const SizedBox(height: 18),
-                                                Expanded(
-                                                  child: ListView.builder(
-                                                      itemCount: 10,
-                                                      shrinkWrap: true,
-                                                      scrollDirection: Axis.horizontal,
-                                                      itemBuilder: (context, index) {
-                                                        return Row(
-                                                          children: [
-                                                            Container(
-                                                              width: 120,
-                                                              child: Stack(
-                                                                children: [
-                                                                  Positioned(
-                                                                    child: CachedNetworkImage(
-                                                                      imageUrl: 'https://trip-story.s3.ap-northeast-2.amazonaws.com/profile/8564dd09-bbe7-4515-9a7d-7322f4fb5cb6',
-                                                                      imageBuilder: (context, imageProvider) => Container(
-                                                                        decoration: BoxDecoration(
-                                                                          borderRadius: BorderRadius.circular(4),
-                                                                          image: DecorationImage(
-                                                                             image: imageProvider,
-                                                                              fit: BoxFit.fill
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      errorWidget: (context, url, error) => const Icon(Icons.error),
-                                                                    ),
-                                                                  ),
-                                                                  Positioned(
-                                                                      top:12,
-                                                                      left:12,
-                                                                      child: Container(
-                                                                          width:25,
-                                                                          height:25,
-                                                                          decoration:BoxDecoration(
-                                                                              color: Color(0xff56BBE6),
-                                                                              shape: BoxShape.circle
-                                                                          ),
-                                                                          child: Center(child: Text('${index}',style: f14Whitew700,)))
-                                                                  ),
-                                                                  Positioned(
-                                                                      bottom: 32,
-                                                                      left:10,
-                                                                      child:  Container(
-                                                                        width: 16,
-                                                                        height: 16,
-                                                                        decoration: BoxDecoration(
-                                                                            shape: BoxShape.circle
-                                                                        ),
-                                                                        child: ClipOval(
-                                                                          child: CachedNetworkImage(
-                                                                            imageUrl: 'https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287',
-                                                                            imageBuilder: (context, imageProvider) => Container(
-                                                                              decoration: BoxDecoration(
-                                                                                image: DecorationImage(
-                                                                                    image: imageProvider,
-                                                                                    fit: BoxFit.fill
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                            placeholder: (context, url) => const CircularProgressIndicator(),
-                                                                            errorWidget: (context, url, error) => const Icon(Icons.error),
-                                                                          ),
-                                                                        ),
-                                                                      )
-                                                                  ),
-                                                                  Positioned(
-                                                                    left:10,
-                                                                    bottom:10,
-                                                                    child: Wrap(
-                                                                      direction: Axis.horizontal,
-                                                                      alignment: WrapAlignment.start,
-                                                                      spacing: 5,
-                                                                      runSpacing: 5,
-                                                                      children: ['벚꽃', '벚꽃여행dasdsa'].map((item) {
-                                                                        return Container(
-                                                                          decoration: BoxDecoration(
-                                                                            borderRadius: BorderRadius.circular(30),
-                                                                          ),
-                                                                          child: Text(
-                                                                            '#${item}',
-                                                                            style: f12whitew500,
-                                                                          ),
-                                                                        );
-                                                                      }).toList(
-                                                                      ),
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            const SizedBox(width: 8)
-                                                          ],
-                                                        );
-                                                      }
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
                                         ),
-                                        const SizedBox(height: 20),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   );
                                 })),
                       )
@@ -450,58 +493,84 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
             ),
           ),
           Positioned(
-              top: 52,
+              top: 57,
               left: 20,
               right: 20,
-              child: Container(
-                height: 52,
-                decoration: BoxDecoration(
-                  color: gray50,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12,horizontal: 16),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset('assets/icon/search.svg'),
-                      const SizedBox(width: 4),
-                      Text('여행지를 검색해주세요',style: f14Gray500w400)
-                    ],
+              child: GestureDetector(
+                onTap: (){Get.to(()=>SearchHistoryPage());},
+                child: Container(
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: gray50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: gray200),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0x2626261A).withOpacity(0.1),
+                          offset: Offset(0, 1),
+                          blurRadius: 2,
+                        ),
+                        BoxShadow(
+                          color: Color(0x26262617).withOpacity(0.09),
+                          offset: Offset(0, 3),
+                          blurRadius: 3,
+                        ),
+                        BoxShadow(
+                          color: Color(0x2626260D).withOpacity(0.05),
+                          offset: Offset(0, 7),
+                          blurRadius: 4,
+                        ),
+                        BoxShadow(
+                          color: Color(0x26262603).withOpacity(0.01),
+                          offset: Offset(0, 13),
+                          blurRadius: 5,
+                        ),
+                      ]
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12,horizontal: 16),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset('assets/icon/search.svg', color: Color(0xff5E91EE),),
+                        const SizedBox(width: 4),
+                        Text('태그, 닉네임으로 사진을 검색해보세요',style: f15gray400w500)
+                      ],
+                    ),
                   ),
                 ),
               )
           ),
-          Positioned(
-              top: 115,
-              left: 20,
-              right: 20,
-              child: Wrap(
-                direction: Axis.horizontal,
-                alignment: WrapAlignment.start,
-                spacing: 6,
-                runSpacing: 5,
-                children: tagList.map((item) {
-                  return Container(
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 8),
-                      child: RichText(
-                          text: TextSpan(
-                              children: [
-                                TextSpan(text: '# ', style:TextStyle(color: pastelBlue)),
-                                TextSpan(text: '${item}',style: f14gray800w600),
-                              ])
-                      ),
-                    ),
-                  );
-                }).toList(
-                ),
-              )
-          ),
+          // Positioned(
+          //     top: 115,
+          //     left: 20,
+          //     right: 20,
+          //     child: Wrap(
+          //       direction: Axis.horizontal,
+          //       alignment: WrapAlignment.start,
+          //       spacing: 6,
+          //       runSpacing: 5,
+          //       children: tagList.map((item) {
+          //         return Container(
+          //           height: 28,
+          //           decoration: BoxDecoration(
+          //             color: Colors.white,
+          //             borderRadius: BorderRadius.circular(8),
+          //           ),
+          //           child: Padding(
+          //             padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 8),
+          //             child: RichText(
+          //                 text: TextSpan(
+          //                     children: [
+          //                       TextSpan(text: '# ', style:TextStyle(color: pastelBlue)),
+          //                       TextSpan(text: '${item}',style: f14gray800w600),
+          //                     ])
+          //             ),
+          //           ),
+          //         );
+          //       }).toList(
+          //       ),
+          //     )
+          // ),
         ],
       ),
     );
