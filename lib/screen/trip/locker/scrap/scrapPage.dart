@@ -76,6 +76,7 @@ class _ScrapPageState extends State<ScrapPage> {
           children: [
             Expanded(
               child: MasonryGridView.count(
+                physics: const ClampingScrollPhysics(),
                 crossAxisCount: 2,
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
