@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/screen/trip/tripHistory/searchHistoryResult.dart';
 
 import '../../../util/color.dart';
 import '../../../util/font.dart';
@@ -55,6 +56,9 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                 style: f15gray800w500,
                 controller: controller,
                 focusNode: focusNode,
+                onFieldSubmitted: (value){
+                  Get.to(()=>SearchHistoryResult());
+                },
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.symmetric(vertical: 16),
@@ -125,93 +129,98 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
           ),
         ),
         bottomSheet: focusNode.hasFocus?
-        Container(
-          width: Get.width,
-          height: 86,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Color(0x1AD4D4D4),
-                offset: Offset(0, -3),
-                blurRadius: 6,
-              ),
-              BoxShadow(
-                color: Color(0x17D4D4D4),
-                offset: Offset(0, -10),
-                blurRadius: 10,
-              ),
-              BoxShadow(
-                color: Color(0x0DD4D4D4),
-                offset: Offset(0, -23),
-                blurRadius: 14,
-              ),
-              BoxShadow(
-                color: Color(0x03D4D4D4),
-                offset: Offset(0, -40),
-                blurRadius: 16,
-              ),
-              BoxShadow(
-                color: Color(0x00D4D4D4),
-                offset: Offset(0, -63),
-                blurRadius: 18,
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('태그 컬러 검색', style: f12gray600w600,),
-                const SizedBox(height: 2,),
-                Container(
-                  width: Get.width,
-                  height: 44,
-                  child: ListView.builder(
-                    itemCount: 5,
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder:(context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap:(){
-                                selectedColor = index;
-                                setState(() {});
-                              },
-                              child: selectedColor==index
-                                  ? Container(
-                                width: 24,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: gray900,width: 2),
-                                    color: colorList[index]
-                                ),
-                                child: SvgPicture.asset('assets/icon/checkIcon.svg',fit: BoxFit.none,),
-                              )
-                                  :  Container(
-                                width: 24,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: colorList[index],
-                                    border: colorList[index] == whiteColor?Border.all(color: gray200):null
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12)
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+        GestureDetector(
+          onTap: (){
+            
+          },
+          child: Container(
+            width: Get.width,
+            height: 86,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x1AD4D4D4),
+                  offset: Offset(0, -3),
+                  blurRadius: 6,
+                ),
+                BoxShadow(
+                  color: Color(0x17D4D4D4),
+                  offset: Offset(0, -10),
+                  blurRadius: 10,
+                ),
+                BoxShadow(
+                  color: Color(0x0DD4D4D4),
+                  offset: Offset(0, -23),
+                  blurRadius: 14,
+                ),
+                BoxShadow(
+                  color: Color(0x03D4D4D4),
+                  offset: Offset(0, -40),
+                  blurRadius: 16,
+                ),
+                BoxShadow(
+                  color: Color(0x00D4D4D4),
+                  offset: Offset(0, -63),
+                  blurRadius: 18,
                 ),
               ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('태그 컬러 검색', style: f12gray600w600,),
+                  const SizedBox(height: 2,),
+                  Container(
+                    width: Get.width,
+                    height: 44,
+                    child: ListView.builder(
+                      itemCount: 5,
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder:(context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap:(){
+                                  selectedColor = index;
+                                  setState(() {});
+                                },
+                                child: selectedColor==index
+                                    ? Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: gray900,width: 2),
+                                      color: colorList[index]
+                                  ),
+                                  child: SvgPicture.asset('assets/icon/checkIcon.svg',fit: BoxFit.none,),
+                                )
+                                    :  Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: colorList[index],
+                                      border: colorList[index] == whiteColor?Border.all(color: gray200):null
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12)
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ):null,

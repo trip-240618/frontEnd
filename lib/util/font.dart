@@ -81,6 +81,20 @@ const TextStyle f16darkGray2w400 = TextStyle(
 );
 
 /// Medium
+const TextStyle f10Gray800w500 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 10,
+  fontWeight: FontWeight.w500,
+  height: 13 / 10,
+  color: gray800,
+);
+const TextStyle f10Whitew500 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 10,
+  fontWeight: FontWeight.w500,
+  height: 13 / 10,
+  color: Colors.white,
+);
 const TextStyle f11redw500 = TextStyle(
   fontFamily: 'Pretendard',
   fontSize: 11,

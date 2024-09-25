@@ -24,18 +24,22 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BackAppBar(text: '장소 검색', onTap: (){Get.back();}),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          placesAutoCompleteTextField(),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.only(top: 16, left: 20, right: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('여행 장소', style: f12gray600w600,),
+            const SizedBox(height: 8,),
+            placesAutoCompleteTextField(),
+          ],
+        ),
       ),
     );
   }
   placesAutoCompleteTextField() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: GooglePlaceAutoCompleteTextField(
         textStyle: f14gray600w500,
         textEditingController: controller,
@@ -47,9 +51,10 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
           hintStyle: f14Gray500w400,
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
-          prefixIcon: SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none,)
+          prefixIcon: SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none,color: Color(0xff5E91EE),)
         ),
         boxDecoration: BoxDecoration(
+          color: gray50,
           border: Border.all(width: 1, color: gray200),
           borderRadius: BorderRadius.circular(4)
         ),
