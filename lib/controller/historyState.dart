@@ -3,22 +3,22 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../screen/trip/tripHistory/album/modal/albumModel.dart';
+import '../screen/trip/tripHistory/history/model/detailItem.dart';
 
 
 class HistoryState extends GetxController{
   AlbumModel? albumModel;
   final RxList albums = [].obs;
-  final RxList selectAlbumList = [].obs;
-  // final RxList<AssetPathEntity> totalAlbumList = RxList<AssetPathEntity>([]); /// 전체 앨범 가져오기
-  // final Rx<List<AlbumModel>> albumSubList = Rx<List<AlbumModel>>([]); /// 앨범 첫번쨰 사진 가져오기
-  // final Rx<List<AlbumModel>> albumList = Rx<List<AlbumModel>>([]); ///해당 앨범 사진 목록
+  final RxList selectAlbumList = [].obs; ///선택된 앨범 리스트
   final selectAlbumIndex = 0.obs; /// 클릭한 앨범 리스트
-
   // final Rx<List<AlbumModel>> selectAlbumList = Rx<List<AlbumModel>>([]); /// 선택한 앨범 리스트
 
   final Completer<GoogleMapController> mapController = Completer<GoogleMapController>();
   final latitude = 0.0.obs;
   final longitude = 0.0.obs;
+
+  ///댓글 리스트
+  final RxList<DetailItem> detailList = <DetailItem>[].obs;
 
   @override
   void onInit() {
@@ -31,6 +31,37 @@ class HistoryState extends GetxController{
     super.onClose();
   }
 
+  Future<void>addDetailItem()async{
+    detailList.add(
+      DetailItem(
+        imageUrl: 'https://example.com/image.jpg',
+        comments: [
+          Comment(
+            username: 'user1',
+            content: '좋은 사진이네요!',
+            timestamp: DateTime.now(),
+          ),
+          Comment(
+            username: 'user2',
+            content: '멋집니다!',
+            timestamp: DateTime.now(),
+          ),
+        ],
+      ),
+    );
+  }
+  void addCommentToDetailItem(int index, Comment newComment) {
+    Comment(
+      username: 'user2',
+      content: '멋집니다!',
+      timestamp: DateTime.now(),
+    );
+    detailList[index].comments.add(newComment);
+    detailList[index] = DetailItem(
+      imageUrl: detailList[index].imageUrl,
+      comments: List.from(detailList[index].comments),
+    );
+  }
   ///앨범 정보 가져오는 함수
   Future<void> getAlbums() async {
     albums.clear();

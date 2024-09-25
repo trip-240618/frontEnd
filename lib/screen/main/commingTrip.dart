@@ -8,6 +8,7 @@ import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import '../../component/bottomModals.dart';
+import '../../component/main/emptyScreen.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
 import 'mainPage.dart';
@@ -22,14 +23,14 @@ class CommingTrip extends StatefulWidget {
 class _CommingTripState extends State<CommingTrip> {
   final ms = Get.put(MainState());
   bool isLoading = true;
-
+  int maxLength = 0;
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
       isLoading = false;
       await ms.getComingTrip();
       setState(() {});
-      print('처음 가져오기 ${ms.tripList}');
+      print('처음 가져오기 ${ms.tripList.length}');
     });
     super.initState();
   }
@@ -42,9 +43,9 @@ class _CommingTripState extends State<CommingTrip> {
         child: ListView.builder(
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
-            itemCount: ms.tripList.length,
+            itemCount: ms.tripList.length==0?1:ms.tripList.length,
             itemBuilder: (contexts, index) {
-              return Column(
+              return ms.tripList.length==0?EmptyScreen(context):Column(
                 children: [
                   GestureDetector(
                     onTap: (){
@@ -73,18 +74,18 @@ class _CommingTripState extends State<CommingTrip> {
                                     Container(
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                            color: greenColor,
+                                            color: Color(int.parse('${ms.tripList[index]['labelColor']}')),
                                             width: 1.5, // 1.5px 두께
                                           ),
                                           borderRadius: BorderRadius.circular(100)
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
-                                        child: Text('D-31',style: f14Greenw700,),
+                                        child: Text('D-${DateTime.parse('${ms.tripList[index]['startDate']}').difference(DateTime.now()).inDays + 1}',style: changeColor(Color(int.parse('${ms.tripList[index]['labelColor']}'))),),
                                       ),
                                     ),
                                     const SizedBox(width: 6),
-                                    Text('2024.04.01 ~ 2024.04.07',style: f12Gray800w500,),
+                                    Text('${ms.tripList[index]['startDate']} ~ ${ms.tripList[index]['endDate']}',style: f12Gray800w500,),
                                     Spacer(),
                                     GestureDetector(
                                         onTap: (){
@@ -93,7 +94,11 @@ class _CommingTripState extends State<CommingTrip> {
                                         },
                                         child: SvgPicture.asset('assets/icon/send.svg',color: gray900)),
                                     const SizedBox(width: 12),
-                                    SvgPicture.asset('assets/icon/bookmark.svg'),
+                                    GestureDetector(
+                                      onTap: (){
+                                        print('3132');
+                                      },
+                                        child: ms.tripList[index]['bookmark']?SvgPicture.asset('assets/icon/checkBookmark.svg'):SvgPicture.asset('assets/icon/bookmark.svg')),
                                   ],
                                 ),
                               )
@@ -115,7 +120,7 @@ class _CommingTripState extends State<CommingTrip> {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(4),
                                         child: CachedNetworkImage(
-                                          imageUrl: 'https://trip-story.s3.ap-northeast-2.amazonaws.com/profile/3c98eecc-e9b0-45c6-8cf2-d34d8b678509',
+                                          imageUrl:'${ms.tripList[index]['thumbnail']}',
                                           imageBuilder: (context, imageProvider) => Container(
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
@@ -140,17 +145,17 @@ class _CommingTripState extends State<CommingTrip> {
                                                 width: 20,
                                                 height: 20,
                                                 decoration: BoxDecoration(
-                                                    color: greenColor,
+                                                    color: Color(int.parse('${ms.tripList[index]['labelColor']}')),
                                                     shape: BoxShape.circle
                                                 ),
-                                                child: Center(child: Text('J',style: f12Whitew700,))
+                                                child: Center(child: Text('${ms.tripList[index]['type']}',style: f12Whitew700,))
                                             ),
                                             const SizedBox(width: 6),
-                                            Text('5월 도쿄 여행방',style: f15gray800w600,)
+                                            Text('${ms.tripList[index]['name']}',style: f15gray800w600,)
                                           ],
                                         ),
                                         Spacer(),
-                                        Text('일본',style: f12gray600w600,),
+                                        Text('${ms.tripList[index]['country']}',style: f12gray600w600,),
                                       ],
                                     ),
                                     Spacer(),
@@ -173,14 +178,15 @@ class _CommingTripState extends State<CommingTrip> {
                                               //   ],
                                               // ),
                                               GestureDetector(
-                                                onTap:(){
+                                                onTap:()async{
+                                                 int maxlen = await getLongestNicknameLength(ms.tripList[index]['tripMemberDtoList']);
                                                   showPopover(
                                                       context: context,
-                                                      bodyBuilder: (context) => ListItems(),
+                                                      bodyBuilder: (context) => ListItems(index: index,),
                                                       onPop: () => print('Popover was popped!'),
                                                       direction: PopoverDirection.bottom,
-                                                      width: 14*5+100,
-                                                      height: 250,
+                                                      width: 14*maxlen+100,
+                                                      height: 30*maxlen+0,
                                                       contentDyOffset: 10, // Popover를 더 가까이 붙이기
                                                       arrowHeight: 8,
                                                       arrowWidth: 13
@@ -199,7 +205,7 @@ class _CommingTripState extends State<CommingTrip> {
                                                           'assets/icon/userIcon.svg',
                                                         ),
                                                         const SizedBox(width: 5),
-                                                        Text('5',style: f14gray600w700,)
+                                                        Text('${ms.tripList[index]['tripMemberDtoList'].length}',style: f14gray600w700,)
                                                       ],
                                                     ),
                                                   ),
@@ -223,5 +229,17 @@ class _CommingTripState extends State<CommingTrip> {
             }),
       ),
     ));
+  }
+  Future<int> getLongestNicknameLength(List<dynamic> tripMemberDtoList) async{
+    int longestLength = 0;
+
+    for (var member in tripMemberDtoList) {
+      String nickname = member['nickname'] ?? ''; // null 값 방지를 위해 기본값 '' 처리
+      if (nickname.length > longestLength) {
+        longestLength = nickname.length;
+      }
+    }
+  return longestLength;
+    print('가장 긴 닉네임의 길이: $longestLength');
   }
 }

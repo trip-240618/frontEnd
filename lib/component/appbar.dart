@@ -30,9 +30,13 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-      title: Text(
-        text,
-        style: f16gray900w700,
+      title: Row(
+        children: [
+          Text(
+            text,
+            style: f16gray900w700,
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
     );

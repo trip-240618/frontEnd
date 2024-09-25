@@ -168,16 +168,18 @@ class _MainPageState extends State<MainPage> {
 }
 
 class ListItems extends StatelessWidget {
-  const ListItems({Key? key}) : super(key: key);
+  final int index;
+  const ListItems({Key? key, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ms = Get.put(MainState());
     return ListView.builder(
       padding: EdgeInsets.only(top: 10),
-      itemCount: 5,
+      itemCount: ms.tripList[index]['tripMemberDtoList'].length,
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
-      itemBuilder: (context, index){
+      itemBuilder: (context, idx){
         return Container(
           child: Column(
             children: [
@@ -191,7 +193,7 @@ class ListItems extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: CachedNetworkImage(
-                          imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2F6sYlEQ7iIBAkqplhqe3E?alt=media',
+                          imageUrl: ms.tripList[index]['tripMemberDtoList'][idx]['profileImg']==''?'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2F6sYlEQ7iIBAkqplhqe3E?alt=media':'${ms.tripList[index]['tripMemberDtoList'][idx]['profileImg']}',
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               image: DecorationImage(
@@ -206,7 +208,7 @@ class ListItems extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12,),
-                    Expanded(child: Text('허지우우우',style: f14Gray800w500,overflow: TextOverflow.ellipsis,)),
+                    Expanded(child: Text('${ms.tripList[index]['tripMemberDtoList'][idx]['nickname']}',style: f14Gray800w500,overflow: TextOverflow.ellipsis,)),
                   ],
                 ),
               ),

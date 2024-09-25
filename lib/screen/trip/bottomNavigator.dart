@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/trip/tripHistory/tripHistoryMain.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/jSchedulePage.dart';
 import 'package:tripStory/util/color.dart';
@@ -19,7 +20,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   List<Widget> _widgetOptions = [];
   late TabController _bottomTabController;
   int _currentIndex = 0;
-
+  final ms = Get.put(MainState());
   @override
   void initState() {
 
@@ -44,7 +45,8 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                      onTap: (){
+                      onTap: ()async{
+                        await ms.getComingTrip();
                         Get.back();
                       },
                       child: SvgPicture.asset('assets/icon/home.svg')),

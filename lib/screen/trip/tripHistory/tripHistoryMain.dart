@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/app/permission/permission.dart';
+import 'package:tripStory/component/dialog/daySelect.dart';
 import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/screen/trip/tripHistory/searchHistoryPage.dart';
 import 'package:tripStory/util/color.dart';
@@ -285,7 +286,8 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                         onTap: ()async{
                                           bool isRequest = await requestPhotoMangerPermission(context);
                                           if(isRequest){
-                                            Get.to(()=>AlbumPage());
+                                            SelectDayDialog(context, '', (){});
+                                            // Get.to(()=>AlbumPage());
                                           }
                                         },
                                         child: SvgPicture.asset('assets/icon/enabledRoundPlus.svg')),
