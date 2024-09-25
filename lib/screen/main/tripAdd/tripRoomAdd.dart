@@ -13,6 +13,7 @@ import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/main/tripAdd/tripCalendar.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../component/bottomContainer.dart';
+import '../../../component/dialog/dialog.dart';
 import '../../../util/font.dart';
 
 class TripRoomAddScreen extends StatefulWidget {
@@ -450,11 +451,10 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                     ms.tripDate,
                     ms.tripDestination.value
                 );
+                if(isCreate){
+                  CodeDialog(context);
+                }
               }
-              // if(isCreate){
-              //   CodeDialog(context);
-              //  }
-              //   Get.back();
         },title: '저장'),
       ),
       ),

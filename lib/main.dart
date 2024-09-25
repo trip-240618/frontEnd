@@ -8,6 +8,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/component/splashScreen.dart';
 import 'package:tripStory/screen/login/loginPage.dart';
 import 'package:tripStory/screen/login/register/term.dart';
+import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import 'imageTest.dart';
 
 
@@ -48,7 +49,8 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(color: Colors.white,surfaceTintColor: Colors.white)
       ),
       // home: SplashPage()
-      home: LoginPage(),
+      // home: LoginPage(),
+      home: BottomNavigator(),
       // home: TermPage(),
     );
   }

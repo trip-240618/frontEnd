@@ -55,33 +55,30 @@ class BlackCountContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: GestureDetector(
-          onTap: onTap,
-          child: Container(
-            width: Get.width,
-            height: 58,
-            decoration: BoxDecoration(
-                color: gray900,
-                borderRadius: BorderRadius.circular(4)
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(title,style: f16Whitew700,),
-                const SizedBox(width: 8),
-                Container(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: Get.width,
+          height: 58,
+          decoration: BoxDecoration(
+              color: gray900,
+              borderRadius: BorderRadius.circular(4)
+          ),
+          child: count==0?Center(child: Text(title,style: f16Whitew700)):Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(title,style: f16Whitew700,),
+              const SizedBox(width: 8,),
+              Container(
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    shape: BoxShape.circle,
+                    shape: BoxShape.circle
                   ),
-                  child: Center(child: Text('${count}',style: f12gray900w700)),
-                )
-              ],
-            ),
+                  child: Center(child: Text('${count}',style: f12gray900w700,)))
+            ],
           ),
         ),
       ),

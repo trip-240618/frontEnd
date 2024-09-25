@@ -148,7 +148,7 @@ class _PastTripState extends State<PastTrip> {
                                               onTap:(){
                                                 showPopover(
                                                     context: context,
-                                                    bodyBuilder: (context) => ListItems(),
+                                                    bodyBuilder: (context) => ListItems(index: index,),
                                                     onPop: () => print('Popover was popped!'),
                                                     direction: PopoverDirection.bottom,
                                                     width: 14*3+100,
