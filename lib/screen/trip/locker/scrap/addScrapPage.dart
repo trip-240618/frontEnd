@@ -22,6 +22,8 @@ class _AddScrapPageState extends State<AddScrapPage> {
   TextEditingController titleCon = TextEditingController();
   QuillController _controller = QuillController.basic();
   final FocusNode _focusNode = FocusNode();
+  List colorList = [whiteColor,pastelBlue,mainRed,yellowColor,greenColor];
+  int selectedColor = 0;
 
 
   @override
@@ -96,9 +98,11 @@ class _AddScrapPageState extends State<AddScrapPage> {
         });
       },
       child: Scaffold(
-        appBar: BackAppBar(text: '스크랩', onTap: (){Get.back();}),
+        backgroundColor: gray50,
+        resizeToAvoidBottomInset: false,
+        appBar: TrailingBackAppBar(text: '스크랩', backTap: (){Get.back();}, svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),trailingTap: (){print('12');},),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.only(top:15, left: 20, right: 20, bottom: 35),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -114,9 +118,9 @@ class _AddScrapPageState extends State<AddScrapPage> {
                 ),
               ),
               const SizedBox(height: 10,),
-
               Container(
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   border: Border.all(
                       width: 1,
                       color: gray200
@@ -129,13 +133,13 @@ class _AddScrapPageState extends State<AddScrapPage> {
                   child: Column(
                     children: [
                       Container(
-                        height: 500,
+                        height: Get.height*0.6,
                         child: QuillEditor.basic(
                           focusNode: _focusNode,
                           controller: _controller,
                           configurations: QuillEditorConfigurations(
                             showCursor: true,
-                            customStyles: DefaultStyles(color: Colors.red),
+                            customStyles: DefaultStyles(),
                             embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(),
                             autoFocus: true
                           ),
@@ -161,13 +165,60 @@ class _AddScrapPageState extends State<AddScrapPage> {
                   ),
                 ),
               ),
-              // Container(
-              //   height: 100,
-              //   child: QuillSimpleToolbar(
-              //     controller: _controller,
-              //     configurations: const QuillSimpleToolbarConfigurations(),
-              //   ),
-              // ),
+              const SizedBox(height: 20,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('태그 컬러', style: f12gray600w600,),
+                  const SizedBox(height: 2,),
+                  Container(
+                    width: Get.width,
+                    height: 44,
+                    child: ListView.builder(
+                      itemCount: 5,
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder:(context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap:(){
+                                  selectedColor = index;
+                                  setState(() {});
+                                },
+                                child: selectedColor==index
+                                    ? Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: gray900,width: 2),
+                                      color: colorList[index]
+                                  ),
+                                  child: SvgPicture.asset('assets/icon/checkIcon.svg',fit: BoxFit.none,),
+                                )
+                                    :  Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: colorList[index],
+                                      border: colorList[index] == whiteColor?Border.all(color: gray200):null
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12)
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
 
             ],
           ),
