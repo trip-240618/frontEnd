@@ -239,53 +239,6 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                         ),
                         const SizedBox(height: 16),
                         Text('간단 메모', style: f12gray600w600),
-                        const SizedBox(height: 8),
-                        Container(
-                          width: Get.width,
-                          decoration: BoxDecoration(
-                              color: gray50,
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: gray200)
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: albumTextList[selectIdx],
-                                    autofocus: false,
-                                    style: f16gray800w600,
-                                    onChanged: (v){
-                                      setState(() {});
-                                    },
-                                    inputFormatters: <TextInputFormatter>[
-                                      LengthLimitingTextInputFormatter(15),
-                                    ],
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.zero,
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      hintText: '여행방 제목을 입력해주세요',
-                                      hintStyle: f14Gray500w400,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10,),
-                                Text('${albumTextList[selectIdx].text.length}/15',style: f11Gray400w600,)
-                              ],
-                            ),
-                          ),
-                        ),
-                        Spacer(),
-                        BlackCountContainer(onTap: (){
-                          Get.to(()=>TripHistoryDetailPage());
-                        },title: '업로드',count: 0,),
                       ],
                     ),
                   )
@@ -373,6 +326,61 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
         //     ),
         //   ),
         // ),
+      bottomSheet: Container(
+        width: Get.width,
+        decoration: BoxDecoration(color: Colors.white),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20,right: 20,top: 8,bottom: 10),
+          child: Container(
+            width: Get.width,
+            decoration: BoxDecoration(
+                color: gray50,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: gray200)
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: albumTextList[selectIdx],
+                      autofocus: false,
+                      style: f16gray800w600,
+                      onChanged: (v){
+                        setState(() {});
+                      },
+                      inputFormatters: <TextInputFormatter>[
+                        LengthLimitingTextInputFormatter(15),
+                      ],
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: '여행방 제목을 입력해주세요',
+                        hintStyle: f14Gray500w400,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10,),
+                  Text('${albumTextList[selectIdx].text.length}/15',style: f11Gray400w600,)
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar:Padding(
+         padding: const EdgeInsets.only(bottom: 44,left: 20,right: 20,top: 46),
+         child: BlackCountContainer(onTap: (){
+           Get.to(()=>TripHistoryDetailPage());
+         },title: '업로드',count: 0,),
+       ),
     );
   }
 }

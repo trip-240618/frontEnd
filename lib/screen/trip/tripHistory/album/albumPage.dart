@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import 'package:tripStory/util/color.dart';
@@ -98,73 +99,90 @@ class _AlbumPageState extends State<AlbumPage> {
                   cacheExtent: 5000,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
+                    crossAxisSpacing: 3,
+                    mainAxisSpacing: 3,
                     childAspectRatio: 1,
                   ),
                   shrinkWrap: true,
                   itemCount: hs.albums.isEmpty||hs.albums[hs.selectAlbumIndex.value].images.length==0?0:hs.albums[hs.selectAlbumIndex.value].images.length,
                   itemBuilder: (context, index) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          index==0
-                              ? Container(
+                    return Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        if (index==0) GestureDetector(
+                          onTap: (){
+                            hs.getSingleCamera(ImageSource.camera);
+                          },
+                          child: Container(
                             width: Get.width,
                             height: 128,
                             decoration: BoxDecoration(
-                              color: gray300,
+                              color: gray50,
                             ),
-                            child: SvgPicture.asset('assets/icon/camera.svg',fit: BoxFit.none,),
-                          )
-                              : GestureDetector(
-                            onTap:()async{
-                              // printExifOf(hs.albums[0].images[index-1]);
-                              if(hs.selectAlbumList.contains(hs.albums[0].images[index-1])){
-                                hs.removeFromSelectedAlbum(hs.albums[0].images[index-1]);
-                              }else{
-                                hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
-                              }
-                            },
-                            child: AssetEntityImage(
-                              gaplessPlayback: true,
-                              filterQuality: FilterQuality.high,
-                              isOriginal: false,
-                              thumbnailSize: ThumbnailSize.square(isScoll?500:25),
-                              thumbnailFormat: ThumbnailFormat.png,
-                              hs.albums[hs.selectAlbumIndex.value].images[index-1],
-                              fit: BoxFit.cover,
-                            ),
+                            child: SvgPicture.asset('assets/icon/camera.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn),fit: BoxFit.none,),
                           ),
-                          index==0?SizedBox():
-                          Positioned(
-                              top: 8,
-                              right: 8,
-                              child: hs.selectAlbumList.contains(hs.albums[hs.selectAlbumIndex.value].images[index-1])
-                                  ?Container(
+                        ) else GestureDetector(
+                          onTap:()async{
+                            if(hs.selectAlbumList.contains(hs.albums[0].images[index-1])){
+                              hs.removeFromSelectedAlbum(hs.albums[0].images[index-1]);
+                            }else{
+                              hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
+                            }
+                          },
+                          child: AssetEntityImage(
+                            gaplessPlayback: true,
+                            filterQuality: FilterQuality.high,
+                            isOriginal: false,
+                            thumbnailSize: ThumbnailSize.square(isScoll?500:25),
+                            thumbnailFormat: ThumbnailFormat.png,
+                            hs.albums[hs.selectAlbumIndex.value].images[index-1],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        index==0?SizedBox():
+                        Positioned(
+                            top: 8,
+                            right: 8,
+                            child: hs.selectAlbumList.contains(hs.albums[hs.selectAlbumIndex.value].images[index-1])
+                                ?GestureDetector(
+                              onTap:(){
+                                if(hs.selectAlbumList.contains(hs.albums[0].images[index-1])){
+                                  hs.removeFromSelectedAlbum(hs.albums[0].images[index-1]);
+                                }else{
+                                  hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
+                                }
+                              },
+                              child: Container(
                                 width: 18,
                                 height: 18,
                                 decoration: BoxDecoration(
-                                    color: mainRed,
+                                    color: gray900,
                                     shape: BoxShape.circle
                                 ),
                                 child: SvgPicture.asset('assets/icon/check2.svg',
                                   colorFilter: ColorFilter.mode(Colors.white,BlendMode.srcIn),
                                   width: 8,height: 6,fit: BoxFit.none,),
-                              )
-                                  :Container(
+                              ),
+                            )
+                                :GestureDetector(
+                              onTap:(){
+                                if(hs.selectAlbumList.contains(hs.albums[0].images[index-1])){
+                                  hs.removeFromSelectedAlbum(hs.albums[0].images[index-1]);
+                                }else{
+                                  hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
+                                }
+                              },
+                              child: Container(
                                 width: 18,
                                 height: 18,
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     shape: BoxShape.circle
                                 ),
-                              )
-                          )
-                        ],
-                      ),
+                              ),
+                            )
+                        )
+                      ],
                     );
                   },
                 ),

@@ -35,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
             KakaoContainer(onTap: ()async{
               // await UserApi.instance.unlink();
               await kakaoLogin();
+              print('?? ${us.userList}');
               if(us.userList[0]['type']=='register'){
                   Get.to(()=>TermPage());
               } else if(us.userList[0]['type']=='login'){

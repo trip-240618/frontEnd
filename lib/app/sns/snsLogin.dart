@@ -11,7 +11,6 @@ import '../api/userApi.dart';
 /// 카카오로그인
 Future<void> kakaoLogin() async {
   if (await isKakaoTalkInstalled()) {
-    print('카카오톡 설치');
     try {
       final oauthToken= await UserApi.instance.loginWithKakaoTalk();
       await sendTokenToServer(oauthToken.accessToken,oauthToken.refreshToken.toString());

@@ -124,8 +124,10 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                         Spacer(),
                         PopupMenuButton(
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
+                                borderRadius: BorderRadius.circular(4),
+                            ),
                             offset: const Offset(-20, 40),
+                            shadowColor: Colors.black.withOpacity(0.4),
                             icon: Container(
                               height: 15,
                               width: 20,
@@ -136,18 +138,31 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                 width: 20,
                               ),
                             ),
+                            color: gray50,
                             itemBuilder: (context) => [
                               PopupMenuItem(
                                 padding: EdgeInsets.zero,
                                 value: 1,
                                 child: Column(
                                   children: [
-                                    Center(
-                                      child: Text(
-                                        '수정하기',
+                                    Padding(
+                                      padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                                      child: Container(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+                                            const SizedBox(width: 10,),
+                                            Text(
+                                              '수정하기',
+                                              style: f14Gray800w500,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    const Divider(), // Divider를 Column 내의 다른 자식으로 이동
+                                    const Divider(color: gray200,), // Divider를 Column 내의 다른 자식으로 이동
                                   ],
                                 ),
                                 onTap: () {
@@ -159,12 +174,22 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                   padding: EdgeInsets.zero,
                                   child: Column(
                                     children: [
-                                      Center(
-                                          child: const Text(
-                                            '삭제하기',
-                                          )),
-                                      SizedBox(
-                                        height: 8,
+                                      Padding(
+                                        padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                                        child: Container(
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+                                              const SizedBox(width: 10,),
+                                              Text(
+                                                '삭제하기',
+                                                style: f14Gray800w500,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -225,14 +250,14 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                 GestureDetector(
                   onTap: (){
                     hs.addCommentToDetailItem(
-                      0,  // 첫 번째 DetailItem에 댓글 추가
+                      0,
                       Comment(
                         username: 'user3',
                         content: '댓글 추가하기!',
                         timestamp: DateTime.now(),
                       ),
                     );
-                    _scrollController.jumpTo(_scrollController.position.maxScrollExtent+50);
+                    _scrollController.jumpTo(_scrollController.position.maxScrollExtent+100);
                     print('312321');
                   },
                   child: Container(

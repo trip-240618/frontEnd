@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../screen/trip/tripHistory/album/modal/albumModel.dart';
 import '../screen/trip/tripHistory/history/model/detailItem.dart';
@@ -8,6 +9,7 @@ import '../screen/trip/tripHistory/history/model/detailItem.dart';
 
 class HistoryState extends GetxController{
   AlbumModel? albumModel;
+  final ImagePicker _picker = ImagePicker();
   final RxList albums = [].obs;
   final RxList selectAlbumList = [].obs; ///선택된 앨범 리스트
   final selectAlbumIndex = 0.obs; /// 클릭한 앨범 리스트
@@ -40,6 +42,7 @@ class HistoryState extends GetxController{
             username: 'user1',
             content: '좋은 사진이네요!',
             timestamp: DateTime.now(),
+
           ),
           Comment(
             username: 'user2',
@@ -47,10 +50,11 @@ class HistoryState extends GetxController{
             timestamp: DateTime.now(),
           ),
         ],
+        tagData: []
       ),
     );
   }
-  void addCommentToDetailItem(int index, Comment newComment) {
+  Future<void> addCommentToDetailItem(int index, Comment newComment) async{
     Comment(
       username: 'user2',
       content: '멋집니다!',
@@ -60,6 +64,7 @@ class HistoryState extends GetxController{
     detailList[index] = DetailItem(
       imageUrl: detailList[index].imageUrl,
       comments: List.from(detailList[index].comments),
+      tagData: []
     );
   }
   ///앨범 정보 가져오는 함수
@@ -104,6 +109,15 @@ class HistoryState extends GetxController{
         });
       }
     });
+  }
+
+  Future getSingleCamera(ImageSource imageSource) async {
+    final XFile? pickedFile = await _picker.pickImage(source: imageSource);
+    if (pickedFile != null) {
+      // setState(() {
+      //   _pickedImage = XFile(pickedFile.path);
+      // });
+    }
   }
 
   // void loadMoreImages(AssetPathEntity album) async {
