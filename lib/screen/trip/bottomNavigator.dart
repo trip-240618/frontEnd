@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/controller/mainState.dart';
+import 'package:tripStory/screen/trip/locker/lockerTapPage.dart';
 import 'package:tripStory/screen/trip/tripHistory/tripHistoryMain.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/jSchedulePage.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
-
-import 'locker/scrap/scrapPage.dart';
 
 class BottomNavigator extends StatefulWidget {
   const BottomNavigator({super.key});
@@ -24,7 +23,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   @override
   void initState() {
 
-    _widgetOptions = [JSchedulePage(), ScrapPage(), TripHistoryMainPage()];
+    _widgetOptions = [JSchedulePage(), LockerTapPage(), TripHistoryMainPage()];
     _bottomTabController = TabController(length: 3, vsync: this,initialIndex: 0);
     _currentIndex = 0;
     super.initState();
@@ -49,31 +48,16 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                         await ms.getComingTrip();
                         Get.back();
                       },
-                      child: SvgPicture.asset('assets/icon/home.svg')),
+                      child: SvgPicture.asset('assets/icon/home.svg', color: gray900,)),
                   Expanded(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: gray200,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              'J',
-                              style: f12gray400W700,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 4),
                         Flexible(
                           child: Text(
                             '도쿄 여행방',
-                            style: f16gray600w700,
+                            style: f18Gray900w600,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
@@ -83,11 +67,11 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                   ),
                   Container(
                       width: 24,
-                      child: SvgPicture.asset('assets/icon/dot.svg')),
+                      child: SvgPicture.asset('assets/icon/dot.svg', color: gray900,)),
                 ],
               ),
-              const SizedBox(height: 4),
-              Text('2024.05.10 ~ 2024.05.14',style: f12Gray500w500,)
+              const SizedBox(height: 2),
+              Text('2024.05.10 ~ 2024.05.14',style: f12Gray600w500,)
             ],
           ),
         ),
@@ -123,7 +107,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
           ),
           unselectedLabelStyle: f10w500,
           labelStyle: f10w500,
-          labelColor: gray600,
+          labelColor: gray900,
           unselectedLabelColor: gray300,
           padding: EdgeInsets.zero,
           labelPadding: EdgeInsets.only(bottom: 20,top: 5),
@@ -134,7 +118,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                 'assets/bottomNavi/schedule.svg',
                 width: 18,
                 height: 19,
-                color: _currentIndex == 0 ? gray600 : gray300,
+                color: _currentIndex == 0 ? gray900 : gray300,
               ),
               iconMargin: EdgeInsets.only(bottom: 3),
               text: '여행 일정',
@@ -144,7 +128,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                 'assets/bottomNavi/locker.svg',
                 width: 20,
                 height: 16,
-                color: _currentIndex == 1 ? gray600 : gray300,
+                color: _currentIndex == 1 ? gray900 : gray300,
               ),
               iconMargin: EdgeInsets.only(bottom: 3),
               text: '보관함',
@@ -154,7 +138,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                 'assets/bottomNavi/tripHistory.svg',
                 width: 24,
                 height: 24,
-                color: _currentIndex == 2 ? gray600 : gray300,
+                color: _currentIndex == 2 ? gray900 : gray300,
               ),
               iconMargin: EdgeInsets.only(bottom: 3),
               text: '여행 기록',
