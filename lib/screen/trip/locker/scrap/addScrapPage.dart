@@ -100,7 +100,7 @@ class _AddScrapPageState extends State<AddScrapPage> {
       child: Scaffold(
         backgroundColor: gray50,
         resizeToAvoidBottomInset: false,
-        appBar: TrailingBackAppBar(text: '스크랩', backTap: (){Get.back();}, svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),trailingTap: (){print('12');},),
+        appBar: TrailingBackAppBar(text: '스크랩', backTap: (){Get.back();}, svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),trailingTap: (){scrapSave();},),
         body: Padding(
           padding: const EdgeInsets.only(top:15, left: 20, right: 20, bottom: 35),
           child: Column(

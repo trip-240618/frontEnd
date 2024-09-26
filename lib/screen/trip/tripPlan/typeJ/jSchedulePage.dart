@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/controller/jPlanState.dart';
+import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/addFlight.dart';
 import 'package:tripStory/util/color.dart';
 
 import '../../../../component/button.dart';
@@ -69,52 +70,28 @@ class _JSchedulePageState extends State<JSchedulePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  height:24,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 10,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Row(
-                        children: [
-                          Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle
-                            ),
-                            child: ClipOval(
-                              child: CachedNetworkImage(
-                                imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2F6sYlEQ7iIBAkqplhqe3E?alt=media',
-                                imageBuilder: (context, imageProvider) => Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.fill
-                                    ),
-                                  ),
-                                ),
-                                placeholder: (context, url) => const CircularProgressIndicator(),
-                                errorWidget: (context, url, error) => const Icon(Icons.error),
-                              ),
-                            ),
-                          ),
-                          index==9?SizedBox():SizedBox(width: 4)
-                        ],
-                      );
-                    },
+          Row(
+            children: [
+              Spacer(),
+              Container(
+                decoration: BoxDecoration(
+                  color: gray200,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset('assets/icon/userIcon.svg', color: gray900,),
+                      const SizedBox(width: 6,),
+                      Text('5', style: f14Gray900w700,),
+                      const SizedBox(width: 6,),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              SizedBox(width: 21,),
+            ],
           ),
           const SizedBox(height: 10),
           Padding(
@@ -216,142 +193,166 @@ class _JSchedulePageState extends State<JSchedulePage> {
               },
             ),
           )),
-          const SizedBox(height: 8),
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: (){
               js.isGoogleExpanded.value = !js.isGoogleExpanded.value;
             },
-              child: Center(
-                  child: Container(
-                      width: 100,
-                      height: 15,
-                      child: SvgPicture.asset('assets/icon/wideUnderArrow.svg',fit: BoxFit.none,)))
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(color: gray200),
+                    bottom: BorderSide(color: gray200)
+                  )
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Center(
+                      child: Container(
+                        width: 54,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: gray400,
+                        ),)),
+                ),
+              )
           ),
           Obx(()=>Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: (){
-                      js.isSorting.value = !js.isSorting.value;
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: pastelBlue, // #67E299 색상
-                                width: 1.5, // 1.5px 두께
-                              ),
-                              borderRadius: BorderRadius.circular(100)
+            child: Container(
+              color: gray50,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10,),
+                    GestureDetector(
+                      onTap: (){
+                        js.isSorting.value = !js.isSorting.value;
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: pastelBlue, // #67E299 색상
+                                  width: 1.5, // 1.5px 두께
+                                ),
+                                borderRadius: BorderRadius.circular(100)
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
+                              child: Text('Day 2',style: f12blueW700,),
+                            ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
-                            child: Text('D-31',style: f12blueW700,),
-                          ),
-                        ),
-                        Spacer(),
-                        SvgPicture.asset('assets/icon/change.svg',colorFilter:
-                        ColorFilter.mode(
-                          js.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
-                          BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
-                        ),),
-                        const SizedBox(width: 4,),
-                        Text('순서변경',style: js.isSorting.value?f12Gray600w500:f12Gray400w500,)
-                      ],
+                          Spacer(),
+                          GestureDetector(
+                            onTap: (){
+                              Get.to(()=>AddFlight());
+                              },
+                            child: SvgPicture.asset('assets/icon/plane.svg')),
+                          const SizedBox(width: 8,),
+                          SvgPicture.asset('assets/icon/change.svg',colorFilter:
+                          ColorFilter.mode(
+                            js.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
+                            BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
+                          ),),
+                          const SizedBox(width: 4,),
+                          Text('순서변경',style: js.isSorting.value?f12Gray600w500:f12Gray400w500,)
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 9),
-                  Expanded(
-                    child: ReorderableListView.builder(
-                      physics: const ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: 10,
-                      buildDefaultDragHandles: false,
-                      itemBuilder: (context,index) {
-                        return Column(
-                          key: Key('$index'),
-                          children: [
-                            ReorderableDragStartListener(
-                              index:index,
-                              enabled: js.isSorting.value?true:false,
-                              child: Container(
-                                width:Get.width,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        decoration: BoxDecoration(
-                                          color: gray100,
-                                          border: Border.all(color: gray200),
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(4),    // 좌측 상단 반경 4px
-                                            topRight: Radius.circular(0),   // 우측 상단 반경 0px
-                                            bottomRight: Radius.circular(0),// 우측 하단 반경 0px
-                                            bottomLeft: Radius.circular(4), // 좌측 하단 반경 4px
+                    const SizedBox(height: 9),
+                    Expanded(
+                      child: ReorderableListView.builder(
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: 10,
+                        buildDefaultDragHandles: false,
+                        itemBuilder: (context,index) {
+                          return Column(
+                            key: Key('$index'),
+                            children: [
+                              ReorderableDragStartListener(
+                                index:index,
+                                enabled: js.isSorting.value?true:false,
+                                child: Container(
+                                  width:Get.width,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          decoration: BoxDecoration(
+                                            color: gray200,
+                                            border: Border.all(color: gray200),
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(4),    // 좌측 상단 반경 4px
+                                              topRight: Radius.circular(0),   // 우측 상단 반경 0px
+                                              bottomRight: Radius.circular(0),// 우측 하단 반경 0px
+                                              bottomLeft: Radius.circular(4), // 좌측 하단 반경 4px
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 13.5,vertical: 16),
+                                            child: Text('07:20',style: f12Gray800w500,),
+                                          )),
+                                      Expanded(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(color: gray200),
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(0),    // 좌측 상단 반경 4px
+                                              topRight: Radius.circular(4),   // 우측 상단 반경 0px
+                                              bottomRight: Radius.circular(4),// 우측 하단 반경 0px
+                                              bottomLeft: Radius.circular(0), // 좌측 하단 반경 4px
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 14),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Text('항공편 KE371 도쿄행 인천 출발',style: f12Gray800w500,),
+                                                Spacer(),
+                                                SvgPicture.asset('assets/icon/columnEllipsis.svg')
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 18),
-                                          child: Text('07:20',style: f12Gray400w500,),
-                                        )),
-                                    Expanded(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(color: gray200),
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(0),    // 좌측 상단 반경 4px
-                                            topRight: Radius.circular(4),   // 우측 상단 반경 0px
-                                            bottomRight: Radius.circular(4),// 우측 하단 반경 0px
-                                            bottomLeft: Radius.circular(0), // 좌측 하단 반경 4px
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 18),
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Text('항공편 KE371 도쿄행 인천 출발',style: f12Gray400w500,),
-                                              Spacer(),
-                                              SvgPicture.asset('assets/icon/ellipsis.svg')
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 4)
-                          ],
-                        );
-                      },
-                      onReorder: (int oldIndex, int newIndex) {
-                        // setState(() {
-                        //   if(oldIndex<newIndex){
-                        //     newIndex -= 1;
-                        //   }
-                        //   changed = false;
-                        //   var element = list.removeAt(oldIndex);
-                        //   list.insert(newIndex,element);
-                        //   changeIndex(oldIndex, newIndex);
-                        // });
-                      },
+                              const SizedBox(height: 4)
+                            ],
+                          );
+                        },
+                        onReorder: (int oldIndex, int newIndex) {
+                          // setState(() {
+                          //   if(oldIndex<newIndex){
+                          //     newIndex -= 1;
+                          //   }
+                          //   changed = false;
+                          //   var element = list.removeAt(oldIndex);
+                          //   list.insert(newIndex,element);
+                          //   changeIndex(oldIndex, newIndex);
+                          // });
+                        },
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20,)
-                ],
+                    const SizedBox(height: 20,)
+                  ],
+                ),
               ),
             ),
           ))
         ],
       ),
         floatingActionButton: PlusFloatingButton(
-          backgroundColor: gray600,
+          backgroundColor: gray900,
           onPressed: ()  {
             Get.to(()=>AddPlanPage());
           },)
