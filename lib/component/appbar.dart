@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tripStory/util/color.dart';
 
 import '../util/font.dart';
 
@@ -8,6 +9,7 @@ import '../util/font.dart';
 class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
   final VoidCallback onTap;
+
 
   BackAppBar({
     required this.text,
@@ -30,15 +32,11 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-      title: Row(
-        children: [
-          Text(
-            text,
-            style: f16gray900w700,
-          ),
-        ],
+      title: Text(
+        text,
+        style: f16gray900w700,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: gray50,
     );
   }
   @override

@@ -153,7 +153,7 @@ class _PastTripState extends State<PastTrip> {
                                                     direction: PopoverDirection.bottom,
                                                     width: 14*3+100,
                                                     height: 250,
-                                                    contentDyOffset: 10, // Popover를 더 가까이 붙이기
+                                                    contentDyOffset: 10,
                                                     arrowHeight: 8,
                                                     arrowWidth: 13
                                                 );

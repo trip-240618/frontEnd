@@ -17,6 +17,7 @@ import 'package:tripStory/screen/myPage/myPage.dart';
 import '../../app/config/dio_client.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
+import 'notification/notification_main.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -37,17 +38,28 @@ class _MainPageState extends State<MainPage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: gray50,
       appBar: AppBar(
+        backgroundColor: gray50,
        automaticallyImplyLeading: false,
        titleSpacing: 0,
        toolbarHeight: 44,
        actions: [
          Padding(
            padding: const EdgeInsets.only(right: 20),
-           child: GestureDetector(
-               onTap: (){
-                 Get.to(()=>MyPage());
-               },
-               child: SvgPicture.asset('assets/icon/person.svg')),
+           child: Row(
+             children: [
+               GestureDetector(
+                   onTap: (){
+                     Get.to(()=>NotificationMain());
+                   },
+                   child: SvgPicture.asset('assets/icon/alert.svg')),
+               const SizedBox(width: 16,),
+               GestureDetector(
+                   onTap: (){
+                     Get.to(()=>MyPage());
+                   },
+                   child: SvgPicture.asset('assets/icon/person.svg')),
+             ],
+           ),
          )
        ],
      ),
@@ -203,7 +215,7 @@ class ListItems extends StatelessWidget {
                             ),
                           ),
                           // placeholder: (context, url) => const CircularProgressIndicator(),
-                          // errorWidget: (context, url, error) => const Icon(Icons.error),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
                       ),
                     ),
