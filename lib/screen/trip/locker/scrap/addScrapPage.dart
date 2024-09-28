@@ -141,7 +141,6 @@ class _AddScrapPageState extends State<AddScrapPage> {
                             showCursor: true,
                             customStyles: DefaultStyles(),
                             embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(),
-                            autoFocus: true
                           ),
                         ),
                       ),
