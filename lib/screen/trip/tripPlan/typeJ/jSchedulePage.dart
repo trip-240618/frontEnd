@@ -4,12 +4,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:tripStory/component/register/termsForm.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/addFlight.dart';
 import 'package:tripStory/util/color.dart';
-
 import '../../../../component/button.dart';
 import '../../../../util/font.dart';
+import '../../../../util/tooltip_shape.dart';
 import 'addPlan/addPlanPage.dart';
 
 
@@ -29,6 +30,9 @@ class _JSchedulePageState extends State<JSchedulePage> {
   ScrollController scrollController = ScrollController();
   Set<Marker> _markers = {};
   bool isSorting = false;
+
+  bool testCheck = false;
+  bool testCheck2 = true;
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
@@ -48,7 +52,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
   }
 // 스크롤을 특정 인덱스로 이동시키는 함수
   void scrollToIndex(int index) {
-    double itemWidth = 40 + 12;
+    double itemWidth = 36 + 12;
     double scrollOffset = itemWidth * index;
 
     scrollController.animateTo(
@@ -244,7 +248,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
-                              child: Text('Day 2',style: f12blueW700,),
+                              child: Text('Day ${selectIdx+1}',style: f12blueW700,),
                             ),
                           ),
                           Spacer(),
@@ -259,8 +263,8 @@ class _JSchedulePageState extends State<JSchedulePage> {
                             js.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
                             BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
                           ),),
-                          const SizedBox(width: 4,),
-                          Text('순서변경',style: js.isSorting.value?f12Gray600w500:f12Gray400w500,)
+                          // const SizedBox(width: 4,),
+                          // Text('순서변경',style: js.isSorting.value?f12Gray600w500:f12Gray400w500,)
                         ],
                       ),
                     ),
@@ -282,6 +286,18 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                   width:Get.width,
                                   child: Row(
                                     children: [
+                                      js.isSorting.value
+                                          ? Row(
+                                            children: [
+                                              changeJButton(value: testCheck,onPressed: (){
+                                                testCheck = !testCheck;
+                                                setState(() {});
+                                              }
+                                              ),
+                                              const SizedBox(width: 8,)
+                                            ],
+                                           )
+                                          : const SizedBox(),
                                       Container(
                                           decoration: BoxDecoration(
                                             color: gray200,
@@ -314,6 +330,20 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                             child: Row(
                                               crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
+                                                PopupMenuButton(
+                                                  offset: Offset(-34, 35),
+                                                  shape: const TooltipShape(borderColor:pastelBlue,borderWidth: 1),
+                                                  child: SvgPicture.asset('assets/icon/memo.svg'),
+                                                  color: Colors.white,
+                                                  itemBuilder: (_) => <PopupMenuEntry>[
+                                                    PopupMenuItem(
+                                                        enabled: false,
+                                                        padding:EdgeInsets.only(left: 10),
+                                                        child: Text('31231ㅇㄴㅁㅇㅁㄴㅇㅁㅇㅁㅇㅁㄴㅇㄴㅁㅇㅁㄴdasdasdasdasdasdasdasdasdasdasda',style: f12mainw600(pastelBlue))
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(width: 4,),
                                                 Text('항공편 KE371 도쿄행 인천 출발',style: f12Gray800w500,),
                                                 Spacer(),
                                                 SvgPicture.asset('assets/icon/columnEllipsis.svg')
@@ -359,3 +389,4 @@ class _JSchedulePageState extends State<JSchedulePage> {
     );
   }
 }
+
