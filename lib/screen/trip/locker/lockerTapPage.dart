@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/screen/trip/locker/planB/jPlanB.dart';
 import 'package:tripStory/screen/trip/locker/planB/pPlanB.dart';
 import 'package:tripStory/screen/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/screen/trip/locker/scrap/scrapPage.dart';
@@ -88,7 +89,7 @@ class _LockerTapPageState extends State<LockerTapPage> with TickerProviderStateM
             child: TabBarView(
               controller: _tabController,
               children: [
-                PPlanB(),
+                JPlanB(),
                 ScrapPage(),
               ],
             ),
