@@ -28,6 +28,8 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
 
   /// trip main
   final tripList = <dynamic>[].obs; /// 여행지 목록 리스트
+
+
   @override
   void onInit() {
     tabController = TabController(length: 2, vsync: this);
