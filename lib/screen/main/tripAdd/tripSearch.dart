@@ -231,13 +231,13 @@ class _TripSearchPageState extends State<TripSearchPage> {
                                   ),
                                 ),
                                 const SizedBox(width: 24),
-                                Text(filterCountries[regionIndex]['countries'][countryIndex]['name'], style: f16Gray500w500),
+                                Text(filterCountries[regionIndex]['countries'][countryIndex]['name'], style: f16gray800w500),
                               ],
                             ),
                             value: filterCountries[regionIndex]['countries'][countryIndex]['name'],
-                            groupValue: ms.selectedCity,
+                            groupValue: ms.selectedCity.value,
                             onChanged: (String? newValue) {
-                              ms.selectedCity = newValue!;
+                              ms.selectedCity.value = newValue!;
                               setState(() {});
                             },
                             dense: true,

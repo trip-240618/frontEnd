@@ -7,11 +7,13 @@ import 'package:intl/intl.dart';
 import 'package:tripStory/component/register/termsForm.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/addFlight.dart';
+import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchFlight.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../../component/button.dart';
 import '../../../../util/font.dart';
 import '../../../../util/tooltip_shape.dart';
 import 'addPlan/addPlanPage.dart';
+import 'addPlan/flight_view.dart';
 
 
 class JSchedulePage extends StatefulWidget {
@@ -74,29 +76,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Spacer(),
-              Container(
-                decoration: BoxDecoration(
-                  color: gray200,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset('assets/icon/userIcon.svg', color: gray900,),
-                      const SizedBox(width: 6,),
-                      Text('5', style: f14Gray900w700,),
-                      const SizedBox(width: 6,),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(width: 21,),
-            ],
-          ),
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.only(left: 20,right: 20),
@@ -253,8 +232,14 @@ class _JSchedulePageState extends State<JSchedulePage> {
                           ),
                           Spacer(),
                           GestureDetector(
+                              onTap: (){
+                                Get.to(()=>FlightView());
+                              },
+                              child: SvgPicture.asset('assets/icon/plane.svg', colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn),)),
+                          const SizedBox(width: 8,),
+                          GestureDetector(
                             onTap: (){
-                              Get.to(()=>AddFlight());
+                              Get.to(()=>SearchFlight());
                               },
                             child: SvgPicture.asset('assets/icon/plane.svg')),
                           const SizedBox(width: 8,),

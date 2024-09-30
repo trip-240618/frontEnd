@@ -5,6 +5,7 @@ import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/trip/locker/lockerTapPage.dart';
 import 'package:tripStory/screen/trip/tripHistory/tripHistoryMain.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/jSchedulePage.dart';
+import 'package:tripStory/screen/trip/tripPlan/typeP/pPlanPage.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
@@ -23,7 +24,8 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   @override
   void initState() {
 
-    _widgetOptions = [JSchedulePage(), LockerTapPage(), TripHistoryMainPage()];
+    // _widgetOptions = [JSchedulePage(), LockerTapPage(), TripHistoryMainPage()];
+    _widgetOptions = [PPlanPage(), LockerTapPage(), TripHistoryMainPage()];
     _bottomTabController = TabController(length: 3, vsync: this,initialIndex: 0);
     _currentIndex = 0;
     super.initState();
@@ -35,6 +37,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
       appBar: _currentIndex==2?null:AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 0,
+        toolbarHeight: 75,
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -71,7 +74,29 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                 ],
               ),
               const SizedBox(height: 2),
-              Text('2024.05.10 ~ 2024.05.14',style: f12Gray600w500,)
+              Text('2024.05.10 ~ 2024.05.14',style: f12Gray600w500,),
+              Row(
+                children: [
+                  Spacer(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: gray200,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset('assets/icon/userIcon.svg', color: gray900,),
+                          const SizedBox(width: 6,),
+                          Text('5', style: f14Gray900w700,),
+                          const SizedBox(width: 6,),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

@@ -10,6 +10,7 @@ import '../../../../component/bottomContainer.dart';
 import '../../../../controller/historyState.dart';
 import '../../../../util/color.dart';
 import '../../../../util/font.dart';
+import '../tagAddPage.dart';
 
 class TripHistoryAddPage extends StatefulWidget {
   const TripHistoryAddPage({super.key});
@@ -130,7 +131,9 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                   bottom: 20,
                   right: 20,
                   child: GestureDetector(
-                    onTap: (){},
+                    onTap: (){
+                      Get.to(()=>TagAddPage());
+                    },
                     child: Container(
                       width: 73,
                       height: 24,

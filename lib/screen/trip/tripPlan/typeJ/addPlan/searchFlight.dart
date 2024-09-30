@@ -7,6 +7,7 @@ import 'package:tripStory/component/appbar.dart';
 import '../../../../../component/bottomContainer.dart';
 import '../../../../../util/color.dart';
 import '../../../../../util/font.dart';
+import 'addFlight.dart';
 
 class SearchFlight extends StatefulWidget {
   const SearchFlight({super.key});
@@ -294,6 +295,7 @@ class _SearchFlightState extends State<SearchFlight> {
             padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
             child: BottomContainer(
                 onTap: ()async{
+                  Get.to(()=>AddFlight());
                 },title: '저장',isBlack: _airlineCon.text.trim().isEmpty&&_airCodeCon.text.trim().isEmpty?true:false),
           ),
         ),

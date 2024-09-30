@@ -52,7 +52,7 @@ void bottomModel(BuildContext context) {
                         onTap: (int i) {
                           if(i==1){
                             ms.tripCitySearchCon.text = '';
-                            ms.selectedCity = '';
+                            ms.selectedCity.value = '';
                           }else if(i==0){
 
                           }
@@ -110,9 +110,9 @@ void bottomModel(BuildContext context) {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      BottomContainer(onTap: ()async{
-                       await ms.saveDestination();
-                      },title: '저장')
+                      Obx(()=>BottomContainer(onTap: ()async{
+                        await ms.saveDestination();
+                      },title: '입력 완료',isBlack: ms.selectedCity.value == ''?false:true,))
                     ],
                   ),
                 ),

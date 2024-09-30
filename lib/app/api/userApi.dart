@@ -59,10 +59,11 @@ class ApiUserClient {
     final us = Get.put(UserState());
     try {
       print('dasdasda ${marketing}');
-      final response = await dioClient.dio.post(
+      final response = await dioClient.dio.put(
         '/user/register',
         data: {
           'nickname':'${nickName}',
+          'memo':'ㅇㅁㄴㅇ',
           'profileImg':'${profileImg}',
           'thumbnail':'${thumbnailImg}',
           "marketing": marketing

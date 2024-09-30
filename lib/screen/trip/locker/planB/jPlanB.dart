@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/addPlanPage.dart';
 
+import '../../../../component/button.dart';
 import '../../../../util/color.dart';
 import '../../../../util/font.dart';
 
@@ -278,6 +280,11 @@ class _JPlanBState extends State<JPlanB> {
           ],
         ),
       ),
+        floatingActionButton: PlusFloatingButton(
+          backgroundColor: gray900,
+          onPressed: ()  {
+            Get.to(()=>AddPlanPage());
+          },)
     );
   }
 }

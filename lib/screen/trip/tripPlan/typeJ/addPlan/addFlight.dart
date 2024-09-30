@@ -5,8 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchFlight.dart';
 
+import '../../../../../component/bottomContainer.dart';
 import '../../../../../util/color.dart';
 import '../../../../../util/font.dart';
+import '../../../bottomNavigator.dart';
 
 class AddFlight extends StatefulWidget {
   const AddFlight({super.key});
@@ -175,7 +177,14 @@ class _AddFlightState extends State<AddFlight> {
           ],
         ),
       ),
-
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
+        child: BottomContainer(
+            onTap: ()async{
+              Get.back();
+              Get.back();
+            },title: '등록 완료',isBlack: true),
+      ),
     );
   }
 }
