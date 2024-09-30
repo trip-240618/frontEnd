@@ -38,12 +38,12 @@ class ApiTripClient {
       String endDate,
       String country,
       ) async {
-    print('lableClor ${labelColor.substring(6, labelColor.length - 1)}');
     try {
       print('??? ${startDate.toString().split(' ')[0]}');
       final response = await dioClient.dio.post(
           '/trip/create',
-          data: {
+          data:
+          {
             'name':'${name}',
             'type':type=='J형'?'J':'P',
             'startDate':'${startDate.toString().split(' ')[0]}',
@@ -56,7 +56,7 @@ class ApiTripClient {
       if (response.statusCode == 200) {
         final data = response.data;
         print('data??? ${data}');
-        return data;
+        return data['invitationCode'];
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }

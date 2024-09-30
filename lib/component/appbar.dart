@@ -9,11 +9,11 @@ import '../util/font.dart';
 class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
   final VoidCallback onTap;
-
+  final Color? color;
 
   BackAppBar({
     required this.text,
-    required this.onTap,});
+    required this.onTap, this.color=gray50,});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
         text,
         style: f16gray900w700,
       ),
-      backgroundColor: gray50,
+      backgroundColor: color,
     );
   }
   @override
@@ -83,7 +83,7 @@ class TrailingBackAppBar extends StatelessWidget implements PreferredSizeWidget 
           ),
         )
       ],
-      backgroundColor: Colors.white,
+      backgroundColor: gray50,
     );
   }
   @override

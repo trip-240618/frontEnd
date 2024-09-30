@@ -45,7 +45,8 @@ class _CommingTripState extends State<CommingTrip> {
             physics: const ClampingScrollPhysics(),
             itemCount: ms.tripList.length==0?1:ms.tripList.length,
             itemBuilder: (contexts, index) {
-              return ms.tripList.length==0?EmptyScreen(context):Column(
+              return ms.tripList.length==0?EmptyScreen(context)
+                  :Column(
                 children: [
                   GestureDetector(
                     onTap: (){

@@ -23,7 +23,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   RxList<DateTime> tripDate = <DateTime>[].obs;
   TextEditingController tripCitySearchCon = TextEditingController(); /// 여행지 검색
   TextEditingController tripDirectSearchCon = TextEditingController(); /// 여행지 직접 검색
-  String selectedCity = ''; /// 선택한 여행지
+  final selectedCity = ''.obs; /// 선택한 여행지
   final tripLeaveType = ''.obs; /// 여행타입 선택
 
   /// trip main
@@ -64,7 +64,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   }
   /// 여행방 만들기 변수 초기화
   Future<void> roomReset()async{
-    selectedCity = '';
+    selectedCity.value = '';
     tripLeaveType.value = '';
     pickedImage.value =null;
 
@@ -74,7 +74,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
 
   /// 여행지 바텀 리셋
   Future<void> bottomModalReset()async{
-    selectedCity = '';
+    selectedCity.value = '';
     tripLeaveType.value = '';
     tabController.index =0;
   }
@@ -85,7 +85,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
       if(selectedCity==''){
         print('나라를 선택안했습니다');
       }else{
-        tripDestination.value = selectedCity;
+        tripDestination.value = selectedCity.value;
         Get.back();
       }
     }else{

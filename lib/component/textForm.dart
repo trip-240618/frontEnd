@@ -89,7 +89,7 @@ class TextIconFormFields2 extends StatelessWidget {
               borderSide: BorderSide(color: gray900,width: 1.5),
             ),
             hintText: '${hintText}',
-            hintStyle: f15gray800w500,
+            hintStyle: f15gray400w500,
             prefixIcon: Padding(
               padding:  EdgeInsets.only(left: 8),
               child: SvgPicture.asset('${icon}',fit: BoxFit.none),

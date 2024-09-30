@@ -55,7 +55,8 @@ class _AddPlanPageState extends State<AddPlanPage> {
         });
       },
       child: Scaffold(
-        appBar: BackAppBar(text: '일정 등록', onTap: (){Get.back();}),
+        resizeToAvoidBottomInset: false,
+        appBar: BackAppBar(text: '일정 등록',color: Colors.white, onTap: (){Get.back();}),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 44),
@@ -64,6 +65,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 24,),
+
                 /// 날짜 및 시간
                 Text('날짜 및 시간*', style: f12gray600w600,),
                 const SizedBox(height: 8,),
@@ -266,9 +268,12 @@ class _AddPlanPageState extends State<AddPlanPage> {
                           ],
                         )
                       ],
+                      // SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
                     ),
+                    // SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
                   ),
                 ),
+                SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
               ],
             ),
           ),

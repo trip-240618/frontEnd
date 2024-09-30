@@ -23,7 +23,7 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BackAppBar(text: '장소 검색', onTap: (){Get.back();}),
+      appBar: BackAppBar(text: '일정 등록', color: Colors.white,onTap: (){Get.back();}),
       body: Padding(
         padding: const EdgeInsets.only(top: 16, left: 20, right: 20),
         child: Column(

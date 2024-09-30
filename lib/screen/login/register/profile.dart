@@ -226,6 +226,7 @@ class _ProfileScreenState extends State<ProfilePage> {
                     if(pickedImage!=null){
                       Map<String, dynamic> url = await us.profileFileUpload(pickedImage!);
                       Map<String, dynamic> thumbnailUrl = await us.profileThumbnailUpload(pickedImage!);
+                      print('313/?');
                       await us.userModify(
                           nameCon.text,
                           '${url['preSignedUrls'][0].toString().split('?')[0]}',

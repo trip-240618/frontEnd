@@ -151,9 +151,7 @@ InviteDialog(BuildContext context, String title, VoidCallback onTap) {
                        controller: con,
                        hintText: '영문+숫자 8자리를 입력해 주세요',
                        icon: 'assets/icon/invitation.svg',
-                       onChanged: (values){
-
-                       },
+                       onChanged: (values){},
                        inputFormatters: [
                          LengthLimitingTextInputFormatter(8)
                        ],
