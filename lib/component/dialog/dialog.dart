@@ -106,8 +106,9 @@ class DialogExample extends StatelessWidget {
 }
 
 
-InviteDialog(BuildContext context, String title, VoidCallback onTap) {
+InviteDialog(BuildContext context, VoidCallback onTap) {
   TextEditingController con = TextEditingController();
+  MainState ms = Get.put(MainState());
   bool isRegCheck = false;
   bool isFirstCheck = false;
   showDialog(
@@ -168,16 +169,17 @@ InviteDialog(BuildContext context, String title, VoidCallback onTap) {
                insetPadding: const EdgeInsets.symmetric(vertical: 24 ,horizontal:20 ),
                actions: [
                  GestureDetector(
-                   onTap: (){
+                   onTap: ()async{
                      isFirstCheck = true;
                      final regex = RegExp(r'^[a-zA-Z0-9]+$');
                      if (con.text.length == 8 && regex.hasMatch(con.text)) {
                        isRegCheck = true;
+                       print('??? ${con.text}');
+                       ms.tripJoin('${con.text}');
                      }else{
                        isRegCheck = false;
                      }
                      setState(() {});
-                     print('??? ${isRegCheck}');
                    },
                    behavior: HitTestBehavior.opaque,
                    child: Center(
@@ -204,7 +206,7 @@ InviteDialog(BuildContext context, String title, VoidCallback onTap) {
       });
 }
 
-CodeDialog(BuildContext context) {
+CodeDialog(BuildContext context,String code) {
   final ms = Get.find<MainState>();
   showDialog(
       context: context,
@@ -221,15 +223,6 @@ CodeDialog(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // GestureDetector(
-              //   onTap: (){
-              //     Get.back();
-              //   },
-              //   child: Align(
-              //     alignment: Alignment.centerRight, // 오른쪽 끝으로 정렬
-              //     child: SvgPicture.asset('assets/icon/close.svg'),
-              //   ),
-              // ),
               const SizedBox(height: 20),
               Center(
                 child: Text(
@@ -239,7 +232,7 @@ CodeDialog(BuildContext context) {
                 ),
               ),
               const SizedBox(height: 8),
-              Center(child: Text('245860',style: f40gray600w700,)),
+              Center(child: Text('${code}',style: f28gray600w700,)),
               const SizedBox(height: 18),
               Text('초대코드로 친구를 초대해보세요.',style: f14Gray400w500,),
               Text('방 생성 이후에도 초대코드를',style: f14Gray400w500,),

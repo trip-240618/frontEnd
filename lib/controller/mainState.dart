@@ -27,13 +27,12 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   final tripLeaveType = ''.obs; /// 여행타입 선택
 
   /// trip main
-  final tripList = <dynamic>[].obs; /// 여행지 목록 리스트
+  final RxList tripList = <dynamic>[].obs; /// 여행지 목록 리스트
 
 
   @override
   void onInit() {
     tabController = TabController(length: 2, vsync: this);
-    apiTripClient.inComingTripGet();
     print('처음시작');
     super.onInit();
   }
@@ -46,13 +45,34 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     super.onClose();
   }
 
-  /// 여행방 가져오기
+  /// 다가오는 여행 가져오기
   Future<void> getComingTrip()async{
     tripList.clear();
     tripList.value = await apiTripClient.inComingTripGet();
   }
-
-
+  /// 지난 여행 가져오기
+  Future<void> getLastTrip()async{
+    tripList.clear();
+    tripList.value = await apiTripClient.lastTripGet();
+  }
+  /// 북마크 가져오기
+  Future<void> getBookMarkTrip()async{
+    tripList.clear();
+    tripList.value = await apiTripClient.bookMarkTripGet();
+  }
+  /// 북마크 여행 가져오기
+  Future<void> getBookmarkTrip()async{
+    tripList.clear();
+    tripList.value = await apiTripClient.inComingTripGet();
+  }
+  /// 여행 북마크 요청
+  Future<void> bookmarkClick(int tripId) async {
+    await apiTripClient.bookmarkClick(tripId);
+  }
+  /// 여행방 참가
+  Future<void> tripJoin(String invitationCode) async {
+    await apiTripClient.tripJoin(invitationCode);
+  }
   /// 여행지 캐쉬 저장
   void preCacheFlagImages(BuildContext context,List<Map<String, dynamic>> country) {
     for (var region in country) {
@@ -62,6 +82,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
       }
     }
   }
+
   /// 여행방 만들기 변수 초기화
   Future<void> roomReset()async{
     selectedCity.value = '';
@@ -111,7 +132,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   }
 
   /// 여행방 add
-  Future<bool> createRoom(
+  Future<String> createRoom(
       String thumbnailUrl,
       String name,
       String color,
@@ -122,7 +143,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
        ||tripDestination ==''
        ||tripDate.length==0){
      print('빈칸을 확인해주세요');
-     return false;
+     return '';
    }else{
      String code = await apiTripClient.tripCreate(
          thumbnailUrl,
@@ -133,10 +154,9 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
          tripDate.length==1?'':'${tripDate[1]}',
          tripDestination);
         print('여행방 만들기 ${code}');
-     return true;
+     return code;
    }
   }
-
   /// 여행방 썸네일 요청
   Future<Map<String, dynamic>> tripThumbnailUpload(XFile xfile) async {
     final fileBytes = await xfile.readAsBytes();
@@ -158,6 +178,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     }
     return data;
   }
+
   ///카카오 공유하기
   void kakaoShare()async{
     /// 사용자 정의 템플릿 ID
