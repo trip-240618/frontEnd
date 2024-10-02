@@ -104,6 +104,51 @@ class ApiTripClient {
       rethrow;
     }
   }
+  /// 주소 자동 완성
+  Future<List<dynamic>> autoLocationGet(String place) async {
+    try {
+      final response = await dioClient.dio.get(
+          '/trip/location/autocomplete',
+        data: {
+          "input": '${place}',
+          "languageCode": "ko",
+        });
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if(data.length==0){
+          return [];
+        }
+        return data;
+      } else {
+        throw Exception('Failed to autoLocation: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during autoLocation: $e');
+      rethrow;
+    }
+  }
+
+  /// lat,lng 포함된 세부적인 장소 정보 검색
+  Future<List<dynamic>> detailLocationGet(String placeId) async {
+    try {
+      final response = await dioClient.dio.get('/trip/location/place/$placeId');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('받은 자세한 데이터?${[data]}');
+        List test = [data];
+        print('형태는?${test[0]['location']['latitude']}');
+        if(data.length==0){
+          return [];
+        }
+        return [data];
+      } else {
+        throw Exception('Failed to detailLocation: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during detailLocation: $e');
+      rethrow;
+    }
+  }
 
   /// 북마크 클릭
   Future<void> bookmarkClick(int tripId) async {

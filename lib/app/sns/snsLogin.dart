@@ -32,6 +32,9 @@ Future<void> kakaoLogin() async {
       final oauthToken = await UserApi.instance.loginWithKakaoAccount();
       await sendTokenToServer(oauthToken.accessToken,oauthToken.refreshToken.toString());
       print('카카오계정으로 로그인 성공');
+      final oauthToken= await UserApi.instance.loginWithKakaoAccount();
+      print('>> ${oauthToken.accessToken}>>?${oauthToken.refreshToken}');
+      await sendTokenToServer(oauthToken.accessToken,oauthToken.refreshToken.toString());
     } catch (error) {
       print('카카오계정으로 로그인 실패 $error');
     }
