@@ -2,28 +2,28 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tripStory/component/appbar.dart';
-import 'package:tripStory/component/bottomModals.dart';
 import 'package:intl/intl.dart';
-import 'package:tripStory/component/main/typeChoose.dart';
-import 'package:tripStory/controller/mainState.dart';
-import 'package:tripStory/screen/main/tripAdd/tripCalendar.dart';
-import 'package:tripStory/util/color.dart';
-import '../../../component/bottomContainer.dart';
-import '../../../component/dialog/dialog.dart';
-import '../../../util/font.dart';
+import 'package:tripStory/controller/tripState.dart';
+import '../../component/appbar.dart';
+import '../../component/bottomContainer.dart';
+import '../../component/bottomModals.dart';
+import '../../controller/mainState.dart';
+import '../../util/color.dart';
+import '../../util/font.dart';
+import '../main/tripAdd/tripCalendar.dart';
 
-class TripRoomAddScreen extends StatefulWidget {
-  const TripRoomAddScreen({super.key});
+class TripEditPage extends StatefulWidget {
+  const TripEditPage({super.key});
 
   @override
-  State<TripRoomAddScreen> createState() => _TripRoomAddScreenState();
+  State<TripEditPage> createState() => _TripEditPageState();
 }
 
-class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
+class _TripEditPageState extends State<TripEditPage> {
+  final ts = Get.put(TripState());
   final ms = Get.put(MainState());
   final List<Map<String, dynamic>> countries = [
     {
@@ -155,162 +155,207 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
   int? selectedColor;
   XFile? pickedImage;
   String tripType = '';
+
   @override
   void initState() {
     Future.delayed(Duration.zero,(){
-      ms.preCacheFlagImages(context, countries);
+      tripName.text = ts.selectTripList[0]['name'];
+      selectedColor = colorList.indexWhere((color) => color.value == int.parse('${ts.selectTripList[0]['labelColor']}'));
+      setState(() {});
     });
     super.initState();
   }
   @override
-  void dispose() {
-    tripName.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: BackAppBar(text: '여행방 만들기', onTap: () {
-          ms.roomReset();
-          Get.back();
-        }),
-        body: Column(
-          children: [
-            Container(
-              color: gray50,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20,right: 20,top: 20),
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: ()async{
-                        pickedImage = await ms.getSingleImage(ImageSource.gallery,context,pickedImage);
-                        setState(() {});
-                      },
-                      child: pickedImage!=null
-                          ? Center(
-                        child: Container(
-                          width: 92,
-                          height: 92,
-                          child: Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(4),
-                                child: Image.file(
-                                  File(pickedImage!.path),
-                                  width: 80,
-                                  height: 80,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                              Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: SvgPicture.asset('assets/icon/plus.svg'))
-                            ],
-                          ),
-                        ),
-                      )
-                          :Center(
-                        child: Container(
-                          width: 92,
-                          height: 92,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                child: Container(
-                                  width: 80,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                        color: Color(0xFFEEEEEE), // 색상 코드 #EEEEEE를 Flutter의 Color로 변환
-                                        width: 1.0, // border의 두께 (1px)
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: BackAppBar(text: '여행방 설정', onTap: () {
+            ms.roomReset();
+            Get.back();
+          }),
+          body: Column(
+            children: [
+              Container(
+                color: gray50,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20,right: 20,top: 20),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: ()async{
+                          pickedImage = await ms.getSingleImage(ImageSource.gallery,context,pickedImage);
+                          setState(() {});
+                        },
+                        child: pickedImage==null&&ts.selectTripList[0]['thumbnail']!=''?
+                        Center(
+                          child: Container(
+                            width: 92,
+                            height: 92,
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(4),
+                                  child: CachedNetworkImage(
+                                    imageUrl: ms.tripList[0]['thumbnail'],
+                                    width: 80,
+                                    height: 80,
+                                    imageBuilder: (context, imageProvider) => Container(
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.fill
+                                        ),
                                       ),
-                                      borderRadius: BorderRadius.circular(4)
+                                    ),
+                                    // placeholder: (context, url) => const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
-                                  child: Center(child: SvgPicture.asset('assets/icon/image.svg',width: 28)),
+                                ),
+                                // ClipRRect(
+                                //   borderRadius: BorderRadius.circular(4),
+                                //   child: Image.file(
+                                //     File(pickedImage!.path),
+                                //     width: 80,
+                                //     height: 80,
+                                //     fit: BoxFit.fill,
+                                //   ),
+                                // ),
+                                Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: SvgPicture.asset('assets/icon/plus.svg'))
+                              ],
+                            ),
+                          ),
+                        ) : pickedImage!=null
+                            ? Center(
+                          child: Container(
+                            width: 92,
+                            height: 92,
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(4),
+                                  child: Image.file(
+                                    File(pickedImage!.path),
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: SvgPicture.asset('assets/icon/plus.svg'))
+                              ],
+                            ),
+                          ),
+                        )
+                            : Center(
+                          child: Container(
+                            width: 92,
+                            height: 92,
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  child: Container(
+                                    width: 80,
+                                    height: 80,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          color: Color(0xFFEEEEEE), // 색상 코드 #EEEEEE를 Flutter의 Color로 변환
+                                          width: 1.0, // border의 두께 (1px)
+                                        ),
+                                        borderRadius: BorderRadius.circular(4)
+                                    ),
+                                    child: Center(child: SvgPicture.asset('assets/icon/image.svg',width: 28)),
+                                  ),
+                                ),
+                                Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: SvgPicture.asset('assets/icon/plus.svg',))
+
+                              ],
+                            ),
+                          ),),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: gray200)
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: tripName,
+                                  autofocus: false,
+                                  style: f16gray800w600,
+                                  onChanged: (v){
+                                    setState(() {});
+                                  },
+                                  inputFormatters: <TextInputFormatter>[
+                                    LengthLimitingTextInputFormatter(15),
+                                  ],
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding: EdgeInsets.zero,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    hintText: '여행방 제목을 입력해주세요',
+                                    hintStyle: f14Gray500w400,
+                                  ),
+
                                 ),
                               ),
-                              Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: SvgPicture.asset('assets/icon/plus.svg',))
-
+                              const SizedBox(width: 10,),
+                              Text('${tripName.text.length}',style: f11Gray800w600,),
+                              Text('/15',style: f11Gray600w600,),
+                              const SizedBox(width: 8,),
+                              SvgPicture.asset('assets/icon/smallpencil.svg')
                             ],
                           ),
-                        ),),
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      width: Get.width,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: gray200)
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: tripName,
-                                autofocus: false,
-                                style: f16gray800w600,
-                                onChanged: (v){
-                                  setState(() {});
-                                },
-                                inputFormatters: <TextInputFormatter>[
-                                  LengthLimitingTextInputFormatter(15),
-                                ],
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.zero,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  hintText: '여행방 제목을 입력해주세요',
-                                  hintStyle: f14Gray500w400,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10,),
-                            Text('${tripName.text.length}/15')
-                          ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 30),
-                  ],
+                      const SizedBox(height: 30),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20,right: 20,top: 15),
-                  child: SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('아이콘 컬러',style: f12gray600w600,),
-                        const SizedBox(height: 12),
-                        Container(
-                          width: Get.width,
-                          height: 24,
-                          child: ListView.builder(
+              Expanded(
+                child: Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20,right: 20,top: 15),
+                    child: SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('아이콘 컬러',style: f12gray600w600,),
+                          const SizedBox(height: 12),
+                          Container(
+                            width: Get.width,
+                            height: 24,
+                            child: ListView.builder(
                               itemCount: 4,
                               shrinkWrap: true,
                               padding: EdgeInsets.zero,
@@ -325,15 +370,15 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                                       },
                                       child: selectedColor==index
                                           ? Container(
-                                            width: 24,
-                                            height: 24,
-                                            decoration: BoxDecoration(
+                                        width: 24,
+                                        height: 24,
+                                        decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             border: Border.all(color: gray900,width: 2),
                                             color: colorList[index]
-                                          ),
-                                            child: SvgPicture.asset('assets/icon/checkIcon.svg',fit: BoxFit.none,),
-                                        )
+                                        ),
+                                        child: SvgPicture.asset('assets/icon/checkIcon.svg',fit: BoxFit.none,),
+                                      )
                                           :  Container(
                                         width: 24,
                                         height: 24,
@@ -348,115 +393,88 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                                 );
                               },
                             ),
-                        ),
-                        const SizedBox(height: 30),
-                        Text('여행방 타입',style: f12gray600w600,),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TypeChoose(text: 'J형',onTap: (){
-                                tripType = 'J형';
-                                setState(() {});
-                              },value: tripType),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: TypeChoose(text: 'P형',onTap: (){
-                                tripType = 'P형';
-                                setState(() {});
-                              },value: tripType),
-                            ),
-                          ],
-                        ),
-                    
-                        const SizedBox(height: 20),
-                        Text('여행 날짜',style: f12gray600w600,),
-                        const SizedBox(height: 8),
-                        Obx(() => GestureDetector(
-                          onTap: ()async{
-                            Get.to(()=>TripCalendar());
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: gray200)
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 16),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset('assets/icon/date.svg',fit: BoxFit.none, colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
-                                  const SizedBox(width: 4),
-                                 ms.tripDate.isEmpty
-                                      ? Text(
-                                    '여행 날짜를 입력해 주세요',
-                                    style: f15gray400w500,
-                                  )
-                                      : Text(
-                                    ms.tripDate.length==1?'${DateFormat('yyyy-MM-dd').format(ms.tripDate[0])}':
-                                    '${DateFormat('yyyy-MM-dd').format(ms.tripDate[0])} ~ ${DateFormat('yyyy-MM-dd').format(ms.tripDate[1])}',
-                                   style: f15gray800w500,
-                                  )
-                                ],
+                          ),
+                          const SizedBox(height: 20),
+                          Text('여행 날짜',style: f12gray600w600,),
+                          const SizedBox(height: 8),
+                          Obx(() => GestureDetector(
+                            onTap: ()async{
+                              Get.to(()=>TripCalendar(edit: true));
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: gray50,
+                                  border: Border.all(color: gray200)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 16),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset('assets/icon/date.svg',fit: BoxFit.none, colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '${ts.selectTripList[0]['startDate']} ~ ${ts.selectTripList[0]['endDate']}',
+                                      style: f15gray800w500,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        )),
-                        const SizedBox(height: 20),
-                    
-                        Text('여행지',style: f12gray600w600,),
-                        const SizedBox(height: 8),
-                        Obx(() => GestureDetector(
-                          onTap: ()async{
-                            await ms.bottomModalReset();
-                            bottomModel(context);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: gray200)
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 16),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
-                                  const SizedBox(width: 4),
-                                  ms.tripDestination.value ==''?Text('여행지를 입력해 주세요',style: f15gray400w500):Text('${ms.tripDestination.value}',style: f15gray800w500,)
-                                ],
+                          )),
+                          const SizedBox(height: 20),
+
+                          Text('여행지',style: f12gray600w600,),
+                          const SizedBox(height: 8),
+                          Obx(() => GestureDetector(
+                            onTap: ()async{
+                              // await ms.bottomModalReset();
+                              // bottomModel(context);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: gray50,
+                                  border: Border.all(color: gray200)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 16),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
+                                    const SizedBox(width: 4),
+                                    Text('${ts.selectTripList[0]['country']}',style: f15gray800w500,)
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        )),
-                        const SizedBox(height: 20),
-                        // SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
-                      ],
+                          )),
+                          const SizedBox(height: 20),
+                          // SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
-        child: BottomContainer(
-            onTap: ()async{
-              if(pickedImage!=null){
-                Map<String, dynamic> thumbnailUrl = await ms.tripThumbnailUpload(pickedImage!);
-                String code = await ms.createRoom(
-                    thumbnailUrl['preSignedUrls'][0].toString().split('?')[0],
+            ],
+          ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
+            child: BottomContainer(
+                onTap: ()async{
+                  String thumbnail = pickedImage != null
+                      ? (await ms.tripThumbnailUpload(pickedImage!))['preSignedUrls'][0].toString().split('?')[0]
+                      : ts.selectTripList[0]['thumbnail'];
+                  await ts.modifyTrip(
+                    ts.selectTripList[0]['id'],
                     tripName.text,
+                    thumbnail,
                     '${colorList[selectedColor!]}',
-                    tripType,
-                    ms.tripDate,
-                    ms.tripDestination.value
-                );
-                if(code!=''){
-                  CodeDialog(context,code);
-                }
-              }
-        },title: '저장'),
-      ),
+                    ts.selectTripList[0]['startDate'],
+                    ts.selectTripList[0]['endDate'],
+                  );
+                },title: '수정 완료',isBlack: true,),
+          ),
+        ),
       ),
     );
   }

@@ -1,15 +1,16 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import '../../../component/bottomContainer.dart';
 import '../../../controller/mainState.dart';
+import '../../../controller/tripState.dart';
 
 class TripCalendar extends StatefulWidget {
-  const TripCalendar({super.key});
+  final bool? edit;
+  const TripCalendar({super.key, this.edit});
 
   @override
   State<TripCalendar> createState() => _TripCalendarState();
@@ -17,6 +18,7 @@ class TripCalendar extends StatefulWidget {
 
 class _TripCalendarState extends State<TripCalendar> {
   final ms = Get.put(MainState());
+  final ts = Get.put(TripState());
   final _scrollController = ScrollController();
   List<DateTime> _rangeDatePickerValueWithDefaultValue = [
     // DateTime(1999, 5, 6),
@@ -77,8 +79,20 @@ class _TripCalendarState extends State<TripCalendar> {
         child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
           child: BlackBottomContainer(onTap: (){
-            ms.tripDate.value = _rangeDatePickerValueWithDefaultValue;
             print('?? ${_rangeDatePickerValueWithDefaultValue}');
+            if(widget.edit==true){
+              if(_rangeDatePickerValueWithDefaultValue.length>1){
+                ts.selectTripList[0]['startDate'] = _rangeDatePickerValueWithDefaultValue[0].toString().split(' ')[0];
+                ts.selectTripList[0]['endDate'] = _rangeDatePickerValueWithDefaultValue[1].toString().split(' ')[0];
+              }else{
+                ts.selectTripList[0]['startDate'] = _rangeDatePickerValueWithDefaultValue[0].toString().split(' ')[0];
+                ts.selectTripList[0]['endDate'] = _rangeDatePickerValueWithDefaultValue[0].toString().split(' ')[0];
+              }
+              ts.selectTripList.refresh();
+            }else{
+              ms.tripDate.value = _rangeDatePickerValueWithDefaultValue;
+            }
+
           }, title: '저장'),
         ),
       ),

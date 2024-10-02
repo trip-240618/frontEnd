@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/controller/mainState.dart';
+import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/locker/lockerTapPage.dart';
 import 'package:tripStory/screen/trip/tripHistory/tripHistoryMain.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/jSchedulePage.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeP/pPlanPage.dart';
+import 'package:tripStory/screen/trip/trip_edit_page.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
@@ -21,11 +23,12 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   late TabController _bottomTabController;
   int _currentIndex = 0;
   final ms = Get.put(MainState());
+  final ts = Get.put(TripState());
   @override
   void initState() {
 
-    // _widgetOptions = [JSchedulePage(), LockerTapPage(), TripHistoryMainPage()];
-    _widgetOptions = [PPlanPage(), LockerTapPage(), TripHistoryMainPage()];
+    _widgetOptions = [JSchedulePage(), LockerTapPage(), TripHistoryMainPage()];
+    // _widgetOptions = [PPlanPage(), LockerTapPage(), TripHistoryMainPage()];
     _bottomTabController = TabController(length: 3, vsync: this,initialIndex: 0);
     _currentIndex = 0;
     super.initState();
@@ -38,7 +41,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         toolbarHeight: 75,
-        title: Padding(
+        title: Obx(()=>Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
@@ -59,7 +62,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                       children: [
                         Flexible(
                           child: Text(
-                            '도쿄 여행방',
+                            '${ts.selectTripList[0]['name']}',
                             style: f18Gray900w600,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -68,9 +71,74 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                       ],
                     ),
                   ),
-                  Container(
-                      width: 24,
-                      child: SvgPicture.asset('assets/icon/dot.svg', color: gray900,)),
+                  PopupMenuButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      offset: const Offset(-10, 20),
+                      shadowColor: Colors.black.withOpacity(0.4),
+                      child: SvgPicture.asset(
+                        'assets/icon/dot.svg',
+                        width: 24,
+                        color: gray900,
+                      ),
+                      color: gray50,
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          padding: EdgeInsets.zero,
+                          value: 1,
+                          onTap: (){
+                            Get.to(()=>TripEditPage());
+                          },
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                                child: Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+                                      const SizedBox(width: 10,),
+                                      Text(
+                                        '수정하기',
+                                        style: f14Gray800w500,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const Divider(color: gray200),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem(
+                          height: 0,
+                          padding: EdgeInsets.zero,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                                child: Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+                                      const SizedBox(width: 10,),
+                                      Text(
+                                        '삭제하기',
+                                        style: f14Gray800w500,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )])
                 ],
               ),
               const SizedBox(height: 2),
@@ -99,17 +167,8 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
               ),
             ],
           ),
-        ),
+        )),
       ),
-      // appBar: AppBar(
-      //   title: Text('5월 도쿄 여행방'),
-      //   leading: GestureDetector(
-      //     onTap: () {
-      //       Get.back();
-      //     },
-      //     child: Icon(Icons.arrow_back_ios_new_outlined),
-      //   ),
-      // ),
       body: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         children: _widgetOptions,

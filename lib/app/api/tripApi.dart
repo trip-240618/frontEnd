@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/app/config/dio_client.dart';
+import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
 
 class ApiTripClient {
@@ -12,9 +13,48 @@ class ApiTripClient {
   /// 여행 가져오기
   Future<List<dynamic>> inComingTripGet() async {
     try {
-      final response = await dioClient.dio.get('/trip/list/incoming?sortField=startDate&sortDirection=DESC');
+      final response = await dioClient.dio.get('/trip/list/incoming');
       if (response.statusCode == 200) {
         final data = response.data;
+        print('data?? ${data}');
+        if(data.length==0){
+          return [];
+        }
+        return data;
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+  /// 다가오는 여행 가져오기
+  Future<List<dynamic>> lastTripGet() async {
+    try {
+      final response = await dioClient.dio.get('/trip/list/last');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+        if(data.length==0){
+          return [];
+        }
+        return data;
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+  /// 북마크 여행 가져오기
+  Future<List<dynamic>> bookMarkTripGet() async {
+    try {
+      final response = await dioClient.dio.get('/trip/list/bookmark');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
         if(data.length==0){
           return [];
         }
@@ -28,7 +68,6 @@ class ApiTripClient {
     }
   }
   /// 여행방 생성하기
-  /// 유저 정보 디테일
   Future<String> tripCreate(
       String thumnail,
       String name,
@@ -111,5 +150,83 @@ class ApiTripClient {
     }
   }
 
-
+  /// 북마크 클릭
+  Future<void> bookmarkClick(int tripId) async {
+    try {
+      final response = await dioClient.dio.put(
+          '/trip/bookmark/toggle?tripId=${tripId}');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+      } else {
+        throw Exception('error ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+  /// 여행방 참여
+  Future<void> tripJoin(String invitationCode) async {
+    try {
+      final response = await dioClient.dio.post(
+          '/trip/join?invitationCode=${invitationCode}');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+      } else {
+        throw Exception('error ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+  /// 여행방 입장
+  Future<List<dynamic>> tripEnter(int tripId) async {
+    try {
+      final response = await dioClient.dio.post(
+          '/trip/enter?tripId=${tripId}');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+        if(data.length==0){
+          return [];
+        }
+        return [data];
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+  /// 여행방 수정
+  Future<void> tripModify(int tripId,String name,String thumbnail,String labelColor,String startDate,String endDate) async {
+    final ts = Get.put(TripState());
+    try {
+      final response = await dioClient.dio.put(
+          '/trip/modify?tripId=${tripId}',
+          data: {
+            "name": "${name}",
+            "thumbnail": "${thumbnail}",
+            "labelColor": '${labelColor.substring(6, labelColor.length - 1)}',
+            "startDate": "${startDate}",
+            "endDate": "${endDate}"
+          }
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        ts.selectTripList.value = [response.data];
+        ts.selectTripList.refresh();
+        print('data?? ${data}');
+      } else {
+        throw Exception('error ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
 }

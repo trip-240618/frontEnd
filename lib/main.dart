@@ -9,6 +9,8 @@ import 'package:tripStory/component/splashScreen.dart';
 import 'package:tripStory/screen/login/loginPage.dart';
 import 'package:tripStory/screen/login/register/term.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
+import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchFlight.dart';
+import 'package:tripStory/screen/trip/trip_edit_page.dart';
 import 'imageTest.dart';
 
 
@@ -48,9 +50,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(color: Colors.white,surfaceTintColor: Colors.white)
       ),
-      // home: SplashPage()
-      // home: LoginPage(),
-      home: BottomNavigator(),
+      home: LoginPage(),
       // home: TermPage(),
     );
   }
