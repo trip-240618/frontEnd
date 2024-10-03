@@ -175,10 +175,9 @@ class _TripEditPageState extends State<TripEditPage> {
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: BackAppBar(text: '여행방 설정', onTap: () {
-            ms.roomReset();
-            Get.back();
-          }),
+          appBar: TrailingBackAppBar(text: '스크랩', backTap: (){Get.back();}, svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),trailingTap: (){
+
+            },),
           body: Column(
             children: [
               Container(

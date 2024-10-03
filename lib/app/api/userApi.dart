@@ -29,7 +29,6 @@ class ApiUserClient {
       rethrow;
     }
   }
-
   /// 로그아웃
   Future<void> logOut() async {
     final us = Get.put(UserState());
@@ -52,10 +51,8 @@ class ApiUserClient {
       rethrow;
     }
   }
-
-
   /// 유저 정보 디테일
-  Future<Map<String, dynamic>> userModify(String nickName,String profileImg,String thumbnailImg,bool marketing) async {
+  Future<Map<String, dynamic>> userRegister(String nickName,String profileImg,String thumbnailImg,bool marketing) async {
     final us = Get.put(UserState());
     try {
       print('dasdasda ${marketing}');
@@ -71,6 +68,37 @@ class ApiUserClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
+        print('data??? ${data}');
+        return data;
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+  /// 유저 정보 수정
+  Future<Map<String, dynamic>> userModify(String nickName,String memo,String thumbnailImg,String profileImg) async {
+    final us = Get.put(UserState());
+    try {
+      print('??? ${nickName}');
+      print('??? ${memo}');
+      print('??? ${thumbnailImg}');
+      print('??? ${profileImg}');
+      final response = await dioClient.dio.put(
+          '/user/modify',
+          data:{
+            "nickname": "${nickName}",
+            "memo": "${memo}",
+            "thumbnail": "${thumbnailImg}",
+            "profileImg": "${profileImg}"
+          }
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        us.userList.value = [data];
+        us.userList.refresh();
         print('data??? ${data}');
         return data;
       } else {

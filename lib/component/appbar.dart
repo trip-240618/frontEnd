@@ -49,12 +49,12 @@ class TrailingBackAppBar extends StatelessWidget implements PreferredSizeWidget 
   final VoidCallback backTap;
   final SvgPicture svgPicture;
   final VoidCallback trailingTap;
-
+  final Color? color;
   TrailingBackAppBar({
     required this.text,
     required this.backTap,
     required this.svgPicture,
-    required this.trailingTap,});
+    required this.trailingTap, this.color,});
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +72,9 @@ class TrailingBackAppBar extends StatelessWidget implements PreferredSizeWidget 
       ),
       title: Text(
         text,
-        style: f16gray900w700,
+        style: f18Gray900w600,
       ),
+
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 20),
@@ -83,7 +84,7 @@ class TrailingBackAppBar extends StatelessWidget implements PreferredSizeWidget 
           ),
         )
       ],
-      backgroundColor: gray50,
+      backgroundColor: color,
     );
   }
   @override

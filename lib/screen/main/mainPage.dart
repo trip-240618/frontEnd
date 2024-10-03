@@ -133,7 +133,6 @@ class _MainPageState extends State<MainPage> {
                     setState(() {
                       isLoading = true;
                     });
-                    print('1??');
                     await ms.getBookMarkTrip();
                     setState(() {
                       isLoading = false;
@@ -193,7 +192,7 @@ class _MainPageState extends State<MainPage> {
                                       width: Get.width,
                                       child: Row(
                                         children: [
-                                          Container(
+                                          ms.selectIdx.value==1?SvgPicture.asset('assets/icon/calender.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn)):Container(
                                             decoration: BoxDecoration(
                                                 border: Border.all(
                                                   color: Color(int.parse('${ms.tripList[index]['labelColor']}')),
