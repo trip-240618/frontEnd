@@ -5,10 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/textForm.dart';
+import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import 'package:tripStory/controller/mainState.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
+import '../../util/upper_case.dart';
 
 /// 메세지만 있는 확인용 다이얼로그
 showConfirmTapDialog(
@@ -108,7 +110,8 @@ class DialogExample extends StatelessWidget {
 
 InviteDialog(BuildContext context, VoidCallback onTap) {
   TextEditingController con = TextEditingController();
-  MainState ms = Get.put(MainState());
+  final ms = Get.put(MainState());
+  final ts = Get.put(TripState());
   bool isRegCheck = false;
   bool isFirstCheck = false;
   showDialog(
@@ -154,7 +157,8 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
                        icon: 'assets/icon/invitation.svg',
                        onChanged: (values){},
                        inputFormatters: [
-                         LengthLimitingTextInputFormatter(8)
+                         LengthLimitingTextInputFormatter(8),
+                         UpperCaseTextFormatter(),
                        ],
                      ),
                      !isFirstCheck?SizedBox():isRegCheck==true?SizedBox():Padding(
@@ -170,12 +174,13 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
                actions: [
                  GestureDetector(
                    onTap: ()async{
+                     ts.selectTripList.clear();
                      isFirstCheck = true;
                      final regex = RegExp(r'^[a-zA-Z0-9]+$');
                      if (con.text.length == 8 && regex.hasMatch(con.text)) {
                        isRegCheck = true;
-                       print('??? ${con.text}');
-                       ms.tripJoin('${con.text}');
+                       await ms.tripJoin('${con.text}');
+                       // print('lenth?? ${ts.selectTripList.length}');
                      }else{
                        isRegCheck = false;
                      }
@@ -264,6 +269,7 @@ CodeDialog(BuildContext context,String code) {
                       ms.roomReset();
                       Get.back();
                       Get.back();
+
                       Get.to(()=>BottomNavigator());
                     },
                     behavior: HitTestBehavior.opaque,
