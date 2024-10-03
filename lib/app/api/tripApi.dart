@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/app/config/dio_client.dart';
+import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
 
@@ -129,18 +130,16 @@ class ApiTripClient {
   }
 
   /// lat,lng 포함된 세부적인 장소 정보 검색
-  Future<List<dynamic>> detailLocationGet(String placeId) async {
+  Future<void> detailLocationGet(String placeId) async {
+    final js = Get.put(JPlanState());
     try {
       final response = await dioClient.dio.get('/trip/location/place/$placeId');
       if (response.statusCode == 200) {
         final data = response.data;
-        print('받은 자세한 데이터?${[data]}');
-        List test = [data];
-        print('형태는?${test[0]['location']['latitude']}');
+        js.searchLocation.value = [data];
+        js.searchLocation.refresh();
         if(data.length==0){
-          return [];
         }
-        return [data];
       } else {
         throw Exception('Failed to detailLocation: ${response.statusCode}');
       }
