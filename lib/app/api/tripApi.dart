@@ -68,7 +68,7 @@ class ApiTripClient {
     }
   }
   /// 여행방 생성하기
-  Future<String> tripCreate(
+  Future<Map<String,dynamic>> tripCreate(
       String thumnail,
       String name,
       String labelColor,
@@ -95,7 +95,7 @@ class ApiTripClient {
       if (response.statusCode == 200) {
         final data = response.data;
         print('data??? ${data}');
-        return data['invitationCode'];
+        return data;
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -166,11 +166,14 @@ class ApiTripClient {
   }
   /// 여행방 참여
   Future<void> tripJoin(String invitationCode) async {
+    final ts = Get.put(TripState());
     try {
       final response = await dioClient.dio.post(
           '/trip/join?invitationCode=${invitationCode}');
       if (response.statusCode == 200) {
         final data = response.data;
+        // ts.selectTripList.value = [data];
+        // ts.selectTripList.refresh();
         print('data?? ${data}');
       } else {
         throw Exception('error ${response.statusCode}');

@@ -10,6 +10,7 @@ import 'package:tripStory/component/bottomModals.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/main/typeChoose.dart';
 import 'package:tripStory/controller/mainState.dart';
+import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/main/tripAdd/tripCalendar.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../component/bottomContainer.dart';
@@ -25,6 +26,7 @@ class TripRoomAddScreen extends StatefulWidget {
 
 class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
   final ms = Get.put(MainState());
+  final ts = Get.put(TripState());
   final List<Map<String, dynamic>> countries = [
     {
       'region': '국내',
@@ -443,7 +445,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
             onTap: ()async{
               if(pickedImage!=null){
                 Map<String, dynamic> thumbnailUrl = await ms.tripThumbnailUpload(pickedImage!);
-                String code = await ms.createRoom(
+                Map<String, dynamic> createData = await ms.createRoom(
                     thumbnailUrl['preSignedUrls'][0].toString().split('?')[0],
                     tripName.text,
                     '${colorList[selectedColor!]}',
@@ -451,8 +453,11 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                     ms.tripDate,
                     ms.tripDestination.value
                 );
-                if(code!=''){
-                  CodeDialog(context,code);
+                print(createData.length);
+                if(createData.length!=0){
+                  print('???sssss ${createData}');
+                  await ts.getSelectTrip(createData['tripId']);
+                  CodeDialog(context,createData['invitationCode']);
                 }
               }
         },title: '저장'),

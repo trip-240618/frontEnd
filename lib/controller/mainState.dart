@@ -132,7 +132,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   }
 
   /// 여행방 add
-  Future<String> createRoom(
+  Future<Map<String,dynamic>> createRoom(
       String thumbnailUrl,
       String name,
       String color,
@@ -143,9 +143,9 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
        ||tripDestination ==''
        ||tripDate.length==0){
      print('빈칸을 확인해주세요');
-     return '';
+     return {};
    }else{
-     String code = await apiTripClient.tripCreate(
+     Map<String, dynamic> createData = await apiTripClient.tripCreate(
          thumbnailUrl,
          name,
          color,
@@ -153,8 +153,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
          '${tripDate[0]}',
          tripDate.length==1?'':'${tripDate[1]}',
          tripDestination);
-        print('여행방 만들기 ${code}');
-     return code;
+     return createData;
    }
   }
   /// 여행방 썸네일 요청

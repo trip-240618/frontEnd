@@ -5,7 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:tripStory/component/splashScreen.dart';
+import 'package:tripStory/screen/splashScreen.dart';
 import 'package:tripStory/screen/login/loginPage.dart';
 import 'package:tripStory/screen/login/register/term.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
@@ -16,7 +16,7 @@ import 'imageTest.dart';
 
 void main() async{
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(); // Firebase 초기화
   KakaoSdk.init(
     nativeAppKey: '39c88180cf07b71dc3e44c8b41822afa',
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(color: Colors.white,surfaceTintColor: Colors.white)
       ),
-      home: LoginPage(),
+      home: SplashPage(),
       // home: TermPage(),
     );
   }

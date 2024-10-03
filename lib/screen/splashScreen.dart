@@ -24,8 +24,7 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   void initState() {
-    // initPlatformState();
-
+    initPlatformState();
     super.initState();
   }
 
@@ -55,7 +54,7 @@ class _SplashPageState extends State<SplashPage> {
       if (jailbroken) {
         return DialogExample();
       } else {
-        // FlutterNativeSplash.remove();
+        FlutterNativeSplash.remove();
         return us.userList.isNotEmpty?MainPage():LoginPage();
       }
     }
