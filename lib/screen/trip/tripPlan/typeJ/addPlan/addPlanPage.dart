@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomContainer.dart';
+import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/googleMap_searchPlace.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchTripPlace.dart';
 import '../../../../../component/bottomModals.dart';
 import '../../../../../controller/jPlanState.dart';
@@ -55,7 +58,8 @@ class _AddPlanPageState extends State<AddPlanPage> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: BackAppBar(text: '일정 등록',color: Colors.white, onTap: (){Get.back();}),
+        appBar: BackAppBar(text: '일정 등록',color: Colors.white,
+            onTap: (){js.searchLocation.value = []; Get.back();}),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 44),
@@ -166,7 +170,8 @@ class _AddPlanPageState extends State<AddPlanPage> {
                     ),
                   ),
                 ),
-                Obx(()=> js.searchLocation.isEmpty?Container():Container(
+                Obx(()=> js.searchLocation.isEmpty?Container():
+                Container(
                   width: Get.width,
                   height: 240,
                   decoration: BoxDecoration(
@@ -182,6 +187,9 @@ class _AddPlanPageState extends State<AddPlanPage> {
                       target: LatLng(double.parse('${js.searchLocation[0]['location']['latitude']}'), double.parse('${js.searchLocation[0]['location']['longitude']}')),
                       zoom: 14.4746,
                     ),
+                    onTap: (argument) {
+                      if(js.searchLocation.isNotEmpty) Get.to(()=>GoogleMapSearchPlace());
+                    },
                     markers: {
                       Marker(
                           markerId: MarkerId('${js.searchLocation[0]['displayName']['text']}'),
@@ -190,10 +198,12 @@ class _AddPlanPageState extends State<AddPlanPage> {
                             //navigateTo(latitude,longitude, '고기극장');
                           },
                         icon: customIcon!,
-
                       )
                     },
                     myLocationButtonEnabled: false,
+                    gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                      Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
+                    },
                     onMapCreated: (GoogleMapController controller) {
                       if (!js.mapController.isCompleted) {
                         js.mapController.complete(controller);
