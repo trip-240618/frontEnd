@@ -1,6 +1,16 @@
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/controller/mainState.dart';
+import 'package:tripStory/controller/userState.dart';
+import '../../component/bottomContainer.dart';
+import '../../util/color.dart';
+import '../../util/font.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -10,69 +20,292 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  final us = Get.put(UserState());
+  final ms = Get.put(MainState());
+  final TextEditingController _nickCon = TextEditingController();
+  final TextEditingController _memoCon = TextEditingController();
+  ScrollController scrollController = ScrollController();
+  XFile? pickedImage;
+  @override
+  void initState() {
+    Future.delayed(Duration.zero,(){
+      _nickCon.text = us.userList[0]['name'];
+      _memoCon.text = us.userList[0]['memo'];
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nickCon.dispose();
+    _memoCon.dispose();
+
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: BackAppBar(text: '프로필',onTap: (){Get.back();},),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20,right: 20,top: 38,bottom: 50),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Stack(
-                children: [
-                  Positioned(
+    return GestureDetector(
+      onTap: (){
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: BackAppBar(text: '프로필',onTap: (){Get.back();},color: Colors.white,),
+        body: SingleChildScrollView(
+          controller: scrollController,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20,right: 20,top: 38,bottom: 50),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: ()async{
+                    pickedImage = await ms.getSingleImage(ImageSource.gallery,context,pickedImage);
+                    setState(() {});
+                  },
+                  child: pickedImage==null&&us.userList[0]['thumbnail']!=''?
+                  Center(
                     child: Container(
-                      width: 95,
-                      height: 95,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xffD9D9D9)
+                      width: 98,
+                      height: 98,
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: CachedNetworkImage(
+                              imageUrl: us.userList[0]['thumbnail'],
+                              width: 80,
+                              height: 80,
+                              imageBuilder: (context, imageProvider) => Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.fill
+                                  ),
+                                ),
+                              ),
+                              // placeholder: (context, url) => const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                            ),
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              width: 36,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  border: Border.all(width: 1, color: Color(0xffECECEC))
+                              ),
+                              child: SvgPicture.asset('assets/icon/photo.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(gray500,BlendMode.srcIn)),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
+                  ) : pickedImage!=null
+                      ? Center(
                     child: Container(
-                      width: 31,
-                      height: 32,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          border: Border.all(width: 1, color: Color(0xffECECEC))
+                      width: 98,
+                      height: 98,
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: Image.file(
+                              File(pickedImage!.path),
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              width: 36,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  border: Border.all(width: 1, color: Color(0xffECECEC))
+                              ),
+                              child: SvgPicture.asset('assets/icon/photo.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(gray500,BlendMode.srcIn)),
+                            ),
+                          )
+                        ],
                       ),
-                      child: Icon(Icons.camera_alt, size: 20,),
                     ),
                   )
-                ],),
-            ),
-            const SizedBox(height: 66),
-            Container(
-              width: Get.width,
-              height: 60,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xffE0E0E0)),
-                  borderRadius: BorderRadius.circular(12)
-              ),
-              child: Center(child: Text('')),
-            ),
-            Spacer(),
-            GestureDetector(
-              onTap: (){
-              },
-              child: Container(
-                width: Get.width,
-                height: 60,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Color(0xffEEEEEE)
+                      : Center(
+                    child: Container(
+                      width: 98,
+                      height: 98,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            child: Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: Color(0xFFEEEEEE), // 색상 코드 #EEEEEE를 Flutter의 Color로 변환
+                                    width: 1.0, // border의 두께 (1px)
+                                  ),
+                                  borderRadius: BorderRadius.circular(4)
+                              ),
+                              child: Center(child: SvgPicture.asset('assets/icon/image.svg',width: 28)),
+                            ),
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              width: 36,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  border: Border.all(width: 1, color: Color(0xffECECEC))
+                              ),
+                              child: SvgPicture.asset('assets/icon/photo.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(gray500,BlendMode.srcIn)),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),),
                 ),
-                child: Center(child: Text('저장하기')),
-              ),
-            )
-          ],
+                const SizedBox(height: 47),
+                Text('닉네임',style: f12gray700W700,),
+                const SizedBox(height: 10),
+                Container(
+                  width: Get.width,
+                  decoration: BoxDecoration(
+                      color: gray50,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: gray200)
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _nickCon,
+                            autofocus: false,
+                            style: f16gray800w600,
+                            onChanged: (v){
+                              setState(() {});
+                            },
+                            inputFormatters: <TextInputFormatter>[
+                              LengthLimitingTextInputFormatter(8),
+                            ],
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: EdgeInsets.zero,
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              hintText: '닉네임을 입력해주세요',
+                              hintStyle: f14Gray500w400,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10,),
+                        Text('${_nickCon.text.length}',style: f11Gray800w600,),
+                        Text('/8',style: f11Gray400w600,)
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20,),
+                Text('자기소개', style: f12gray600w600,),
+                const SizedBox(height: 8,),
+                Container(
+                  width: Get.width,
+                  height: 180,
+                  decoration: BoxDecoration(
+                    color: gray50,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: gray200),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            onChanged: (con){
+                              setState(() {});
+                            },
+                            scrollPadding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).viewInsets.bottom + 40),
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: EdgeInsets.zero,
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              hintText: '일정 간편 메모를 이용해 보세요',
+                              hintStyle: f15gray400w500,
+                            ),
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            controller: _memoCon,
+                            style: f16gray800w600,
+                            inputFormatters: <TextInputFormatter>[
+                              LengthLimitingTextInputFormatter(100),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text('${_memoCon.text.length}', style: _memoCon.text.length>0?f11Gray800w600:f11Gray400w600,),
+                            Text('/100 ', style: f11Gray400w600,),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).viewInsets.bottom/2),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
+          child: BottomContainer(
+              onTap: ()async{
+                print('1111');
+                if(pickedImage!=null){
+                  Map<String, dynamic> url = await us.profileFileUpload(pickedImage!);
+                  Map<String, dynamic> thumbnailUrl = await us.profileThumbnailUpload(pickedImage!);
+                  await us.userModify(
+                      _nickCon.text,
+                      _memoCon.text,
+                      '${thumbnailUrl['preSignedUrls'][0].toString().split('?')[0]}',
+                      '${url['preSignedUrls'][0].toString().split('?')[0]}');
+                }else{
+                  await us.userModify(
+                      _nickCon.text,
+                      _memoCon.text,
+                      '${us.userList[0]['thumbnail']}',
+                      '${us.userList[0]['profileImg']}');
+                }
+              },title: '다음',isBlack: true),
         ),
       ),
     );

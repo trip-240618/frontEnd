@@ -57,7 +57,11 @@ class UserState extends GetxController{
     return data;
   }
   /// 프로필 상세 등록
-  Future<void> userModify(String nickName,String profileImg,String thumbnailImg,bool marketing)async{
-    apiUserClient.userModify(nickName, profileImg,thumbnailImg,marketing);
+  Future<void> userRegister(String nickName,String profileImg,String thumbnailImg,bool marketing)async{
+    apiUserClient.userRegister(nickName, profileImg,thumbnailImg,marketing);
+  }
+  /// 프로필 수정
+  Future<void> userModify(String nickName,String memo,String thumbnailImg,String profileImg)async{
+    apiUserClient.userModify(nickName, memo,thumbnailImg,profileImg);
   }
 }
