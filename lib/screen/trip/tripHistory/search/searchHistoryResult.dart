@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../../component/appbar.dart';
-import '../../../util/font.dart';
+import '../../../../component/appbar.dart';
+import '../../../../util/font.dart';
 
 class SearchHistoryResult extends StatefulWidget {
   const SearchHistoryResult({super.key});

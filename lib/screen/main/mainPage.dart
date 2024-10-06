@@ -210,7 +210,7 @@ class _MainPageState extends State<MainPage> {
                                           Spacer(),
                                           ms.selectIdx.value==1?const SizedBox():GestureDetector(
                                               onTap: (){
-                                                sendBottomModal(context);
+                                                sendBottomModal(context,ms.tripList[index]['invitationCode']);
                                               },
                                               child: SvgPicture.asset('assets/icon/send.svg',color: gray900)),
                                           const SizedBox(width: 12),
@@ -308,29 +308,15 @@ class _MainPageState extends State<MainPage> {
                                                 return Column(
                                                   mainAxisAlignment: MainAxisAlignment.end,
                                                   children: [
-                                                    // PopupMenuButton(
-                                                    //   offset: Offset(1, 50),
-                                                    //   shape: const TooltipShape(borderColor: Colors.red,borderWidth: 1),
-                                                    //   menuPadding: EdgeInsets.only(left: 20,right: 20),
-                                                    //   itemBuilder: (_) => <PopupMenuEntry>[
-                                                    //     PopupMenuItem(
-                                                    //         enabled: false,
-                                                    //         padding:EdgeInsets.only(left: 10),
-                                                    //         child: Text('31231ㅇㄴㅁㅇㅁㄴㅇㅁㅇㅁㅇㅁㄴㅇㄴㅁㅇㅁㄴdasdasdasdasdasdasdasdasdasdasda',style: TextStyle(color: Colors.red))
-                                                    //     ),
-                                                    //
-                                                    //   ],
-                                                    // ),
                                                     GestureDetector(
                                                       onTap:()async{
                                                         int maxlen = await getLongestNicknameLength(ms.tripList[index]['tripMemberDtoList']);
                                                         showPopover(
                                                             context: context,
                                                             bodyBuilder: (context) => ListItems(index: index,),
-                                                            onPop: () => print('Popover was popped!'),
                                                             direction: PopoverDirection.bottom,
                                                             width: 14*maxlen+100,
-                                                            height: 30*maxlen+0,
+                                                            height: 12*maxlen+0,
                                                             contentDyOffset: 10, // Popover를 더 가까이 붙이기
                                                             arrowHeight: 8,
                                                             arrowWidth: 13

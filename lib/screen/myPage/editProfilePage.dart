@@ -257,7 +257,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
-                              hintText: '일정 간편 메모를 이용해 보세요',
+                              hintText: '자기소개를 작성해 주세요',
                               hintStyle: f15gray400w500,
                             ),
                             keyboardType: TextInputType.multiline,

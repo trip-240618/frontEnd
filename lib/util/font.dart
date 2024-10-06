@@ -109,13 +109,16 @@ const TextStyle f12Gray800w500 = TextStyle(
   fontWeight: FontWeight.w500,
   height: 16.01 / 12,
   letterSpacing: 0.0252 * 12,
+  color: gray800
 );
 
 const TextStyle f12whitew500 = TextStyle(
-  fontSize: 12,
-  color: Colors.white,
-  fontWeight: FontWeight.w500,
   fontFamily: 'Pretendard',
+  fontSize: 12.0,
+  fontWeight: FontWeight.w500,
+  height: 16.01 / 12,
+  letterSpacing: 0.0252,
+  color: Colors.white
 );
 const TextStyle f12non400w500 = TextStyle(
   fontSize: 12,
@@ -231,6 +234,14 @@ const TextStyle f14whitew500 = TextStyle(
   height: 20.01 / 14.0,
   letterSpacing: 0.0145 * 14.0,
 );
+const TextStyle f15whitew500 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 15.0,
+  fontWeight: FontWeight.w500,
+  height: 22.01 / 15,
+  letterSpacing: 0.0096 * 15,
+  color: Colors.white
+);
 const TextStyle f15gray800w500 = TextStyle(
   fontFamily: 'Pretendard',
   color: gray800,
@@ -238,6 +249,14 @@ const TextStyle f15gray800w500 = TextStyle(
   fontWeight: FontWeight.w500,
   height: 22.01 / 15.0,
   letterSpacing: 0.0096 * 15.0,
+);
+const TextStyle f16gray900w500 = TextStyle(
+    fontFamily: 'Pretendard',
+    fontSize: 16.0,
+    fontWeight: FontWeight.w500,
+    height: 1.5,
+    letterSpacing: 0.0057 * 16,
+    color: gray900
 );
 const TextStyle f16gray800w500 = TextStyle(
   fontFamily: 'Pretendard',
@@ -288,6 +307,15 @@ const TextStyle f12whitew600 = TextStyle(
   height: 16.01 / 12,
   letterSpacing: 0.0252 * 12,
   color:Colors.white
+);
+
+const TextStyle f14whitew600 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 14.0,
+  fontWeight: FontWeight.w600,
+  height: 22 / 14,
+  letterSpacing: 0.0145 * 14,
+  color: Colors.white
 );
 const TextStyle f15gray800w600 = TextStyle(
   fontFamily: 'Pretendard',
@@ -378,12 +406,8 @@ const TextStyle f16darkGray3w600 = TextStyle(
   fontFamily: 'Pretendard',
   height: 1.5,
 );
-const TextStyle f16Gray900w600 = TextStyle(
-  fontSize: 16,
-  color: gray900,
-  fontWeight: FontWeight.w600,
-  fontFamily: 'Pretendard',
-);
+
+
 const TextStyle f14gray800w600 = TextStyle(
   fontSize: 14,
   color: gray800,
