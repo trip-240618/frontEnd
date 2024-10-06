@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:get/get.dart';
 import '../app/api/tripApi.dart';
 import '../app/config/dio_client.dart';
@@ -6,7 +8,6 @@ import '../app/config/dio_client.dart';
 class TripState extends GetxController{
   final RxList selectTripList = <dynamic>[].obs; /// 선택한 여행
   final apiTripClient = ApiTripClient(DioClient());
-
   @override
   void onInit() {
 
@@ -16,6 +17,8 @@ class TripState extends GetxController{
   Future<void> getSelectTrip(int tripId)async{
     selectTripList.clear();
     selectTripList.value = await apiTripClient.tripEnter(tripId);
+    selectTripList[0]['labelColor'] = int.parse(selectTripList[0]['labelColor']);
+    selectTripList.refresh();
   }
   /// 여행방 정보 수정하기
   Future<void> modifyTrip(int tripId,String name,String thumbnail,String labelColor,String startDate,String endDate)async{

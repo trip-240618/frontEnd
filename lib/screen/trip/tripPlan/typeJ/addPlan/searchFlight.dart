@@ -4,7 +4,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/controller/jPlanState.dart';
+import 'package:tripStory/controller/tripState.dart';
 import '../../../../../component/bottomContainer.dart';
+import '../../../../../component/dialog/daySelect.dart';
 import '../../../../../util/color.dart';
 import '../../../../../util/font.dart';
 import 'addFlight.dart';
@@ -17,6 +20,8 @@ class SearchFlight extends StatefulWidget {
 }
 
 class _SearchFlightState extends State<SearchFlight> {
+  final js = Get.put(JPlanState());
+  final ts = Get.put(TripState());
   DateFormat dateFormatter = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR');
   TextEditingController _startDateCon = TextEditingController();
   TextEditingController _airlineCon = TextEditingController();
@@ -44,7 +49,8 @@ class _SearchFlightState extends State<SearchFlight> {
   @override
   void initState() {
     super.initState();
-    _startDateCon.text = dateFormatter.format(DateTime.now());
+    js.selectedDateReset();
+
     _focusNode.addListener(() {
       setState(() {});
     });
@@ -83,7 +89,7 @@ class _SearchFlightState extends State<SearchFlight> {
                         children: [
                           GestureDetector(
                             onTap: (){
-                              print('달력 클릭');
+                              SelectDayBottomSheet(context,'항공편의 출발 날짜를 선택해 주세요', (){});
                             },
                             child: Row(
                               children: [
@@ -93,10 +99,10 @@ class _SearchFlightState extends State<SearchFlight> {
                                     'assets/bottomNavi/schedule.svg',
                                     width: 15,
                                     height: 15.83,
-                                    color: Color(0xff647AED),
+                                    colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
                                   ),
                                 ),
-                                Text(_startDateCon.text, style: f15gray800w500,),
+                                Obx(()=>Text('${DateFormat('yyyy.MM.dd (EEE)', 'ko').format(DateFormat('yyyy-MM-dd').parse(js.selectedDate.value))}', style: f15gray800w500,),)
                               ],
                             ),
                           ),
@@ -152,9 +158,9 @@ class _SearchFlightState extends State<SearchFlight> {
                       ),
                       prefixIcon: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: SvgPicture.asset(
-                            'assets/icon/search.svg',
-                            fit: BoxFit.none, color: Color(0xff5E91EE)
+                        child: SvgPicture.asset('assets/icon/search.svg',
+                          fit: BoxFit.none,
+                          colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
                         ),
                       ),
                     ),

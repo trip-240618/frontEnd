@@ -18,11 +18,11 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      /// 앱바 leading 기본 패딩 16, 23으로 맞추기 위해 왼쪽 패딩 추가
-      leading:  Padding(
-        padding: const EdgeInsets.only(left: 7),
-        child: GestureDetector(
-          onTap: onTap,
+      /// 앱바 leading 기본 패딩 16, 20으로 맞추기 위해 왼쪽 패딩 추가
+      leading:  GestureDetector(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Container(
             color: Colors.transparent,
             child: SvgPicture.asset(
@@ -34,7 +34,7 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Text(
         text,
-        style: f16gray900w700,
+        style: f18Gray900w600,
       ),
       backgroundColor: color,
     );
@@ -59,14 +59,17 @@ class TrailingBackAppBar extends StatelessWidget implements PreferredSizeWidget 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      /// 앱바 leading 기본 패딩 16, 23으로 맞추기 위해 왼쪽 패딩 추가
-      leading:  Padding(
-        padding: const EdgeInsets.only(left: 7,),
-        child: GestureDetector(
-          onTap: backTap,
-          child: SvgPicture.asset(
-            'assets/icon/leftArrow.svg',
-            fit: BoxFit.none,
+      /// 앱바 leading 기본 패딩 16, 20으로 맞추기 위해 왼쪽 패딩 추가
+      leading:  GestureDetector(
+        onTap: backTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Container(
+            color: Colors.transparent,
+            child: SvgPicture.asset(
+              'assets/icon/leftArrow.svg',
+              fit: BoxFit.none,
+            ),
           ),
         ),
       ),

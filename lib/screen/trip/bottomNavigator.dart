@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/locker/lockerTapPage.dart';
@@ -142,7 +143,14 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                 ],
               ),
               const SizedBox(height: 2),
-              Text('2024.05.10 ~ 2024.05.14',style: f12Gray600w500,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('${DateFormat('yyyy.MM.dd').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']))}', style: f12Gray600w500),
+                  Text(' ~ ', style: f12Gray600w500),
+                  Text('${DateFormat('yyyy.MM.dd').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['endDate']))}', style: f12Gray600w500)
+                ],
+              ),
               Row(
                 children: [
                   Spacer(),

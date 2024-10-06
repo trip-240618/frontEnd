@@ -18,6 +18,7 @@ class ScrapPage extends StatefulWidget {
 }
 
 class _ScrapPageState extends State<ScrapPage> {
+  bool bookmarkChecked = false;
   List scrapList = [
     {'date':'2024.04.23','title':'고효율 작업을 위한 생산성 도구 추천', 'content':r'[{"insert":"이 제품은 정말 대박이에요!!! 사용하고 나서부터 생활이 편리해졌어요 강추합니다 너무 마음에 들어요!!!!!!!!!!!!!!!!!!!!!! \n"}]','nickname':'김여행', 'color':'0xff5E91EE'},
     {'date':'2024.04.13','title':'돈키호테 쇼핑리스트', 'content':r'[{"insert":"Ddfsdfd\nㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ\n"}]','nickname':'나들이', 'color':'0xff83CF75'},
@@ -71,9 +72,42 @@ class _ScrapPageState extends State<ScrapPage> {
     return Scaffold(
       backgroundColor: gray50,
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         child: Column(
           children: [
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: (){
+                    bookmarkChecked = !bookmarkChecked;
+                    setState(() {
+                    });
+                  },
+                  child: bookmarkChecked == true?
+                  Container(
+                    width:20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Color(0xffE0E0E0),width: 1.5),
+                        shape: BoxShape.circle
+                    ),
+                  ):
+                  Container(
+                    width:20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                        color: gray900,
+                        shape: BoxShape.circle
+                    ),
+                    child: SvgPicture.asset('assets/icon/smallCheck.svg',fit: BoxFit.none),
+                  ),
+                ),
+                const SizedBox(width: 6,),
+                Text('북마크', style: f12gray600w600,)
+              ],
+            ),
+            const SizedBox(height: 12,),
             Expanded(
               child: MasonryGridView.count(
                 physics: const ClampingScrollPhysics(),
