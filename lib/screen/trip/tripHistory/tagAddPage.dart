@@ -4,18 +4,21 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomContainer.dart';
+import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/util/font.dart';
 
 import '../../../util/color.dart';
 
 class TagAddPage extends StatefulWidget {
-  const TagAddPage({super.key});
+  final int index;
+  const TagAddPage({super.key, required this.index});
 
   @override
   State<TagAddPage> createState() => _TagAddPageState();
 }
 
 class _TagAddPageState extends State<TagAddPage> {
+  final hs = Get.put(HistoryState());
   TextEditingController _tagCon = TextEditingController();
   FocusNode _focusNode = FocusNode();
   List colorList = [whiteColor,pastelBlue,mainRed,yellowColor,greenColor];
@@ -46,7 +49,7 @@ class _TagAddPageState extends State<TagAddPage> {
         });
       },
       child: Scaffold(
-        appBar: BackAppBar(text: '태그 추가', onTap: (){Get.back();}),
+        appBar: BackAppBar(text: '태그 추가', onTap: (){Get.back();},color: Colors.white,),
         body: Padding(
           padding: const EdgeInsets.only(top: 27, left: 20, right: 20),
           child: Column(
@@ -112,64 +115,96 @@ class _TagAddPageState extends State<TagAddPage> {
                 alignment: WrapAlignment.start,
                 spacing: 12,
                 children: tagList.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  var item = entry.value;
                   return Container(
-                    decoration: BoxDecoration(
-                      color: gray50,
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(
-                        width: 1.5,
-                        color: gray900,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 14,
-                            height: 14,
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8,right: 7),
+                          child: Container(
                             decoration: BoxDecoration(
-                              color: item['color'],
-                              borderRadius: BorderRadius.circular(100),
-                              border: item['color'] == whiteColor
-                                  ? Border.all(color: gray200)
-                                  : null,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: gray200)
                             ),
-                            child: Center(
-                              child: Text(
-                                '#',
-                                style: item['color'] == whiteColor
-                                    ? f10Gray800w500
-                                    : f10Whitew500,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width:16,
+                                    height: 16,
+                                    decoration: BoxDecoration(
+                                      color: entry.value['color'],
+                                      shape: BoxShape.circle
+                                    ),
+                                    child: Center(child: Text('#',style: f12whitew500,)),
+                                  ),
+                                  const SizedBox(width: 4,),
+                                  Text('${entry.value['name']}'),
+                                ],
                               ),
                             ),
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${item['name']}',
-                            style: f14Gray800w500,
-                          ),
-                          const SizedBox(width: 12),
-                          GestureDetector(
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: GestureDetector(
                             onTap: () {
-                              setState(() {
-                                tagList.removeAt(index); // 해당 인덱스 아이템 삭제
-                              });
+                              tagList.removeAt(entry.key);
                             },
-                            child: SvgPicture.asset('assets/icon/close.svg', color: gray900),
-                          )
-                        ],
-                      ),
+                            child: SvgPicture.asset(
+                              'assets/icon/minix.svg',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ],
+                      // child: Row(
+                      //   mainAxisSize: MainAxisSize.min,
+                      //   children: [
+                      //
+                      //     // Container(
+                      //     //   width: 14,
+                      //     //   height: 14,
+                      //     //   decoration: BoxDecoration(
+                      //     //     color: item['color'],
+                      //     //     borderRadius: BorderRadius.circular(100),
+                      //     //     border: item['color'] == whiteColor
+                      //     //         ? Border.all(color: gray200)
+                      //     //         : null,
+                      //     //   ),
+                      //     //   child: Center(
+                      //     //     child: Text(
+                      //     //       '#',
+                      //     //       style: item['color'] == whiteColor
+                      //     //           ? f10Gray800w500
+                      //     //           : f10Whitew500,
+                      //     //     ),
+                      //     //   ),
+                      //     // ),
+                      //     // const SizedBox(width: 4),
+                      //     // Text(
+                      //     //   '${item['name']}',
+                      //     //   style: f14Gray800w500,
+                      //     // ),
+                      //     // const SizedBox(width: 12),
+                      //     // GestureDetector(
+                      //     //   onTap: () {
+                      //     //     setState(() {
+                      //     //       tagList.removeAt(index); // 해당 인덱스 아이템 삭제
+                      //     //     });
+                      //     //   },
+                      //     //   child: SvgPicture.asset('assets/icon/close.svg', color: gray900),
+                      //     // )
+                      //   ],
+                      // ),
                     ),
                   );
                 }).toList(),
               )
-                  :Container(),
-
-
+                  :const SizedBox(),
             ],
           ),
         ),
@@ -272,7 +307,17 @@ class _TagAddPageState extends State<TagAddPage> {
           color : Colors.white,
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
-            child: BlackBottomContainer(onTap: (){}, title: '저장'),
+            child: BlackBottomContainer(onTap: (){
+              hs.addTagList[widget.index] = tagList;
+              // for(int i=0;i<tagList.length;i++){
+              //   hs.addTagList[widget.index].add({
+              //     'name': '${tagList[i]['name']}',
+              //     'color': tagList[i]['color']
+              //   });
+              // }
+              print('dasdas??? ${hs.addTagList.value }');
+              Get.back();
+            }, title: '저장'),
           ),
         ),
       ),

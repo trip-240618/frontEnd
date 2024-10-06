@@ -19,7 +19,7 @@ class ApiUserClient {
       if (response.statusCode == 200) {
         final data = response.data;
         us.userList.value = [data];
-        print('data??? ${us.userList.value}');
+        print('자동로그인 값? ${us.userList.value}');
         return data;
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
