@@ -10,12 +10,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/component/dialog/daySelect.dart';
 import 'package:tripStory/controller/historyState.dart';
-import 'package:tripStory/screen/trip/tripHistory/searchHistoryPage.dart';
+import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/screen/trip/tripHistory/search/searchHistoryPage.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../component/history/customMarker.dart';
 import '../../../imageTest.dart';
 import '../../../util/font.dart';
-import 'album/albumPage.dart';
 
 
 class TripHistoryMainPage extends StatefulWidget {
@@ -27,6 +27,7 @@ class TripHistoryMainPage extends StatefulWidget {
 
 class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   final hs = Get.put(HistoryState());
+  final ts = Get.put(TripState());
   DraggableScrollableController scrollableController = DraggableScrollableController();
   ScrollController listScrollCon = ScrollController();
   final GlobalKey<ScaffoldState> modelScaffoldKey = GlobalKey<ScaffoldState>();
@@ -39,6 +40,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
+      await hs.getHistoryList(ts.selectTripList[0]['id']);
       await addMarker(LatLng(36.35475233611197, 127.34170655688537));
       setState(() {});
     });
@@ -117,7 +119,6 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
 
     return BitmapDescriptor.fromBytes(pngBytes);
   }
-
   Future<void> addMarker(LatLng position) async {
     List<LatLng> test = [
       LatLng(36.35475233611197, 127.34170655688537),
@@ -153,7 +154,6 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
       _markers.add(marker);
     }
   }
-
   Future<void> changeMarker() async {
     List<LatLng> test = [
       LatLng(36.35475233611197, 127.34170655688537),
@@ -197,13 +197,8 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: modelScaffoldKey,
-      body: Stack(
+      body: Obx(()=>Stack(
         children: [
-          // GestureDetector(
-          //   onTap: (){
-          //     changeMarker();
-          //   },
-          //     child: Text('313121')),
           GoogleMap(
             initialCameraPosition: CameraPosition(
               target: LatLng(hs.latitude.value, hs.longitude.value),
@@ -280,17 +275,17 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                           },
                                           child: SvgPicture.asset('assets/icon/home.svg', color: gray900,)),
                                       Spacer(),
-                                      Text('도쿄 즉흥 여행',style: f18Gray900w600,),
+                                      Text('${ts.selectTripList[0]['name']}',style: f18Gray900w600,),
                                       Spacer(),
                                       GestureDetector(
-                                        onTap: ()async{
-                                          bool isRequest = await requestPhotoMangerPermission(context);
-                                          if(isRequest){
-                                            SelectDayDialog(context, '', (){});
-                                            // Get.to(()=>AlbumPage());
-                                          }
-                                        },
-                                        child: SvgPicture.asset('assets/icon/enabledRoundPlus.svg')),
+                                          onTap: ()async{
+                                            bool isRequest = await requestPhotoMangerPermission(context);
+                                            if(isRequest){
+                                              SelectDayDialog(context, '', (){});
+                                              // Get.to(()=>AlbumPage());
+                                            }
+                                          },
+                                          child: SvgPicture.asset('assets/icon/enabledRoundPlus.svg')),
                                     ],
                                   ),
                                 ],
@@ -354,7 +349,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                       Text('2024.08.12', style: f12Gray800w500,),
                                                       Spacer(),
                                                       Container(
-                                                        width: 20,
+                                                          width: 20,
                                                           height: 20,
                                                           decoration: BoxDecoration(
                                                             color: Color(0xff5E91EE),
@@ -386,7 +381,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                       decoration: BoxDecoration(
                                                                         borderRadius: BorderRadius.circular(4),
                                                                         image: DecorationImage(
-                                                                           image: imageProvider,
+                                                                            image: imageProvider,
                                                                             fit: BoxFit.fill
                                                                         ),
                                                                       ),
@@ -415,25 +410,25 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                   ),
                                                                 ),
                                                                 Positioned(
-                                                                    top:8,
-                                                                    right:8,
-                                                                    child: Container(
-                                                                      width: 20,
-                                                                      height: 20,
-                                                                      child: CachedNetworkImage(
-                                                                        imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/profile.png?alt=media',
-                                                                        imageBuilder: (context, imageProvider) => Container(
-                                                                          decoration: BoxDecoration(
-                                                                            borderRadius: BorderRadius.circular(4),
-                                                                            image: DecorationImage(
-                                                                                image: imageProvider,
-                                                                                fit: BoxFit.fill
-                                                                            ),
+                                                                  top:8,
+                                                                  right:8,
+                                                                  child: Container(
+                                                                    width: 20,
+                                                                    height: 20,
+                                                                    child: CachedNetworkImage(
+                                                                      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/profile.png?alt=media',
+                                                                      imageBuilder: (context, imageProvider) => Container(
+                                                                        decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(4),
+                                                                          image: DecorationImage(
+                                                                              image: imageProvider,
+                                                                              fit: BoxFit.fill
                                                                           ),
                                                                         ),
-                                                                        errorWidget: (context, url, error) => const Icon(Icons.error),
                                                                       ),
+                                                                      errorWidget: (context, url, error) => const Icon(Icons.error),
                                                                     ),
+                                                                  ),
                                                                 ),
                                                                 Positioned(
                                                                   left:8,
@@ -503,9 +498,9 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                 child: Container(
                   height: 52,
                   decoration: BoxDecoration(
-                    color: gray50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: gray200),
+                      color: gray50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: gray200),
                       boxShadow: [
                         BoxShadow(
                           color: Color(0x2626261A).withOpacity(0.1),
@@ -574,7 +569,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
           //     )
           // ),
         ],
-      ),
+      )),
     );
   }
 }

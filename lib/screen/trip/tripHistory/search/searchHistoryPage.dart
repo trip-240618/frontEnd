@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/appbar.dart';
-import 'package:tripStory/screen/trip/tripHistory/searchHistoryResult.dart';
+import 'package:tripStory/screen/trip/tripHistory/search/searchHistoryResult.dart';
 
-import '../../../util/color.dart';
-import '../../../util/font.dart';
+import '../../../../util/color.dart';
+import '../../../../util/font.dart';
 
 class SearchHistoryPage extends StatefulWidget {
   const SearchHistoryPage({super.key});

@@ -43,16 +43,25 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
           children: [
             Stack(
               children: [
-                AssetEntityImage(
-                  gaplessPlayback: true,
-                  filterQuality: FilterQuality.high,
-                  thumbnailSize: ThumbnailSize.square(700),
-                  thumbnailFormat: ThumbnailFormat.png,
-                  hs.selectAlbumList[1],
-                  width: Get.width,
-                  height: Get.height*0.6,
-                  fit: BoxFit.cover,
+                CachedNetworkImage(
+                  imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/foodImage.jpeg?alt=media',
+                    width: Get.width,
+                    height: Get.height*0.6,
+                  fit: BoxFit.fill,
+                  // placeholder: (context, url) =>
+                  // const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
+                // AssetEntityImage(
+                //   gaplessPlayback: true,
+                //   filterQuality: FilterQuality.high,
+                //   thumbnailSize: ThumbnailSize.square(700),
+                //   thumbnailFormat: ThumbnailFormat.png,
+                //   hs.selectAlbumList[1],
+                //   width: Get.width,
+                //   height: Get.height*0.6,
+                //   fit: BoxFit.cover,
+                // ),
                 Positioned(
                   bottom: 0,
                   left: 0,
@@ -67,8 +76,26 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                           Colors.transparent,
                           Color(0xff212121).withOpacity(0.5),
                         ],
-                        stops: [0.54, 1],
+                        stops: [0.3, 1],
                       ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 20,
+                  left: 0,
+                  right: 0, // 화면의 왼쪽과 오른쪽에 닿도록 설정
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20,right: 20),
+                    child: Wrap(
+                      children: [
+                        Text(
+                          '일본 여행 중 먹었던 츠케멘 맛집은 정말 맛있었어요. 면발이 쫄깃하고, 국물의 깊은 맛이 일품이라서 잊지 못할 맛이었어요. 특히 시루가 매콤해서 얼큰한 맛으로 추천합니다!!!!!!',
+                          style: f15whitew500,
+                          maxLines: 10, // 최대 줄 수 설정
+                          overflow: TextOverflow.ellipsis, // 텍스트가 오버플로우될 경우 처리
+                        ),
+                      ],
                     ),
                   ),
                 ),

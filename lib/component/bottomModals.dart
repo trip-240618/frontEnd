@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/main/tripAdd/tirpDirectSearch.dart';
@@ -187,7 +189,10 @@ void timeBottomModel(BuildContext context, DateTime selectedTime) {
         );
       });
 }
-void sendBottomModal(BuildContext context) {
+void sendBottomModal(BuildContext context,String inviteCode) {
+  FToast fToast;
+  fToast = FToast();
+  fToast.init(context);
   showModalBottomSheet(
       context: context,
 
@@ -237,15 +242,67 @@ void sendBottomModal(BuildContext context) {
                           ),
                         ),
                       ),
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset('assets/icon/copy.svg'),
-                              const SizedBox(width: 20),
-                              Text('초대 코드 복사하기',style: f15gray800w600,)
-                            ],
+                      GestureDetector(
+                        onTap: (){
+                          Clipboard.setData(ClipboardData(text: inviteCode));
+                          fToast.showToast(
+                            child: Container(
+                              width: Get.width,
+                              height: 58,
+                              decoration: BoxDecoration(
+                                color: Color(0xff212121).withOpacity(0.7),  // 반투명한 배경
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x1A000000),
+                                    offset: Offset(0, 4),
+                                    blurRadius: 9,
+                                  ),
+                                  BoxShadow(
+                                    color: Color(0x17000000),
+                                    offset: Offset(0, 16),
+                                    blurRadius: 16,
+                                  ),
+                                  BoxShadow(
+                                    color: Color(0x0D000000),
+                                    offset: Offset(0, 36),
+                                    blurRadius: 21,
+                                  ),
+                                  BoxShadow(
+                                    color: Color(0x03000000),
+                                    offset: Offset(0, 63),
+                                    blurRadius: 25,
+                                  ),
+                                  BoxShadow(
+                                    color: Color(0x00000000),
+                                    offset: Offset(0, 99),
+                                    blurRadius: 28,
+                                  ),
+                                ],
+                              ),
+                              child: Center(child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset('assets/icon/copy.svg',colorFilter: ColorFilter.mode(Colors.white,BlendMode.srcIn)),
+                                  const SizedBox(width: 8,),
+                                  Text('초대코드를 복사했습니다',style: f14whitew600,),
+                                ],
+                              )),
+                            ),
+                            gravity: ToastGravity.TOP,
+                            toastDuration: Duration(seconds: 2),
+                          );
+                        },
+                        child: Container(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset('assets/icon/copy.svg'),
+                                const SizedBox(width: 20),
+                                Text('초대 코드 복사하기',style: f15gray800w600,)
+                              ],
+                            ),
                           ),
                         ),
                       )

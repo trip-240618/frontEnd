@@ -3,16 +3,18 @@ import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import '../../controller/tripState.dart';
+import 'package:tripStory/controller/historyState.dart';
 import '../../screen/trip/tripHistory/album/albumPage.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
 
 SelectDayDialog(BuildContext context, String title, VoidCallback onTap) {
-  String? selectedDate; // 선택된 날짜를 저장할 변수
+  final ts = Get.put(TripState());
+  final hs = Get.put(HistoryState());
+  String? selectedDate;
   final List<String> dateList = List.generate(
-    10,
-        (index) => DateFormat('yyyy.MM.dd (EEE)', 'ko').format(
-      DateTime(2024, 9, 25).add(Duration(days: index)),
+      DateTime.parse('${ts.selectTripList[0]['endDate']}').difference(DateTime.parse('${ts.selectTripList[0]['startDate']}')).inDays + 1, (index) => DateFormat('yyyy.MM.dd (EEE)', 'ko').format(
+      DateTime.parse('${ts.selectTripList[0]['startDate']}').add(Duration(days: index)),
     ),
   );
   showDialog(
@@ -123,8 +125,11 @@ SelectDayDialog(BuildContext context, String title, VoidCallback onTap) {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              Get.back();
-                              Get.to(()=>AlbumPage());
+                              if(selectedDate !=null){
+                                Get.back();
+                                hs.selectedDate.value = selectedDate!;
+                                Get.to(()=>AlbumPage());
+                              }
                             },
                             behavior: HitTestBehavior.opaque,
                             child: Center(

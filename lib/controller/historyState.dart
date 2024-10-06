@@ -1,19 +1,27 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
+import '../app/api/fileApi.dart';
+import '../app/api/historyApi.dart';
+import '../app/config/dio_client.dart';
 import '../screen/trip/tripHistory/album/modal/albumModel.dart';
 import '../screen/trip/tripHistory/history/model/detailItem.dart';
-
+import 'package:http/http.dart' as http;
 
 class HistoryState extends GetxController{
+  final apiHistoryClient = ApiHistoryClient(DioClient());
+  final apiFileClient = ApiFileClient(DioClient());
   AlbumModel? albumModel;
   final ImagePicker _picker = ImagePicker();
   final RxList albums = [].obs;
   final RxList selectAlbumList = [].obs; ///선택된 앨범 리스트
   final selectAlbumIndex = 0.obs; /// 클릭한 앨범 리스트
-  // final Rx<List<AlbumModel>> selectAlbumList = Rx<List<AlbumModel>>([]); /// 선택한 앨범 리스트
+  final RxList imgUrl = [].obs; /// img url 저장하기
+  final selectedDate = ''.obs; /// 사진 등록 할 때 날짜 선택
+  final RxList addTagList = [].obs;/// 태그 추가할 리스트
 
   final Completer<GoogleMapController> mapController = Completer<GoogleMapController>();
   final latitude = 0.0.obs;
@@ -22,15 +30,25 @@ class HistoryState extends GetxController{
   ///댓글 리스트
   final RxList<DetailItem> detailList = <DetailItem>[].obs;
 
+  /// 여행 리스트
+  final RxList historyList = [].obs;
+
   @override
   void onInit() {
     latitude.value = 36.35475233611197;
     longitude.value = 127.34170655688537;
     super.onInit();
   }
+
   @override
   void onClose()async{
     super.onClose();
+  }
+
+  /// 기록 리스트 가져오기
+  Future<void> getHistoryList(int tripId)async{
+    historyList.clear();
+    historyList.value = await apiHistoryClient.getHistoryList(tripId);
   }
 
   Future<void>addDetailItem()async{
@@ -54,6 +72,7 @@ class HistoryState extends GetxController{
       ),
     );
   }
+
   Future<void> addCommentToDetailItem(int index, Comment newComment) async{
     Comment(
       username: 'user2',
@@ -67,13 +86,29 @@ class HistoryState extends GetxController{
       tagData: []
     );
   }
+
+  /// 사진 업로드
+  Future<Map<String, dynamic>> historyFileUpload(List files)async{
+    Map<String, dynamic> data = await apiFileClient.historyUrlGet(files.length);
+    imgUrl.value = data['preSignedUrls'];
+    for(int i=0;i<data['preSignedUrls'].length;i++){
+      File? file = await files[i].file;
+      final fileBytes = await file!.readAsBytes();
+      final response = await http.put(Uri.parse(data['preSignedUrls'][i]),
+        headers: {
+          'Content-Type': "image/jpeg",
+        },
+        body: fileBytes,
+      );
+    }
+    return data;
+  }
+
   ///앨범 정보 가져오는 함수
   Future<void> getAlbums() async {
     albums.clear();
-    // totalAlbumList.value.clear();
-    // albumList.value.clear();
     await PhotoManager.getAssetPathList(
-        type: RequestType.common,
+        type: RequestType.image,
         pathFilterOption: PMPathFilter(
             darwin: PMDarwinPathFilter(subType: [
               PMDarwinAssetCollectionSubtype.smartAlbumRecentlyAdded,
@@ -119,53 +154,29 @@ class HistoryState extends GetxController{
       // });
     }
   }
-
-  // void loadMoreImages(AssetPathEntity album) async {
-  //   int start = albumList.value.isNotEmpty
-  //       ? albumList.value.first.images.length
-  //       : 0;
-  //   int end = start + 100;
-  //   List<AssetEntity> newImages = await album.getAssetListRange(start: start, end: end);
-  //   if (newImages.isNotEmpty) {
-  //     AlbumModel? existingAlbum = albumList.value.firstWhereOrNull((a) => a.id == album.id);
-  //     await PhotoCachingManager().requestCacheAssets(
-  //       assets: newImages,
-  //       option: ThumbnailOption(
-  //         size: ThumbnailSize.square(25), // 요청할 썸네일 크기
-  //       ),
-  //     );
-  //
-  //     if (existingAlbum != null) {
-  //       existingAlbum.images.addAll(newImages);
-  //     } else {
-  //       albumList.value.add(AlbumModel(
-  //         id: album.id,
-  //         name: album.name,
-  //         images: newImages,
-  //       ));
-  //     }
-  //     albumList.refresh();
-  //   }
-  // }
-
   /// 앨범 선택
   void addToSelectedAlbum(AssetEntity image) {
     selectAlbumList.add(image);
     albums.refresh();
-
-    // final AlbumModel album = albumList.value[0];
-    // final updatedList = List<AlbumModel>.from(selectAlbumList.value);
-    // updatedList.add(album);
-    // selectAlbumList.value = updatedList;
   }
   /// 앨범 지우기
-  void removeFromSelectedAlbum(AssetEntity image) {
+  void removeFromSelectedAlbum(AssetEntity image) async{
     selectAlbumList.remove(image);
     albums.refresh();
+  }
+  /// 저장 한 후에 앨범에서 지우기
+  void removeImage(AssetEntity image,int index) async{
+    apiFileClient.historyUrlDelete(imgUrl[index]);
+    imgUrl.removeAt(index);
+    selectAlbumList.remove(image);
+    selectAlbumList.refresh();
+    albums.refresh();
+  }
 
-    // final AlbumModel album = albumList.value[0];
-    // final updatedList = List<AlbumModel>.from(selectAlbumList.value);
-    // updatedList.remove(album);
-    // selectAlbumList.value = updatedList;
+  /// 파일 업로드
+  Future<List> addHistory(int tripId,List uploadList) async {
+    List createData = await apiHistoryClient.addHistory(tripId, uploadList);
+
+    return createData;
   }
 }
