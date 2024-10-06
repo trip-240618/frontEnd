@@ -6,9 +6,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/register/termsForm.dart';
 import 'package:tripStory/controller/jPlanState.dart';
+import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/addFlight.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchFlight.dart';
 import 'package:tripStory/util/color.dart';
+import '../../../../app/api/flightApi.dart';
+import '../../../../app/config/dio_client.dart';
 import '../../../../component/button.dart';
 import '../../../../util/font.dart';
 import '../../../../util/tooltip_shape.dart';
@@ -24,7 +27,9 @@ class JSchedulePage extends StatefulWidget {
 }
 
 class _JSchedulePageState extends State<JSchedulePage> {
+  final apiFlightClient = ApiFlightClient(DioClient());
   final js = Get.put(JPlanState());
+  final ts = Get.put(TripState());
   int selectIdx = 0;
   String startTime = '2024-08-01';
   String endTime = '2024-08-30';
@@ -39,14 +44,15 @@ class _JSchedulePageState extends State<JSchedulePage> {
   void initState() {
     Future.delayed(Duration.zero,()async{
       diffDate();
+      await js.getFlightList();
     });
     super.initState();
   }
   void diffDate(){
     // 날짜 형식 파서
     DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-    DateTime startDate = dateFormat.parse(startTime);
-    DateTime endDate = dateFormat.parse(endTime);
+    DateTime startDate = dateFormat.parse(ts.selectTripList[0]['startDate']);
+    DateTime endDate = dateFormat.parse(ts.selectTripList[0]['endDate']);
     // 날짜 사이의 차이 계산
     totalDateLength = endDate.difference(startDate).inDays + 1;
     setState(() {});
@@ -98,7 +104,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                             width:36,
                             height: 54,
                             decoration: BoxDecoration(
-                                color: Color(0xff647AED),
+                                color: Color(ts.selectTripList[0]['labelColor']),
                                 borderRadius: BorderRadius.circular(100)
                             ),
                             child: Padding(
@@ -106,7 +112,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f12whitew600,),
+                                  Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f12whitew600,),
                                   Spacer(),
                                   Container(
                                       width: 28,
@@ -115,7 +121,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                         shape: BoxShape.circle,
                                         color: Colors.white
                                       ),
-                                      child: Center(child: Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f14gray800w700,)))
+                                      child: Center(child: Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f14gray800w700,)))
                                 ],
                               ),
                             ),
@@ -136,7 +142,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f12gray300w600,),
+                                    Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f12gray300w600,),
                                     Spacer(),
                                     Container(
                                         width: 28,
@@ -145,7 +151,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                             shape: BoxShape.circle,
                                             color: gray300
                                         ),
-                                        child: Center(child: Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(startTime).add(Duration(days: index)))}',style: f14Whitew700,)))
+                                        child: Center(child: Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f14Whitew700,)))
                                   ],
                                 ),
                               ),
@@ -220,28 +226,29 @@ class _JSchedulePageState extends State<JSchedulePage> {
                           Container(
                             decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: pastelBlue, // #67E299 색상
+                                  color: Color(ts.selectTripList[0]['labelColor']),
                                   width: 1.5, // 1.5px 두께
                                 ),
                                 borderRadius: BorderRadius.circular(100)
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
-                              child: Text('Day ${selectIdx+1}',style: f12blueW700,),
+                              child: Text('Day ${selectIdx+1}',style: f12mainw700(Color(ts.selectTripList[0]['labelColor'])),),
                             ),
                           ),
                           Spacer(),
+                          js.flightList.isEmpty?
                           GestureDetector(
                               onTap: (){
+                                Get.to(()=>SearchFlight());
+                              },
+                              child: SvgPicture.asset('assets/icon/plane.svg'))
+                          :
+                          GestureDetector(
+                              onTap: () async {
                                 Get.to(()=>FlightView());
                               },
-                              child: SvgPicture.asset('assets/icon/plane.svg', colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn),)),
-                          const SizedBox(width: 8,),
-                          GestureDetector(
-                            onTap: (){
-                              Get.to(()=>SearchFlight());
-                              },
-                            child: SvgPicture.asset('assets/icon/plane.svg')),
+                              child: SvgPicture.asset('assets/icon/plane.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),)),
                           const SizedBox(width: 8,),
                           SvgPicture.asset('assets/icon/change.svg',colorFilter:
                           ColorFilter.mode(
@@ -317,14 +324,14 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                               children: [
                                                 PopupMenuButton(
                                                   offset: Offset(-34, 35),
-                                                  shape: const TooltipShape(borderColor:pastelBlue,borderWidth: 1),
-                                                  child: SvgPicture.asset('assets/icon/memo.svg'),
+                                                  shape: TooltipShape(borderColor:Color(ts.selectTripList[0]['labelColor']),borderWidth: 1),
+                                                  child: SvgPicture.asset('assets/icon/memo.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
                                                   color: Colors.white,
                                                   itemBuilder: (_) => <PopupMenuEntry>[
                                                     PopupMenuItem(
                                                         enabled: false,
                                                         padding:EdgeInsets.only(left: 10),
-                                                        child: Text('31231ㅇㄴㅁㅇㅁㄴㅇㅁㅇㅁㅇㅁㄴㅇㄴㅁㅇㅁㄴdasdasdasdasdasdasdasdasdasdasda',style: f12mainw600(pastelBlue))
+                                                        child: Text('31231ㅇㄴㅁㅇㅁㄴㅇㅁㅇㅁㅇㅁㄴㅇㄴㅁㅇㅁㄴdasdasdasdasdasdasdasdasdasdasda',style: f12mainw600(Color(ts.selectTripList[0]['labelColor'])))
                                                     ),
                                                   ],
                                                 ),

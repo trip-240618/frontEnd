@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomContainer.dart';
+import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/googleMap_searchPlace.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchTripPlace.dart';
 import '../../../../../component/bottomModals.dart';
@@ -25,6 +26,7 @@ class AddPlanPage extends StatefulWidget {
 
 class _AddPlanPageState extends State<AddPlanPage> {
   BitmapDescriptor? customIcon;
+  final ts = Get.put(TripState());
   final js = Get.put(JPlanState());
   Set<Marker> markers = {};
   DateFormat dateFormatter = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR');
@@ -68,7 +70,6 @@ class _AddPlanPageState extends State<AddPlanPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 24,),
-
                 /// 날짜 및 시간
                 Text('날짜 및 시간*', style: f12gray600w600,),
                 const SizedBox(height: 8,),
@@ -93,7 +94,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
                                   'assets/bottomNavi/schedule.svg',
                                   width: 15,
                                   height: 15.83,
-                                  color: Color(0xff647AED),
+                                  colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
                                 ),
                               ),
                               Text(selectDay, style: f15gray800w500,),
@@ -110,10 +111,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
                               Padding(
                                 padding: const EdgeInsets.all(1.67),
                                 child: SvgPicture.asset(
-                                  'assets/icon/time.svg',
-                                  width: 16.67,
-                                  height: 16.67,
-                                  color: Color(0xff647AED),
+                                  'assets/icon/time.svg', width: 16.67, height: 16.67, colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
                                 ),
                               ),
                               const SizedBox(width: 4,),
@@ -147,7 +145,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
                       padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 16),
                       child: Obx(()=>js.searchLocation.isEmpty?Row(
                         children: [
-                          SvgPicture.asset('assets/icon/search.svg', color: Color(0xff5E91EE),),
+                          SvgPicture.asset('assets/icon/search.svg',colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
                           const SizedBox(width: 5),
                           Text('여행 장소를 검색해주세요',style: f14Gray500w400),
                         ],

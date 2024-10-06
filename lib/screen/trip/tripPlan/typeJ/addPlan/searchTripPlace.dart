@@ -6,6 +6,7 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/controller/jPlanState.dart';
+import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../../../app/api/tripApi.dart';
 import '../../../../../app/config/dio_client.dart';
@@ -23,6 +24,7 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
   TextEditingController _placeCon = TextEditingController();
   final apiTripClient = ApiTripClient(DioClient());
   final js = Get.put(JPlanState());
+  final ts = Get.put(TripState());
   List placeList = [];
 
   /// 주소와 세컨드 주소의 중복값을 제거해서 장소 이름을 추출
@@ -64,8 +66,7 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                          'assets/icon/search.svg',
-                          fit: BoxFit.none, colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
+                          'assets/icon/search.svg', fit: BoxFit.none, colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
                       const SizedBox(width: 5,),
                       Expanded(
                         child: TextFormField(

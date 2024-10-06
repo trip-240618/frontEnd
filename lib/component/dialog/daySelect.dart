@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/controller/jPlanState.dart';
+import '../../controller/tripState.dart';
 import 'package:tripStory/controller/historyState.dart';
-import 'package:tripStory/controller/tripState.dart';
 import '../../screen/trip/tripHistory/album/albumPage.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
@@ -157,4 +158,110 @@ SelectDayDialog(BuildContext context, String title, VoidCallback onTap) {
         );
       }
   );
+}
+
+SelectDayBottomSheet(BuildContext context, String title, VoidCallback onTap){
+  final js = Get.put(JPlanState());
+  final ts = Get.put(TripState());
+  String selectedDate =  DateFormat('yyyy.MM.dd (EEE)', 'ko').format(DateFormat('yyyy-MM-dd').parse(js.selectedDate.value));
+  final List<String> dateList = List.generate(
+    DateTime.parse('${ts.selectTripList[0]['endDate']}').difference(DateTime.parse('${ts.selectTripList[0]['startDate']}')).inDays + 1, (index) => DateFormat('yyyy.MM.dd (EEE)', 'ko').format(
+    DateTime.parse('${ts.selectTripList[0]['startDate']}').add(Duration(days: index)),
+  ),
+  );
+  showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (builder){
+        return StatefulBuilder(
+            builder: (context, StateSetter setState){
+              return GestureDetector(
+                onTap: (){
+                  FocusScope.of(context).unfocus();
+                },
+                child: Container(
+                  width: Get.width,
+                  height: Get.height * 0.5,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: new BorderRadius.only(
+                      topLeft: const Radius.circular(20.0),
+                      topRight: const Radius.circular(20.0),
+                    )
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 40),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Container(
+                            width: 50,
+                            height: 5,
+                            decoration: BoxDecoration(
+                                color:greyColor
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 34,),
+                        Text(title, style: f18Gray800w600,),
+                        const SizedBox(height: 12,),
+                        Expanded(
+                          child: ListView.builder(
+                            physics: const ClampingScrollPhysics(),
+                            itemCount: dateList.length,
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemBuilder: (context, idx) {
+                              return RadioListTile<String>(
+                                title: Row(
+                                  children: [
+                                    Text(dateList[idx], style: f16gray800w500),
+                                  ],
+                                ),
+                                value: dateList[idx],
+                                contentPadding: EdgeInsets.zero,
+                                groupValue: selectedDate,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedDate = newValue!;
+                                    js.selectedDate.value = DateFormat('yyyy-MM-dd').format(DateFormat('yyyy.MM.dd (EEE)', 'ko').parse(selectedDate));
+                                  });
+                                },
+                                dense: true,
+                                hoverColor: gray900,
+                                controlAffinity: ListTileControlAffinity.leading,
+                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                fillColor: MaterialStateProperty.resolveWith<Color>(
+                                      (Set<MaterialState> states) {
+                                    if (states.contains(MaterialState.disabled)) {
+                                      return gray400.withOpacity(.32);
+                                    } else if (states.contains(MaterialState.selected)) {
+                                      return gray900;
+                                    }
+                                    return gray400.withOpacity(.32);
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+
+
+
+                      ],
+                    ),
+                  ),
+                ),
+
+              );
+            }
+
+        );
+      }
+
+  );
+
+
 }
