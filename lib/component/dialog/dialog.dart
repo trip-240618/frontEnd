@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:tripStory/component/textForm.dart';
+import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import 'package:tripStory/controller/mainState.dart';
@@ -413,3 +415,177 @@ showConfirmCancelTapDialog(BuildContext context, String title, String message, V
         );
       });
 }
+
+
+FlightDialog(BuildContext context, VoidCallback onTap) {
+  final ts = Get.put(TripState());
+  final js = Get.put(JPlanState());
+
+  showGeneralDialog(
+    context: context,
+    barrierDismissible: true,
+    barrierLabel: '',
+    pageBuilder: (context, animation1, animation2) {
+      return Material(
+        color: Colors.transparent, // 투명 배경
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: gray900,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15,horizontal: 16),
+                    child: Row(
+                      children: [
+                        Text('항공권', style: f15Whitew600,),
+                        Spacer(),
+                        GestureDetector(
+                          onTap: (){
+                            Get.back();
+
+                          },
+                          child: SvgPicture.asset('assets/icon/pencil.svg',width: 25,),
+                        ),
+                        const SizedBox(width: 14,),
+                        GestureDetector(
+                          onTap: (){
+                            Get.back();
+
+                          },
+                          child: SvgPicture.asset('assets/icon/xicon.svg',width: 22,),
+                        )
+                      ],
+                    ),
+
+                  ),
+                ),
+                Container(
+                  width: Get.width,
+                  height: 540,
+                  child: Stack(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icon/ticketBox.svg',
+                        width: Get.width, // 크기 조정
+                        height: Get.height,
+                        fit: BoxFit.fill,
+                      ),
+                      Positioned(
+                        top: 32,
+                        left: 24,
+                        right: 24,
+                        child: Container(
+                          width: Get.width,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('항공편명', style: f12gray600w600,),
+                              const SizedBox(height: 8,),
+                              Container(
+                                width: Get.width,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(width: 1, color: gray200),
+                                ),
+                                child: Padding(padding: EdgeInsets.all(16),
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset('assets/icon/plane.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn)),
+                                      const SizedBox(width: 7,),
+                                      Text(js.flightList[0]['airlineCode']==null?'':'${js.flightList[0]['airlineCode']} ${js.flightList[0]['airlineNumber']}', style: f15gray800w500,),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8,),
+                              Text('출발 공항', style: f12gray600w600,),
+                              const SizedBox(height: 8,),
+                              Container(
+                                width: Get.width,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(width: 1, color: gray200),
+                                ),
+                                child: Padding(padding: EdgeInsets.all(16),
+                                  child: Text('${js.flightList[0]['departureAirport_kr']}(${js.flightList[0]['departureAirport']})', style: f15gray800w500,),
+                                ),
+                              ),
+                              const SizedBox(height: 8,),
+                              Text('출발 일정', style: f12gray600w600,),
+                              const SizedBox(height: 8,),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(width: 1, color: gray200),
+                                ),
+                                child: Padding(padding: EdgeInsets.all(16),
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset('assets/icon/departureFlight.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn)),
+                                      const SizedBox(width: 6,),
+                                      Text('${DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.parse(js.flightList[0]['departureDate']).toLocal())}', style: f15gray800w500,),
+                                      Text(' ${js.flightList[0]['departureDate'].split('T')[1].split('+')[0]}', style: f15gray800w500,),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 40,),
+                              Text('도착 공항', style: f12gray600w600,),
+                              const SizedBox(height: 8,),
+                              Container(
+                                width: Get.width,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(width: 1, color: gray200),
+                                ),
+                                child: Padding(padding: EdgeInsets.all(16),
+                                  child: Text('${js.flightList[0]['arrivalAirport_kr']}(${js.flightList[0]['arrivalAirport']})', style: f15gray800w500,),
+                                ),
+                              ),
+                              const SizedBox(height: 8,),
+                              Text('도착 일정', style: f12gray600w600,),
+                              const SizedBox(height: 8,),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(width: 1, color: gray200),
+                                ),
+                                child: Padding(padding: EdgeInsets.all(16),
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset('assets/icon/arrivalFlight.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn)),
+                                      const SizedBox(width: 6,),
+                                      Text('${DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.parse(js.flightList[0]['arrivalDate']).toLocal())}', style: f15gray800w500,),
+                                      Text(' ${js.flightList[0]['arrivalDate'].split('T')[1].split('+')[0]}', style: f15gray800w500,),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+

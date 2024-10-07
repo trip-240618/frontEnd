@@ -13,6 +13,7 @@ import 'package:tripStory/util/color.dart';
 import '../../../../app/api/flightApi.dart';
 import '../../../../app/config/dio_client.dart';
 import '../../../../component/button.dart';
+import '../../../../component/dialog/dialog.dart';
 import '../../../../util/font.dart';
 import '../../../../util/tooltip_shape.dart';
 import 'addPlan/addPlanPage.dart';
@@ -246,7 +247,8 @@ class _JSchedulePageState extends State<JSchedulePage> {
                           :
                           GestureDetector(
                               onTap: () async {
-                                Get.to(()=>FlightView());
+                                FlightDialog(context, (){});
+                                //Get.to(()=>FlightView());
                               },
                               child: SvgPicture.asset('assets/icon/plane.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),)),
                           const SizedBox(width: 8,),

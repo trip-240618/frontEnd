@@ -35,6 +35,7 @@ class _SearchFlightState extends State<SearchFlight> {
     {'name': '진에어', 'code': 'LJ'},
   ];
   final List<Map<String, String>> totalAirLine = [
+    // 대한민국
     {'name': '대한항공', 'code': 'KE'},
     {'name': '아시아나항공', 'code': 'OZ'},
     {'name': '티웨이항공', 'code': 'TW'},
@@ -43,7 +44,73 @@ class _SearchFlightState extends State<SearchFlight> {
     {'name': '에어부산', 'code': 'BX'},
     {'name': '이스타항공', 'code': 'ZE'},
     {'name': '에어서울', 'code': 'RS'},
+    {'name': '플라이강원', 'code': '4V'},
+    {'name': '하이에어', 'code': '4H'},
+    {'name': '에어인천', 'code': 'KJ'},
+    {'name': '에어로케이항공', 'code': 'RF'},
+    {'name': '에어프레미아', 'code': 'YP'},
+
+    // 태국
+    {'name': '타이항공', 'code': 'TG'},
+    {'name': 'K-Mile 항공', 'code': '8K'},
+    {'name': '녹에어', 'code': 'DD'},
+    {'name': '방콕항공', 'code': 'PG'},
+    {'name': '에어 피플 인터내셔널', 'code': '3D'},
+    {'name': '타이 에어아시아', 'code': 'FD'},
+    {'name': '타이 스마일 항공', 'code': 'WE'},
+    {'name': '제트 아시아 항공', 'code': 'JF'},
+    {'name': '타이 비엣젯 항공', 'code': 'VZ'},
+
+    // 일본
+    {'name': '일본항공', 'code': 'JL'},
+    {'name': '전일본공수', 'code': 'NH'},
+    {'name': '바닐라에어', 'code': 'JW'},
+    {'name': '피치 항공', 'code': 'MM'},
+    {'name': '에어재팬', 'code': 'NQ'},
+
+    // 중국
+    {'name': '중국국제항공', 'code': 'CA'},
+    {'name': '중국남방항공', 'code': 'CZ'},
+    {'name': '중국동방항공', 'code': 'MU'},
+    {'name': '중국해남항공', 'code': 'HU'},
+    {'name': '상하이항공', 'code': 'FM'},
+    {'name': '샤먼항공', 'code': 'MF'},
+    {'name': '춘추항공', 'code': '9C'},
+    {'name': '칭다오항공', 'code': 'QW'},
+    {'name': '캐피탈항공', 'code': 'JD'},
+    {'name': '길상항공(준야오항공)', 'code': 'HO'},
+
+    // 홍콩
+    {'name': '캐세이퍼시픽', 'code': 'CX'},
+    {'name': '캐세이 드래곤', 'code': 'KA'},
+    {'name': '홍콩익스프레스', 'code': 'UO'},
+
+    // 마카오
+    {'name': '에어 마카오', 'code': 'NX'},
+
+    // 대만 (중화민국)
+    {'name': '중화항공', 'code': 'CI'},
+    {'name': '에바항공', 'code': 'BR'},
+
+    // 미국
+    {'name': '아메리칸항공', 'code': 'AA'},
+    {'name': '델타항공', 'code': 'DL'},
+    {'name': '유나이티드항공', 'code': 'UA'},
+    {'name': '하와이안 항공', 'code': 'HA'},
+    {'name': '알래스카항공', 'code': 'AS'},
+    {'name': '사우스웨스트항공', 'code': 'WN'},
+    {'name': '버진 아메리카', 'code': 'VX'},
+
+    // 영국
+    {'name': '영국항공', 'code': 'BA'},
+
+    // 독일
+    {'name': '루프트한자', 'code': 'LH'},
+
+    // 아랍에미리트
+    {'name': '에미레이트항공', 'code': 'EK'},
   ];
+
   List<Map<String, String>> filteredAirlines = [];
   String? selectedAirline;
   @override
@@ -214,7 +281,7 @@ class _SearchFlightState extends State<SearchFlight> {
                                             padding: const EdgeInsets.only(left: 16),
                                             child: Text(
                                               '${airlines[index]['name']} (${airlines[index]['code']})',
-                                              style: f16Gray500w500,
+                                              style: f14Gray800w500,
                                             ),
                                           ),
                                           Radio<String>(
@@ -250,7 +317,7 @@ class _SearchFlightState extends State<SearchFlight> {
                   ):SizedBox(),
                   _focusNode.hasFocus?const SizedBox(height: 20,):const SizedBox(),
                   const SizedBox(height: 20,),
-                  Text('항공편명', style: f12gray600w600,),
+                  Text('편명', style: f12gray600w600,),
                   const SizedBox(height: 8,),
                   TextFormField(
                     style: f15gray800w500,
@@ -287,8 +354,9 @@ class _SearchFlightState extends State<SearchFlight> {
                       prefixIcon: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12),
                         child: SvgPicture.asset(
-                            'assets/icon/search.svg',
-                            fit: BoxFit.none, color: Color(0xff5E91EE)
+                            'assets/icon/pencil.svg',
+                            fit: BoxFit.none,
+                          colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
                         ),
                       ),
                     ),
@@ -301,7 +369,9 @@ class _SearchFlightState extends State<SearchFlight> {
             padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
             child: BottomContainer(
                 onTap: ()async{
-                  Get.to(()=>AddFlight());
+                  print('항공권 요청중 --');
+                 await js.searchFlight();
+                  //Get.to(()=>AddFlight());
                 },title: '저장',isBlack: _airlineCon.text.trim().isEmpty&&_airCodeCon.text.trim().isEmpty?true:false),
           ),
         ),
