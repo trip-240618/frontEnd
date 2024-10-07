@@ -26,8 +26,10 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
   final ts = Get.put(TripState());
   List<TextEditingController> albumTextList = [];
   int selectIdx = 0;
+  FocusNode focusNode = FocusNode();
   @override
   void initState() {
+    hs.addTagList.clear();
     for(int i=0;i<hs.selectAlbumList.length;i++){
       albumTextList.add(TextEditingController());
       hs.addTagList.add({});
@@ -39,476 +41,361 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
     for (var controller in albumTextList) {
       controller.dispose();
     }
+    focusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 7),
-                child: GestureDetector(
-                  onTap: (){
-                    hs.selectAlbumList.clear();
-                    Get.back();
-                  },
-                  child: Container(
-                    color: Colors.transparent,
-                    child: SvgPicture.asset(
-                      'assets/icon/leftArrow.svg',
-                      fit: BoxFit.none,
+    return WillPopScope(
+      onWillPop: () async =>false,
+      child: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 7),
+                  child: GestureDetector(
+                    onTap: (){
+                      hs.selectAlbumList.clear();
+                      hs.addTagList.clear();
+                      hs.albums.refresh();
+                      Get.back();
+                    },
+                    child: Container(
+                      color: Colors.transparent,
+                      child: SvgPicture.asset(
+                        'assets/icon/leftArrow.svg',
+                        fit: BoxFit.none,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Spacer(),
-              Text(
-                '사진 등록',
-                style: f16gray900w700,
-              ),
-              Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text('${hs.selectAlbumList.length}',style: f12gray900w500,),
-                  Text('/${50-hs.historyList.length}',style: f12gray400w500,)
-                ],
-              )
-            ],
-          ),
-          backgroundColor: Colors.white,
-        ),
-          body: Obx(()=>SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: Column(
-              children: [
-                Stack(
+                Spacer(),
+                Text(
+                  '사진 등록',
+                  style: f16gray900w700,
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    AssetEntityImage(
-                      gaplessPlayback: true,
-                      filterQuality: FilterQuality.high,
-                      thumbnailSize: ThumbnailSize.square(700),
-                      thumbnailFormat: ThumbnailFormat.png,
-                      hs.selectAlbumList[selectIdx],
-                      width: Get.width,
-                      height: 360,
-                      fit: BoxFit.cover,
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        height: 150,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Color(0xff212121).withOpacity(0.5),
-                            ],
-                            stops: [0.3, 1],
+                    Text('${hs.selectAlbumList.length}',style: f12gray900w500,),
+                    Text('/${50-hs.historyList.length}',style: f12gray400w500,)
+                  ],
+                )
+              ],
+            ),
+            backgroundColor: Colors.white,
+          ),
+            body: Obx(()=>SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      hs.selectAlbumList.isNotEmpty?AssetEntityImage(
+                        gaplessPlayback: true,
+                        filterQuality: FilterQuality.high,
+                        thumbnailSize: ThumbnailSize.square(700),
+                        thumbnailFormat: ThumbnailFormat.png,
+                        hs.selectAlbumList[selectIdx],
+                        width: Get.width,
+                        height: 360,
+                        fit: BoxFit.cover,
+                      ):const SizedBox(),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 150,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Color(0xff212121).withOpacity(0.5),
+                              ],
+                              stops: [0.3, 1],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    hs.addTagList[selectIdx].isNotEmpty
-                        ? Positioned(
-                      bottom: 20,
-                      left: 20,
-                      child: Wrap(
-                        direction: Axis.horizontal,
-                        alignment: WrapAlignment.start,
-                        spacing: 12,
-                        children: hs.addTagList[selectIdx].map<Widget>((tag) { // 'tag'로 간단히 사용
-                          return Container(
-                            child: Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8, right: 7),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(4),
-                                      border: Border.all(color: gray200),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: 16,
-                                            height: 16,
-                                            decoration: BoxDecoration(
-                                                color: tag['color'], // 태그 색깔
-                                                shape: BoxShape.circle),
-                                            child: Center(
-                                              child: Text('#', style: f12whitew500),
+                      hs.addTagList.isNotEmpty&&hs.addTagList[selectIdx].isNotEmpty
+                          ? Positioned(
+                        bottom: 20,
+                        left: 20,
+                        child: Wrap(
+                          direction: Axis.horizontal,
+                          alignment: WrapAlignment.start,
+                          spacing: 12,
+                          children: hs.addTagList[selectIdx].map<Widget>((tag) { // 'tag'로 간단히 사용
+                            return Container(
+                              child: Stack(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8, right: 7),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(4),
+                                        border: Border.all(color: gray200),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: 16,
+                                              height: 16,
+                                              decoration: BoxDecoration(
+                                                  color: tag['color'], // 태그 색깔
+                                                  shape: BoxShape.circle),
+                                              child: Center(
+                                                child: Text('#', style: f12whitew500),
+                                              ),
                                             ),
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text('${tag['name']}', style: f12gray900w500), // 태그 이름
-                                        ],
+                                            const SizedBox(width: 4),
+                                            Text('${tag['name']}', style: f12gray900w500), // 태그 이름
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                  top: 0,
-                                  right: 0,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      hs.addTagList[selectIdx].remove(tag); // 해당 태그 삭제
-                                      hs.addTagList.refresh();
-                                    },
-                                    child: SvgPicture.asset(
-                                      'assets/icon/minix.svg',
-                                      fit: BoxFit.contain,
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        hs.addTagList[selectIdx].remove(tag); // 해당 태그 삭제
+                                        hs.addTagList.refresh();
+                                      },
+                                      child: SvgPicture.asset(
+                                        'assets/icon/minix.svg',
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(), // 반드시 toList()로 변환
-                      ),
-                    )
-                        : const SizedBox(),
-                    Positioned(
-                      bottom: 20,
-                      right: 20,
-                      child: GestureDetector(
-                        onTap: (){
-                          Get.to(()=>TagAddPage(index: selectIdx));
-                        },
-                        child: Container(
-                          width: 77,
-                          height: 36,
-                          decoration: BoxDecoration(
-                              color: gray900,
-                              borderRadius: BorderRadius.circular(4)
-                          ),
-                          child: Center(child: Text('# 태그 추가',style: f12Whitew700,)),
+                                ],
+                              ),
+                            );
+                          }).toList(), // 반드시 toList()로 변환
                         ),
+                      )
+                          : const SizedBox(),
+                      hs.addTagList.isNotEmpty&&hs.addTagList[selectIdx].length!=2?Positioned(
+                        bottom: 20,
+                        right: 20,
+                        child: GestureDetector(
+                          onTap: (){
+                            Get.to(()=>TagAddPage(index: selectIdx))?.then((v){
+                              focusNode.unfocus();
+                            });
+                          },
+                          child: Container(
+                            width: 77,
+                            height: 36,
+                            decoration: BoxDecoration(
+                                color: gray900,
+                                borderRadius: BorderRadius.circular(4)
+                            ),
+                            child: Center(child: Text('# 태그 추가',style: f12Whitew700,)),
+                          ),
+                        ),
+                      ):const SizedBox()
+                    ],
+                  ),
+                  const SizedBox(height: 12,),
+                  Obx(()=>Container(
+                      width: Get.width,
+                      decoration: BoxDecoration(
                       ),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 12,),
-                Obx(()=>Container(
-                    width: Get.width,
-                    decoration: BoxDecoration(
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20,right: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: Get.width,
-                            height: 70,
-                            child: ReorderableListView.builder(
-                              itemCount: hs.selectAlbumList.length,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              onReorder: (int oldIndex, int newIndex) {
-                                if (newIndex > oldIndex) {
-                                  newIndex -= 1;
-                                }
-                                final item = hs.selectAlbumList.removeAt(oldIndex);
-                                hs.selectAlbumList.insert(newIndex, item);
-                              },
-                              itemBuilder: (context, index) {
-                                return Row(
-                                  key: ValueKey(hs.selectAlbumList[index]),
-                                  children: [
-                                    Container(
-                                      width:72,
-                                      height: 70,
-                                      child: Stack(
-                                        children: [
-                                          Positioned(
-                                            bottom:0,
-                                            child: GestureDetector(
-                                              onTap: (){
-                                                selectIdx = index;
-                                                setState(() {});
-                                              },
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(4),
-                                                child: AssetEntityImage(
-                                                  gaplessPlayback: true,
-                                                  filterQuality: FilterQuality.high,
-                                                  isOriginal: false,
-                                                  width: 64,
-                                                  height: 64,
-                                                  thumbnailSize: ThumbnailSize.square(500),
-                                                  thumbnailFormat: ThumbnailFormat.png,
-                                                  hs.selectAlbumList[index],
-                                                  fit: BoxFit.cover,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20,right: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: Get.width,
+                              height: 70,
+                              child: ReorderableListView.builder(
+                                itemCount: hs.selectAlbumList.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                onReorder: (int oldIndex, int newIndex) {
+                                  if (newIndex > oldIndex) {
+                                    newIndex -= 1;
+                                  }
+                                  final item = hs.selectAlbumList.removeAt(oldIndex);
+                                  hs.selectAlbumList.insert(newIndex, item);
+                                },
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                    key: ValueKey(hs.selectAlbumList[index]),
+                                    children: [
+                                      Container(
+                                        width:72,
+                                        height: 70,
+                                        child: Stack(
+                                          children: [
+                                            Positioned(
+                                              bottom:0,
+                                              child: GestureDetector(
+                                                onTap: (){
+                                                  selectIdx = index;
+                                                  setState(() {});
+                                                },
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(4),
+                                                  child: AssetEntityImage(
+                                                    gaplessPlayback: true,
+                                                    filterQuality: FilterQuality.high,
+                                                    isOriginal: false,
+                                                    width: 64,
+                                                    height: 64,
+                                                    thumbnailSize: ThumbnailSize.square(500),
+                                                    thumbnailFormat: ThumbnailFormat.png,
+                                                    hs.selectAlbumList[index],
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Positioned(
-                                            top: 0,
-                                            right: 0,
-                                            child: GestureDetector(
-                                              behavior: HitTestBehavior.opaque,
-                                              onTap: () {
-                                                if(hs.selectAlbumList.length!=1){
-                                                  hs.removeImage(hs.selectAlbumList[index],index);
-                                                  albumTextList.removeAt(index);
-                                                  if(selectIdx!=0){
-                                                    selectIdx--;
+                                            Positioned(
+                                              top: 0,
+                                              right: 0,
+                                              child: GestureDetector(
+                                                behavior: HitTestBehavior.opaque,
+                                                onTap: () {
+                                                  if(hs.selectAlbumList.length!=1){
+                                                    hs.removeImage(hs.selectAlbumList[index],index);
+                                                    albumTextList.removeAt(index);
+                                                    if(selectIdx!=0){
+                                                      selectIdx--;
+                                                    }
+                                                    setState(() {});
                                                   }
-                                                  setState(() {});
-                                                }
-                                              },
-                                              child: SvgPicture.asset(
-                                                'assets/icon/minix.svg',
-                                                fit: BoxFit.contain,
-                                                width: 20,
-                                                height: 20,
-                                                alignment: Alignment.center,
+                                                },
+                                                child: SvgPicture.asset(
+                                                  'assets/icon/minix.svg',
+                                                  fit: BoxFit.contain,
+                                                  width: 20,
+                                                  height: 20,
+                                                  alignment: Alignment.center,
+                                                ),
                                               ),
                                             ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 17,),
+                            Container(
+                              width: Get.width,
+                              height: 108,
+                              decoration: BoxDecoration(
+                                color: gray50,
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: gray200),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: TextFormField(
+                                        onChanged: (con){
+                                          setState(() {});
+                                        },
+                                        scrollPadding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context).viewInsets.bottom + 40),
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
                                           ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          hintText: '간단한 메모를 기록해 보세요',
+                                          hintStyle: f15gray400w500,
+                                        ),
+                                        keyboardType: TextInputType.multiline,
+                                        maxLines: null,
+                                        focusNode: focusNode,
+                                        controller: albumTextList[selectIdx],
+                                        style: f16gray800w600,
+                                        inputFormatters: <TextInputFormatter>[
+                                          LengthLimitingTextInputFormatter(60),
                                         ],
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 17,),
-                          Container(
-                            width: Get.width,
-                            height: 108,
-                            decoration: BoxDecoration(
-                              color: gray50,
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: gray200),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: TextFormField(
-                                      onChanged: (con){
-                                        setState(() {});
-                                      },
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context).viewInsets.bottom + 40),
-                                      decoration: InputDecoration(
-                                        isDense: true,
-                                        contentPadding: EdgeInsets.zero,
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                        ),
-                                        hintText: '간단한 메모를 기록해 보세요',
-                                        hintStyle: f15gray400w500,
-                                      ),
-                                      keyboardType: TextInputType.multiline,
-                                      maxLines: null,
-                                      controller: albumTextList[selectIdx],
-                                      style: f16gray800w600,
-                                      inputFormatters: <TextInputFormatter>[
-                                        LengthLimitingTextInputFormatter(60),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text('${albumTextList[selectIdx].text.length}', style: albumTextList[selectIdx].text.length>0?f11Gray800w600:f11Gray400w600,),
+                                        Text('/60 ', style: f11Gray400w600,),
                                       ],
-                                    ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text('${albumTextList[selectIdx].text.length}', style: albumTextList[selectIdx].text.length>0?f11Gray800w600:f11Gray400w600,),
-                                      Text('/60 ', style: f11Gray400w600,),
-                                    ],
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                )),
-                SizedBox(height: 10),
-              ],
-            ),
-          )),
-          // bottomSheet: Container(
-          //   width: Get.width,
-          //   decoration: BoxDecoration(
-          //     color: Colors.white,
-          //     boxShadow: [
-          //       BoxShadow(
-          //         color: Color(0x1AD4D4D4),
-          //         offset: Offset(0, -3),
-          //         blurRadius: 6,
-          //       ),
-          //       BoxShadow(
-          //         color: Color(0x17D4D4D4),
-          //         offset: Offset(0, -10),
-          //         blurRadius: 10,
-          //       ),
-          //       BoxShadow(
-          //         color: Color(0x0DD4D4D4),
-          //         offset: Offset(0, -23),
-          //         blurRadius: 14,
-          //       ),
-          //       BoxShadow(
-          //         color: Color(0x03D4D4D4),
-          //         offset: Offset(0, -40),
-          //         blurRadius: 16,
-          //       ),
-          //       BoxShadow(
-          //         color: Color(0x00D4D4D4),
-          //         offset: Offset(0, -63),
-          //         blurRadius: 18,
-          //       ),
-          //     ],
-          //   ),
-          //   child: Padding(
-          //     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-          //     child: Container(
-          //       width: Get.width,
-          //       decoration: BoxDecoration(
-          //         color: gray50,
-          //         borderRadius: BorderRadius.circular(4),
-          //         border: Border.all(color: gray200),
-          //       ),
-          //       child: Padding(
-          //         padding: const EdgeInsets.all(16),
-          //         child: Row(
-          //           children: [
-          //             Expanded(
-          //               child: TextFormField(
-          //                 onChanged: (con){
-          //                   setState(() {});
-          //                 },
-          //                 // cursorColor: mainColor,
-          //                 decoration: InputDecoration(
-          //                   isDense: true,
-          //                   contentPadding: EdgeInsets.zero,
-          //                   enabledBorder: OutlineInputBorder(
-          //                     borderSide: BorderSide.none,
-          //                   ),
-          //                   focusedBorder: OutlineInputBorder(
-          //                     borderSide: BorderSide.none,
-          //                   ),
-          //                   hintText: '여행 일정을 입력해주세요',
-          //                   hintStyle: f15gray400w500,
-          //                 ),
-          //                 controller: _controller,
-          //                 inputFormatters: <TextInputFormatter>[
-          //                   LengthLimitingTextInputFormatter(18),
-          //                 ],
-          //               ),
-          //             ),
-          //             const SizedBox(width: 10,),
-          //             Text('${_controller.text.length}', style: _controller.text.length>0?f11Gray800w600:f11Gray400w600,),
-          //             Text('/18 ', style: f11Gray400w600,),
-          //             const SizedBox(width: 8,),
-          //             SvgPicture.asset('assets/icon/roundArrowRight.svg')
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-        // bottomSheet: Container(
-        //   width: Get.width,
-        //   decoration: BoxDecoration(color: Colors.white),
-        //   child: Padding(
-        //     padding: const EdgeInsets.only(left: 20,right: 20,top: 8,bottom: 10),
-        //     child: Container(
-        //       width: Get.width,
-        //       decoration: BoxDecoration(
-        //           color: gray50,
-        //           borderRadius: BorderRadius.circular(4),
-        //           border: Border.all(color: gray200)
-        //       ),
-        //       child: Padding(
-        //         padding: const EdgeInsets.all(16),
-        //         child: Row(
-        //           children: [
-        //             Expanded(
-        //               child: TextFormField(
-        //                 controller: albumTextList[selectIdx],
-        //                 autofocus: false,
-        //                 style: f16gray800w600,
-        //                 onChanged: (v){
-        //                   setState(() {});
-        //                 },
-        //                 inputFormatters: <TextInputFormatter>[
-        //                   LengthLimitingTextInputFormatter(15),
-        //                 ],
-        //                 decoration: InputDecoration(
-        //                   isDense: true,
-        //                   contentPadding: EdgeInsets.zero,
-        //                   enabledBorder: OutlineInputBorder(
-        //                     borderSide: BorderSide.none,
-        //                   ),
-        //                   focusedBorder: OutlineInputBorder(
-        //                     borderSide: BorderSide.none,
-        //                   ),
-        //                   hintText: '여행방 제목을 입력해주세요',
-        //                   hintStyle: f14Gray500w400,
-        //                 ),
-        //               ),
-        //             ),
-        //             const SizedBox(width: 10,),
-        //             Text('${albumTextList[selectIdx].text.length}/15',style: f11Gray400w600,)
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        bottomNavigationBar:Padding(
-           padding: const EdgeInsets.only(bottom: 44,left: 20,right: 20),
-           child: BlackCountContainer(onTap: (){
-              List totalList = [];
-              for(int i=0;i<hs.selectAlbumList.length;i++){
-                totalList.add({
-                  "thumbnail": "${hs.imgUrl[i]}",
-                  "imageUrl": "${hs.imgUrl[i]}",
-                  "latitude": hs.selectAlbumList[i].latitude,
-                  "longitude": hs.selectAlbumList[i].longitude,
-                  "photoDate": "${hs.selectedDate.value.toString().split(' ')[0]}",
-                  "memo": "${albumTextList[i].text}",
-                  "tags": [
-                    "tag1",
-                    "tag2",
-                  ]
-                });
-              }
-              hs.addHistory(ts.selectTripList[0]['id'], totalList);
-              hs.selectAlbumList.clear();
-              hs.selectAlbumIndex.value = 0;
-              hs.selectAlbumList.refresh();
-             Get.to(()=>TripHistoryList());
-           },title: '업로드',count: hs.selectAlbumList.length),
-         ),
+                          ],
+                        ),
+                      )
+                  )),
+                  SizedBox(height: 10),
+                ],
+              ),
+            )),
+          bottomNavigationBar:Padding(
+             padding: const EdgeInsets.only(bottom: 44,left: 20,right: 20),
+             child: BlackCountContainer(onTap: ()async{
+                List totalList = [];
+                for(int i=0;i<hs.selectAlbumList.length;i++){
+                  totalList.add({
+                    "thumbnail": "${hs.imgUrl[i].toString().split('?')[0]}",
+                    "imageUrl": "${hs.imgUrl[i].toString().split('?')[0]}",
+                    "latitude": hs.selectAlbumList[i].latitude,
+                    "longitude": hs.selectAlbumList[i].longitude,
+                    "photoDate": "${hs.selectedDate.value.toString().replaceAll(".", '-').split(' ')[0]}",
+                    "memo": "${albumTextList[i].text}",
+                    "tags": [
+                      for (var tag in hs.addTagList[i])
+                        {
+                          "tagColor": "${tag['color'].value.toRadixString(16).toUpperCase()}",
+                          "tagName": tag['name'],
+                        },
+                    ],
+                  });
+                }
+                hs.historyList.clear();
+                hs.historyList.value = await hs.addHistory(ts.selectTripList[0]['id'], totalList);
+                hs.selectAlbumList.clear();
+                hs.addTagList.clear();
+                hs.selectAlbumList.refresh();
+                hs.selectAlbumIndex.value = 0;
+               Get.to(()=>TripHistoryList());
+             },title: '업로드',count: hs.selectAlbumList.length),
+           ),
+        ),
       ),
     );
   }

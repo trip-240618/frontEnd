@@ -4,13 +4,14 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:tripStory/controller/tripState.dart';
 import '../app/api/fileApi.dart';
 import '../app/api/historyApi.dart';
 import '../app/config/dio_client.dart';
 import '../screen/trip/tripHistory/album/modal/albumModel.dart';
 import '../screen/trip/tripHistory/history/model/detailItem.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:intl/intl.dart';
 class HistoryState extends GetxController{
   final apiHistoryClient = ApiHistoryClient(DioClient());
   final apiFileClient = ApiFileClient(DioClient());
@@ -46,11 +47,44 @@ class HistoryState extends GetxController{
   }
 
   /// 기록 리스트 가져오기
-  Future<void> getHistoryList(int tripId)async{
+  Future<void> getHistoryList(int tripId) async {
+    final ts = Get.put(TripState());
     historyList.clear();
-    historyList.value = await apiHistoryClient.getHistoryList(tripId);
+    List<Map<String, dynamic>> fetchedList = await apiHistoryClient.getHistoryList(tripId);
+    Map<String, List<Map<String, dynamic>>> groupedByDate = groupByDate(fetchedList);
+
+    DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
+    DateTime endDate = DateTime.parse(ts.selectTripList[0]['endDate']);
+
+    List<Map<String, dynamic>> allDates = [];
+
+    for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
+      String currentDate = DateFormat('yyyy-MM-dd').format(startDate.add(Duration(days: i)));
+      allDates.add({
+        'date': currentDate,
+        'items': groupedByDate[currentDate] ?? [],
+      });
+    }
+    historyList.value = allDates;
+    print('Complete Data: ${historyList.value.length}');
   }
 
+  /// 날짜별로 항목을 그룹화하는 함수
+  Map<String, List<Map<String, dynamic>>> groupByDate(List<Map<String, dynamic>> items) {
+    Map<String, List<Map<String, dynamic>>> groupedItems = {};
+
+    for (var item in items) {
+      String date = item['photoDate'];
+
+      if (groupedItems.containsKey(date)) {
+        groupedItems[date]!.add(item);
+      } else {
+        groupedItems[date] = [item];
+      }
+    }
+
+    return groupedItems;
+  }
   Future<void>addDetailItem()async{
     detailList.add(
       DetailItem(
@@ -175,8 +209,7 @@ class HistoryState extends GetxController{
 
   /// 파일 업로드
   Future<List> addHistory(int tripId,List uploadList) async {
-    List createData = await apiHistoryClient.addHistory(tripId, uploadList);
-
-    return createData;
+    List data = await apiHistoryClient.addHistory(tripId, uploadList);
+    return data;
   }
 }
