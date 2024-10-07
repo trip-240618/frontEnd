@@ -39,6 +39,7 @@ class JPlanState extends GetxController{
   Future<void> getFlightList()async{
     flightList.clear();
     flightList.value = await apiFlightClient.flightGet();
+    print('항공권 가죠오나?${flightList.value}');
     flightList.refresh();
   }
 
@@ -46,6 +47,14 @@ class JPlanState extends GetxController{
   Future<void> selectedDateReset()async {
     final ts = Get.put(TripState());
     selectedDate.value = ts.selectTripList[0]['startDate'];
+  }
+
+  /// 다가오는 여행 가져오기
+  Future<void> searchFlight()async{
+    flightList.clear();
+    flightList.value = await apiFlightClient.flightSearch();
+    print('가져오니?${flightList.value}');
+    flightList.refresh();
   }
 
 }
