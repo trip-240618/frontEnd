@@ -39,7 +39,6 @@ abstract class BaseApi {
     return handleResponse(response, extractData: extractData, showDialog: showDialog);
   }
 
-  // 공통 유틸리티 메서드
   String _bindPathParams(String path, Map<String, dynamic>? params) {
     if (params != null) {
       for (var param in params.entries) {

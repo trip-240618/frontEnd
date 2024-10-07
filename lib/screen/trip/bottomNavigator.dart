@@ -179,6 +179,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
         child: TabBar(
           onTap: (index){
             _currentIndex = index;
+
             setState(() {
 
             });

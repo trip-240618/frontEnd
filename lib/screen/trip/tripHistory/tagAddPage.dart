@@ -28,6 +28,12 @@ class _TagAddPageState extends State<TagAddPage> {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero,(){
+      if(hs.addTagList[widget.index].length!=0){
+        tagList = hs.addTagList[widget.index];
+        setState(() {});
+      }
+    });
     _focusNode.addListener(() {
       setState(() {});
     });
@@ -45,11 +51,12 @@ class _TagAddPageState extends State<TagAddPage> {
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
-        setState(() {
-        });
+        setState(() {});
       },
       child: Scaffold(
-        appBar: BackAppBar(text: '태그 추가', onTap: (){Get.back();},color: Colors.white,),
+        appBar: BackAppBar(text: '태그 추가', onTap: (){
+          Get.back();
+          },color: Colors.white,),
         body: Padding(
           padding: const EdgeInsets.only(top: 27, left: 20, right: 20),
           child: Column(
@@ -74,10 +81,23 @@ class _TagAddPageState extends State<TagAddPage> {
                           onChanged: (con){
                             setState(() {});
                           },
+                          onFieldSubmitted: (v){
+                            if(tagList.length!=2){
+                              tagList.add({'name': _tagCon.text, 'color':colorList[selectedColor]});
+                              _tagCon.clear();
+                              setState(() {});
+                            }else{
+                              _tagCon.clear();
+                              setState(() {});
+                            }
+                          },
                           decoration: InputDecoration(
                             isDense: true,
                             contentPadding: EdgeInsets.zero,
                             enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
+                            border: OutlineInputBorder(
                               borderSide: BorderSide.none,
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -86,6 +106,7 @@ class _TagAddPageState extends State<TagAddPage> {
                             hintText: '태그는 2개까지 등록 가능합니다.',
                             hintStyle: f15gray400w500,
                           ),
+                          enabled: tagList.length!=2?true:false,
                           controller: _tagCon,
                           focusNode: _focusNode,
                           inputFormatters: <TextInputFormatter>[
@@ -97,12 +118,15 @@ class _TagAddPageState extends State<TagAddPage> {
                       Text('${_tagCon.text.length}', style: _tagCon.text.length>0?f11Gray800w600:f11Gray400w600,),
                       Text('/7 ', style: f11Gray400w600,),
                       const SizedBox(width: 8,),
-                      _tagCon.text.length>0?GestureDetector(onTap: (){
-                        tagList.add({'name': _tagCon.text, 'color':colorList[selectedColor]});
-                        _tagCon.clear();
-                        setState(() {
-
-                        });
+                      tagList.length!=2&&_tagCon.text.length>0?GestureDetector(onTap: (){
+                        if(tagList.length!=2){
+                          tagList.add({'name': _tagCon.text, 'color':colorList[selectedColor]});
+                          _tagCon.clear();
+                          setState(() {});
+                        }else{
+                          _tagCon.clear();
+                          setState(() {});
+                        }
                       }, child: SvgPicture.asset('assets/icon/roundArrowRight.svg')):Container(),
                     ],
                   ),
@@ -138,10 +162,10 @@ class _TagAddPageState extends State<TagAddPage> {
                                       color: entry.value['color'],
                                       shape: BoxShape.circle
                                     ),
-                                    child: Center(child: Text('#',style: f12whitew500,)),
+                                    child: Center(child: Text('#',style: entry.value['color'] == Color(0xffffffff)?f12gray900w500:f12whitew500,)),
                                   ),
                                   const SizedBox(width: 4,),
-                                  Text('${entry.value['name']}'),
+                                  Text('${entry.value['name']}',style: f12gray900w500),
                                 ],
                               ),
                             ),
@@ -153,6 +177,7 @@ class _TagAddPageState extends State<TagAddPage> {
                           child: GestureDetector(
                             onTap: () {
                               tagList.removeAt(entry.key);
+                              setState(() {});
                             },
                             child: SvgPicture.asset(
                               'assets/icon/minix.svg',
@@ -161,45 +186,6 @@ class _TagAddPageState extends State<TagAddPage> {
                           ),
                         ),
                       ],
-                      // child: Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: [
-                      //
-                      //     // Container(
-                      //     //   width: 14,
-                      //     //   height: 14,
-                      //     //   decoration: BoxDecoration(
-                      //     //     color: item['color'],
-                      //     //     borderRadius: BorderRadius.circular(100),
-                      //     //     border: item['color'] == whiteColor
-                      //     //         ? Border.all(color: gray200)
-                      //     //         : null,
-                      //     //   ),
-                      //     //   child: Center(
-                      //     //     child: Text(
-                      //     //       '#',
-                      //     //       style: item['color'] == whiteColor
-                      //     //           ? f10Gray800w500
-                      //     //           : f10Whitew500,
-                      //     //     ),
-                      //     //   ),
-                      //     // ),
-                      //     // const SizedBox(width: 4),
-                      //     // Text(
-                      //     //   '${item['name']}',
-                      //     //   style: f14Gray800w500,
-                      //     // ),
-                      //     // const SizedBox(width: 12),
-                      //     // GestureDetector(
-                      //     //   onTap: () {
-                      //     //     setState(() {
-                      //     //       tagList.removeAt(index); // 해당 인덱스 아이템 삭제
-                      //     //     });
-                      //     //   },
-                      //     //   child: SvgPicture.asset('assets/icon/close.svg', color: gray900),
-                      //     // )
-                      //   ],
-                      // ),
                     ),
                   );
                 }).toList(),
@@ -210,9 +196,7 @@ class _TagAddPageState extends State<TagAddPage> {
         ),
         bottomSheet: _focusNode.hasFocus?
         GestureDetector(
-          onTap: (){
-
-          },
+          onTap: (){},
           child: Container(
             width: Get.width,
             height: 86,
@@ -309,13 +293,6 @@ class _TagAddPageState extends State<TagAddPage> {
             padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
             child: BlackBottomContainer(onTap: (){
               hs.addTagList[widget.index] = tagList;
-              // for(int i=0;i<tagList.length;i++){
-              //   hs.addTagList[widget.index].add({
-              //     'name': '${tagList[i]['name']}',
-              //     'color': tagList[i]['color']
-              //   });
-              // }
-              print('dasdas??? ${hs.addTagList.value }');
               Get.back();
             }, title: '저장'),
           ),

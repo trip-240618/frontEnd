@@ -16,7 +16,7 @@ import 'package:tripStory/util/color.dart';
 import '../../../component/history/customMarker.dart';
 import '../../../imageTest.dart';
 import '../../../util/font.dart';
-
+import 'package:intl/intl.dart' as intl;
 
 class TripHistoryMainPage extends StatefulWidget {
   const TripHistoryMainPage({super.key});
@@ -39,6 +39,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
 
   @override
   void initState() {
+
     Future.delayed(Duration.zero,()async{
       await hs.getHistoryList(ts.selectTripList[0]['id']);
       await addMarker(LatLng(36.35475233611197, 127.34170655688537));
@@ -119,6 +120,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
 
     return BitmapDescriptor.fromBytes(pngBytes);
   }
+
   Future<void> addMarker(LatLng position) async {
     List<LatLng> test = [
       LatLng(36.35475233611197, 127.34170655688537),
@@ -187,9 +189,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
           onTap: (){}
       );
       _markers.add(marker);
-      setState(() {
-
-      });
+      setState(() {});
     }
   }
 
@@ -294,11 +294,11 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                           ),
                         ),
                       ),
-                      SliverPadding(
+                      Obx(()=>SliverPadding(
                         padding: EdgeInsets.zero,
                         sliver: SliverList(
                             delegate: SliverChildBuilderDelegate(
-                                childCount: 10,
+                                childCount: hs.historyList.length,
                                     (context, index) {
                                   return Column(
                                     children: [
@@ -346,7 +346,12 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                         ),
                                                       ),
                                                       const SizedBox(width: 6,),
-                                                      Text('2024.08.12', style: f12Gray800w500,),
+                                                      Text(
+                                                        intl.DateFormat('yyyy.MM.dd').format(
+                                                            DateTime.parse('${ts.selectTripList[0]['startDate']}').add(Duration(days: index))
+                                                        ),
+                                                        style: f12Gray800w500,
+                                                      ),
                                                       Spacer(),
                                                       Container(
                                                           width: 20,
@@ -356,18 +361,19 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                             borderRadius: BorderRadius.circular(100),
                                                           ),
                                                           child: Center(child: Text('5', style: f11whitew600,))),
-
                                                     ],
                                                   ),
                                                 ),
                                               ),
-                                              Expanded(
+                                              Obx(()=>Expanded(
                                                 child: ListView.builder(
-                                                    itemCount: 10,
-                                                    shrinkWrap: true,
+                                                    itemCount: hs.historyList[index]['items'].length,
                                                     scrollDirection: Axis.horizontal,
-                                                    itemBuilder: (context, index) {
+                                                    itemBuilder: (context, idx) {
+                                                      print('????? ${hs.historyList[idx]['items'].length}');
                                                       return Row(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Container(
                                                             width: 120,
@@ -474,7 +480,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                       );
                                                     }
                                                 ),
-                                              )
+                                              ))
                                             ],
                                           ),
                                         ),
@@ -482,7 +488,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                     ],
                                   );
                                 })),
-                      )
+                      ))
                     ],
                   );
                 },

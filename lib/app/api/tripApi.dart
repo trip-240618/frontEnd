@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/app/config/dio_client.dart';
+import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
@@ -36,6 +37,7 @@ class ApiTripClient {
       final response = await dioClient.dio.get('/trip/list/last');
       if (response.statusCode == 200) {
         final data = response.data;
+
         print('data?? ${data}');
         if(data.length==0){
           return [];
