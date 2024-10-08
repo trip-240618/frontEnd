@@ -18,6 +18,8 @@ import '../../../imageTest.dart';
 import '../../../util/font.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'history/trip_history_list.dart';
+
 class TripHistoryMainPage extends StatefulWidget {
   const TripHistoryMainPage({super.key});
 
@@ -304,73 +306,70 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                     children: [
                                       Container(
                                         width: Get.width,
-                                        height: 222,
+                                        height: hs.historyList[index]['items'].length==0?56:222,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           border: Border(
-                                            top: BorderSide(color: gray200, width: 1),
+                                            top: BorderSide(color: gray200, width: 0.5),
                                             bottom: BorderSide(color: gray200, width: 0.5),
                                           ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.05),
-                                              offset: Offset(0, 0),
-                                              blurRadius: 13.3,
-                                              spreadRadius: 0,
-                                            ),
-                                          ],
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.only(left: 20, bottom: 16),
+                                          padding: const EdgeInsets.only(left: 20,top: 16),
                                           child: Column(
                                             children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(top: 16,bottom: 16, right: 20),
-                                                  child: Row(
-                                                    children: [
-                                                      Container(
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.white,
-                                                            border: Border.all(
-                                                                color: Color(0xff5E91EE), width: 1.5
-                                                            ),
-                                                            borderRadius: BorderRadius.circular(100)
-                                                        ),
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 12),
-                                                          child: Text('Day ${index + 1}', style: f12mainw700(Color(0xff5E91EE)),),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(width: 6,),
-                                                      Text(
-                                                        intl.DateFormat('yyyy.MM.dd').format(
-                                                            DateTime.parse('${ts.selectTripList[0]['startDate']}').add(Duration(days: index))
-                                                        ),
-                                                        style: f12Gray800w500,
-                                                      ),
-                                                      Spacer(),
-                                                      Container(
-                                                          width: 20,
-                                                          height: 20,
+                                              GestureDetector(
+                                                onTap:(){
+                                                  if(hs.historyList[index]['items'].length!=0){
+                                                   Get.to(()=>TripHistoryList(isAdd: false,index: index));
+                                                  }
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(right: 20),
+                                                    child: Row(
+                                                      children: [
+                                                        Container(
                                                           decoration: BoxDecoration(
-                                                            color: Color(0xff5E91EE),
-                                                            borderRadius: BorderRadius.circular(100),
+                                                              color: Colors.white,
+                                                              border: Border.all(
+                                                                  color: Color(0xff5E91EE), width: 1
+                                                              ),
+                                                              borderRadius: BorderRadius.circular(100)
                                                           ),
-                                                          child: Center(child: Text('5', style: f11whitew600,))),
-                                                    ],
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 12),
+                                                            child: Text('Day ${index + 1}', style: f12mainw700(Color(0xff5E91EE)),),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(width: 6,),
+                                                        Text(
+                                                            '${intl.DateFormat('yyyy.MM.dd').format(DateTime.parse('${hs.historyList[index]['date']}'))}',
+                                                          style: f12Gray800w500,
+                                                        ),
+                                                        Spacer(),
+                                                        Container(
+                                                            width: 20,
+                                                            height: 20,
+                                                            decoration: BoxDecoration(
+                                                              color: hs.historyList[index]['items'].length==0?gray400:Color(0xff5E91EE),
+                                                              borderRadius: BorderRadius.circular(100),
+                                                            ),
+                                                            child: Center(child: Text('${hs.historyList[index]['items'].length}', style: f11whitew600,))),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
+                                              hs.historyList[index]['items'].length==0?const SizedBox():const SizedBox(height: 16,),
                                               Obx(()=>Expanded(
                                                 child: ListView.builder(
                                                     itemCount: hs.historyList[index]['items'].length,
                                                     scrollDirection: Axis.horizontal,
                                                     itemBuilder: (context, idx) {
-                                                      print('????? ${hs.historyList[idx]['items'].length}');
                                                       return Row(
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,7 +381,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                 Positioned(
                                                                   child: CachedNetworkImage(
                                                                     //imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2F1EjyruHeHaU6ZQpNe22L?alt=media',
-                                                                    imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/foodImage.jpeg?alt=media',
+                                                                    imageUrl: '${hs.historyList[index]['items'][idx]['thumbnail']}',
                                                                     imageBuilder: (context, imageProvider) => Container(
                                                                       decoration: BoxDecoration(
                                                                         borderRadius: BorderRadius.circular(4),
@@ -422,7 +421,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                     width: 20,
                                                                     height: 20,
                                                                     child: CachedNetworkImage(
-                                                                      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/profile.png?alt=media',
+                                                                      imageUrl: '${hs.historyList[index]['items'][idx]['profileImage']}',
                                                                       imageBuilder: (context, imageProvider) => Container(
                                                                         decoration: BoxDecoration(
                                                                           borderRadius: BorderRadius.circular(4),
@@ -439,37 +438,16 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                 Positioned(
                                                                   left:8,
                                                                   bottom:8,
-                                                                  child: Wrap(
-                                                                    direction: Axis.horizontal,
-                                                                    alignment: WrapAlignment.start,
-                                                                    spacing: 4,
-                                                                    runSpacing: 4,
-                                                                    children: ['긴자', '음식'].map((item) {
-                                                                      return Container(
-                                                                        decoration: BoxDecoration(
-                                                                          borderRadius: BorderRadius.circular(30),
-                                                                        ),
-                                                                        child: Row(
-                                                                          children: [
-                                                                            Container(
-                                                                              width: 14,
-                                                                              height: 14,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Color(0xff83CF75),
-                                                                                borderRadius: BorderRadius.circular(100),
-                                                                              ),
-                                                                              child: Center(child: Text('#', style: f10Whitew700,)),
-                                                                            ),
-                                                                            const SizedBox(width: 2,),
-                                                                            Text(
-                                                                              '${item}',
-                                                                              style: f12whitew500,
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      );
-                                                                    }).toList(
-                                                                    ),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      SvgPicture.asset('assets/icon/smallheart.svg'),
+                                                                      const SizedBox(width: 3,),
+                                                                      Text('${hs.historyList[index]['items'][idx]['likeCnt']}',style: f12whitew500,),
+                                                                      const SizedBox(width: 8,),
+                                                                      SvgPicture.asset('assets/icon/smallComment.svg'),
+                                                                      const SizedBox(width: 3,),
+                                                                      Text('${hs.historyList[index]['items'][idx]['replyCnt']}',style: f12whitew500,),
+                                                                    ],
                                                                   ),
                                                                 )
                                                               ],
@@ -480,7 +458,8 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                       );
                                                     }
                                                 ),
-                                              ))
+                                              )),
+                                              hs.historyList[index]['items'].length==0?const SizedBox():const SizedBox(height: 16,),
                                             ],
                                           ),
                                         ),

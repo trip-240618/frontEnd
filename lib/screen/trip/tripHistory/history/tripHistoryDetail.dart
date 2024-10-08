@@ -2,15 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:photo_manager/photo_manager.dart';
-import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
+import 'package:tripStory/controller/tripState.dart';
 import '../../../../controller/historyState.dart';
 import '../../../../util/color.dart';
 import '../../../../util/font.dart';
 import 'model/detailItem.dart';
 
 class TripHistoryDetailPage extends StatefulWidget {
-  const TripHistoryDetailPage({super.key});
+  final int selectedIdx;
+  const TripHistoryDetailPage({super.key, required this.selectedIdx});
 
   @override
   State<TripHistoryDetailPage> createState() => _TripHistoryDetailPageState();
@@ -20,10 +20,11 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
   TextEditingController textCon = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final hs = Get.put(HistoryState());
-
+  final ts = Get.put(TripState());
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
+      await hs.getDetailHistoryList(ts.selectTripList[0]['id'], widget.selectedIdx);
       await hs.addDetailItem();
     });
     super.initState();
@@ -39,29 +40,19 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
       body: SingleChildScrollView(
         controller: _scrollController,
         physics: const ClampingScrollPhysics(),
-        child: Column(
+        child: Obx(()=>Column(
           children: [
             Stack(
               children: [
                 CachedNetworkImage(
-                  imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/foodImage.jpeg?alt=media',
-                    width: Get.width,
-                    height: Get.height*0.6,
+                  imageUrl: '${hs.historyDetailList['imageUrl']}',
+                  width: Get.width,
+                  height: Get.height*0.6,
                   fit: BoxFit.fill,
                   // placeholder: (context, url) =>
                   // const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  errorWidget: (context, url, error) => const CircularProgressIndicator(),
                 ),
-                // AssetEntityImage(
-                //   gaplessPlayback: true,
-                //   filterQuality: FilterQuality.high,
-                //   thumbnailSize: ThumbnailSize.square(700),
-                //   thumbnailFormat: ThumbnailFormat.png,
-                //   hs.selectAlbumList[1],
-                //   width: Get.width,
-                //   height: Get.height*0.6,
-                //   fit: BoxFit.cover,
-                // ),
                 Positioned(
                   bottom: 0,
                   left: 0,
@@ -90,7 +81,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                     child: Wrap(
                       children: [
                         Text(
-                          '일본 여행 중 먹었던 츠케멘 맛집은 정말 맛있었어요. 면발이 쫄깃하고, 국물의 깊은 맛이 일품이라서 잊지 못할 맛이었어요. 특히 시루가 매콤해서 얼큰한 맛으로 추천합니다!!!!!!',
+                          '${hs.historyDetailList['memo']}',
                           style: f15whitew500,
                           maxLines: 10, // 최대 줄 수 설정
                           overflow: TextOverflow.ellipsis, // 텍스트가 오버플로우될 경우 처리
@@ -151,7 +142,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                         Spacer(),
                         PopupMenuButton(
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             offset: const Offset(-20, 40),
                             shadowColor: Colors.black.withOpacity(0.4),
@@ -197,29 +188,29 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                 },
                               ),
                               PopupMenuItem(
-                                  height: 0,
-                                  padding: EdgeInsets.zero,
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
-                                        child: Container(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
-                                              const SizedBox(width: 10,),
-                                              Text(
-                                                '삭제하기',
-                                                style: f14Gray800w500,
-                                              ),
-                                            ],
-                                          ),
+                                height: 0,
+                                padding: EdgeInsets.zero,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                                      child: Container(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+                                            const SizedBox(width: 10,),
+                                            Text(
+                                              '삭제하기',
+                                              style: f14Gray800w500,
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
+                                ),
                               )]),
                       ],
                     ),
@@ -232,7 +223,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
             )),
             SizedBox(height: 80),
           ],
-        ),
+        )),
       ),
       bottomSheet: Container(
         width: Get.width,
