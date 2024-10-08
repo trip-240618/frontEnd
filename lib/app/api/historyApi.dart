@@ -9,7 +9,7 @@ class ApiHistoryClient {
 
   ApiHistoryClient(this.dioClient);
 
-  /// 여행 기록 가져오기 디테일
+  /// 여행 기록 가져오기
   Future<List<Map<String, dynamic>>> getHistoryList(int tripId) async {
     try {
       final response = await dioClient.dio.get(
@@ -45,6 +45,28 @@ class ApiHistoryClient {
           return [];
         }
         return [data];
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
+  /// 여형 기록 디테일 가져오기
+  Future<Map<String,dynamic>> getDetailHistoryList(int tripId,int historyId) async {
+    try {
+      final response = await dioClient.dio.get(
+          '/trip/${tripId}/history/detail/${historyId}'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if(data.length==0){
+          return {};
+        }
+        print('data??? ${data}');
+        return data;
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }

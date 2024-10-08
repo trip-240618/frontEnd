@@ -2,15 +2,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripHistory/history/tripHistoryDetail.dart';
 import 'package:tripStory/util/color.dart';
-
 import '../../../../component/appbar.dart';
 import '../../../../util/font.dart';
-
+import 'package:intl/intl.dart';
 class TripHistoryList extends StatefulWidget {
-  const TripHistoryList({super.key});
+  final bool? isAdd;
+  final int? index;
+  const TripHistoryList({super.key, this.isAdd=true, this.index=0});
 
   @override
   State<TripHistoryList> createState() => _TripHistoryListState();
@@ -18,18 +20,22 @@ class TripHistoryList extends StatefulWidget {
 
 class _TripHistoryListState extends State<TripHistoryList> {
   final ts = Get.put(TripState());
+  final hs = Get.put(HistoryState());
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async =>false,
       child: Scaffold(
         appBar: BackAppBar(text: '', onTap: () {
-          Get.back();
-          Get.back();
-          Get.back();
+          if(widget.isAdd!){
+            Get.back();
+            Get.back();
+            Get.back();
+          }else{
+            Get.back();
+          }
         },color: Colors.white,),
-        body:
-        Padding(
+        body: Obx(()=>Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 16),
           child: Column(
             children: [
@@ -39,13 +45,17 @@ class _TripHistoryListState extends State<TripHistoryList> {
                     width: 58,
                     height: 24,
                     decoration: BoxDecoration(
-                      border: Border.all(color: pastelBlue,width: 1.5),
-                      borderRadius: BorderRadius.circular(100)
+                        border: Border.all(color: pastelBlue,width: 1.5),
+                        borderRadius: BorderRadius.circular(100)
                     ),
                     child: Center(child: Text('Day 1',style: f12blueW700)),
                   ),
                   const SizedBox(width: 6,),
-                  Text('2024.05.10',style: f12Gray800w500,)
+                  Text(
+                    '${DateFormat('yyyy.MM.dd').format(DateTime.parse('${hs.historyList[widget.index!]['date']}'))}',
+                    style: f12Gray800w500,
+                  ),
+                  // Text('${}',style: f12Gray800w500,)
                 ],
               ),
               const SizedBox(height: 16,),
@@ -57,11 +67,14 @@ class _TripHistoryListState extends State<TripHistoryList> {
                       mainAxisSpacing: 12.0,
                       childAspectRatio: 0.793,
                     ),
-                    itemCount: 10,
+                    itemCount: hs.historyList[widget.index!]['items'].length,
                     itemBuilder: (context, index){
                       return GestureDetector(
                         onTap: (){
-                          Get.to(()=>TripHistoryDetailPage());
+                          // hs.historyDetailList.value = hs.historyList[widget.index!]['items'][index];
+                          // print('??? ${hs.historyList[widget.index!]}');
+                          // print('??? ${hs.historyDetailList}');
+                          Get.to(()=>TripHistoryDetailPage(selectedIdx: hs.historyList[widget.index!]['items'][index]['id']));
                         },
                         child: Container(
                           width: 120,
@@ -69,8 +82,7 @@ class _TripHistoryListState extends State<TripHistoryList> {
                             children: [
                               Positioned(
                                 child: CachedNetworkImage(
-                                  //imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2F1EjyruHeHaU6ZQpNe22L?alt=media',
-                                  imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/foodImage.jpeg?alt=media',
+                                  imageUrl: '${hs.historyList[widget.index!]['items'][index]['thumbnail']}',
                                   imageBuilder: (context, imageProvider) => Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(4),
@@ -110,7 +122,7 @@ class _TripHistoryListState extends State<TripHistoryList> {
                                   width: 20,
                                   height: 20,
                                   child: CachedNetworkImage(
-                                    imageUrl: 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/profile.png?alt=media',
+                                    imageUrl: '${hs.historyList[widget.index!]['items'][index]['profileImage']}',
                                     imageBuilder: (context, imageProvider) => Container(
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(4),
@@ -131,11 +143,11 @@ class _TripHistoryListState extends State<TripHistoryList> {
                                   children: [
                                     SvgPicture.asset('assets/icon/smallheart.svg'),
                                     const SizedBox(width: 3,),
-                                    Text('0',style: f12whitew500,),
+                                    Text('${hs.historyList[widget.index!]['items'][index]['likeCnt']}',style: f12whitew500,),
                                     const SizedBox(width: 8,),
                                     SvgPicture.asset('assets/icon/smallComment.svg'),
                                     const SizedBox(width: 3,),
-                                    Text('0',style: f12whitew500,),
+                                    Text('${hs.historyList[widget.index!]['items'][index]['replyCnt']}',style: f12whitew500,),
                                   ],
                                 ),
                               )
@@ -148,7 +160,7 @@ class _TripHistoryListState extends State<TripHistoryList> {
                 ),
               ),
             ],
-          ),),
+          ),)),
 
       ),
     );

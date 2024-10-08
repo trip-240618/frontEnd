@@ -190,6 +190,7 @@ void timeBottomModel(BuildContext context, DateTime selectedTime) {
       });
 }
 void sendBottomModal(BuildContext context,String inviteCode) {
+  final ms = Get.put(MainState());
   FToast fToast;
   fToast = FToast();
   fToast.init(context);
@@ -230,15 +231,20 @@ void sendBottomModal(BuildContext context,String inviteCode) {
                       const SizedBox(height: 40),
                       Text('초대 코드를 복사했어요',style: f18gray800w700,),
                       const SizedBox(height: 20,),
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset('assets/icon/kakao.svg'),
-                              const SizedBox(width: 20),
-                              Text('카카오톡으로 공유하기',style: f15gray800w600,)
-                            ],
+                      GestureDetector(
+                        onTap: (){
+                          ms.kakaoShare();
+                        },
+                        child: Container(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset('assets/icon/kakao.svg'),
+                                const SizedBox(width: 20),
+                                Text('카카오톡으로 공유하기',style: f15gray800w600,)
+                              ],
+                            ),
                           ),
                         ),
                       ),

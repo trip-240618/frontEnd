@@ -33,6 +33,7 @@ class HistoryState extends GetxController{
 
   /// 여행 리스트
   final RxList historyList = [].obs;
+  final RxMap historyDetailList = {}.obs; /// 여행방 상세보기
 
   @override
   void onInit() {
@@ -66,7 +67,6 @@ class HistoryState extends GetxController{
       });
     }
     historyList.value = allDates;
-    print('Complete Data: ${historyList.value.length}');
   }
 
   /// 날짜별로 항목을 그룹화하는 함수
@@ -82,9 +82,18 @@ class HistoryState extends GetxController{
         groupedItems[date] = [item];
       }
     }
-
     return groupedItems;
   }
+
+  /// 디테일 리스트 가져오기
+  Future<void> getDetailHistoryList(int tripId,int historyId) async {
+    historyDetailList.clear();
+    historyDetailList.value = await apiHistoryClient.getDetailHistoryList(tripId,historyId);
+    print('??hisdetail ${historyDetailList}');
+    historyDetailList.refresh();
+  }
+
+
   Future<void>addDetailItem()async{
     detailList.add(
       DetailItem(
