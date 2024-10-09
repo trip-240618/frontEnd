@@ -21,12 +21,10 @@ class ApiUserClient {
         us.userList.value = [data];
         print('자동로그인 값? ${us.userList.value}');
         return data;
-      } else {
-        throw Exception('Failed to auto-login: ${response.statusCode}');
       }
     } catch (e) {
       print('Error during auto-login: $e');
-      rethrow;
+      us.userList.clear();
     }
   }
   /// 로그아웃
