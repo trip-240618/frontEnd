@@ -18,6 +18,7 @@ import '../../../imageTest.dart';
 import '../../../util/font.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'history/tripHistoryDetail.dart';
 import 'history/trip_history_list.dart';
 
 class TripHistoryMainPage extends StatefulWidget {
@@ -374,54 +375,18 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
-                                                          Container(
-                                                            width: 120,
-                                                            child: Stack(
-                                                              children: [
-                                                                Positioned(
-                                                                  child: CachedNetworkImage(
-                                                                    //imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2F1EjyruHeHaU6ZQpNe22L?alt=media',
-                                                                    imageUrl: '${hs.historyList[index]['items'][idx]['thumbnail']}',
-                                                                    imageBuilder: (context, imageProvider) => Container(
-                                                                      decoration: BoxDecoration(
-                                                                        borderRadius: BorderRadius.circular(4),
-                                                                        image: DecorationImage(
-                                                                            image: imageProvider,
-                                                                            fit: BoxFit.fill
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    errorWidget: (context, url, error) => const Icon(Icons.error),
-                                                                  ),
-                                                                ),
-                                                                Positioned(
-                                                                  bottom: 0,
-                                                                  left: 0,
-                                                                  right: 0,
-                                                                  child: Container(
-                                                                    height: 150,
-                                                                    decoration: BoxDecoration(
-                                                                      borderRadius: BorderRadius.circular(4),
-                                                                      gradient: LinearGradient(
-                                                                        begin: Alignment.topCenter,
-                                                                        end: Alignment.bottomCenter,
-                                                                        colors: [
-                                                                          Colors.transparent,
-                                                                          Color(0xff212121).withOpacity(0.5),
-                                                                        ],
-                                                                        stops: [0.54, 1],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Positioned(
-                                                                  top:8,
-                                                                  right:8,
-                                                                  child: Container(
-                                                                    width: 20,
-                                                                    height: 20,
+                                                          GestureDetector(
+                                                            onTap:(){
+                                                              Get.to(()=>TripHistoryDetailPage(selectedIdx: hs.historyList[index]['items'][idx]['id']));
+                                                            },
+                                                            child: Container(
+                                                              width: 120,
+                                                              child: Stack(
+                                                                children: [
+                                                                  Positioned(
                                                                     child: CachedNetworkImage(
-                                                                      imageUrl: '${hs.historyList[index]['items'][idx]['profileImage']}',
+                                                                      //imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2F1EjyruHeHaU6ZQpNe22L?alt=media',
+                                                                      imageUrl: '${hs.historyList[index]['items'][idx]['thumbnail']}',
                                                                       imageBuilder: (context, imageProvider) => Container(
                                                                         decoration: BoxDecoration(
                                                                           borderRadius: BorderRadius.circular(4),
@@ -434,23 +399,64 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                       errorWidget: (context, url, error) => const Icon(Icons.error),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                                Positioned(
-                                                                  left:8,
-                                                                  bottom:8,
-                                                                  child: Row(
-                                                                    children: [
-                                                                      SvgPicture.asset('assets/icon/smallheart.svg'),
-                                                                      const SizedBox(width: 3,),
-                                                                      Text('${hs.historyList[index]['items'][idx]['likeCnt']}',style: f12whitew500,),
-                                                                      const SizedBox(width: 8,),
-                                                                      SvgPicture.asset('assets/icon/smallComment.svg'),
-                                                                      const SizedBox(width: 3,),
-                                                                      Text('${hs.historyList[index]['items'][idx]['replyCnt']}',style: f12whitew500,),
-                                                                    ],
+                                                                  Positioned(
+                                                                    bottom: 0,
+                                                                    left: 0,
+                                                                    right: 0,
+                                                                    child: Container(
+                                                                      height: 150,
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(4),
+                                                                        gradient: LinearGradient(
+                                                                          begin: Alignment.topCenter,
+                                                                          end: Alignment.bottomCenter,
+                                                                          colors: [
+                                                                            Colors.transparent,
+                                                                            Color(0xff212121).withOpacity(0.5),
+                                                                          ],
+                                                                          stops: [0.54, 1],
+                                                                        ),
+                                                                      ),
+                                                                    ),
                                                                   ),
-                                                                )
-                                                              ],
+                                                                  Positioned(
+                                                                    top:8,
+                                                                    right:8,
+                                                                    child: Container(
+                                                                      width: 20,
+                                                                      height: 20,
+                                                                      child: CachedNetworkImage(
+                                                                        imageUrl: '${hs.historyList[index]['items'][idx]['profileImage']}',
+                                                                        imageBuilder: (context, imageProvider) => Container(
+                                                                          decoration: BoxDecoration(
+                                                                            borderRadius: BorderRadius.circular(4),
+                                                                            image: DecorationImage(
+                                                                                image: imageProvider,
+                                                                                fit: BoxFit.fill
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Positioned(
+                                                                    left:8,
+                                                                    bottom:8,
+                                                                    child: Row(
+                                                                      children: [
+                                                                        SvgPicture.asset('assets/icon/smallheart.svg'),
+                                                                        const SizedBox(width: 3,),
+                                                                        Text('${hs.historyList[index]['items'][idx]['likeCnt']}',style: f12whitew500,),
+                                                                        const SizedBox(width: 8,),
+                                                                        SvgPicture.asset('assets/icon/smallComment.svg'),
+                                                                        const SizedBox(width: 3,),
+                                                                        Text('${hs.historyList[index]['items'][idx]['replyCnt']}',style: f12whitew500,),
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
                                                           const SizedBox(width: 8)

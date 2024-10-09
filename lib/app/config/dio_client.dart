@@ -29,6 +29,7 @@ class DioClient {
         return handler.next(response); // 응답 계속 진행
       },
       onError: (error, handler) {
+        return handler.next(error);
         /// 리프레쉬 토큰 만료 토큰
         if(error.response?.statusCode == 420){
           print('새로운 토큰 갱신 후 실패했던 api 다시 진행');
