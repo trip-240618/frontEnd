@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/controller/historyState.dart';
+import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripHistory/search/searchHistoryResult.dart';
 
 import '../../../../util/color.dart';
@@ -15,6 +17,8 @@ class SearchHistoryPage extends StatefulWidget {
 }
 
 class _SearchHistoryPageState extends State<SearchHistoryPage> {
+  final hs = Get.put(HistoryState());
+  final ts = Get.put(TripState());
   bool isSearch = false;
   List colorList = [whiteColor,pastelBlue,mainRed,yellowColor,greenColor];
   List searchHistoryList = ['도쿄타워','음식','시부야'];
@@ -25,6 +29,8 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
   @override
   void initState() {
     super.initState();
+    print('태그 이닛');
+    hs.getTagAll(ts.selectTripList[0]['id']);
     focusNode.addListener(() {
       setState(() {});
     });
@@ -36,7 +42,6 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
     controller.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {

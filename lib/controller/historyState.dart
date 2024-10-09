@@ -17,7 +17,7 @@ class HistoryState extends GetxController{
   final apiFileClient = ApiFileClient(DioClient());
   AlbumModel? albumModel;
   final ImagePicker _picker = ImagePicker();
-  final RxList albums = [].obs;
+  final RxList albums = [].obs; /// 앨범 목록
   final RxList selectAlbumList = [].obs; ///선택된 앨범 리스트
   final selectAlbumIndex = 0.obs; /// 클릭한 앨범 리스트
   final RxList imgUrl = [].obs; /// img url 저장하기
@@ -32,8 +32,10 @@ class HistoryState extends GetxController{
   final RxList<DetailItem> detailList = <DetailItem>[].obs;
 
   /// 여행 리스트
-  final RxList historyList = [].obs;
-  final RxMap historyDetailList = {}.obs; /// 여행방 상세보기
+  final RxList historyList = [].obs; /// 여행 총 리스트
+  final RxMap historyDetailList = {}.obs; /// 여행방 상세보기 리스트
+  final RxList historyComment = [].obs; /// 댓글 리스트
+  final RxList tagAllList = [].obs; /// 태그 전체 리스트
 
   @override
   void onInit() {
@@ -66,6 +68,7 @@ class HistoryState extends GetxController{
         'items': groupedByDate[currentDate] ?? [],
       });
     }
+
     historyList.value = allDates;
   }
 
@@ -89,45 +92,70 @@ class HistoryState extends GetxController{
   Future<void> getDetailHistoryList(int tripId,int historyId) async {
     historyDetailList.clear();
     historyDetailList.value = await apiHistoryClient.getDetailHistoryList(tripId,historyId);
-    print('??hisdetail ${historyDetailList}');
     historyDetailList.refresh();
   }
 
-
-  Future<void>addDetailItem()async{
-    detailList.add(
-      DetailItem(
-        imageUrl: 'https://example.com/image.jpg',
-        comments: [
-          Comment(
-            username: 'user1',
-            content: '좋은 사진이네요!',
-            timestamp: DateTime.now(),
-
-          ),
-          Comment(
-            username: 'user2',
-            content: '멋집니다!',
-            timestamp: DateTime.now(),
-          ),
-        ],
-        tagData: []
-      ),
-    );
+  /// 댓글 목록 가져오기
+  Future<void> getDetailHistoryCommentList(int tripId,int historyId) async {
+    historyComment.clear();
+    historyComment.value = await apiHistoryClient.getDetailHistoryCommentList(tripId,historyId);
+    historyComment.refresh();
   }
 
-  Future<void> addCommentToDetailItem(int index, Comment newComment) async{
-    Comment(
-      username: 'user2',
-      content: '멋집니다!',
-      timestamp: DateTime.now(),
-    );
-    detailList[index].comments.add(newComment);
-    detailList[index] = DetailItem(
-      imageUrl: detailList[index].imageUrl,
-      comments: List.from(detailList[index].comments),
-      tagData: []
-    );
+  /// 댓글 추가하기
+  Future<void> addHistoryComment(int tripId,int historyId,String comment) async {
+    historyComment.value = await apiHistoryClient.addHistoryComment(tripId,historyId,comment);
+    historyDetailList['replyCnt'] = historyComment.length;
+    for (var day in historyList) {
+      for (var item in day['items']) {
+        if (item['id'] == historyId) {
+          item['replyCnt'] = historyComment.length;
+          break;
+        }
+      }
+    }
+    historyList.refresh();
+    historyComment.refresh();
+  }
+
+  /// 댓글 수정하기
+  Future<void> editHistoryComment(int tripId,int historyId,int replyId,String content) async {
+    historyComment.value = await apiHistoryClient.editHistoryComment(tripId,historyId,replyId,content);
+    historyComment.refresh();
+  }
+
+  /// 댓글 삭제
+  Future<void> deleteHistoryComment(int tripId,int historyId,int replyId) async {
+    historyComment.value = await apiHistoryClient.deleteHistoryComment(tripId,historyId,replyId);
+    historyDetailList['replyCnt'] = historyComment.length;
+    for (var day in historyList) {
+      for (var item in day['items']) {
+        if (item['id'] == historyId) {
+          item['replyCnt'] = historyComment.length;
+          break;
+        }
+      }
+    }
+    historyList.refresh();
+    historyComment.refresh();
+  }
+
+  /// 좋아요 토글
+  Future<void> historyListToggle(int tripId,int historyId) async {
+    await apiHistoryClient.historyListToggle(tripId,historyId);
+    bool isLiked = historyDetailList['like'] = !historyDetailList['like'];
+    historyDetailList['likeCnt'] += isLiked ? 1 : -1;
+
+    for (var day in historyList) {
+      for (var item in day['items']) {
+        if (item['id'] == historyId) {
+          item['likeCnt'] += isLiked ? 1 : -1;
+          break;
+        }
+      }
+    }
+    historyList.refresh();
+    historyDetailList.refresh();
   }
 
   /// 사진 업로드
@@ -197,16 +225,19 @@ class HistoryState extends GetxController{
       // });
     }
   }
+
   /// 앨범 선택
   void addToSelectedAlbum(AssetEntity image) {
     selectAlbumList.add(image);
     albums.refresh();
   }
+
   /// 앨범 지우기
   void removeFromSelectedAlbum(AssetEntity image) async{
     selectAlbumList.remove(image);
     albums.refresh();
   }
+
   /// 저장 한 후에 앨범에서 지우기
   void removeImage(AssetEntity image,int index) async{
     apiFileClient.historyUrlDelete(imgUrl[index]);
@@ -220,5 +251,12 @@ class HistoryState extends GetxController{
   Future<List> addHistory(int tripId,List uploadList) async {
     List data = await apiHistoryClient.addHistory(tripId, uploadList);
     return data;
+  }
+
+  /// 태그 전체 가져오기
+  Future<void> getTagAll(int tripId) async {
+    tagAllList.clear();
+    tagAllList.value = await apiHistoryClient.getTagAll(tripId);
+    tagAllList.refresh();
   }
 }

@@ -71,9 +71,6 @@ class _TripHistoryListState extends State<TripHistoryList> {
                     itemBuilder: (context, index){
                       return GestureDetector(
                         onTap: (){
-                          // hs.historyDetailList.value = hs.historyList[widget.index!]['items'][index];
-                          // print('??? ${hs.historyList[widget.index!]}');
-                          // print('??? ${hs.historyDetailList}');
                           Get.to(()=>TripHistoryDetailPage(selectedIdx: hs.historyList[widget.index!]['items'][index]['id']));
                         },
                         child: Container(
