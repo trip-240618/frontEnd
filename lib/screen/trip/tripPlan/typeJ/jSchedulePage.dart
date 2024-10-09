@@ -17,7 +17,6 @@ import '../../../../component/dialog/dialog.dart';
 import '../../../../util/font.dart';
 import '../../../../util/tooltip_shape.dart';
 import 'addPlan/addPlanPage.dart';
-import 'addPlan/flight_view.dart';
 
 
 class JSchedulePage extends StatefulWidget {

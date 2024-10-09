@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 
 import '../config/dio_client.dart';
@@ -11,7 +12,7 @@ class ApiFlightClient{
   Future<List<dynamic>> flightGet() async {
     final ts = Get.put(TripState());
     try {
-      final response = await dioClient.dio.post('/flight/${ts.selectTripList[0]['id']}/flight/list');
+      final response = await dioClient.dio.get('/flight/trip/${ts.selectTripList[0]['id']}/list');
       if (response.statusCode == 200) {
         final data = response.data;
         if(data.length==0){
@@ -27,31 +28,86 @@ class ApiFlightClient{
     }
   }
 
-  /// 항공권 조회 및 등록
-  Future<List<dynamic>> flightSearch() async {
-    int flightNumber = 703;
-    String carrierCode = 'KE';
-    String departureDate = '2024-10-07';
-    final ts = Get.put(TripState());
-    print('id?');
-    print(ts.selectTripList[0]['id']);
+  /// 항공권 조회
+  Future<List<dynamic>> flightSearch(int flightNumber, String carrierCode) async {
+    final js = Get.put(JPlanState());
     try {
-      final response = await dioClient.dio.post(
-          '/flight/${ts.selectTripList[0]['id']}/flight/create?flightNumber=${flightNumber}&carrierCode=${carrierCode}&departureDate=${departureDate}'
+      final response = await dioClient.dio.get(
+          '/flight/search?flightNumber=${flightNumber}&carrierCode=${carrierCode}&departureDate=${js.selectedDate}'
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('항공권???${data}');
+        print('data?${data}');
         if(data.length==0){
-          print('항공권 없나??????${data}');
           return [];
         }
-        return data;
+        return [data];
       } else {
         throw Exception('Failed to flight-get: ${response.statusCode}');
       }
     } catch (e) {
       print('Error during flight-get: $e');
+      return [];
+      rethrow;
+    }
+  }
+
+  Future<void> flightDelete()async{
+    final ts = Get.put(TripState());
+    final js = Get.put(JPlanState());
+    try {
+      final response = await dioClient.dio.delete(
+          '/flight/trip/${ts.selectTripList[0]['id']}/delete?flightId=${js.flightList[0]['flightId']}'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if(data.length==0){
+
+        }
+      } else {
+        throw Exception('Failed to flight-delete: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during flight-delete: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> flightCreate(
+      String airlineCode,
+      int airlineNumber,
+      String departureDate,
+      String departureAirport,
+      String departureAirport_kr,
+      String arrivalDate,
+      String arrivalAirport,
+      String arrivalAirport_kr,
+      )async{
+    final ts = Get.put(TripState());
+    try {
+      final response = await dioClient.dio.post('/flight/trip/${ts.selectTripList[0]['id']}/create',
+          data: {
+            "airlineCode": '${airlineCode}',
+            "airlineNumber": airlineNumber,
+            "departureDate": '${departureDate}',
+            "departureAirport": '${departureAirport}',
+            "departureAirport_kr": '${departureAirport_kr}',
+            "arrivalDate": '${arrivalDate}',
+            "arrivalAirport": '${arrivalAirport}',
+            "arrivalAirport_kr": '${arrivalAirport_kr}'
+          }
+
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if(data.length==0){
+
+        }
+      } else {
+        throw Exception('Failed to flight-delete: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during flight-delete: $e');
       rethrow;
     }
   }

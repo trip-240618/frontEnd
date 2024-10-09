@@ -10,6 +10,7 @@ import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import 'package:tripStory/controller/mainState.dart';
+import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/flight_edit.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
 import '../../util/upper_case.dart';
@@ -448,6 +449,7 @@ FlightDialog(BuildContext context, VoidCallback onTap) {
                         GestureDetector(
                           onTap: (){
                             Get.back();
+                            Get.to(()=>FlightEdit());
 
                           },
                           child: SvgPicture.asset('assets/icon/pencil.svg',width: 25,),

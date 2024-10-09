@@ -29,6 +29,10 @@ class _AddScrapPageState extends State<AddScrapPage> {
   @override
   void initState() {
     //jsonD();
+    _controller.addListener((){
+      setState(() {
+      });
+    });
     super.initState();
   }
 
@@ -140,8 +144,12 @@ class _AddScrapPageState extends State<AddScrapPage> {
                           configurations: QuillEditorConfigurations(
                             showCursor: true,
                             customStyles: DefaultStyles(),
+                            magnifierConfiguration: TextMagnifierConfiguration(
+                              shouldDisplayHandlesInMagnifier: true
+                            ),
                             embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(),
                           ),
+
                         ),
                       ),
                       Row(
@@ -149,15 +157,9 @@ class _AddScrapPageState extends State<AddScrapPage> {
                           GestureDetector(
                             onTap: (){
                             },
-                            child: SvgPicture.asset('assets/icon/brush.svg',),
+                            child: SvgPicture.asset('assets/icon/normalImage.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
                           ),
-                          const SizedBox(width: 8,),
-                          GestureDetector(
-                            onTap: (){
-                              _onPressedHandler(context);
-                            },
-                            child: SvgPicture.asset('assets/bottomNavi/tripHistory.svg',),
-                          ),
+                          Text('${_controller.document.length}'),
                         ],
                       ),
                     ],

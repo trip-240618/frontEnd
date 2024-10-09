@@ -202,7 +202,7 @@ class _MainPageState extends State<MainPage> {
                                             ),
                                             child: Padding(
                                               padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
-                                              child: Text('D-${DateTime.parse('${ms.tripList[index]['startDate']}').difference(DateTime.now()).inDays + 1}',style: changeColor(Color(int.parse('${ms.tripList[index]['labelColor']}'))),),
+                                              child: Text((DateTime.parse('${ms.tripList[index]['startDate']}').difference(DateTime.now()).inDays + 1)<1?'여행중':'D-${DateTime.parse('${ms.tripList[index]['startDate']}').difference(DateTime.now()).inDays + 1}',style: changeColor(Color(int.parse('${ms.tripList[index]['labelColor']}'))),),
                                             ),
                                           ),
                                           const SizedBox(width: 6),

@@ -6,11 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/addFlight.dart';
 import '../../../../../component/bottomContainer.dart';
 import '../../../../../component/dialog/daySelect.dart';
 import '../../../../../util/color.dart';
 import '../../../../../util/font.dart';
-import 'addFlight.dart';
 
 class SearchFlight extends StatefulWidget {
   const SearchFlight({super.key});
@@ -23,9 +23,9 @@ class _SearchFlightState extends State<SearchFlight> {
   final js = Get.put(JPlanState());
   final ts = Get.put(TripState());
   DateFormat dateFormatter = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR');
-  TextEditingController _startDateCon = TextEditingController();
-  TextEditingController _airlineCon = TextEditingController();
-  TextEditingController _airCodeCon = TextEditingController();
+  bool _isFlightNotFound = false;
+  TextEditingController _carrierCon = TextEditingController();
+  TextEditingController _flightNumCon= TextEditingController();
   FocusNode _focusNode = FocusNode();
   List<Map<String, String>> airlines = [
     {'name': '대한항공', 'code': 'KE'},
@@ -134,7 +134,9 @@ class _SearchFlightState extends State<SearchFlight> {
           FocusScope.of(context).unfocus();
         },
         child: Scaffold(
-          appBar: BackAppBar(text: '항공편명 조회', onTap: (){Get.back();}),
+          appBar: BackAppBar(text: '항공사 조회', onTap: (){
+            js.selectedDateReset();
+            Get.back();}, color: Colors.white,),
           body: Padding(
             padding: const EdgeInsets.only(top: 36,left: 20, right: 20),
             child: SingleChildScrollView(
@@ -182,7 +184,7 @@ class _SearchFlightState extends State<SearchFlight> {
                   const SizedBox(height: 8,),
                   TextFormField(
                     style: f15gray800w500,
-                    controller: _airlineCon,
+                    controller: _carrierCon,
                     focusNode: _focusNode,
                     onFieldSubmitted: (value){
                       // Get.to(()=>SearchHistoryResult());
@@ -266,9 +268,10 @@ class _SearchFlightState extends State<SearchFlight> {
                                 children: [
                                   GestureDetector(
                                     onTap:(){
-                                      _airlineCon.text = '${airlines[index]['name']} (${airlines[index]['code']})';
+                                      _carrierCon.text = '${airlines[index]['name']} (${airlines[index]['code']})';
                                       setState(() {
-                                        selectedAirline = airlines[index]['name']; // 새로운 값으로 업데이트
+                                        selectedAirline = airlines[index]['code']; // 새로운 값으로 업데이트
+                                        print('???${selectedAirline}');
                                       });
                                     },
                                     child: Container(
@@ -285,7 +288,7 @@ class _SearchFlightState extends State<SearchFlight> {
                                             ),
                                           ),
                                           Radio<String>(
-                                            value: airlines[index]['name']!,
+                                            value: airlines[index]['code']!,
                                             groupValue: selectedAirline,
                                             onChanged: (String? newValue) {
                                               setState(() {
@@ -321,7 +324,7 @@ class _SearchFlightState extends State<SearchFlight> {
                   const SizedBox(height: 8,),
                   TextFormField(
                     style: f15gray800w500,
-                    controller: _airCodeCon,
+                    controller: _flightNumCon,
                     onFieldSubmitted: (value){
                       // Get.to(()=>SearchHistoryResult());
                     },
@@ -361,6 +364,10 @@ class _SearchFlightState extends State<SearchFlight> {
                       ),
                     ),
                   ),
+                  _isFlightNotFound==true?Padding(
+                    padding: const EdgeInsets.only(left: 16,top: 4),
+                    child: Text('조회되지 않는 편명입니다',style: f11redw500,),
+                  ):SizedBox(),
                 ],
               ),
             ),
@@ -370,9 +377,24 @@ class _SearchFlightState extends State<SearchFlight> {
             child: BottomContainer(
                 onTap: ()async{
                   print('항공권 요청중 --');
-                 await js.searchFlight();
+                 await js.searchFlight(int.parse(_flightNumCon.text),selectedAirline!);
+                 if(js.flightList.isNotEmpty){
+                   print('항공편명은?${_carrierCon.text}');
+                   _isFlightNotFound = false;
+                   Get.to(()=>AddFlight(flightName: '${_carrierCon.text}',))?.then((v)=>{
+                     _flightNumCon.clear(),
+                     _carrierCon.clear(),
+                   });
+
+                 }
+                 else{
+                   _isFlightNotFound = true;
+                 }
+                 setState(() {
+
+                 });
                   //Get.to(()=>AddFlight());
-                },title: '저장',isBlack: _airlineCon.text.trim().isEmpty&&_airCodeCon.text.trim().isEmpty?true:false),
+                },title: '조회하기',isBlack: _carrierCon.text.trim().isEmpty||_flightNumCon.text.trim().isEmpty?false:true),
           ),
         ),
     );
