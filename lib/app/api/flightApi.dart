@@ -48,7 +48,6 @@ class ApiFlightClient{
     } catch (e) {
       print('Error during flight-get: $e');
       return [];
-      rethrow;
     }
   }
 
@@ -62,7 +61,6 @@ class ApiFlightClient{
       if (response.statusCode == 200) {
         final data = response.data;
         if(data.length==0){
-
         }
       } else {
         throw Exception('Failed to flight-delete: ${response.statusCode}');
@@ -73,7 +71,7 @@ class ApiFlightClient{
     }
   }
 
-  Future<void> flightCreate(
+  Future<List<dynamic>> flightCreate(
       String airlineCode,
       int airlineNumber,
       String departureDate,
@@ -101,8 +99,9 @@ class ApiFlightClient{
       if (response.statusCode == 200) {
         final data = response.data;
         if(data.length==0){
-
+          return [];
         }
+        return [data];
       } else {
         throw Exception('Failed to flight-delete: ${response.statusCode}');
       }
