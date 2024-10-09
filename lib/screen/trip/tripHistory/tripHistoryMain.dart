@@ -1,23 +1,19 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/component/dialog/daySelect.dart';
+import 'package:tripStory/controller/MapState.dart';
 import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
-import 'package:tripStory/screen/trip/tripHistory/search/searchHistoryPage.dart';
+import 'package:tripStory/screen/trip/tripHistory/search/search_history_page.dart';
 import 'package:tripStory/util/color.dart';
-import '../../../component/history/customMarker.dart';
 import '../../../imageTest.dart';
 import '../../../util/font.dart';
 import 'package:intl/intl.dart' as intl;
-
 import 'history/tripHistoryDetail.dart';
 import 'history/trip_history_list.dart';
 
@@ -31,169 +27,22 @@ class TripHistoryMainPage extends StatefulWidget {
 class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   final hs = Get.put(HistoryState());
   final ts = Get.put(TripState());
+  final maps = Get.put(MapState());
   DraggableScrollableController scrollableController = DraggableScrollableController();
   ScrollController listScrollCon = ScrollController();
   final GlobalKey<ScaffoldState> modelScaffoldKey = GlobalKey<ScaffoldState>();
-  Set<Marker> _markers = {};
   double currentHeight = 0.4;
   bool isInitialCameraMove = true;
   bool isListScroller = false;
-  List tagList = ['도파민','맛집 탐방','액티비티','한달살이','새벽 감성','배낭 여행','힐링','미식가'];
 
   @override
   void initState() {
-
     Future.delayed(Duration.zero,()async{
       await hs.getHistoryList(ts.selectTripList[0]['id']);
-      await addMarker(LatLng(36.35475233611197, 127.34170655688537));
+      maps.addMarkersFromHistory();
       setState(() {});
     });
     super.initState();
-  }
-
-  Future<BitmapDescriptor> getCustomIcon(int index, String imageUrl) async {
-    final double iconSize = 300.0;
-
-    final File imageFile = await DefaultCacheManager().getSingleFile(imageUrl);
-    final Uint8List imageBytes = await imageFile.readAsBytes();
-
-    final widget = SizedBox(
-      width: iconSize,
-      height: 400,
-      child: Directionality(
-        textDirection: TextDirection.ltr,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: blueColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Center(child: Text('$index', style: f28whitew700)),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 30,
-              child: Image.asset(
-                "assets/icon/mapImage.png",
-                width: iconSize,
-                height: iconSize,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              bottom: 100,
-              left: 50,
-              child: Container(
-                height: 200,
-                width: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Image.memory(
-                    imageBytes,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    final pngBytes = await createImageFromWidget(
-      widget,
-      logicalSize: Size(iconSize, iconSize),
-      imageSize: Size(iconSize, iconSize),
-    );
-
-    return BitmapDescriptor.fromBytes(pngBytes);
-  }
-
-  Future<void> addMarker(LatLng position) async {
-    List<LatLng> test = [
-      LatLng(36.35475233611197, 127.34170655688537),
-      LatLng(36.369355301533325, 127.3465953546253),
-      LatLng(36.37698055405723, 127.38723847110654),
-      LatLng(36.41435138948434, 127.40107085328566),
-      LatLng(36.426725618175894, 127.38703931549783),
-      LatLng(36.44842703850146, 127.42880857320041),
-      LatLng(36.4279919474585, 127.39659122410552),
-      LatLng(36.42694185772703, 127.38705154010651),
-      LatLng(36.40360013422488, 127.44444792592536),
-    ];
-    List image = [
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2FrMFkrkPO8Jqc6Mm7Vs4I?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2F6sYlEQ7iIBAkqplhqe3E?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2FOsn4V5Z4xfHMmuiYPbKh?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2FPJXkZvzei5R6GwdkrxP1?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2FpnoARp13y5f1UetRXuPC?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2FaVgN4qc74mWFs47ZeYYt?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2FdYvEtzzpl5BfDJgOe8nY?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2FF0bb70do8J4jA1McLghD?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2FF0bb70do8J4jA1McLghD?alt=media',
-    ];
-
-    for(int i=0;i<9;i++){
-      final icon = await getCustomIcon(i,image[i]);
-      final marker = Marker(
-          markerId: MarkerId(DateTime.now().toString()), // 각 마커마다 고유 ID 설정
-          position: test[i],
-          icon: icon,
-          onTap: (){}
-      );
-      _markers.add(marker);
-    }
-  }
-  Future<void> changeMarker() async {
-    List<LatLng> test = [
-      LatLng(36.35475233611197, 127.34170655688537),
-      LatLng(36.369355301533325, 127.3465953546253),
-      LatLng(36.37698055405723, 127.38723847110654),
-      LatLng(36.41435138948434, 127.40107085328566),
-      LatLng(36.426725618175894, 127.38703931549783),
-      LatLng(36.44842703850146, 127.42880857320041),
-      LatLng(36.4279919474585, 127.39659122410552),
-      LatLng(36.42694185772703, 127.38705154010651),
-      LatLng(36.40360013422488, 127.44444792592536),
-    ];
-    List image = [
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2FrMFkrkPO8Jqc6Mm7Vs4I?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2F6sYlEQ7iIBAkqplhqe3E?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2FOsn4V5Z4xfHMmuiYPbKh?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2FPJXkZvzei5R6GwdkrxP1?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2FpnoARp13y5f1UetRXuPC?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2FaVgN4qc74mWFs47ZeYYt?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2FdYvEtzzpl5BfDJgOe8nY?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2FF0bb70do8J4jA1McLghD?alt=media',
-      'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2FF0bb70do8J4jA1McLghD?alt=media',
-    ];
-    _markers.clear();
-    for(int i=0;i<3;i++){
-      final icon = await getCustomIcon(i,image[i]);
-      final marker = Marker(
-          markerId: MarkerId(DateTime.now().toString()), // 각 마커마다 고유 ID 설정
-          position: test[i],
-          icon: icon,
-          onTap: (){}
-      );
-      _markers.add(marker);
-      setState(() {});
-    }
   }
 
   @override
@@ -204,10 +53,10 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
         children: [
           GoogleMap(
             initialCameraPosition: CameraPosition(
-              target: LatLng(hs.latitude.value, hs.longitude.value),
+              target: LatLng(maps.latitude.value, maps.longitude.value),
               zoom: 14.4746,
             ),
-            markers: _markers.toSet(),
+            markers: maps.markers.toSet(),
             onCameraMove: (CameraPosition position){
               if(!isInitialCameraMove){
                 // scrollableController.animateTo(
@@ -219,8 +68,8 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
               setState(() {});
             },
             onMapCreated: (GoogleMapController controller) {
-              if (!hs.mapController.isCompleted) {
-                hs.mapController.complete(controller);
+              if (!maps.mapController.isCompleted) {
+                maps.mapController.complete(controller);
               }
             },
           ),
