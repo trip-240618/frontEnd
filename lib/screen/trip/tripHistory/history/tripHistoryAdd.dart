@@ -12,7 +12,7 @@ import '../../../../component/bottomContainer.dart';
 import '../../../../controller/historyState.dart';
 import '../../../../util/color.dart';
 import '../../../../util/font.dart';
-import '../tagAddPage.dart';
+import '../tag/tagAddPage.dart';
 
 class TripHistoryAddPage extends StatefulWidget {
   const TripHistoryAddPage({super.key});
@@ -386,12 +386,7 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                     ],
                   });
                 }
-                hs.historyList.clear();
-                hs.historyList.value = await hs.addHistory(ts.selectTripList[0]['id'], totalList);
-                hs.selectAlbumList.clear();
-                hs.addTagList.clear();
-                hs.selectAlbumList.refresh();
-                hs.selectAlbumIndex.value = 0;
+                await hs.addHistory(ts.selectTripList[0]['id'], totalList);
                Get.to(()=>TripHistoryList());
              },title: '업로드',count: hs.selectAlbumList.length),
            ),

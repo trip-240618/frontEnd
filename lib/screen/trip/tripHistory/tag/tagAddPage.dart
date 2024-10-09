@@ -6,8 +6,7 @@ import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomContainer.dart';
 import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/util/font.dart';
-
-import '../../../util/color.dart';
+import '../../../../util/color.dart';
 
 class TagAddPage extends StatefulWidget {
   final int index;

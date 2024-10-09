@@ -22,6 +22,10 @@ class _TripHistoryListState extends State<TripHistoryList> {
   final ts = Get.put(TripState());
   final hs = Get.put(HistoryState());
   @override
+  void initState() {
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async =>false,

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:tripStory/controller/tripState.dart';
@@ -12,7 +11,9 @@ import '../screen/trip/tripHistory/album/modal/albumModel.dart';
 import '../screen/trip/tripHistory/history/model/detailItem.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+
 class HistoryState extends GetxController{
+  final ts = Get.put(TripState());
   final apiHistoryClient = ApiHistoryClient(DioClient());
   final apiFileClient = ApiFileClient(DioClient());
   AlbumModel? albumModel;
@@ -24,10 +25,6 @@ class HistoryState extends GetxController{
   final selectedDate = ''.obs; /// 사진 등록 할 때 날짜 선택
   final RxList addTagList = [].obs;/// 태그 추가할 리스트
 
-  final Completer<GoogleMapController> mapController = Completer<GoogleMapController>();
-  final latitude = 0.0.obs;
-  final longitude = 0.0.obs;
-
   ///댓글 리스트
   final RxList<DetailItem> detailList = <DetailItem>[].obs;
 
@@ -36,11 +33,13 @@ class HistoryState extends GetxController{
   final RxMap historyDetailList = {}.obs; /// 여행방 상세보기 리스트
   final RxList historyComment = [].obs; /// 댓글 리스트
   final RxList tagAllList = [].obs; /// 태그 전체 리스트
+  final RxList tagSearchList = [].obs; /// 검색한 태그 리스트
+  final RxList tagFilterColor = [].obs; /// 태그에서 컬러로 필터하고 싶을 때 리스트
+  final RxList searchList = [].obs; /// 검색한 리스트들
+  final RxList selectedTagList = [].obs; /// 선택한 태그
 
   @override
   void onInit() {
-    latitude.value = 36.35475233611197;
-    longitude.value = 127.34170655688537;
     super.onInit();
   }
 
@@ -247,10 +246,32 @@ class HistoryState extends GetxController{
     albums.refresh();
   }
 
-  /// 파일 업로드
-  Future<List> addHistory(int tripId,List uploadList) async {
-    List data = await apiHistoryClient.addHistory(tripId, uploadList);
-    return data;
+  /// 히스토리 업로드
+  Future<void> addHistory(int tripId,List uploadList) async {
+    final ts = Get.put(TripState());
+    historyList.clear();
+    List<Map<String, dynamic>> fetchedList = await apiHistoryClient.addHistory(tripId, uploadList);
+
+    Map<String, List<Map<String, dynamic>>> groupedByDate = groupByDate(fetchedList);
+
+    DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
+    DateTime endDate = DateTime.parse(ts.selectTripList[0]['endDate']);
+
+    List<Map<String, dynamic>> allDates = [];
+
+    for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
+      String currentDate = DateFormat('yyyy-MM-dd').format(startDate.add(Duration(days: i)));
+      allDates.add({
+        'date': currentDate,
+        'items': groupedByDate[currentDate] ?? [],
+      });
+    }
+    historyList.value = allDates;
+    selectAlbumList.clear();
+    addTagList.clear();
+    selectAlbumIndex.value = 0;
+    selectAlbumList.refresh();
+    historyList.refresh();
   }
 
   /// 태그 전체 가져오기
@@ -259,4 +280,41 @@ class HistoryState extends GetxController{
     tagAllList.value = await apiHistoryClient.getTagAll(tripId);
     tagAllList.refresh();
   }
+
+  /// 태그 선택 할 때
+  Future<void> getSelectedTag(int tripId,String tagName,String tagColor) async {
+    searchList.clear();
+    searchList.value = await apiHistoryClient.getTagSelect(tripId,tagName,tagColor);
+    searchList.refresh();
+  }
+
+  /// 이름 선택 할 때
+  Future<void> getSelectedName(int tripId,String uuid) async {
+    searchList.clear();
+    searchList.value = await apiHistoryClient.getUserSelect(tripId,uuid);
+    searchList.refresh();
+  }
+
+  /// 태그 검색하기 닉네임,태그 검색했을 때
+  Future<void> searchTagName(String searchText) async {
+    tagSearchList.clear();
+
+    List filteredNick = ts.selectTripList[0]['tripMemberDtoList'].where((init) {
+      return init['nickname'] != null && init['nickname'].contains(searchText);
+    }).toList();
+
+    List filteredTags = tagAllList.where((tag) {
+      return tag['tagName'] != null && tag['tagName'].contains(searchText);
+    }).toList();
+
+
+    if (filteredTags.isNotEmpty) {
+      tagSearchList.addAll(filteredTags);
+    }
+
+    if (filteredNick.isNotEmpty) {
+      tagSearchList.addAll(filteredNick);
+    }
+  }
+
 }

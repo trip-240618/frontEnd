@@ -31,7 +31,7 @@ class ApiHistoryClient {
   }
 
   /// 여행 기록 업로드
-  Future<List> addHistory(int tripId,List uploadList) async {
+  Future<List<Map<String, dynamic>>> addHistory(int tripId,List uploadList) async {
     try {
       final response = await dioClient.dio.post(
           '/trip/${tripId}/history/create/many',data: {
@@ -40,11 +40,10 @@ class ApiHistoryClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data??? ${data}');
         if(data.length==0){
           return [];
         }
-        return [data];
+        return List<Map<String, dynamic>>.from(data);
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -193,7 +192,51 @@ class ApiHistoryClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('dadasd? ${data}');
+        if(data.length==0){
+          return [];
+        }
+        print('tag??? ${data}');
+        return data;
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
+  /// 태그 선택했을 때
+  Future<List> getTagSelect(int tripId,String tagName,String tagColor) async {
+    try {
+      final response = await dioClient.dio.get(
+          '/trip/${tripId}/history/search?tagName=$tagName&tagColor=$tagColor'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+        if(data.length==0){
+          return [];
+        }
+        return data;
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
+  /// 닉네임 클릭 했을 시
+  Future<List> getUserSelect(int tripId,String uuid) async {
+    try {
+      final response = await dioClient.dio.get(
+          '/trip/${tripId}/history/search?uuid=$uuid'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
         if(data.length==0){
           return [];
         }
