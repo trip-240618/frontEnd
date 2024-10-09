@@ -39,7 +39,7 @@ class JPlanState extends GetxController{
   Future<void> getFlightList()async{
     flightList.clear();
     flightList.value = await apiFlightClient.flightGet();
-    print('항공권 가죠오나?${flightList.value}');
+    print('flightList?${flightList.value}');
     flightList.refresh();
   }
 
@@ -50,11 +50,31 @@ class JPlanState extends GetxController{
   }
 
   /// 다가오는 여행 가져오기
-  Future<void> searchFlight()async{
+  Future<void> searchFlight(int flightNumber, String carrierCode)async{
     flightList.clear();
-    flightList.value = await apiFlightClient.flightSearch();
-    print('가져오니?${flightList.value}');
+    flightList.value = await apiFlightClient.flightSearch(flightNumber, carrierCode);
+    print('flightList?${flightList.value}');
     flightList.refresh();
+  }
+
+  /// 항공권 삭제
+  Future<void> deleteFlight()async {
+    await apiFlightClient.flightDelete();
+    flightList.clear();
+  }
+
+  /// 항공권 생성
+  Future<void> createFlight(String airlineCode)async {
+    await apiFlightClient.flightCreate(
+      airlineCode,
+      flightList[0]['airlineNumber'],
+      flightList[0]['departureDate'],
+      flightList[0]['departureAirport'],
+      flightList[0]['departureAirport_kr'],
+      flightList[0]['arrivalDate'],
+      flightList[0]['arrivalAirport'],
+      flightList[0]['arrivalAirport_kr'],
+    );
   }
 
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/locker/planB/jPlanB.dart';
 import 'package:tripStory/screen/trip/locker/planB/pPlanB.dart';
 import 'package:tripStory/screen/trip/locker/scrap/addScrapPage.dart';
@@ -18,6 +19,7 @@ class LockerTapPage extends StatefulWidget {
 
 class _LockerTapPageState extends State<LockerTapPage> with TickerProviderStateMixin{
   late TabController _tabController;
+  final ts = Get.put(TripState());
 
   @override
   void initState() {
@@ -89,7 +91,7 @@ class _LockerTapPageState extends State<LockerTapPage> with TickerProviderStateM
             child: TabBarView(
               controller: _tabController,
               children: [
-                JPlanB(),
+                ts.selectTripList[0]['type']=='J'?JPlanB():PPlanB(),
                 ScrapPage(),
               ],
             ),
