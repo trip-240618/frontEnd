@@ -65,7 +65,7 @@ class JPlanState extends GetxController{
 
   /// 항공권 생성
   Future<void> createFlight(String airlineCode)async {
-    await apiFlightClient.flightCreate(
+    flightList.value = await apiFlightClient.flightCreate(
       airlineCode,
       flightList[0]['airlineNumber'],
       flightList[0]['departureDate'],
