@@ -35,6 +35,7 @@ class _SplashPageState extends State<SplashPage> {
       jailbroken = true;
     }
     final cookies = await us.apiUserClient.dioClient.getRefreshToken();
+    print('cookies???${cookies}');
     if (cookies != null) {
       await us.apiUserClient.autoLogin();
     }
