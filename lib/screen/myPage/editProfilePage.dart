@@ -230,7 +230,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 const SizedBox(height: 8,),
                 Container(
                   width: Get.width,
-                  height: 180,
+                  height: 76,
                   decoration: BoxDecoration(
                     color: gray50,
                     borderRadius: BorderRadius.circular(4),
@@ -265,7 +265,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             controller: _memoCon,
                             style: f16gray800w600,
                             inputFormatters: <TextInputFormatter>[
-                              LengthLimitingTextInputFormatter(100),
+                              LengthLimitingTextInputFormatter(16),
                             ],
                           ),
                         ),
@@ -273,7 +273,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text('${_memoCon.text.length}', style: _memoCon.text.length>0?f11Gray800w600:f11Gray400w600,),
-                            Text('/100 ', style: f11Gray400w600,),
+                            Text('/16 ', style: f11Gray400w600,),
                           ],
                         )
                       ],
@@ -289,7 +289,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
           padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
           child: BottomContainer(
               onTap: ()async{
-                print('1111');
                 if(pickedImage!=null){
                   Map<String, dynamic> url = await us.profileFileUpload(pickedImage!);
                   Map<String, dynamic> thumbnailUrl = await us.profileThumbnailUpload(pickedImage!);
@@ -305,7 +304,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       '${us.userList[0]['thumbnail']}',
                       '${us.userList[0]['profileImg']}');
                 }
-              },title: '다음',isBlack: true),
+              },title: '저장하기',isBlack: true),
         ),
       ),
     );

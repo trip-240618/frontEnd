@@ -7,13 +7,13 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/controller/tripState.dart';
-import '../../component/appbar.dart';
-import '../../component/bottomContainer.dart';
-import '../../component/bottomModals.dart';
-import '../../controller/mainState.dart';
-import '../../util/color.dart';
-import '../../util/font.dart';
-import '../main/tripAdd/tripCalendar.dart';
+import '../../../component/appbar.dart';
+import '../../../component/bottomContainer.dart';
+import '../../../component/bottomModals.dart';
+import '../../../controller/mainState.dart';
+import '../../../util/color.dart';
+import '../../../util/font.dart';
+import '../../main/tripAdd/tripCalendar.dart';
 
 class TripEditPage extends StatefulWidget {
   const TripEditPage({super.key});

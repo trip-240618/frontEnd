@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 import '../../util/font.dart';
 
@@ -14,18 +16,23 @@ class SettingArrowRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: Row(
-        children: [
-          Text(title, style: f16darkGray1w400),
-          Spacer(),
-          SizedBox(
-            child: SvgPicture.asset(
-              'assets/icon/rightArrow.svg',
-              fit: BoxFit.none,
+      child: Container(
+        width: Get.width,
+        height: 44,
+        child: Row(
+          children: [
+            Text(title, style: f14Gray700w500),
+            Spacer(),
+            SizedBox(
+              child: SvgPicture.asset(
+                'assets/icon/rightArrow.svg',
+                fit: BoxFit.none,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

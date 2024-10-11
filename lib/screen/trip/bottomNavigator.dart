@@ -8,7 +8,7 @@ import 'package:tripStory/screen/trip/locker/lockerTapPage.dart';
 import 'package:tripStory/screen/trip/tripHistory/tripHistoryMain.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/jSchedulePage.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeP/pPlanPage.dart';
-import 'package:tripStory/screen/trip/trip_edit_page.dart';
+import 'package:tripStory/screen/trip/setting/trip_edit_page.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 

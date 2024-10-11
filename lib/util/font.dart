@@ -159,6 +159,15 @@ const TextStyle f14Gray800w500 = TextStyle(
   letterSpacing: 0.0145 * 14,
   color: gray800
 );
+const TextStyle f14Gray700w500 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  height: 20.01 / 14,
+  letterSpacing: 0.0145,
+  color: gray700
+
+);
 const TextStyle f14Gray500w500 = TextStyle(
   fontSize: 14,
   color: gray500,
@@ -233,6 +242,14 @@ const TextStyle f14whitew500 = TextStyle(
   fontFamily: 'Pretendard',
   height: 20.01 / 14.0,
   letterSpacing: 0.0145 * 14.0,
+);
+const TextStyle f14bluew500 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  height: 20.01 / 14,
+  letterSpacing: 0.0145,
+  color: pastelBlue
 );
 const TextStyle f15whitew500 = TextStyle(
   fontFamily: 'Pretendard',
@@ -472,6 +489,14 @@ const TextStyle f14redw600 = TextStyle(
   fontFamily: 'Pretendard',
   height: 1.5,
 );
+const TextStyle f14Gray600w600 = const TextStyle(
+    fontFamily: 'Pretendard',
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+    height: 22.01 / 15,
+    letterSpacing: 0.0096 * 15,
+    color: gray600
+);
 const TextStyle f18Gray900w600 = TextStyle(
     fontFamily: 'Pretendard',
     fontSize: 18,
@@ -529,6 +554,7 @@ const TextStyle f12Whitew700 = TextStyle(
   letterSpacing: 0.0252,
   color: Colors.white
 );
+
 const TextStyle f18gray900w600 = TextStyle(
   fontFamily: 'Pretendard',
   fontSize: 18.0,

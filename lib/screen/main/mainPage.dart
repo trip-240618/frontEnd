@@ -151,15 +151,6 @@ class _MainPageState extends State<MainPage> {
                 )
               ],
             )),
-            // const SizedBox(height: 22),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     SvgPicture.asset('assets/icon/swap.svg'),
-            //     const SizedBox(width: 4),
-            //     Text('최신순',style: f12gray600w600,),
-            //   ],
-            // ),
             const SizedBox(height: 32),
             isLoading?Expanded(child: LoadingWidget()):Obx(()=>Expanded(
               child: SingleChildScrollView(

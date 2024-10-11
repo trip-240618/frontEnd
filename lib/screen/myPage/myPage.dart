@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/component/bottomModals.dart';
 import 'package:tripStory/component/setting/settingArrowRow.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/myPage/editProfilePage.dart';
-import 'package:tripStory/screen/myPage/settingPage.dart';
+import 'package:tripStory/screen/myPage/faq/setting_faq_main.dart';
+import 'package:tripStory/screen/myPage/setting/setting_main_page.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:get/get.dart';
+
+import 'notice/setting_noti_main.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -23,7 +27,14 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TrailingBackAppBar(text: '마이 페이지', backTap: (){Get.back();}, svgPicture: SvgPicture.asset('assets/icon/setting.svg',fit: BoxFit.none,),trailingTap: (){print('12');},color: Colors.white,),
+      appBar: TrailingBackAppBar(
+        text: '마이 페이지',
+        backTap: (){Get.back();},
+        svgPicture: SvgPicture.asset('assets/icon/setting.svg',fit: BoxFit.none,),
+        trailingTap: (){
+          Get.to(()=>SettingMainPage());
+        },
+        color: Colors.white,),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
@@ -182,41 +193,45 @@ class _MyPageState extends State<MyPage> {
             ),
             /// 앱초대
             Padding(
-              padding: const EdgeInsets.only(top: 28, left: 20, right: 31, bottom: 38),
+              padding: const EdgeInsets.only(top: 28, left: 20, right: 20,),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('앱 초대', style: f20gray800w700,),
-                  const SizedBox(height: 28,),
+                  const SizedBox(height: 16,),
                   SettingArrowRow(
                       title: '초대 링크 보내기',
-                      onTap: (){print('초대 링크 보내기');
+                      onTap: (){
+                        appSendBottomModal(context, 'dada');
                   }),
                 ],
               ),
             ),
+            const SizedBox(height: 16,),
             Divider(
               thickness: 6,
               color: lightGray1,
             ),
             /// 이용 안내
             Padding(
-              padding: const EdgeInsets.only(top: 28, left: 20, right: 31, bottom: 38),
+              padding: const EdgeInsets.only(top: 28, left: 20, right: 20, bottom: 50),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text('이용 안내', style: f20gray800w700,),
-                  const SizedBox(height: 28,),
+                  const SizedBox(height: 16,),
                   SettingArrowRow(
                       title: '공지사항',
-                      onTap: (){print('공지사항');
+                      onTap: (){
+                        Get.to(()=>SettingNotiMain());
                       }),
-                  const SizedBox(height: 20,),
+                  const SizedBox(height: 16,),
                   SettingArrowRow(
                       title: 'FAQ',
-                      onTap: (){print('FAQ');
+                      onTap: (){
+                        Get.to(()=>SettingFaqMain());
                       }),
                 ],
               ),

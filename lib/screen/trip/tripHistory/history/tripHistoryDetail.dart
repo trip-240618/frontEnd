@@ -11,28 +11,37 @@ import 'model/detailItem.dart';
 
 class TripHistoryDetailPage extends StatefulWidget {
   final int selectedIdx;
-  const TripHistoryDetailPage({super.key, required this.selectedIdx});
+  final int dayIdx;
+  const TripHistoryDetailPage({super.key, required this.selectedIdx, required this.dayIdx});
 
   @override
   State<TripHistoryDetailPage> createState() => _TripHistoryDetailPageState();
 }
 
 class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
+  final PageController pageController = PageController(
+    initialPage: 0,
+  );/// 페이지 컨트롤러
+  final hs = Get.put(HistoryState());
+  final ts = Get.put(TripState());
+  final us = Get.put(UserState());
   TextEditingController textCon = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool isEditing = false;
   int? editingIdx;
   FocusNode _focusNode = FocusNode();
-  final hs = Get.put(HistoryState());
-  final ts = Get.put(TripState());
-  final us = Get.put(UserState());
+
+  int selectedPageIdx = 0; /// 현재 페이지 뷰 인덱스
 
   @override
   void initState() {
+    selectedPageIdx = widget.selectedIdx;
+    setState(() {});
     Future.delayed(Duration.zero,()async{
-      hs.getDetailHistoryList(ts.selectTripList[0]['id'], widget.selectedIdx);
-      hs.getDetailHistoryCommentList(ts.selectTripList[0]['id'], widget.selectedIdx);
+      hs.getDetailHistoryList(ts.selectTripList[0]['id'],hs.historyList[widget.dayIdx]['items'][selectedPageIdx]['id']);
+      hs.getDetailHistoryCommentList(ts.selectTripList[0]['id'], hs.historyList[widget.dayIdx]['items'][selectedPageIdx]['id']);
     });
+
     super.initState();
   }
   @override
@@ -51,257 +60,518 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
         setState(() {});
       },
       child: Scaffold(
-        body: SingleChildScrollView(
-          controller: _scrollController,
-          physics: const ClampingScrollPhysics(),
-          child: Obx(()=>Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
+        body: PageView.builder(
+          controller: pageController,
+          itemCount: hs.historyList[widget.dayIdx]['items'].length,
+          onPageChanged: (v){
+            print('31312 ${v}');
+            selectedPageIdx =v;
+            hs.getDetailHistoryList(ts.selectTripList[0]['id'],hs.historyList[widget.dayIdx]['items'][v]['id']);
+            hs.getDetailHistoryCommentList(ts.selectTripList[0]['id'], hs.historyList[widget.dayIdx]['items'][v]['id']);
+            setState(() {});
+          },
+          itemBuilder: (context,pageIdx){
+            return Obx(()=>SingleChildScrollView(
+              controller: _scrollController,
+              physics: const ClampingScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: '${hs.historyDetailList['imageUrl']}',
-                    width: Get.width,
-                    height: Get.height*0.6,
-                    fit: BoxFit.fill,
-                    // placeholder: (context, url) =>
-                    // const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => const CircularProgressIndicator(),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      height: 150,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Color(0xff212121).withOpacity(0.5),
-                          ],
-                          stops: [0.3, 1],
-                        ),
+                  Stack(
+                    children: [
+                      CachedNetworkImage(
+                        imageUrl: '${hs.historyList[widget.dayIdx]['items'][pageIdx]['thumbnail']}',
+                        width: Get.width,
+                        height: Get.height*0.6,
+                        fit: BoxFit.fill,
+                        // placeholder: (context, url) =>
+                        // const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const CircularProgressIndicator(),
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 20,
-                    left: 0,
-                    right: 0, // 화면의 왼쪽과 오른쪽에 닿도록 설정
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20,right: 20),
-                      child: Wrap(
-                        children: [
-                          Text(
-                            '${hs.historyDetailList['memo']}',
-                            style: f15whitew500,
-                            maxLines: 10, // 최대 줄 수 설정
-                            overflow: TextOverflow.ellipsis, // 텍스트가 오버플로우될 경우 처리
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 150,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Color(0xff212121).withOpacity(0.5),
+                              ],
+                              stops: [0.3, 1],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                width: Get.width,
-                color:gray50,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
-                  child: Wrap(
-                    direction: Axis.horizontal,
-                    alignment: WrapAlignment.start,
-                    spacing: 12,
-                    children: (hs.historyDetailList['tags'] != null ? hs.historyDetailList['tags'] : []).map<Widget>((tag) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: gray200),
                         ),
+                      ),
+                      Positioned(
+                        bottom: 20,
+                        left: 0,
+                        right: 0, // 화면의 왼쪽과 오른쪽에 닿도록 설정
                         child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                          padding: const EdgeInsets.only(left: 20,right: 20),
+                          child: Wrap(
                             children: [
-                              Container(
-                                width: 16,
-                                height: 16,
-                                decoration: BoxDecoration(
-                                    color: Color(int.parse('0xff${tag['tagColor']}')), // 태그 색깔
-                                    shape: BoxShape.circle),
-                                child: Center(
-                                  child: Text('#', style: f12whitew500),
-                                ),
+                              Text(
+                                '${hs.historyDetailList['memo']}',
+                                style: f15whitew500,
+                                maxLines: 10, // 최대 줄 수 설정
+                                overflow: TextOverflow.ellipsis, // 텍스트가 오버플로우될 경우 처리
                               ),
-                              const SizedBox(width: 4),
-                              Text('${tag['tagName']}', style: f12gray900w500), // 태그 이름
                             ],
                           ),
                         ),
-                      );
-                    }).toList(),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-              const SizedBox(height:8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                  Container(
+                    width: Get.width,
+                    color:gray50,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+                      child: Wrap(
+                        direction: Axis.horizontal,
+                        alignment: WrapAlignment.start,
+                        spacing: 12,
+                        children: (hs.historyDetailList['tags'] != null ? hs.historyDetailList['tags'] : []).map<Widget>((tag) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: gray200),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 16,
+                                    height: 16,
+                                    decoration: BoxDecoration(
+                                        color: Color(int.parse('0xff${tag['tagColor']}')), // 태그 색깔
+                                        shape: BoxShape.circle),
+                                    child: Center(
+                                      child: Text('#', style: f12whitew500),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text('${tag['tagName']}', style: f12gray900w500), // 태그 이름
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height:8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        GestureDetector(
-                            onTap:()async{
-                              await hs.historyListToggle(ts.selectTripList[0]['id'], widget.selectedIdx);
-                            },
-                            child: SvgPicture.asset('assets/icon/heart.svg',colorFilter: ColorFilter.mode(hs.historyDetailList['like']??false?gray900:gray300,BlendMode.srcIn))),
-                        const SizedBox(width: 4),
-                        Text('${hs.historyDetailList['likeCnt']}',style: f14Gray800w500,),
-                        const SizedBox(width: 8),
-                        SvgPicture.asset('assets/icon/chat.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
-                        const SizedBox(width: 4),
-                        Text('${hs.historyDetailList['replyCnt']}',style: f14Gray800w500,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                                onTap:()async{
+                                  await hs.historyListToggle(ts.selectTripList[0]['id'], widget.selectedIdx);
+                                },
+                                child: SvgPicture.asset('assets/icon/heart.svg',colorFilter: ColorFilter.mode(hs.historyDetailList['like']??false?gray900:gray300,BlendMode.srcIn))),
+                            const SizedBox(width: 4),
+                            Text('${hs.historyDetailList['likeCnt']}',style: f14Gray800w500,),
+                            const SizedBox(width: 8),
+                            SvgPicture.asset('assets/icon/chat.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
+                            const SizedBox(width: 4),
+                            Text('${hs.historyDetailList['replyCnt']}',style: f14Gray800w500,),
+                          ],
+                        ),
+                        const SizedBox(height: 24,),
+                        Obx(()=>ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: hs.historyComment.length,
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: CachedNetworkImage(
+                                        imageUrl: '${hs.historyComment[index]['profileImage']}',
+                                        width: 24,
+                                        height: 24,
+                                        fit: BoxFit.fill,
+                                        // placeholder: (context, url) =>
+                                        // const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8,),
+                                    Text('${hs.historyComment[index]['nickname']}'),
+                                    const SizedBox(width: 6,),
+                                    Text('지금'),
+                                    Spacer(),
+                                    us.userList[0]['uuid']==hs.historyComment[index]['writerUuid']
+                                        ?PopupMenuButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        offset: const Offset(-20, 40),
+                                        shadowColor: Colors.black.withOpacity(0.4),
+                                        icon: Container(
+                                          height: 15,
+                                          width: 20,
+                                          alignment: Alignment.centerRight,
+                                          child: SvgPicture.asset(
+                                            'assets/icon/dot.svg',
+                                            height: 15,
+                                            width: 20,
+                                          ),
+                                        ),
+                                        color: gray50,
+                                        itemBuilder: (context) => [
+                                          PopupMenuItem(
+                                            padding: EdgeInsets.zero,
+                                            value: 1,
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                                                  child: Container(
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                      children: [
+                                                        Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+                                                        const SizedBox(width: 10,),
+                                                        Text(
+                                                          '수정하기',
+                                                          style: f14Gray800w500,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                const Divider(color: gray200,), // Divider를 Column 내의 다른 자식으로 이동
+                                              ],
+                                            ),
+                                            onTap: () {
+                                              setState(() {
+                                                editingIdx = index;
+                                                isEditing = true;
+                                              });
+                                              FocusScope.of(context).requestFocus(_focusNode);
+                                              textCon.text = hs.historyComment[index]['content'];
+                                              // hs.editHistoryComment(ts.selectTripList[0]['id'], widget.selectedIdx, hs.historyComment[index]['id'], 'dadasdasdasda');
+                                            },
+                                          ),
+                                          PopupMenuItem(
+                                            onTap: (){
+                                              FocusScope.of(context).unfocus();
+                                              hs.deleteHistoryComment(ts.selectTripList[0]['id'], widget.selectedIdx, hs.historyComment[index]['id']);
+                                            },
+                                            height: 0,
+                                            padding: EdgeInsets.zero,
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                                                  child: Container(
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                      children: [
+                                                        Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+                                                        const SizedBox(width: 10,),
+                                                        Text(
+                                                          '삭제하기',
+                                                          style: f14Gray800w500,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ])
+                                        :const SizedBox(),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Text('${hs.historyComment[index]['content']}'),
+                                const SizedBox(height: 22),
+                              ],
+                            );
+                          },
+                        )),
+                        SizedBox(height: 80),
                       ],
                     ),
-                    const SizedBox(height: 24,),
-                    Obx(()=>ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: hs.historyComment.length,
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(4),
-                                  child: CachedNetworkImage(
-                                    imageUrl: '${hs.historyComment[index]['profileImage']}',
-                                    width: 24,
-                                    height: 24,
-                                    fit: BoxFit.fill,
-                                    // placeholder: (context, url) =>
-                                    // const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error),
-                                  ),
-                                ),
-                                const SizedBox(width: 8,),
-                                Text('${hs.historyComment[index]['nickname']}'),
-                                const SizedBox(width: 6,),
-                                Text('지금'),
-                                Spacer(),
-                                us.userList[0]['uuid']==hs.historyComment[index]['writerUuid']
-                                    ?PopupMenuButton(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    offset: const Offset(-20, 40),
-                                    shadowColor: Colors.black.withOpacity(0.4),
-                                    icon: Container(
-                                      height: 15,
-                                      width: 20,
-                                      alignment: Alignment.centerRight,
-                                      child: SvgPicture.asset(
-                                        'assets/icon/dot.svg',
-                                        height: 15,
-                                        width: 20,
-                                      ),
-                                    ),
-                                    color: gray50,
-                                    itemBuilder: (context) => [
-                                      PopupMenuItem(
-                                        padding: EdgeInsets.zero,
-                                        value: 1,
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
-                                              child: Container(
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
-                                                    const SizedBox(width: 10,),
-                                                    Text(
-                                                      '수정하기',
-                                                      style: f14Gray800w500,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            const Divider(color: gray200,), // Divider를 Column 내의 다른 자식으로 이동
-                                          ],
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            editingIdx = index;
-                                            isEditing = true;
-                                          });
-                                          FocusScope.of(context).requestFocus(_focusNode);
-                                          textCon.text = hs.historyComment[index]['content'];
-                                          // hs.editHistoryComment(ts.selectTripList[0]['id'], widget.selectedIdx, hs.historyComment[index]['id'], 'dadasdasdasda');
-                                        },
-                                      ),
-                                      PopupMenuItem(
-                                        onTap: (){
-                                          FocusScope.of(context).unfocus();
-                                          hs.deleteHistoryComment(ts.selectTripList[0]['id'], widget.selectedIdx, hs.historyComment[index]['id']);
-                                        },
-                                        height: 0,
-                                        padding: EdgeInsets.zero,
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
-                                              child: Container(
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
-                                                    const SizedBox(width: 10,),
-                                                    Text(
-                                                      '삭제하기',
-                                                      style: f14Gray800w500,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ])
-                                    :const SizedBox(),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text('${hs.historyComment[index]['content']}'),
-                            const SizedBox(height: 22),
-                          ],
-                        );
-                      },
-                    )),
-                    SizedBox(height: 80),
-                  ],
-                ),
-              )
-            ],
-          )),
+                  )
+                ],
+              ),
+            ));
+          },
+          // child: Column(
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     Stack(
+          //       children: [
+          //         CachedNetworkImage(
+          //           imageUrl: '${hs.historyDetailList['imageUrl']}',
+          //           width: Get.width,
+          //           height: Get.height*0.6,
+          //           fit: BoxFit.fill,
+          //           // placeholder: (context, url) =>
+          //           // const CircularProgressIndicator(),
+          //           errorWidget: (context, url, error) => const CircularProgressIndicator(),
+          //         ),
+          //         Positioned(
+          //           bottom: 0,
+          //           left: 0,
+          //           right: 0,
+          //           child: Container(
+          //             height: 150,
+          //             decoration: BoxDecoration(
+          //               gradient: LinearGradient(
+          //                 begin: Alignment.topCenter,
+          //                 end: Alignment.bottomCenter,
+          //                 colors: [
+          //                   Colors.transparent,
+          //                   Color(0xff212121).withOpacity(0.5),
+          //                 ],
+          //                 stops: [0.3, 1],
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //         Positioned(
+          //           bottom: 20,
+          //           left: 0,
+          //           right: 0, // 화면의 왼쪽과 오른쪽에 닿도록 설정
+          //           child: Padding(
+          //             padding: const EdgeInsets.only(left: 20,right: 20),
+          //             child: Wrap(
+          //               children: [
+          //                 Text(
+          //                   '${hs.historyDetailList['memo']}',
+          //                   style: f15whitew500,
+          //                   maxLines: 10, // 최대 줄 수 설정
+          //                   overflow: TextOverflow.ellipsis, // 텍스트가 오버플로우될 경우 처리
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //     Container(
+          //       width: Get.width,
+          //       color:gray50,
+          //       child: Padding(
+          //         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+          //         child: Wrap(
+          //           direction: Axis.horizontal,
+          //           alignment: WrapAlignment.start,
+          //           spacing: 12,
+          //           children: (hs.historyDetailList['tags'] != null ? hs.historyDetailList['tags'] : []).map<Widget>((tag) {
+          //             return Container(
+          //               decoration: BoxDecoration(
+          //                 color: Colors.white,
+          //                 borderRadius: BorderRadius.circular(4),
+          //                 border: Border.all(color: gray200),
+          //               ),
+          //               child: Padding(
+          //                 padding: const EdgeInsets.all(10),
+          //                 child: Row(
+          //                   mainAxisSize: MainAxisSize.min,
+          //                   crossAxisAlignment: CrossAxisAlignment.center,
+          //                   children: [
+          //                     Container(
+          //                       width: 16,
+          //                       height: 16,
+          //                       decoration: BoxDecoration(
+          //                           color: Color(int.parse('0xff${tag['tagColor']}')), // 태그 색깔
+          //                           shape: BoxShape.circle),
+          //                       child: Center(
+          //                         child: Text('#', style: f12whitew500),
+          //                       ),
+          //                     ),
+          //                     const SizedBox(width: 4),
+          //                     Text('${tag['tagName']}', style: f12gray900w500), // 태그 이름
+          //                   ],
+          //                 ),
+          //               ),
+          //             );
+          //           }).toList(),
+          //         ),
+          //       ),
+          //     ),
+          //     const SizedBox(height:8),
+          //     Padding(
+          //       padding: const EdgeInsets.symmetric(horizontal: 20),
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.start,
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.end,
+          //             children: [
+          //               GestureDetector(
+          //                   onTap:()async{
+          //                     await hs.historyListToggle(ts.selectTripList[0]['id'], widget.selectedIdx);
+          //                   },
+          //                   child: SvgPicture.asset('assets/icon/heart.svg',colorFilter: ColorFilter.mode(hs.historyDetailList['like']??false?gray900:gray300,BlendMode.srcIn))),
+          //               const SizedBox(width: 4),
+          //               Text('${hs.historyDetailList['likeCnt']}',style: f14Gray800w500,),
+          //               const SizedBox(width: 8),
+          //               SvgPicture.asset('assets/icon/chat.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
+          //               const SizedBox(width: 4),
+          //               Text('${hs.historyDetailList['replyCnt']}',style: f14Gray800w500,),
+          //             ],
+          //           ),
+          //           const SizedBox(height: 24,),
+          //           Obx(()=>ListView.builder(
+          //             physics: NeverScrollableScrollPhysics(),
+          //             itemCount: hs.historyComment.length,
+          //             shrinkWrap: true,
+          //             padding: EdgeInsets.zero,
+          //             itemBuilder: (context, index) {
+          //               return Column(
+          //                 crossAxisAlignment: CrossAxisAlignment.start,
+          //                 children: [
+          //                   Row(
+          //                     children: [
+          //                       ClipRRect(
+          //                         borderRadius: BorderRadius.circular(4),
+          //                         child: CachedNetworkImage(
+          //                           imageUrl: '${hs.historyComment[index]['profileImage']}',
+          //                           width: 24,
+          //                           height: 24,
+          //                           fit: BoxFit.fill,
+          //                           // placeholder: (context, url) =>
+          //                           // const CircularProgressIndicator(),
+          //                           errorWidget: (context, url, error) => const Icon(Icons.error),
+          //                         ),
+          //                       ),
+          //                       const SizedBox(width: 8,),
+          //                       Text('${hs.historyComment[index]['nickname']}'),
+          //                       const SizedBox(width: 6,),
+          //                       Text('지금'),
+          //                       Spacer(),
+          //                       us.userList[0]['uuid']==hs.historyComment[index]['writerUuid']
+          //                           ?PopupMenuButton(
+          //                           shape: RoundedRectangleBorder(
+          //                             borderRadius: BorderRadius.circular(4),
+          //                           ),
+          //                           offset: const Offset(-20, 40),
+          //                           shadowColor: Colors.black.withOpacity(0.4),
+          //                           icon: Container(
+          //                             height: 15,
+          //                             width: 20,
+          //                             alignment: Alignment.centerRight,
+          //                             child: SvgPicture.asset(
+          //                               'assets/icon/dot.svg',
+          //                               height: 15,
+          //                               width: 20,
+          //                             ),
+          //                           ),
+          //                           color: gray50,
+          //                           itemBuilder: (context) => [
+          //                             PopupMenuItem(
+          //                               padding: EdgeInsets.zero,
+          //                               value: 1,
+          //                               child: Column(
+          //                                 children: [
+          //                                   Padding(
+          //                                     padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+          //                                     child: Container(
+          //                                       child: Row(
+          //                                         mainAxisAlignment: MainAxisAlignment.start,
+          //                                         crossAxisAlignment: CrossAxisAlignment.center,
+          //                                         children: [
+          //                                           Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+          //                                           const SizedBox(width: 10,),
+          //                                           Text(
+          //                                             '수정하기',
+          //                                             style: f14Gray800w500,
+          //                                           ),
+          //                                         ],
+          //                                       ),
+          //                                     ),
+          //                                   ),
+          //                                   const Divider(color: gray200,), // Divider를 Column 내의 다른 자식으로 이동
+          //                                 ],
+          //                               ),
+          //                               onTap: () {
+          //                                 setState(() {
+          //                                   editingIdx = index;
+          //                                   isEditing = true;
+          //                                 });
+          //                                 FocusScope.of(context).requestFocus(_focusNode);
+          //                                 textCon.text = hs.historyComment[index]['content'];
+          //                                 // hs.editHistoryComment(ts.selectTripList[0]['id'], widget.selectedIdx, hs.historyComment[index]['id'], 'dadasdasdasda');
+          //                               },
+          //                             ),
+          //                             PopupMenuItem(
+          //                               onTap: (){
+          //                                 FocusScope.of(context).unfocus();
+          //                                 hs.deleteHistoryComment(ts.selectTripList[0]['id'], widget.selectedIdx, hs.historyComment[index]['id']);
+          //                               },
+          //                               height: 0,
+          //                               padding: EdgeInsets.zero,
+          //                               child: Column(
+          //                                 children: [
+          //                                   Padding(
+          //                                     padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+          //                                     child: Container(
+          //                                       child: Row(
+          //                                         mainAxisAlignment: MainAxisAlignment.start,
+          //                                         crossAxisAlignment: CrossAxisAlignment.center,
+          //                                         children: [
+          //                                           Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+          //                                           const SizedBox(width: 10,),
+          //                                           Text(
+          //                                             '삭제하기',
+          //                                             style: f14Gray800w500,
+          //                                           ),
+          //                                         ],
+          //                                       ),
+          //                                     ),
+          //                                   ),
+          //                                 ],
+          //                               ),
+          //                             )
+          //                           ])
+          //                           :const SizedBox(),
+          //                     ],
+          //                   ),
+          //                   const SizedBox(height: 4),
+          //                   Text('${hs.historyComment[index]['content']}'),
+          //                   const SizedBox(height: 22),
+          //                 ],
+          //               );
+          //             },
+          //           )),
+          //           SizedBox(height: 80),
+          //         ],
+          //       ),
+          //     )
+          //   ],
+          // ),
         ),
         bottomSheet: Container(
           width: Get.width,

@@ -33,17 +33,6 @@ class ApiUserClient {
     try {
       us.userList.clear();
       dioClient.deleteCookies();
-      // final response = await dioClient.dio.get(
-      //   '/user/info',
-      // );
-      // if (response.statusCode == 200) {
-      //   final data = response.data;
-      //   us.userList.value = [data];
-      //   print('data??? ${us.userList.value}');
-      //   return data;
-      // } else {
-      //   throw Exception('Failed to auto-login: ${response.statusCode}');
-      // }
     } catch (e) {
       print('Error during auto-login: $e');
       rethrow;
