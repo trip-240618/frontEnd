@@ -10,7 +10,7 @@ import 'package:tripStory/screen/login/loginPage.dart';
 import 'package:tripStory/screen/login/register/term.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchFlight.dart';
-import 'package:tripStory/screen/trip/trip_edit_page.dart';
+import 'package:tripStory/screen/trip/setting/trip_edit_page.dart';
 import 'imageTest.dart';
 
 

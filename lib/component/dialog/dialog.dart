@@ -345,10 +345,9 @@ showOnlyConfirmTapDialog(BuildContext context, String title, VoidCallback confir
 }
 
 /// 확인 취소 다이얼로그
-showConfirmCancelTapDialog(BuildContext context, String title, String message, VoidCallback confirmTap) {
+showConfirmCancelTapDialog(BuildContext context, String title,String actionText, String message, VoidCallback confirmTap) {
   showDialog(
       context: context,
-      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
@@ -356,61 +355,55 @@ showConfirmCancelTapDialog(BuildContext context, String title, String message, V
             borderRadius: BorderRadius.circular(20),
           ),
           contentPadding: EdgeInsets.zero,
-          title: Container(
+          insetPadding: EdgeInsets.symmetric(horizontal: 20),
+          content: Container(
             width: Get.width,
             child: Padding(
-              padding: EdgeInsets.zero,
-              child: Text(
-                '${title}',
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          content:
-              Padding(
-                padding: const EdgeInsets.only(bottom: 55),
-                child: Container(
-                  width: Get.width,
-                  child: Text(
-                    '${message}',
-                    textAlign: TextAlign.center,
+                  padding: const EdgeInsets.only(bottom: 32,top: 36),
+                  child: Container(
+                    child: Text(
+                      '${message}',
+                      style: f18Gray800w600,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-              ),
+          ),
           actions: [
-            Center(
-              child: Row(
-                children: [
-                  GestureDetector(
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
                     onTap: (){
                       Get.back();
                     },
                     child: Container(
-                      width: 130,
-                      height: 60,
+                      height: 58,
                       decoration: BoxDecoration( borderRadius: BorderRadius.circular(10), color: gray200,),
                       child: Center(
                           child: Text(
                             '취소',
+                            style: f16gray600w400,
                           )),
                     ),
                   ),
-                  Spacer(),
-                  GestureDetector(
+                ),
+                const SizedBox(width: 12,),
+                Expanded(
+                  child: GestureDetector(
                     onTap: confirmTap,
                     behavior: HitTestBehavior.opaque,
                     child: Container(
-                      width: 130,
-                      height: 60,
+                      height: 58,
                       decoration: BoxDecoration( borderRadius: BorderRadius.circular(10),color: Colors.black,),
                       child: Center(
                           child: Text(
-                            '확인', style: TextStyle(color: Colors.white),
+                            '${actionText}', style: f16whitew400,
                           )),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             )
           ],
         );

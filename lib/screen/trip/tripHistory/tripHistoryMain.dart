@@ -226,7 +226,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                         children: [
                                                           GestureDetector(
                                                             onTap:(){
-                                                              Get.to(()=>TripHistoryDetailPage(selectedIdx: hs.historyList[index]['items'][idx]['id']));
+                                                              Get.to(()=>TripHistoryDetailPage(selectedIdx: hs.historyList[index]['items'][idx]['id'],dayIdx: idx,));
                                                             },
                                                             child: Container(
                                                               width: 120,
