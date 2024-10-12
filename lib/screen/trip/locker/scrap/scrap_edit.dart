@@ -3,36 +3,46 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/controller/scrapState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:get/get.dart';
 
-class AddScrapPage extends StatefulWidget {
-  const AddScrapPage({super.key});
+
+class ScrapEdit extends StatefulWidget {
+  const ScrapEdit({super.key});
 
   @override
-  State<AddScrapPage> createState() => _AddScrapPageState();
+  State<ScrapEdit> createState() => _ScrapEditState();
 }
 
-class _AddScrapPageState extends State<AddScrapPage> {
+class _ScrapEditState extends State<ScrapEdit> {
   final ss = Get.put(ScrapState());
   TextEditingController titleCon = TextEditingController();
   QuillController _controller = QuillController.basic();
   final FocusNode _focusNode = FocusNode();
   List colorList = [whiteColor,pastelBlue,mainRed,yellowColor,greenColor];
   int selectedColor = 0;
-  XFile? pickedImage;
 
 
   @override
   void initState() {
+    print('이거 선택되나?${ss.selectScrapList[0]['content']}');
+    jsonD();
+    // String jsonString = '[{"insert":"ㄴㅇㅇㅇ유옹ㅍㅇㅍㅇ"},{"insert":{"image":"https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/cafeImage.jpeg?alt=media"}},{"insert":"\\n"}]';
+    //
+    // // JSON 문자열을 파싱하여 List로 변환
+    // List<dynamic> jsonData = jsonDecode(jsonString);
+    //
+    // // 이미지가 포함되어 있는지 확인
+    // bool containsImage = jsonData.any((element) => element["insert"] is Map && element["insert"].containsKey("image"));
+    //
+    // print('????${containsImage}'); // 이미지가 포함된 경우 true, 포함되지 않은 경우 false
+
     _controller.addListener((){
       setState(() {
       });
@@ -41,12 +51,15 @@ class _AddScrapPageState extends State<AddScrapPage> {
   }
 
   void jsonD() {
-    var myJson = jsonDecode(r'[{"insert":"Ddfsdfd\nㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ"},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":"\n"}]');
+    var myJson = jsonDecode(ss.selectScrapList[0]['content']);
+    titleCon.text = ss.selectScrapList[0]['title'];
     _controller = QuillController(
       document: Document.fromJson(myJson),
       selection: TextSelection.collapsed(offset: 0),
     );
   }
+
+
 
   OnImageInsertCallback defaultOnImageInsertCallback() {
     return (imageUrl, controller) async {
@@ -79,7 +92,7 @@ class _AddScrapPageState extends State<AddScrapPage> {
     }
 
 
-    final imageUrl = ss.addImgUrl.split('?')[0];
+    final imageUrl = 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/cafeImage.jpeg?alt=media';
 
 
     if (imageUrl.isNotEmpty) {
@@ -90,20 +103,13 @@ class _AddScrapPageState extends State<AddScrapPage> {
     }
   }
 
-  bool isImageIncluded(){
-    List<dynamic> jsonData = _controller.document.toDelta().toJson();
-    bool hasImage = jsonData.any((element) => element["insert"] is Map && element["insert"].containsKey("image"));
-    return hasImage;
-  }
 
-
-  Future<void> scrapSave() async {
+  void scrapSave(){
     var json = jsonEncode(_controller.document.toDelta().toJson());
     print('json저장');
     print(titleCon.text);
-    print('image?${[ss.addImgUrl.split('?')[0]]}');
-    bool hasImage = isImageIncluded();
-    await ss.createScrap(titleCon.text, json, hasImage, '${colorList[selectedColor]}', hasImage?[ss.addImgUrl.split('?')[0]]:[]);
+    print('${colorList[selectedColor]}');
+    ss.createScrap(titleCon.text, json, false, '${colorList[selectedColor]}', []);
 
     print(json);
   }
@@ -118,18 +124,7 @@ class _AddScrapPageState extends State<AddScrapPage> {
       child: Scaffold(
         backgroundColor: gray50,
         resizeToAvoidBottomInset: false,
-        appBar: TrailingBackAppBar(
-          text: '스크랩',
-          backTap: () async {
-            await ss.removeImage();
-            Get.back();},
-          svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),
-          trailingTap: (){
-            scrapSave().then((_) async {
-              await ss.getScrapList();
-              Get.back();
-            });
-            },),
+        appBar: TrailingBackAppBar(text: '스크랩', backTap: (){Get.back();}, svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),trailingTap: (){scrapSave();},),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(top:15, left: 20, right: 20, bottom: 35),
@@ -171,7 +166,7 @@ class _AddScrapPageState extends State<AddScrapPage> {
                               showCursor: true,
                               customStyles: DefaultStyles(),
                               magnifierConfiguration: TextMagnifierConfiguration(
-                                shouldDisplayHandlesInMagnifier: true
+                                  shouldDisplayHandlesInMagnifier: true
                               ),
                               embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(),
                             ),
@@ -181,16 +176,9 @@ class _AddScrapPageState extends State<AddScrapPage> {
                         Row(
                           children: [
                             GestureDetector(
-                              onTap: () async {
-                                if(isImageIncluded()){
-
-                                }else{
-                                  pickedImage = await ss.getSingleImage(ImageSource.gallery,context,pickedImage);
-                                  await ss.scrapFileUpload(pickedImage!);
-
-                                  _onPressedHandler(context);
-
-                                }
+                              onTap: (){
+                                print('11111');
+                                _onPressedHandler(context);
                               },
                               child: SvgPicture.asset('assets/icon/normalImage.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
                             ),
