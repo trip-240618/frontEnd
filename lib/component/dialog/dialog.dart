@@ -183,7 +183,6 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
                      if (con.text.length == 8 && regex.hasMatch(con.text)) {
                        isRegCheck = true;
                        await ms.tripJoin('${con.text}');
-                       // print('lenth?? ${ts.selectTripList.length}');
                      }else{
                        isRegCheck = false;
                      }

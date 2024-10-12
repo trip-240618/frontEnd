@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -7,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:tripStory/component/register/termsForm.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
-import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/addFlight.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchFlight.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../../app/api/flightApi.dart';
@@ -31,9 +29,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
   final js = Get.put(JPlanState());
   final ts = Get.put(TripState());
   int selectIdx = 0;
-  String startTime = '2024-08-01';
-  String endTime = '2024-08-30';
-  int totalDateLength = 0;
   ScrollController scrollController = ScrollController();
   Set<Marker> _markers = {};
   bool isSorting = false;
@@ -43,22 +38,13 @@ class _JSchedulePageState extends State<JSchedulePage> {
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
-      diffDate();
+      // js.getJPlanList(day, locker)
       await js.getFlightList();
     });
     super.initState();
   }
-  void diffDate(){
-    // 날짜 형식 파서
-    DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-    DateTime startDate = dateFormat.parse(ts.selectTripList[0]['startDate']);
-    DateTime endDate = dateFormat.parse(ts.selectTripList[0]['endDate']);
-    // 날짜 사이의 차이 계산
-    totalDateLength = endDate.difference(startDate).inDays + 1;
-    setState(() {});
-    print('?? ${totalDateLength}');
-  }
-// 스크롤을 특정 인덱스로 이동시키는 함수
+
+/// 스크롤을 특정 인덱스로 이동시키는 함수
   void scrollToIndex(int index) {
     double itemWidth = 36 + 12;
     double scrollOffset = itemWidth * index;
@@ -75,6 +61,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
     scrollController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +77,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
               child: ListView.builder(
                 controller: scrollController,
                 scrollDirection: Axis.horizontal,
-                itemCount: totalDateLength,
+                itemCount: DateTime.parse(ts.selectTripList[0]['endDate']).difference(DateTime.parse(ts.selectTripList[0]['startDate'])).inDays + 1,
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 itemBuilder: (context, index) {

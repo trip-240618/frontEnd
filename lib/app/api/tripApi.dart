@@ -174,8 +174,6 @@ class ApiTripClient {
           '/trip/join?invitationCode=${invitationCode}');
       if (response.statusCode == 200) {
         final data = response.data;
-        // ts.selectTripList.value = [data];
-        // ts.selectTripList.refresh();
         print('data?? ${data}');
       } else {
         throw Exception('error ${response.statusCode}');

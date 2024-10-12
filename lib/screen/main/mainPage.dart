@@ -305,8 +305,8 @@ class _MainPageState extends State<MainPage> {
                                                             bodyBuilder: (context) => ListItems(index: index,),
                                                             direction: PopoverDirection.bottom,
                                                             width: 14*maxlen+100,
-                                                            height: 12*maxlen+0,
-                                                            contentDyOffset: 10, // Popover를 더 가까이 붙이기
+                                                            height: 50*ms.tripList[index]['tripMemberDtoList'].length+0,
+                                                            contentDyOffset: 10,
                                                             arrowHeight: 8,
                                                             arrowWidth: 13
                                                         );
@@ -401,46 +401,55 @@ class ListItems extends StatelessWidget {
   Widget build(BuildContext context) {
     final ms = Get.put(MainState());
     return ListView.builder(
-      padding: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.zero,
       itemCount: ms.tripList[index]['tripMemberDtoList'].length,
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
       itemBuilder: (context, idx){
-        return Container(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 9,horizontal: 12),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: CachedNetworkImage(
-                          imageUrl: ms.tripList[index]['tripMemberDtoList'][idx]['profileImg']==''?'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2F6sYlEQ7iIBAkqplhqe3E?alt=media':'${ms.tripList[index]['tripMemberDtoList'][idx]['profileImg']}',
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.fill
+        return Column(
+          children: [
+            Container(
+              height: 50,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 12,right: 12,top: 12),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: CachedNetworkImage(
+                                imageUrl: ms.tripList[index]['tripMemberDtoList'][idx]['profileImg']==''?'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2F6sYlEQ7iIBAkqplhqe3E?alt=media':'${ms.tripList[index]['tripMemberDtoList'][idx]['profileImg']}',
+                                imageBuilder: (context, imageProvider) => Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.fill
+                                    ),
+                                  ),
+                                ),
+                                // placeholder: (context, url) => const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => const Icon(Icons.error),
                               ),
                             ),
                           ),
-                          // placeholder: (context, url) => const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                        ),
+                          Expanded(child: Text('${ms.tripList[index]['tripMemberDtoList'][idx]['nickname']}',style: f14Gray800w500,overflow: TextOverflow.ellipsis,)),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 12,),
-                    Expanded(child: Text('${ms.tripList[index]['tripMemberDtoList'][idx]['nickname']}',style: f14Gray800w500,overflow: TextOverflow.ellipsis,)),
-                  ],
-                ),
+                  ),
+                  Spacer(),
+                  Divider(color: gray200,height: 5,)
+                ],
               ),
-              index==4?SizedBox():Divider(color: gray200,)
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
