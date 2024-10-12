@@ -114,7 +114,7 @@ class _ScrapEditState extends State<ScrapEdit> {
         json,
         hasImage,
         '${colorList[selectedColor]}',
-        hasImage?ss.addImgUrl.isEmpty?[ss.selectScrapList[0]['imageDtos'][0]['imgKey']]:[ss.addImgUrl.split('?')[0]]:[]).then((_) async {
+        hasImage?ss.addImgUrl.isEmpty?[ss.selectScrapList[0]['imageDtos'][0]['imageUrl']]:[ss.addImgUrl.split('?')[0]]:[]).then((_) async {
         await ss.getScrapList();Get.back();
     });
 
