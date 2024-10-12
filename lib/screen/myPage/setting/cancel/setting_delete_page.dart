@@ -75,7 +75,7 @@ class _SettingDeletePageState extends State<SettingDeletePage> {
         padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
         child: BottomContainer(
             onTap: ()async{
-              showConfirmCancelTapDialog(context, '회원탈퇴를 하시겠어요?', '탈퇴', '회원탈퇴를 하시겠어요?', (){});
+              showConfirmCancelTapDialog(context, '회원탈퇴를 하시겠어요?', '탈퇴', null, (){});
             },title: '확인했어요',isBlack: true),
       ),
     );

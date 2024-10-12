@@ -70,7 +70,7 @@ class _SettingMainPageState extends State<SettingMainPage> {
                   const SizedBox(height: 10,),
                   GestureDetector(
                     onTap: (){
-                      showConfirmCancelTapDialog(context, '로그아웃을 하시겠어요?', '탈퇴', '로그아웃을 하시겠어요?', (){
+                      showConfirmCancelTapDialog(context, '로그아웃을 하시겠어요?', '탈퇴',null, (){
                         us.logOut();
                         Get.offAll(()=>LoginPage());
                       });
