@@ -345,7 +345,7 @@ showOnlyConfirmTapDialog(BuildContext context, String title, VoidCallback confir
 }
 
 /// 확인 취소 다이얼로그
-showConfirmCancelTapDialog(BuildContext context, String title,String actionText, String message, VoidCallback confirmTap) {
+showConfirmCancelTapDialog(BuildContext context, String title,String actionText, String? message, VoidCallback confirmTap) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -360,12 +360,20 @@ showConfirmCancelTapDialog(BuildContext context, String title,String actionText,
             width: Get.width,
             child: Padding(
                   padding: const EdgeInsets.only(bottom: 32,top: 36),
-                  child: Container(
-                    child: Text(
-                      '${message}',
-                      style: f18Gray800w600,
-                      textAlign: TextAlign.center,
-                    ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${title}',
+                        style: f18Gray800w600,
+                        textAlign: TextAlign.center,
+                      ),
+                      message!=null?
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text('${message}',style: f14Gray400w500, textAlign: TextAlign.center,),
+                      ) :SizedBox()
+                    ],
                   ),
                 ),
           ),

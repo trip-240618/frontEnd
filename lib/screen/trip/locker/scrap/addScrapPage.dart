@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/controller/scrapState.dart';
@@ -29,10 +28,13 @@ class _AddScrapPageState extends State<AddScrapPage> {
   List colorList = [whiteColor,pastelBlue,mainRed,yellowColor,greenColor];
   int selectedColor = 0;
   XFile? pickedImage;
+  FToast fToast  = FToast();
 
 
   @override
   void initState() {
+    fToast = FToast();
+    fToast.init(context);
     _controller.addListener((){
       setState(() {
       });
@@ -40,21 +42,6 @@ class _AddScrapPageState extends State<AddScrapPage> {
     super.initState();
   }
 
-  void jsonD() {
-    var myJson = jsonDecode(r'[{"insert":"Ddfsdfd\nㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ"},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":"\n"}]');
-    _controller = QuillController(
-      document: Document.fromJson(myJson),
-      selection: TextSelection.collapsed(offset: 0),
-    );
-  }
-
-  OnImageInsertCallback defaultOnImageInsertCallback() {
-    return (imageUrl, controller) async {
-      controller
-        ..skipRequestKeyboard = true
-        ..insertImageBlock(imageSource: imageUrl);
-    };
-  }
 
   Future<void> _onPressedHandler(BuildContext context) async {
     var options = const QuillToolbarImageButtonOptions();
@@ -96,7 +83,6 @@ class _AddScrapPageState extends State<AddScrapPage> {
     return hasImage;
   }
 
-
   Future<void> scrapSave() async {
     var json = jsonEncode(_controller.document.toDelta().toJson());
     print('json저장');
@@ -104,7 +90,6 @@ class _AddScrapPageState extends State<AddScrapPage> {
     print('image?${[ss.addImgUrl.split('?')[0]]}');
     bool hasImage = isImageIncluded();
     await ss.createScrap(titleCon.text, json, hasImage, '${colorList[selectedColor]}', hasImage?[ss.addImgUrl.split('?')[0]]:[]);
-
     print(json);
   }
   @override
@@ -121,7 +106,7 @@ class _AddScrapPageState extends State<AddScrapPage> {
         appBar: TrailingBackAppBar(
           text: '스크랩',
           backTap: () async {
-            await ss.removeImage();
+            if(ss.addImgUrl.isNotEmpty) await ss.removeImage(ss.addImgUrl.value);
             Get.back();},
           svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),
           trailingTap: (){
@@ -139,6 +124,7 @@ class _AddScrapPageState extends State<AddScrapPage> {
               children: [
                 TextFormField(
                   controller: titleCon,
+                  style: f16gray800w700,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.zero,
                     hintText: '제목을 입력해주세요',
@@ -183,6 +169,51 @@ class _AddScrapPageState extends State<AddScrapPage> {
                             GestureDetector(
                               onTap: () async {
                                 if(isImageIncluded()){
+                                  fToast.showToast(
+                                    child: Container(
+                                      width: Get.width,
+                                      height: 58,
+                                      decoration: BoxDecoration(
+                                        color: Color(0xff212121).withOpacity(0.7),  // 반투명한 배경
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color(0x1A000000),
+                                            offset: Offset(0, 4),
+                                            blurRadius: 9,
+                                          ),
+                                          BoxShadow(
+                                            color: Color(0x17000000),
+                                            offset: Offset(0, 16),
+                                            blurRadius: 16,
+                                          ),
+                                          BoxShadow(
+                                            color: Color(0x0D000000),
+                                            offset: Offset(0, 36),
+                                            blurRadius: 21,
+                                          ),
+                                          BoxShadow(
+                                            color: Color(0x03000000),
+                                            offset: Offset(0, 63),
+                                            blurRadius: 25,
+                                          ),
+                                          BoxShadow(
+                                            color: Color(0x00000000),
+                                            offset: Offset(0, 99),
+                                            blurRadius: 28,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text('기존 이미지 삭제 후 업로드 가능합니다.',style: f12whitew500,),
+                                        ],
+                                      )),
+                                    ),
+                                    gravity: ToastGravity.TOP,
+                                    toastDuration: Duration(seconds: 2),
+                                  );
 
                                 }else{
                                   pickedImage = await ss.getSingleImage(ImageSource.gallery,context,pickedImage);
@@ -194,7 +225,9 @@ class _AddScrapPageState extends State<AddScrapPage> {
                               },
                               child: SvgPicture.asset('assets/icon/normalImage.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
                             ),
-                            Text('${_controller.document.length}'),
+                            Spacer(),
+                            Text('${_controller.document.length}', style: f11Gray800w600,),
+                            Text('/1000', style: f11Gray400w600,),
                           ],
                         ),
                       ],

@@ -43,10 +43,47 @@ class ApiScrapClient{
     }
   }
 
+  /// 스크랩 수정
+  Future<List<dynamic>> modifyScrap(
+      int id,
+      String title,
+      String content,
+      bool hasImage,
+      String color,
+      List photoList
+      )async{
+    final ts = Get.put(TripState());
+    try {
+      final response = await dioClient.dio.put('/trip/${ts.selectTripList[0]['id']}/scrap/modify',
+          data: {
+            "id": id,
+            "title": '${title}',
+            "content": '${content}',
+            "hasImage": '${hasImage}',
+            "color": '${color.substring(6, color.length - 1)}',
+            "photoList": photoList,
+          }
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data??${data}');
+        if(data.length==0){
+          return [];
+        }
+        return [data];
+      } else {
+        throw Exception('Failed to flight-delete: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during flight-delete: $e');
+      rethrow;
+    }
+
+  }
+
   /// 스크랩 가져오기
   Future<List<dynamic>> getScrap() async{
     final ts = Get.put(TripState());
-    print('id??${{ts.selectTripList[0]['id']}}');
     try {
       final response = await dioClient.dio.get('/trip/${ts.selectTripList[0]['id']}/scrap/list');
       if (response.statusCode == 200) {

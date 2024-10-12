@@ -68,7 +68,7 @@ class ApiFileClient {
   Future<Map<String, dynamic>> scrapUrlGet(int count) async {
     try {
       final response = await dioClient.dio.get(
-          '/file/request/url?prefix=profile&photoCnt=${count}'
+          '/file/request/url?prefix=scrap&photoCnt=${count}'
       );
       if (response.statusCode == 200) {
         final data = response.data;

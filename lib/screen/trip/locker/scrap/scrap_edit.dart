@@ -3,11 +3,15 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/controller/scrapState.dart';
+import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:get/get.dart';
@@ -21,28 +25,28 @@ class ScrapEdit extends StatefulWidget {
 }
 
 class _ScrapEditState extends State<ScrapEdit> {
+  final us = Get.put(UserState());
   final ss = Get.put(ScrapState());
   TextEditingController titleCon = TextEditingController();
   QuillController _controller = QuillController.basic();
   final FocusNode _focusNode = FocusNode();
   List colorList = [whiteColor,pastelBlue,mainRed,yellowColor,greenColor];
   int selectedColor = 0;
+  XFile? pickedImage;
+  FToast fToast  = FToast();
 
 
   @override
   void initState() {
-    print('이거 선택되나?${ss.selectScrapList[0]['content']}');
+    print('색상은?${Color(int.parse(ss.selectScrapList[0]['color']))}');
+    selectedColor = colorList.indexOf(Color(int.parse(ss.selectScrapList[0]['color'])));
+    fToast = FToast();
+    fToast.init(context);
+    Future.delayed(Duration.zero,()async{
+     await ss.scrapImgUrlReset();
+    });
+    print('기존 이미지가 있을 경우?${ss.selectScrapList[0]['imageDtos']}');
     jsonD();
-    // String jsonString = '[{"insert":"ㄴㅇㅇㅇ유옹ㅍㅇㅍㅇ"},{"insert":{"image":"https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/cafeImage.jpeg?alt=media"}},{"insert":"\\n"}]';
-    //
-    // // JSON 문자열을 파싱하여 List로 변환
-    // List<dynamic> jsonData = jsonDecode(jsonString);
-    //
-    // // 이미지가 포함되어 있는지 확인
-    // bool containsImage = jsonData.any((element) => element["insert"] is Map && element["insert"].containsKey("image"));
-    //
-    // print('????${containsImage}'); // 이미지가 포함된 경우 true, 포함되지 않은 경우 false
-
     _controller.addListener((){
       setState(() {
       });
@@ -59,15 +63,6 @@ class _ScrapEditState extends State<ScrapEdit> {
     );
   }
 
-
-
-  OnImageInsertCallback defaultOnImageInsertCallback() {
-    return (imageUrl, controller) async {
-      controller
-        ..skipRequestKeyboard = true
-        ..insertImageBlock(imageSource: imageUrl);
-    };
-  }
 
   Future<void> _onPressedHandler(BuildContext context) async {
     var options = const QuillToolbarImageButtonOptions();
@@ -92,7 +87,7 @@ class _ScrapEditState extends State<ScrapEdit> {
     }
 
 
-    final imageUrl = 'https://firebasestorage.googleapis.com/v0/b/tripstory-14935.appspot.com/o/cafeImage.jpeg?alt=media';
+    final imageUrl = ss.addImgUrl.split('?')[0];
 
 
     if (imageUrl.isNotEmpty) {
@@ -103,14 +98,40 @@ class _ScrapEditState extends State<ScrapEdit> {
     }
   }
 
+  Future<void> editScrap() async{
+    var json = jsonEncode(_controller.document.toDelta().toJson());
+    bool hasImage = isImageIncluded();
+    print(ss.selectScrapList.value);
+    print('hasImage${hasImage}');
+    /// 기존 이미지가 있는데 이미지를 지웠을경우에 별도 삭제처리 해줘야함
+    /// has 이미지가 있을때 포토리스트 값은 여기서 addurl할지, 기존 select값 보낼때 처리
+    if(hasImage){
 
-  void scrapSave(){
+    }
+    await ss.modifyScrap(
+        ss.selectScrapList[0]['id'],
+        titleCon.text,
+        json,
+        hasImage,
+        '${colorList[selectedColor]}',
+        hasImage?ss.addImgUrl.isEmpty?[ss.selectScrapList[0]['imageDtos'][0]['imgKey']]:[ss.addImgUrl.split('?')[0]]:[]).then((_) async {
+        await ss.getScrapList();Get.back();
+    });
+
+  }
+  bool isImageIncluded(){
+    List<dynamic> jsonData = _controller.document.toDelta().toJson();
+    bool hasImage = jsonData.any((element) => element["insert"] is Map && element["insert"].containsKey("image"));
+    return hasImage;
+  }
+
+  Future<void> scrapSave() async {
     var json = jsonEncode(_controller.document.toDelta().toJson());
     print('json저장');
     print(titleCon.text);
-    print('${colorList[selectedColor]}');
-    ss.createScrap(titleCon.text, json, false, '${colorList[selectedColor]}', []);
-
+    print('image?${[ss.addImgUrl.split('?')[0]]}');
+    bool hasImage = isImageIncluded();
+    await ss.createScrap(titleCon.text, json, hasImage, '${colorList[selectedColor]}', hasImage?[ss.addImgUrl.split('?')[0]]:[]);
     print(json);
   }
   @override
@@ -124,7 +145,17 @@ class _ScrapEditState extends State<ScrapEdit> {
       child: Scaffold(
         backgroundColor: gray50,
         resizeToAvoidBottomInset: false,
-        appBar: TrailingBackAppBar(text: '스크랩', backTap: (){Get.back();}, svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),trailingTap: (){scrapSave();},),
+        appBar: TrailingBackAppBar(text: '스크랩 수정',
+          backTap: () async {
+          if(ss.addImgUrl.isNotEmpty) await ss.removeImage(ss.addImgUrl.value);
+          Get.back();},
+          svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),
+            trailingTap: () async {
+              await editScrap().then((_) async {
+                 await ss.getScrapList();
+                 Get.back();
+               });
+            }),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(top:15, left: 20, right: 20, bottom: 35),
@@ -134,6 +165,7 @@ class _ScrapEditState extends State<ScrapEdit> {
               children: [
                 TextFormField(
                   controller: titleCon,
+                  style: f16gray800w700,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.zero,
                     hintText: '제목을 입력해주세요',
@@ -151,7 +183,6 @@ class _ScrapEditState extends State<ScrapEdit> {
                         color: gray200
                     ),
                     borderRadius: BorderRadius.circular(4),
-
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -173,23 +204,83 @@ class _ScrapEditState extends State<ScrapEdit> {
 
                           ),
                         ),
-                        Row(
+                        us.userList[0]['uuid']==ss.scrapList[0]['writerUuid'] ?Row(
                           children: [
                             GestureDetector(
-                              onTap: (){
-                                print('11111');
-                                _onPressedHandler(context);
+                              onTap: () async {
+                                if(isImageIncluded()){
+                                  fToast.showToast(
+                                    child: Container(
+                                      width: Get.width,
+                                      height: 58,
+                                      decoration: BoxDecoration(
+                                        color: Color(0xff212121).withOpacity(0.7),  // 반투명한 배경
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color(0x1A000000),
+                                            offset: Offset(0, 4),
+                                            blurRadius: 9,
+                                          ),
+                                          BoxShadow(
+                                            color: Color(0x17000000),
+                                            offset: Offset(0, 16),
+                                            blurRadius: 16,
+                                          ),
+                                          BoxShadow(
+                                            color: Color(0x0D000000),
+                                            offset: Offset(0, 36),
+                                            blurRadius: 21,
+                                          ),
+                                          BoxShadow(
+                                            color: Color(0x03000000),
+                                            offset: Offset(0, 63),
+                                            blurRadius: 25,
+                                          ),
+                                          BoxShadow(
+                                            color: Color(0x00000000),
+                                            offset: Offset(0, 99),
+                                            blurRadius: 28,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text('기존 이미지 삭제 후 업로드 가능합니다.',style: f12whitew500,),
+                                        ],
+                                      )),
+                                    ),
+                                    gravity: ToastGravity.TOP,
+                                    toastDuration: Duration(seconds: 2),
+                                  );
+
+                                }else{
+                                  /// content에는 삭제했지만 추가한 이미지url가 있는 경우 기존 url 삭제
+                                  if(ss.addImgUrl.isNotEmpty){
+                                    await ss.removeImage(ss.addImgUrl.value);
+                                    await ss.scrapImgUrlReset();
+                                  }
+                                  pickedImage = await ss.getSingleImage(ImageSource.gallery,context,pickedImage);
+                                  await ss.scrapFileUpload(pickedImage!);
+
+                                  _onPressedHandler(context);
+
+                                }
                               },
                               child: SvgPicture.asset('assets/icon/normalImage.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
                             ),
-                            Text('${_controller.document.length}'),
+                            Spacer(),
+                            Text('${_controller.document.length}', style: f11Gray800w600,),
+                            Text('/1000', style: f11Gray400w600,),
                           ],
-                        ),
+                        ):const SizedBox(),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 20,),
+                us.userList[0]['uuid']==ss.scrapList[0]['writerUuid'] ?
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -242,7 +333,7 @@ class _ScrapEditState extends State<ScrapEdit> {
                       ),
                     ),
                   ],
-                ),
+                ):const SizedBox(),
 
               ],
             ),

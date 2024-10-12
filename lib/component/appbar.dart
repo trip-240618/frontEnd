@@ -54,7 +54,7 @@ class TrailingBackAppBar extends StatelessWidget implements PreferredSizeWidget 
     required this.text,
     required this.backTap,
     required this.svgPicture,
-    required this.trailingTap, this.color,});
+    required this.trailingTap, this.color=gray50,});
 
   @override
   Widget build(BuildContext context) {

@@ -17,7 +17,7 @@ class ScrapState extends GetxController{
   final apiScrapClient = ApiScrapClient(DioClient());
   final apiFileClient = ApiFileClient(DioClient());
   final ImagePicker _picker = ImagePicker();
-  final addImgUrl = ''.obs;
+  final addImgUrl = ''.obs; /// 추가한 스크랩 이미지
 
   /// 스크랩 생성
   Future<void> createScrap(
@@ -35,11 +35,39 @@ class ScrapState extends GetxController{
     );
   }
 
+  /// 스크랩 수정
+  Future<void> modifyScrap(
+      int id,
+      String title,
+      String content,
+      bool hasImage,
+      String color,
+      List? photoList) async {
+      if(hasImage){
+        /// 기존 이미지를 그대로 유지 text만 변경할 경우, photoList 값은 screen 에서 조절
+        /// 기존 이미지를 새로운 이미지 대체할 경우
+        print('photoList?${photoList}');
+        if(selectScrapList[0]['hasImage']&&addImgUrl.isNotEmpty) await removeImage(selectScrapList[0]['imageDtos'][0]['imgKey']);
+      }else{
+        if(addImgUrl.isNotEmpty)await removeImage(addImgUrl.value);
+        if(selectScrapList[0]['hasImage']) await removeImage(selectScrapList[0]['imageDtos'][0]['imgKey']);
+      }
+      await apiScrapClient.modifyScrap(
+        id,
+        title,
+        content,
+        hasImage,
+        color,
+        photoList!.isEmpty?[]:photoList,
+      );
+
+
+  }
+
   /// 스크랩 리스트 가져오기
   Future<void> getScrapList()async{
     scrapList.clear();
     scrapList.value = await apiScrapClient.getScrap();
-    print('scrapList?${scrapList.value}');
     scrapList.refresh();
   }
 
@@ -60,7 +88,6 @@ class ScrapState extends GetxController{
     selectScrapList.clear();
     selectScrapList.value = await apiScrapClient.getSelectScrap(scrapId);
     print('selectScrapList?${selectScrapList.value}');
-    print('길이?${selectScrapList.length}');
     scrapList.refresh();
   }
 
@@ -101,10 +128,14 @@ class ScrapState extends GetxController{
     return data;
   }
 
-  Future<void> removeImage()async {
-    await apiFileClient.historyUrlDelete(addImgUrl.value);
+  Future<void> removeImage(String imgUrl)async {
+    await apiFileClient.historyUrlDelete(imgUrl);
   }
 
+  /// 스크랩 이미지 url 리셋
+  Future<void> scrapImgUrlReset() async{
+    addImgUrl.value = '';
+  }
 
 
 }

@@ -10,6 +10,7 @@ import 'package:tripStory/component/button.dart';
 import 'package:tripStory/controller/scrapState.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/trip/locker/scrap/scrap_edit.dart';
+import '../../../../component/dialog/dialog.dart';
 import '../../../../component/dialog/loading.dart';
 import '../../../../util/color.dart';
 import '../../../../util/font.dart';
@@ -30,11 +31,7 @@ class _ScrapPageState extends State<ScrapPage> {
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
-      print('us??${us.userList.value}');
-
       await ss.getScrapList();
-      //print('ss?${ss.scrapList.value}');
-      print(us.userList[0]['uuid']==ss.scrapList[0]['writerUuid']);
       isLoading = false;
       setState(() {
 
@@ -214,7 +211,11 @@ class _ScrapPageState extends State<ScrapPage> {
                                   us.userList[0]['uuid']==ss.scrapList[0]['writerUuid'] ?
                                   GestureDetector(
                                       onTap: () async {
-                                        await ss.deleteScrap(int.parse('${ss.scrapList[index]['id']}'));
+                                        //if(ss.scrapList[index]['hasImage']) await ss.removeImage(ss.selectScrapList[index]['imageDtos'][0]['imgKey']);
+                                        showConfirmCancelTapDialog(context, '스크랩을 삭제하시겠습니까?', '확인','스크랩 삭제 후 복구는 어렵습니다',() async {
+                                          await ss.deleteScrap(int.parse('${ss.scrapList[index]['id']}'));
+                                          await ss.getScrapList();
+                                        } );
                                       },
                                       child: SvgPicture.asset('assets/icon/trashCan.svg'))
                                       : const SizedBox(),
