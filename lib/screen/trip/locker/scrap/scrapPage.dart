@@ -211,7 +211,6 @@ class _ScrapPageState extends State<ScrapPage> {
                                   us.userList[0]['uuid']==ss.scrapList[0]['writerUuid'] ?
                                   GestureDetector(
                                       onTap: () async {
-                                        //if(ss.scrapList[index]['hasImage']) await ss.removeImage(ss.selectScrapList[index]['imageDtos'][0]['imgKey']);
                                         showConfirmCancelTapDialog(context, '스크랩을 삭제하시겠습니까?', '확인','스크랩 삭제 후 복구는 어렵습니다',() async {
                                           await ss.deleteScrap(int.parse('${ss.scrapList[index]['id']}'));
                                           await ss.getScrapList();
