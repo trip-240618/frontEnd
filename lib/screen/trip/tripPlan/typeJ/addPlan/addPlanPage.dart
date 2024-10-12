@@ -61,7 +61,10 @@ class _AddPlanPageState extends State<AddPlanPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: BackAppBar(text: '일정 등록',color: Colors.white,
-            onTap: (){js.searchLocation.value = []; Get.back();}),
+            onTap: (){
+          js.searchLocation.clear();
+          Get.back();
+        }),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 44),
@@ -316,7 +319,19 @@ class _AddPlanPageState extends State<AddPlanPage> {
           color: Colors.white,
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
-            child: BlackBottomContainer(onTap: (){}, title: '저장'),
+            child: BlackBottomContainer(onTap: (){
+              Map data = {
+                "dayAfterStart": 1,
+                "startTime": "14:30",
+                "title": "호텔 체크인 하기",
+                "place": "도쿄 디즈니",
+                "memo": "3시 이후에 체크인 가능",
+                "latitude": 37.4220541,
+                "longitude": -122.08532419999999,
+                "locker": false
+              };
+              js.addJPlanList(data);
+            }, title: '저장'),
           ),
         ),
 
