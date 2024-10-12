@@ -17,6 +17,14 @@ const TextStyle f11Gray600w400 = TextStyle(
   height: 14 / 11,
   letterSpacing: 0.0311,
 );
+const TextStyle f12Gray600w400 = TextStyle(
+  fontSize: 12,
+  color: gray600,
+  fontWeight: FontWeight.w400,
+  fontFamily: 'Pretendard',
+  height: 14 / 12,
+  letterSpacing: 0.0311,
+);
 
 const TextStyle f11Gray900w400 = TextStyle(
   fontSize: 11,

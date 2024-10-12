@@ -6,12 +6,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/screen/splashScreen.dart';
-import 'package:tripStory/screen/login/loginPage.dart';
-import 'package:tripStory/screen/login/register/term.dart';
-import 'package:tripStory/screen/trip/bottomNavigator.dart';
-import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchFlight.dart';
-import 'package:tripStory/screen/trip/setting/trip_edit_page.dart';
-import 'imageTest.dart';
+
 
 
 void main() async{

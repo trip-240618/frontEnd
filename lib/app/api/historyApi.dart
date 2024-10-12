@@ -53,6 +53,23 @@ class ApiHistoryClient {
     }
   }
 
+  /// 여행 기록 삭제
+  Future<void> deleteHistory(int tripId,int historyId) async {
+    try {
+      final response = await dioClient.dio.delete(
+          '/trip/${tripId}/history/delete/${historyId}'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
   /// 여행 기록 디테일 가져오기
   Future<Map<String,dynamic>> getDetailHistoryList(int tripId,int historyId) async {
     try {
@@ -97,14 +114,14 @@ class ApiHistoryClient {
   }
 
   /// 여행 좋아요 토글
-  Future<void> historyListToggle(int tripId,int historyId) async {
+  Future<bool> historyListToggle(int tripId,int historyId) async {
     try {
       final response = await dioClient.dio.put(
           '/trip/${tripId}/history/${historyId}/like'
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('좋아요 ${data}');
+        return data;
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -236,7 +253,7 @@ class ApiHistoryClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
+        print('검색한 리스트?  ${data}');
         if(data.length==0){
           return [];
         }

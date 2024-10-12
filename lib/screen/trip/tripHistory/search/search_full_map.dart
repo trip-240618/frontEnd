@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../controller/MapState.dart';
 
-
 class SearchFullMap extends StatefulWidget {
   const SearchFullMap({super.key});
 
@@ -16,7 +15,6 @@ class _SearchFullMapState extends State<SearchFullMap> {
 
   @override
   void initState() {
-
     maps.addMarkersFullMap();
     super.initState();
   }

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import 'package:tripStory/util/color.dart';
-
 import '../../../../controller/historyState.dart';
 import '../../../../util/font.dart';
 

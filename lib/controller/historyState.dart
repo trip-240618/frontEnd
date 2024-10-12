@@ -52,46 +52,27 @@ class HistoryState extends GetxController{
   Future<void> getHistoryList(int tripId) async {
     final ts = Get.put(TripState());
     historyList.clear();
-    List<Map<String, dynamic>> fetchedList = await apiHistoryClient.getHistoryList(tripId);
-    Map<String, List<Map<String, dynamic>>> groupedByDate = groupByDate(fetchedList);
+    List allData = await apiHistoryClient.getHistoryList(tripId);
+    List filterDate = [];
 
     DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
     DateTime endDate = DateTime.parse(ts.selectTripList[0]['endDate']);
 
-    List<Map<String, dynamic>> allDates = [];
-
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
       String currentDate = DateFormat('yyyy-MM-dd').format(startDate.add(Duration(days: i)));
-      allDates.add({
-        'date': currentDate,
-        'items': groupedByDate[currentDate] ?? [],
+      Map<String, dynamic>? matchedData;
+      for (var data in allData) {
+        if (data['photoDate'] == currentDate) {
+          matchedData = data;
+          break;
+        }
+      }
+      filterDate.add({
+        'photoDate': currentDate,
+        'historyList': matchedData != null ? matchedData['historyList'] : [],
       });
     }
-
-    historyList.value = allDates;
-  }
-
-  /// 날짜별로 항목을 그룹화하는 함수
-  Map<String, List<Map<String, dynamic>>> groupByDate(List<Map<String, dynamic>> items) {
-    Map<String, List<Map<String, dynamic>>> groupedItems = {};
-
-    for (var item in items) {
-      String date = item['photoDate'];
-
-      if (groupedItems.containsKey(date)) {
-        groupedItems[date]!.add(item);
-      } else {
-        groupedItems[date] = [item];
-      }
-    }
-    return groupedItems;
-  }
-
-  /// 디테일 리스트 가져오기
-  Future<void> getDetailHistoryList(int tripId,int historyId) async {
-    historyDetailList.clear();
-    historyDetailList.value = await apiHistoryClient.getDetailHistoryList(tripId,historyId);
-    historyDetailList.refresh();
+    historyList.value = filterDate;
   }
 
   /// 댓글 목록 가져오기
@@ -102,16 +83,26 @@ class HistoryState extends GetxController{
   }
 
   /// 댓글 추가하기
-  Future<void> addHistoryComment(int tripId,int historyId,String comment) async {
+  Future<void> addHistoryComment(int tripId,int historyId,String comment,bool search) async {
     historyComment.value = await apiHistoryClient.addHistoryComment(tripId,historyId,comment);
     historyDetailList['replyCnt'] = historyComment.length;
     for (var day in historyList) {
-      for (var item in day['items']) {
+      for (var item in day['historyList']) {
         if (item['id'] == historyId) {
           item['replyCnt'] = historyComment.length;
           break;
         }
       }
+    }
+    if(search){
+      /// 댓글 추가
+      for (var item in searchList) {
+        if (item['id'] == historyId) {
+          item['replyCnt'] = historyComment.length;
+          break;
+        }
+      }
+      searchList.refresh();
     }
     historyList.refresh();
     historyComment.refresh();
@@ -124,37 +115,50 @@ class HistoryState extends GetxController{
   }
 
   /// 댓글 삭제
-  Future<void> deleteHistoryComment(int tripId,int historyId,int replyId) async {
+  Future<void> deleteHistoryComment(int tripId,int historyId,int replyId,bool search) async {
     historyComment.value = await apiHistoryClient.deleteHistoryComment(tripId,historyId,replyId);
     historyDetailList['replyCnt'] = historyComment.length;
     for (var day in historyList) {
-      for (var item in day['items']) {
+      for (var item in day['historyList']) {
         if (item['id'] == historyId) {
           item['replyCnt'] = historyComment.length;
           break;
         }
       }
     }
+    if(search){
+      /// 댓글 추가
+      for (var item in searchList) {
+        if (item['id'] == historyId) {
+          item['replyCnt'] = historyComment.length;
+          break;
+        }
+      }
+      searchList.refresh();
+    }
     historyList.refresh();
     historyComment.refresh();
   }
 
   /// 좋아요 토글
-  Future<void> historyListToggle(int tripId,int historyId) async {
-    await apiHistoryClient.historyListToggle(tripId,historyId);
-    bool isLiked = historyDetailList['like'] = !historyDetailList['like'];
-    historyDetailList['likeCnt'] += isLiked ? 1 : -1;
+  Future<void> historyListToggle(int tripId,int historyId,bool isSearch) async {
+    bool checked = await apiHistoryClient.historyListToggle(tripId,historyId);
+    List list = isSearch?searchList:historyList;
 
-    for (var day in historyList) {
-      for (var item in day['items']) {
+    for (var day in list) {
+      for (var item in day['historyList']) {
         if (item['id'] == historyId) {
-          item['likeCnt'] += isLiked ? 1 : -1;
+          item['likeCnt'] += checked ? 1 : -1;
+          item['like'] = checked?true:false;
           break;
         }
       }
     }
-    historyList.refresh();
-    historyDetailList.refresh();
+    if(isSearch){
+      searchList.refresh();
+    }else{
+      historyList.refresh();
+    }
   }
 
   /// 사진 업로드
@@ -250,28 +254,37 @@ class HistoryState extends GetxController{
   Future<void> addHistory(int tripId,List uploadList) async {
     final ts = Get.put(TripState());
     historyList.clear();
-    List<Map<String, dynamic>> fetchedList = await apiHistoryClient.addHistory(tripId, uploadList);
-
-    Map<String, List<Map<String, dynamic>>> groupedByDate = groupByDate(fetchedList);
-
+    List allData = await apiHistoryClient.addHistory(tripId, uploadList);
+    List filterDate = [];
     DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
     DateTime endDate = DateTime.parse(ts.selectTripList[0]['endDate']);
 
-    List<Map<String, dynamic>> allDates = [];
-
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
       String currentDate = DateFormat('yyyy-MM-dd').format(startDate.add(Duration(days: i)));
-      allDates.add({
-        'date': currentDate,
-        'items': groupedByDate[currentDate] ?? [],
+      Map<String, dynamic>? matchedData;
+      for (var data in allData) {
+        if (data['photoDate'] == currentDate) {
+          matchedData = data;
+          break;
+        }
+      }
+      filterDate.add({
+        'photoDate': currentDate,
+        'historyList': matchedData != null ? matchedData['historyList'] : [],
       });
     }
-    historyList.value = allDates;
+    print('추가 ${filterDate}');
+    historyList.value = filterDate;
     selectAlbumList.clear();
     addTagList.clear();
     selectAlbumIndex.value = 0;
     selectAlbumList.refresh();
     historyList.refresh();
+  }
+
+  /// 히스토리 삭제
+  Future<void> deleteHistory(int tripId,int historyId) async {
+     await apiHistoryClient.deleteHistory(tripId,historyId);
   }
 
   /// 태그 전체 가져오기
@@ -307,7 +320,6 @@ class HistoryState extends GetxController{
       return tag['tagName'] != null && tag['tagName'].contains(searchText);
     }).toList();
 
-
     if (filteredTags.isNotEmpty) {
       tagSearchList.addAll(filteredTags);
     }
@@ -315,6 +327,45 @@ class HistoryState extends GetxController{
     if (filteredNick.isNotEmpty) {
       tagSearchList.addAll(filteredNick);
     }
+  }
+
+  /// 검색 댓글 추가하기
+  Future<void> searchAddHistoryComment(int tripId,int historyId,String comment) async {
+    historyComment.value = await apiHistoryClient.addHistoryComment(tripId,historyId,comment);
+    historyDetailList['replyCnt'] = historyComment.length;
+    for (var day in historyList) {
+      for (var item in day['historyList']) {
+        if (item['id'] == historyId) {
+          item['replyCnt'] = historyComment.length;
+          break;
+        }
+      }
+    }
+
+    historyList.refresh();
+    historyComment.refresh();
+  }
+
+  /// 댓글 수정하기
+  Future<void> searchEditHistoryComment(int tripId,int historyId,int replyId,String content) async {
+    historyComment.value = await apiHistoryClient.editHistoryComment(tripId,historyId,replyId,content);
+    historyComment.refresh();
+  }
+
+  /// 댓글 삭제
+  Future<void> searchDeleteHistoryComment(int tripId,int historyId,int replyId) async {
+    historyComment.value = await apiHistoryClient.deleteHistoryComment(tripId,historyId,replyId);
+    historyDetailList['replyCnt'] = historyComment.length;
+    for (var day in historyList) {
+      for (var item in day['historyList']) {
+        if (item['id'] == historyId) {
+          item['replyCnt'] = historyComment.length;
+          break;
+        }
+      }
+    }
+    historyList.refresh();
+    historyComment.refresh();
   }
 
 }
