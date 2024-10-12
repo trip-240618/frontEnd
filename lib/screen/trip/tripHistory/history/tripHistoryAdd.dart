@@ -5,9 +5,8 @@ import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import 'package:tripStory/controller/tripState.dart';
-import 'package:tripStory/screen/trip/tripHistory/history/tripHistoryDetail.dart';
+import 'package:intl/intl.dart';
 import 'package:tripStory/screen/trip/tripHistory/history/trip_history_list.dart';
-import '../../../../component/appbar.dart';
 import '../../../../component/bottomContainer.dart';
 import '../../../../controller/historyState.dart';
 import '../../../../util/color.dart';
@@ -82,11 +81,15 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                   style: f16gray900w700,
                 ),
                 Spacer(),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text('${hs.selectAlbumList.length}',style: f12gray900w500,),
-                    Text('/${50-hs.historyList.length}',style: f12gray400w500,)
+                    Text(
+                      '/${(50 - hs.historyList.length + (DateTime.parse(ts.selectTripList[0]['endDate']).difference(DateTime.parse(ts.selectTripList[0]['startDate'])).inDays+1))}',
+                      style: f12gray400w500,
+                    ),
                   ],
                 )
               ],
@@ -377,7 +380,7 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                     "longitude": hs.selectAlbumList[i].longitude,
                     "photoDate": "${hs.selectedDate.value.toString().replaceAll(".", '-').split(' ')[0]}",
                     "memo": "${albumTextList[i].text}",
-                    "tags": [
+                    "tags": hs.addTagList[i].length==0?[]:[
                       for (var tag in hs.addTagList[i])
                         {
                           "tagColor": "${tag['color'].value.toRadixString(16).toUpperCase()}",
@@ -386,8 +389,17 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                     ],
                   });
                 }
+                DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
+                DateTime endDate = DateTime.parse(ts.selectTripList[0]['endDate']);
+                /// 날짜 목록 생성
+                List<String> dateList = [];
+                for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
+                  dateList.add(DateFormat('yyyy-MM-dd').format(startDate.add(Duration(days: i))));
+                }
+                int index = dateList.indexOf(hs.selectedDate.value.toString().replaceAll(".", '-').split(' ')[0]);
+                print('?? ${index}');
                 await hs.addHistory(ts.selectTripList[0]['id'], totalList);
-               Get.to(()=>TripHistoryList());
+               Get.to(()=>TripHistoryList(index: index,));
              },title: '업로드',count: hs.selectAlbumList.length),
            ),
         ),

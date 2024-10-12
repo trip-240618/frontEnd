@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
-import 'package:tripStory/app/api/testApi.dart';
 import 'package:tripStory/app/api/userApi.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/mainState.dart';
@@ -31,7 +30,6 @@ class _MainPageState extends State<MainPage> {
   TripState ts = Get.put(TripState());
   final dioClient = DioClient();
   final apiUserClient = ApiUserClient(DioClient());
-  final apiTestCli = ApiTestClient(DioClient());
   bool isLoading = true;
 
   void initState() {

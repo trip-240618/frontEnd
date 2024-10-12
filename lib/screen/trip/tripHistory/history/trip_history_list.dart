@@ -56,7 +56,7 @@ class _TripHistoryListState extends State<TripHistoryList> {
                   ),
                   const SizedBox(width: 6,),
                   Text(
-                    '${DateFormat('yyyy.MM.dd').format(DateTime.parse('${hs.historyList[widget.index!]['date']}'))}',
+                    '${DateFormat('yyyy.MM.dd').format(DateTime.parse('${hs.historyList[widget.index!]['photoDate']}'))}',
                     style: f12Gray800w500,
                   ),
                   // Text('${}',style: f12Gray800w500,)
@@ -71,12 +71,14 @@ class _TripHistoryListState extends State<TripHistoryList> {
                       mainAxisSpacing: 12.0,
                       childAspectRatio: 0.793,
                     ),
-                    itemCount: hs.historyList[widget.index!]['items'].length,
+                    itemCount: hs.historyList[widget.index!]['historyList'].length,
                     itemBuilder: (context, index){
                       return GestureDetector(
                         onTap: (){
-                          print('??? ${hs.historyList[widget.index!]['items']}');
-                          Get.to(()=>TripHistoryDetailPage(selectedIdx: index,dayIdx: widget.index!,));
+                          Get.to(()=>TripHistoryDetailPage(
+                            selectedIdx: index,
+                            dayIdx: widget.index!,
+                            historyId: hs.historyList[widget.index!]['historyList'][index]['id'],));
                         },
                         child: Container(
                           width: 120,
@@ -84,7 +86,7 @@ class _TripHistoryListState extends State<TripHistoryList> {
                             children: [
                               Positioned(
                                 child: CachedNetworkImage(
-                                  imageUrl: '${hs.historyList[widget.index!]['items'][index]['thumbnail']}',
+                                  imageUrl: '${hs.historyList[widget.index!]['historyList'][index]['thumbnail']}',
                                   imageBuilder: (context, imageProvider) => Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(4),
@@ -124,7 +126,7 @@ class _TripHistoryListState extends State<TripHistoryList> {
                                   width: 20,
                                   height: 20,
                                   child: CachedNetworkImage(
-                                    imageUrl: '${hs.historyList[widget.index!]['items'][index]['profileImage']}',
+                                    imageUrl: '${hs.historyList[widget.index!]['historyList'][index]['profileImage']}',
                                     imageBuilder: (context, imageProvider) => Container(
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(4),
@@ -145,11 +147,11 @@ class _TripHistoryListState extends State<TripHistoryList> {
                                   children: [
                                     SvgPicture.asset('assets/icon/smallheart.svg'),
                                     const SizedBox(width: 3,),
-                                    Text('${hs.historyList[widget.index!]['items'][index]['likeCnt']}',style: f12whitew500,),
+                                    Text('${hs.historyList[widget.index!]['historyList'][index]['likeCnt']}',style: f12whitew500,),
                                     const SizedBox(width: 8,),
                                     SvgPicture.asset('assets/icon/smallComment.svg'),
                                     const SizedBox(width: 3,),
-                                    Text('${hs.historyList[widget.index!]['items'][index]['replyCnt']}',style: f12whitew500,),
+                                    Text('${hs.historyList[widget.index!]['historyList'][index]['replyCnt']}',style: f12whitew500,),
                                   ],
                                 ),
                               )
@@ -163,7 +165,6 @@ class _TripHistoryListState extends State<TripHistoryList> {
               ),
             ],
           ),)),
-
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/screen/myPage/notice/setting_noti_detail.dart';
 import '../../../component/appbar.dart';
+import '../../../controller/notiState.dart';
 import '../../../util/color.dart';
 import '../../../util/font.dart';
 
@@ -13,13 +14,20 @@ class SettingNotiMain extends StatefulWidget {
 }
 
 class _SettingNotiMainState extends State<SettingNotiMain> {
+  final notiS = Get.put(Notistate());
   int selectField = 0;
   List filedList = ['전체','일반','업데이트','시스템'];
+
+  @override
+  void initState() {
+    notiS.getNoti('전체');
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BackAppBar(text: '공지사항',onTap: (){Get.back();},color: Colors.white,),
-      body: Padding(
+      body: Obx(()=>Padding(
         padding: const EdgeInsets.only(left: 20,right: 20),
         child: Column(
           children: [
@@ -27,7 +35,11 @@ class _SettingNotiMainState extends State<SettingNotiMain> {
             Row(
               children: [
                 GestureDetector(
-                  onTap: ()async{},
+                  onTap: ()async{
+                    selectField = 0;
+                    notiS.getNoti('전체');
+                    setState(() {});
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                         color: selectField==0?gray900:gray200,
@@ -42,6 +54,9 @@ class _SettingNotiMainState extends State<SettingNotiMain> {
                 const SizedBox(width: 8),
                 GestureDetector(
                   onTap: ()async{
+                    selectField = 1;
+                    notiS.getNoti('일반');
+                    setState(() {});
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -57,7 +72,9 @@ class _SettingNotiMainState extends State<SettingNotiMain> {
                 const SizedBox(width: 8),
                 GestureDetector(
                   onTap: ()async{
-
+                    selectField = 2;
+                    notiS.getNoti('업데이트');
+                    setState(() {});
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -73,16 +90,18 @@ class _SettingNotiMainState extends State<SettingNotiMain> {
                 const SizedBox(width: 8),
                 GestureDetector(
                   onTap: ()async{
-
+                    selectField = 3;
+                    notiS.getNoti('시스템');
+                    setState(() {});
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                        color: selectField==2?gray900:gray200,
+                        color: selectField==3?gray900:gray200,
                         borderRadius: BorderRadius.circular(100)
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 4),
-                      child: Text('시스템',style: selectField==2?f14Whitew700:f14gray400w700),
+                      child: Text('시스템',style: selectField==3?f14Whitew700:f14gray400w700),
                     ),
                   ),
                 )
@@ -95,22 +114,22 @@ class _SettingNotiMainState extends State<SettingNotiMain> {
                 child: ListView.builder(
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
-                    itemCount: 3,
+                    itemCount: notiS.notiList.length,
                     padding: EdgeInsets.zero,
                     itemBuilder: (contexts, index) {
                       return GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onTap: (){
+                        onTap: ()async{
+                          notiS.getDetailNoti(notiS.notiList[index]['id'], notiS.notiList[index]['type']);
                           Get.to(()=>SettingNotiDetail());
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 12,),
-                            Container(
-                                child: Text('[${filedList[selectField]}] 전산시스템 점검에 따른 서비스 일부 제한 안내 (8월 2일 04시 - 06시)',style: f14Gray600w600,maxLines: 2,overflow: TextOverflow.ellipsis,)),
+                            Text('[${notiS.notiList[index]['type']}] ${notiS.notiList[index]['title']}',style: f14Gray600w600,maxLines: 2,overflow: TextOverflow.ellipsis,),
                             const SizedBox(height: 2,),
-                            Text('2024.07.31',style: f12gray400w500,),
+                            Text('${notiS.notiList[index]['createDate']}',style: f12gray400w500,),
                             const SizedBox(height: 16,),
                             Divider(
                               thickness: 1,
@@ -124,7 +143,7 @@ class _SettingNotiMainState extends State<SettingNotiMain> {
             )
           ],
         ),
-      ),
+      )),
     );
   }
 }

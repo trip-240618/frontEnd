@@ -156,7 +156,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                     children: [
                                       Container(
                                         width: Get.width,
-                                        height: hs.historyList[index]['items'].length==0?56:222,
+                                        height: hs.historyList[index]['historyList'].length==0?56:222,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           border: Border(
@@ -170,7 +170,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                             children: [
                                               GestureDetector(
                                                 onTap:(){
-                                                  if(hs.historyList[index]['items'].length!=0){
+                                                  if(hs.historyList[index]['historyList'].length!=0){
                                                    Get.to(()=>TripHistoryList(isAdd: false,index: index));
                                                   }
                                                 },
@@ -197,7 +197,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                         ),
                                                         const SizedBox(width: 6,),
                                                         Text(
-                                                            '${intl.DateFormat('yyyy.MM.dd').format(DateTime.parse('${hs.historyList[index]['date']}'))}',
+                                                            '${intl.DateFormat('yyyy.MM.dd').format(DateTime.parse('${hs.historyList[index]['photoDate']}'))}',
                                                           style: f12Gray800w500,
                                                         ),
                                                         Spacer(),
@@ -205,19 +205,19 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                             width: 20,
                                                             height: 20,
                                                             decoration: BoxDecoration(
-                                                              color: hs.historyList[index]['items'].length==0?gray400:Color(0xff5E91EE),
+                                                              color: hs.historyList[index]['historyList'].length==0?gray400:Color(0xff5E91EE),
                                                               borderRadius: BorderRadius.circular(100),
                                                             ),
-                                                            child: Center(child: Text('${hs.historyList[index]['items'].length}', style: f11whitew600,))),
+                                                            child: Center(child: Text('${hs.historyList[index]['historyList'].length}', style: f11whitew600,))),
                                                       ],
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                              hs.historyList[index]['items'].length==0?const SizedBox():const SizedBox(height: 16,),
+                                              hs.historyList[index]['historyList'].length==0?const SizedBox():const SizedBox(height: 16,),
                                               Obx(()=>Expanded(
                                                 child: ListView.builder(
-                                                    itemCount: hs.historyList[index]['items'].length,
+                                                    itemCount: hs.historyList[index]['historyList'].length,
                                                     scrollDirection: Axis.horizontal,
                                                     itemBuilder: (context, idx) {
                                                       return Row(
@@ -226,7 +226,11 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                         children: [
                                                           GestureDetector(
                                                             onTap:(){
-                                                              Get.to(()=>TripHistoryDetailPage(selectedIdx: hs.historyList[index]['items'][idx]['id'],dayIdx: idx,));
+                                                              Get.to(()=>TripHistoryDetailPage(
+                                                                selectedIdx: idx,
+                                                                dayIdx: index,
+                                                                historyId: hs.historyList[index]['historyList'][idx]['id'],
+                                                              ));
                                                             },
                                                             child: Container(
                                                               width: 120,
@@ -235,7 +239,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                   Positioned(
                                                                     child: CachedNetworkImage(
                                                                       //imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2F1EjyruHeHaU6ZQpNe22L?alt=media',
-                                                                      imageUrl: '${hs.historyList[index]['items'][idx]['thumbnail']}',
+                                                                      imageUrl: '${hs.historyList[index]['historyList'][idx]['thumbnail']}',
                                                                       imageBuilder: (context, imageProvider) => Container(
                                                                         decoration: BoxDecoration(
                                                                           borderRadius: BorderRadius.circular(4),
@@ -275,7 +279,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                       width: 20,
                                                                       height: 20,
                                                                       child: CachedNetworkImage(
-                                                                        imageUrl: '${hs.historyList[index]['items'][idx]['profileImage']}',
+                                                                        imageUrl: '${hs.historyList[index]['historyList'][idx]['profileImage']}',
                                                                         imageBuilder: (context, imageProvider) => Container(
                                                                           decoration: BoxDecoration(
                                                                             borderRadius: BorderRadius.circular(4),
@@ -296,11 +300,11 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                       children: [
                                                                         SvgPicture.asset('assets/icon/smallheart.svg'),
                                                                         const SizedBox(width: 3,),
-                                                                        Text('${hs.historyList[index]['items'][idx]['likeCnt']}',style: f12whitew500,),
+                                                                        Text('${hs.historyList[index]['historyList'][idx]['likeCnt']}',style: f12whitew500,),
                                                                         const SizedBox(width: 8,),
                                                                         SvgPicture.asset('assets/icon/smallComment.svg'),
                                                                         const SizedBox(width: 3,),
-                                                                        Text('${hs.historyList[index]['items'][idx]['replyCnt']}',style: f12whitew500,),
+                                                                        Text('${hs.historyList[index]['historyList'][idx]['replyCnt']}',style: f12whitew500,),
                                                                       ],
                                                                     ),
                                                                   )
@@ -314,7 +318,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                     }
                                                 ),
                                               )),
-                                              hs.historyList[index]['items'].length==0?const SizedBox():const SizedBox(height: 16,),
+                                              hs.historyList[index]['historyList'].length==0?const SizedBox():const SizedBox(height: 16,),
                                             ],
                                           ),
                                         ),

@@ -30,12 +30,12 @@ class MapState extends GetxController{
   Future<void> addMarkersFromHistory() async {
     markers.clear();
     for (int i = 0; i < hs.historyList.length; i++) {
-      for(int j=0;j<hs.historyList[i]['items'].length;j++){
-        if(hs.historyList[i]['items'][j]['latitude']!= 0.0 && hs.historyList[i]['items'][j]['longitude']!=0.0){
-          final icon = await getCustomIcon(i+1, hs.historyList[i]['items'][j]['thumbnail']);
+      for(int j=0;j<hs.historyList[i]['historyList'].length;j++){
+        if(hs.historyList[i]['historyList'][j]['latitude']!= 0.0 && hs.historyList[i]['historyList'][j]['longitude']!=0.0){
+          final icon = await getCustomIcon(i+1, hs.historyList[i]['historyList'][j]['thumbnail']);
           final marker = Marker(
             markerId: MarkerId(DateTime.now().toString()),
-            position: LatLng(hs.historyList[i]['items'][j]['latitude'], hs.historyList[i]['items'][j]['longitude']),
+            position: LatLng(hs.historyList[i]['historyList'][j]['latitude'], hs.historyList[i]['historyList'][j]['longitude']),
             icon: icon,
             onTap: () {
               // 마커 클릭 시 행동
@@ -51,11 +51,11 @@ class MapState extends GetxController{
   Future<void> addMarkersFullMap() async {
     selectedMarkers.clear();
     for (int i = 0; i < hs.searchList.length; i++) {
-        if(hs.searchList[i]['latitude']!= 0.0 && hs.searchList[i]['longitude']!=0.0){
-          final icon = await getCustomIcon(i+1, hs.searchList[i]['thumbnail']);
+        if(hs.searchList[0]['historyList'][i]['latitude']!= 0.0 && hs.searchList[0]['historyList'][i]['longitude']!=0.0){
+          final icon = await getCustomIcon(i+1, hs.searchList[0]['historyList'][i]['thumbnail']);
           final marker = Marker(
             markerId: MarkerId(DateTime.now().toString()),
-            position: LatLng(hs.searchList[i]['latitude'], hs.searchList[i]['longitude']),
+            position: LatLng(hs.searchList[0]['historyList'][i]['latitude'], hs.searchList[0]['historyList'][i]['longitude']),
             icon: icon,
             onTap: () {
               // 마커 클릭 시 행동

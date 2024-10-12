@@ -24,7 +24,6 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
 
   @override
   void initState() {
-    print('>?>?? ${hs.selectedTagList}');
     super.initState();
   }
   @override
@@ -41,77 +40,75 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
       body: Obx(()=>Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 16),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                hs.selectedTagList[0].containsKey('tagName')
-                    ? Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: gray200),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 16,
-                          height: 16,
-                          decoration: BoxDecoration(
-                              color: Color(int.parse('0xff${hs.selectedTagList[0]['tagColor']}')), // 태그 색깔
-                              shape: BoxShape.circle),
-                          child: Center(
-                            child: Text('#', style: f12whitew500),
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text('${hs.selectedTagList[0]['tagName']}', style: f12gray900w500), // 태그 이름
-                      ],
+            hs.selectedTagList[0].containsKey('tagName')
+                ? Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: gray200),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                          color: Color(int.parse('0xff${hs.selectedTagList[0]['tagColor']}')), // 태그 색깔
+                          shape: BoxShape.circle),
+                      child: Center(
+                        child: Text('#', style: f12whitew500),
+                      ),
                     ),
-                  ),
-                )
-                    : Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: gray200),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width:24,
-                          height: 24,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: CachedNetworkImage(
-                              imageUrl:'${hs.selectedTagList[0]['thumbnail']}',
-                              imageBuilder: (context, imageProvider) => Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.fill
-                                  ),
-                                ),
+                    const SizedBox(width: 4),
+                    Text('${hs.selectedTagList[0]['tagName']}', style: f12gray900w500), // 태그 이름
+                  ],
+                ),
+              ),
+            )
+                : Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: gray200),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width:24,
+                      height: 24,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: CachedNetworkImage(
+                          imageUrl:'${hs.selectedTagList[0]['thumbnail']}',
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.fill
                               ),
-                              // placeholder: (context, url) => const CircularProgressIndicator(),
-                              // errorWidget: (context, url, error) => const Icon(Icons.error),
                             ),
                           ),
+                          // placeholder: (context, url) => const CircularProgressIndicator(),
+                          // errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
-                        const SizedBox(width: 6),
-                        Text('${hs.selectedTagList[0]['nickname']}', style: f12gray900w500), // 태그 이름
-                      ],
+                      ),
                     ),
-                  ),
-                )
-              ],
+                    const SizedBox(width: 6),
+                    Text('${hs.selectedTagList[0]['nickname']}', style: f12gray900w500), // 태그 이름
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 16,),
             Expanded(
@@ -126,7 +123,9 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
                   itemBuilder: (context, index){
                     return GestureDetector(
                       onTap: (){
-                        Get.to(()=>SearchHistoryDetail(selectedIdx: hs.searchList[index]['id']));
+                        Get.to(()=>SearchHistoryDetail(
+                          historyId: hs.searchList[index]['id'],
+                          pageIdx: index));
                       },
                       child: Container(
                         width: 120,
@@ -207,7 +206,6 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
                         ),
                       ),
                     );
-
                   }
               ),
             ),

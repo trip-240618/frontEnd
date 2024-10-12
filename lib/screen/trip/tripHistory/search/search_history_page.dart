@@ -51,7 +51,7 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
         setState(() {});
       },
       child: Scaffold(
-        appBar: BackAppBar(text: '사진 검색', onTap: (){Get.back();}),
+        appBar: BackAppBar(text: '사진 검색', onTap: (){Get.back();},color: Colors.white),
         body: Padding(
           padding: const EdgeInsets.only(top: 20,left: 20, right: 20),
           child: Column(
@@ -237,6 +237,8 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                           GestureDetector(
                             onTap: ()async{
                               selectedIdx = 1;
+                              isColorFilter = false;
+                              selectedColor=null;
                               setState(() {});
                             },
                             child: Container(
