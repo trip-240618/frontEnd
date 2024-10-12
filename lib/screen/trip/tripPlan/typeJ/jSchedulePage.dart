@@ -35,10 +35,11 @@ class _JSchedulePageState extends State<JSchedulePage> {
 
   bool testCheck = false;
   bool testCheck2 = true;
+
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
-      // js.getJPlanList(day, locker)
+      js.getJPlanList(1, false);
       await js.getFlightList();
     });
     super.initState();
@@ -65,7 +66,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Obx(()=>Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -85,9 +86,9 @@ class _JSchedulePageState extends State<JSchedulePage> {
                     children: [
                       selectIdx == index
                           ?  Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
                             width:36,
                             height: 54,
                             decoration: BoxDecoration(
@@ -105,8 +106,8 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                       width: 28,
                                       height: 28,
                                       decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.white
+                                          shape: BoxShape.circle,
+                                          color: Colors.white
                                       ),
                                       child: Center(child: Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f14gray800w700,)))
                                 ],
@@ -116,34 +117,34 @@ class _JSchedulePageState extends State<JSchedulePage> {
                         ],
                       )
                           :  GestureDetector(
-                            onTap:(){
-                             selectIdx = index;
-                             scrollToIndex(index);
-                             setState(() {});
-                            },
-                            child: Container(
-                              width:36,
-                              height: 54,
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 4,top: 4),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f12gray300w600,),
-                                    Spacer(),
-                                    Container(
-                                        width: 28,
-                                        height: 28,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: gray300
-                                        ),
-                                        child: Center(child: Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f14Whitew700,)))
-                                  ],
-                                ),
-                              ),
+                        onTap:(){
+                          selectIdx = index;
+                          scrollToIndex(index);
+                          setState(() {});
+                        },
+                        child: Container(
+                          width:36,
+                          height: 54,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 4,top: 4),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f12gray300w600,),
+                                Spacer(),
+                                Container(
+                                    width: 28,
+                                    height: 28,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: gray300
+                                    ),
+                                    child: Center(child: Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f14Whitew700,)))
+                              ],
                             ),
+                          ),
                         ),
+                      ),
                       const SizedBox(width: 12)
                     ],
                   );
@@ -152,7 +153,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
             ),
           ),
           const SizedBox(height: 15),
-          Obx(()=>Container(
+          Container(
             width: Get.width,
             height: js.isGoogleExpanded.value?154:0,
             child: GoogleMap(
@@ -168,19 +169,19 @@ class _JSchedulePageState extends State<JSchedulePage> {
                 }
               },
             ),
-          )),
+          ),
           GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: (){
-              js.isGoogleExpanded.value = !js.isGoogleExpanded.value;
-            },
+              behavior: HitTestBehavior.opaque,
+              onTap: (){
+                js.isGoogleExpanded.value = !js.isGoogleExpanded.value;
+              },
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(
-                    top: BorderSide(color: gray200),
-                    bottom: BorderSide(color: gray200)
-                  )
+                    color: Colors.white,
+                    border: Border(
+                        top: BorderSide(color: gray200),
+                        bottom: BorderSide(color: gray200)
+                    )
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6),
@@ -195,7 +196,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                 ),
               )
           ),
-          Obx(()=>Expanded(
+          Expanded(
             child: Container(
               color: gray50,
               child: Padding(
@@ -230,7 +231,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                 Get.to(()=>SearchFlight());
                               },
                               child: SvgPicture.asset('assets/icon/plane.svg'))
-                          :
+                              :
                           GestureDetector(
                               onTap: () async {
                                 FlightDialog(context, (){});
@@ -253,7 +254,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                       child: ReorderableListView.builder(
                         physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: 10,
+                        itemCount: js.jPlanList.length,
                         buildDefaultDragHandles: false,
                         itemBuilder: (context,index) {
                           return Column(
@@ -268,15 +269,15 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                     children: [
                                       js.isSorting.value
                                           ? Row(
-                                            children: [
-                                              changeJButton(value: testCheck,onPressed: (){
-                                                testCheck = !testCheck;
-                                                setState(() {});
-                                              }
-                                              ),
-                                              const SizedBox(width: 8,)
-                                            ],
-                                           )
+                                        children: [
+                                          changeJButton(value: testCheck,onPressed: (){
+                                            testCheck = !testCheck;
+                                            setState(() {});
+                                          }
+                                          ),
+                                          const SizedBox(width: 8,)
+                                        ],
+                                      )
                                           : const SizedBox(),
                                       Container(
                                           decoration: BoxDecoration(
@@ -358,9 +359,9 @@ class _JSchedulePageState extends State<JSchedulePage> {
                 ),
               ),
             ),
-          ))
+          )
         ],
-      ),
+      )),
         floatingActionButton: PlusFloatingButton(
           backgroundColor: gray900,
           onPressed: ()  {
