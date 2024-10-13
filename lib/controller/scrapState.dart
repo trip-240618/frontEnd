@@ -47,10 +47,10 @@ class ScrapState extends GetxController{
         /// 기존 이미지를 그대로 유지 text만 변경할 경우, photoList 값은 screen 에서 조절
         /// 기존 이미지를 새로운 이미지 대체할 경우
         print('photoList?${photoList}');
-        if(selectScrapList[0]['hasImage']&&addImgUrl.isNotEmpty) await removeImage(selectScrapList[0]['imageDtos'][0]['imgKey']);
+        if(selectScrapList[0]['hasImage']&&addImgUrl.isNotEmpty) await removeImage(selectScrapList[0]['imageDtos'][0]['imageUrl']);
       }else{
         if(addImgUrl.isNotEmpty)await removeImage(addImgUrl.value);
-        if(selectScrapList[0]['hasImage']) await removeImage(selectScrapList[0]['imageDtos'][0]['imgKey']);
+        if(selectScrapList[0]['hasImage']) await removeImage(selectScrapList[0]['imageDtos'][0]['imageUrl']);
       }
       await apiScrapClient.modifyScrap(
         id,

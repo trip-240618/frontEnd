@@ -26,9 +26,13 @@ class JPlanState extends GetxController{
   /// jplan
   final RxList jPlanList = [].obs; /// jplan data 리스트
 
+
   /// jplan add
   final Rx<DateTime> addSelectedDateTime = DateTime.now().obs;
   final addDate = ''.obs; /// 추가 시킬 때 날짜
+  /// planB jList
+  final RxList planBJList = [].obs; /// plan B j data 리스트
+
   @override
   void onInit() {
     latitude.value = 36.35475233611197;
@@ -71,6 +75,13 @@ class JPlanState extends GetxController{
   /// jplanList 스왑
   Future<void> swapJPlan(Map data)async {
     await apijplanClient.swapJPlan(ts.selectTripList[0]['id'],data);
+  }
+
+  /// planB jList 가져오기
+  Future<void> getPlanBJList(int day, bool locker)async{
+    planBJList.value = await apijplanClient.getPlanBJList(ts.selectTripList[0]['id'], day, locker);
+    print('?? ${planBJList}');
+    planBJList.refresh();
   }
 
   /// 항공권 목록 정보 가져오기
