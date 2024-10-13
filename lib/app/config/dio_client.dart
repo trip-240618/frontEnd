@@ -12,7 +12,6 @@ class DioClient {
     ));
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-
         final prefs = await SharedPreferences.getInstance();
         String accessToken = '${prefs.getString('accessToken')}';
         String refreshToken = '${prefs.getString('refreshToken')}';

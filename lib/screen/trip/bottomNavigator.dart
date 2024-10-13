@@ -170,7 +170,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                           children: [
                             SvgPicture.asset('assets/icon/userIcon.svg', color: gray900,),
                             const SizedBox(width: 6,),
-                            Text('5', style: f14Gray900w700,),
+                            Text('${ts.selectTripList[0]['tripMemberDtoList'].length}', style: f14Gray900w700,),
                             const SizedBox(width: 6,),
                           ],
                         ),

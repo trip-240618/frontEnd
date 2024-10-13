@@ -13,11 +13,12 @@ class JPlanState extends GetxController{
   final Completer<GoogleMapController> mapController = Completer<GoogleMapController>();
   final latitude = 0.0.obs;
   final longitude = 0.0.obs;
-  final isGoogleExpanded = true.obs;
+  final isGoogleExpanded = false.obs;
   final isSorting = false.obs;
   final RxList flightList = [].obs; /// 항공권 저장하는 리스트
 
   final selectedDate = ''.obs; /// 선택된 날짜를 저장하는 값 ex)항공권, 일정 추가 시 선택된 날짜
+  final selectedIdx = 0.obs; /// 선택된 날짜 인덱스
 
   /// AddPlan에서 여행장소 검색 결과를 저장하는 리스트
   final RxList searchLocation = [].obs;
@@ -25,6 +26,10 @@ class JPlanState extends GetxController{
   /// jplan
   final RxList jPlanList = [].obs; /// jplan data 리스트
 
+
+  /// jplan add
+  final Rx<DateTime> addSelectedDateTime = DateTime.now().obs;
+  final addDate = ''.obs; /// 추가 시킬 때 날짜
   /// planB jList
   final RxList planBJList = [].obs; /// plan B j data 리스트
 
@@ -44,13 +49,32 @@ class JPlanState extends GetxController{
   /// jplanList 가져오기
   Future<void> getJPlanList(int day ,bool locker)async{
     jPlanList.value = await apijplanClient.getJPlanList(ts.selectTripList[0]['id'], day, locker);
+
+    jPlanList.forEach((day) {
+      day['planList'] = day['planList'].map((plan) {
+        plan['checked'] = false;
+        plan['checked2'] = false;
+        return plan;
+      }).toList();
+    });
+    print('?? ${jPlanList}');
     jPlanList.refresh();
   }
 
   /// jplanList 추가
   Future<void> addJPlanList(Map data)async{
-    jPlanList.value = await apijplanClient.addJPlanList(ts.selectTripList[0]['id'],data);
+    await apijplanClient.addJPlanList(ts.selectTripList[0]['id'],data);
     jPlanList.refresh();
+  }
+
+  /// jplanList 삭제
+  Future<void> deleteJPlanList(int planId)async{
+    await apijplanClient.deleteJPlan(ts.selectTripList[0]['id'], planId);
+    jPlanList.refresh();
+  }
+  /// jplanList 스왑
+  Future<void> swapJPlan(Map data)async {
+    await apijplanClient.swapJPlan(ts.selectTripList[0]['id'],data);
   }
 
   /// planB jList 가져오기
@@ -98,5 +122,8 @@ class JPlanState extends GetxController{
       flightList[0]['arrivalAirport_kr'],
     );
   }
+
+
+
 
 }

@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-
-
 /// 원형 캐시드네트워크 이미지
 class CircleImage extends StatelessWidget {
   final String imageUrl;
