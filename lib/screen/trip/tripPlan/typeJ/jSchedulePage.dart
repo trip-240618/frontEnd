@@ -12,6 +12,7 @@ import '../../../../app/api/flightApi.dart';
 import '../../../../app/config/dio_client.dart';
 import '../../../../component/button.dart';
 import '../../../../component/dialog/dialog.dart';
+import '../../../../controller/socketState.dart';
 import '../../../../util/font.dart';
 import '../../../../util/tooltip_shape.dart';
 import 'addPlan/addPlanPage.dart';
@@ -28,17 +29,19 @@ class _JSchedulePageState extends State<JSchedulePage> {
   final apiFlightClient = ApiFlightClient(DioClient());
   final js = Get.put(JPlanState());
   final ts = Get.put(TripState());
-  int selectIdx = 0;
+  final socket = Get.put(SocketState());
+  // int selectIdx = 0;
   ScrollController scrollController = ScrollController();
   Set<Marker> _markers = {};
   bool isSorting = false;
-
   bool testCheck = false;
   bool testCheck2 = true;
 
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
+      js.selectedIdx.value = 0;
+      js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: 0))}';
       js.getJPlanList(1, false);
       await js.getFlightList();
     });
@@ -84,7 +87,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                 itemBuilder: (context, index) {
                   return Row(
                     children: [
-                      selectIdx == index
+                      js.selectedIdx.value == index
                           ?  Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -118,8 +121,11 @@ class _JSchedulePageState extends State<JSchedulePage> {
                       )
                           :  GestureDetector(
                         onTap:(){
-                          selectIdx = index;
+                          js.selectedIdx.value = index;
                           scrollToIndex(index);
+                          js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index))}';
+                          js.getJPlanList(index+1, false);
+                          print('?? 선택된 날짜 ${js.selectedIdx.value}');
                           setState(() {});
                         },
                         child: Container(
@@ -155,7 +161,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
           const SizedBox(height: 15),
           Container(
             width: Get.width,
-            height: js.isGoogleExpanded.value?154:0,
+            height: js.isGoogleExpanded.value?300:154,
             child: GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: LatLng(js.latitude.value, js.longitude.value),
@@ -172,8 +178,12 @@ class _JSchedulePageState extends State<JSchedulePage> {
           ),
           GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: (){
-                js.isGoogleExpanded.value = !js.isGoogleExpanded.value;
+              onVerticalDragUpdate: (details) {
+                if (details.delta.dy < 0) {
+                  js.isGoogleExpanded.value = false;
+                } else if (details.delta.dy > 0) {
+                  js.isGoogleExpanded.value = true;
+                }
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -184,7 +194,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                     )
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Center(
                       child: Container(
                         width: 54,
@@ -197,64 +207,61 @@ class _JSchedulePageState extends State<JSchedulePage> {
               )
           ),
           Expanded(
-            child: Container(
-              color: gray50,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
                 child: Column(
                   children: [
                     const SizedBox(height: 10,),
-                    GestureDetector(
-                      onTap: (){
-                        js.isSorting.value = !js.isSorting.value;
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Color(ts.selectTripList[0]['labelColor']),
-                                  width: 1.5, // 1.5px 두께
-                                ),
-                                borderRadius: BorderRadius.circular(100)
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
-                              child: Text('Day ${selectIdx+1}',style: f12mainw700(Color(ts.selectTripList[0]['labelColor'])),),
-                            ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Color(ts.selectTripList[0]['labelColor']),
+                                width: 1.5, // 1.5px 두께
+                              ),
+                              borderRadius: BorderRadius.circular(100)
                           ),
-                          Spacer(),
-                          js.flightList.isEmpty?
-                          GestureDetector(
-                              onTap: (){
-                                Get.to(()=>SearchFlight());
-                              },
-                              child: SvgPicture.asset('assets/icon/plane.svg'))
-                              :
-                          GestureDetector(
-                              onTap: () async {
-                                FlightDialog(context, (){});
-                                //Get.to(()=>FlightView());
-                              },
-                              child: SvgPicture.asset('assets/icon/plane.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),)),
-                          const SizedBox(width: 8,),
-                          SvgPicture.asset('assets/icon/change.svg',colorFilter:
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical:2,horizontal: 10),
+                            child: Text('Day ${js.selectedIdx.value+1}',style: f12mainw700(Color(ts.selectTripList[0]['labelColor'])),),
+                          ),
+                        ),
+                        Spacer(),
+                        js.flightList.isEmpty?
+                        GestureDetector(
+                            onTap: (){
+                              Get.to(()=>SearchFlight());
+                            },
+                            child: SvgPicture.asset('assets/icon/plane.svg'))
+                            : GestureDetector(
+                            onTap: () async {
+                              FlightDialog(context, (){});
+                              //Get.to(()=>FlightView());
+                            },
+                            child: SvgPicture.asset('assets/icon/plane.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),)),
+                        const SizedBox(width: 8,),
+                        GestureDetector(
+                          onTap: (){
+                            socket.addEditor(1);
+                            js.isSorting.value = !js.isSorting.value;
+                          },
+                          child: SvgPicture.asset('assets/icon/change.svg',colorFilter:
                           ColorFilter.mode(
                             js.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
                             BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
                           ),),
-                          // const SizedBox(width: 4,),
-                          // Text('순서변경',style: js.isSorting.value?f12Gray600w500:f12Gray400w500,)
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 9),
                     Expanded(
-                      child: ReorderableListView.builder(
+                      child: js.jPlanList.isEmpty?const SizedBox():ReorderableListView.builder(
                         physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: js.jPlanList.length,
+                        itemCount: js.jPlanList[0]['planList'].length,
                         buildDefaultDragHandles: false,
                         itemBuilder: (context,index) {
                           return Column(
@@ -262,79 +269,242 @@ class _JSchedulePageState extends State<JSchedulePage> {
                             children: [
                               ReorderableDragStartListener(
                                 index:index,
-                                enabled: js.isSorting.value?true:false,
-                                child: Container(
-                                  width:Get.width,
-                                  child: Row(
-                                    children: [
-                                      js.isSorting.value
-                                          ? Row(
-                                        children: [
-                                          changeJButton(value: testCheck,onPressed: (){
-                                            testCheck = !testCheck;
-                                            setState(() {});
-                                          }
-                                          ),
-                                          const SizedBox(width: 8,)
-                                        ],
-                                      )
-                                          : const SizedBox(),
-                                      Container(
-                                          decoration: BoxDecoration(
-                                            color: gray200,
-                                            border: Border.all(color: gray200),
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(4),    // 좌측 상단 반경 4px
-                                              topRight: Radius.circular(0),   // 우측 상단 반경 0px
-                                              bottomRight: Radius.circular(0),// 우측 하단 반경 0px
-                                              bottomLeft: Radius.circular(4), // 좌측 하단 반경 4px
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 13.5,vertical: 16),
-                                            child: Text('07:20',style: f12Gray800w500,),
-                                          )),
-                                      Expanded(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(color: gray200),
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(0),    // 좌측 상단 반경 4px
-                                              topRight: Radius.circular(4),   // 우측 상단 반경 0px
-                                              bottomRight: Radius.circular(4),// 우측 하단 반경 0px
-                                              bottomLeft: Radius.circular(0), // 좌측 하단 반경 4px
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 14),
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                PopupMenuButton(
-                                                  offset: Offset(-34, 35),
-                                                  shape: TooltipShape(borderColor:Color(ts.selectTripList[0]['labelColor']),borderWidth: 1),
-                                                  child: SvgPicture.asset('assets/icon/memo.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
-                                                  color: Colors.white,
-                                                  itemBuilder: (_) => <PopupMenuEntry>[
-                                                    PopupMenuItem(
-                                                        enabled: false,
-                                                        padding:EdgeInsets.only(left: 10),
-                                                        child: Text('31231ㅇㄴㅁㅇㅁㄴㅇㅁㅇㅁㅇㅁㄴㅇㄴㅁㅇㅁㄴdasdasdasdasdasdasdasdasdasdasda',style: f12mainw600(Color(ts.selectTripList[0]['labelColor'])))
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizedBox(width: 4,),
-                                                Text('항공편 KE371 도쿄행 인천 출발',style: f12Gray800w500,),
-                                                Spacer(),
-                                                SvgPicture.asset('assets/icon/columnEllipsis.svg')
-                                              ],
-                                            ),
-                                          ),
+                                enabled: false,
+                                child: Row(
+                                  children: [
+                                    js.isSorting.value
+                                        ? changeJButton(
+                                        value: js.jPlanList[0]['planList'][index]['checked'],
+                                        onPressed: (){
+                                          js.jPlanList[0]['planList'] = js.jPlanList[0]['planList'].asMap().map((i, plan) {
+                                            return MapEntry(i, {
+                                              ...plan,
+                                              'checked': i == index ? true : false,
+                                            });
+                                          }).values.toList();
+                                          js.jPlanList.refresh();
+                                        }
+                                        )
+                                        : const SizedBox(),
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          // border: Border.all(color: gray900),
+                                          borderRadius: BorderRadius.circular(4)
                                         ),
-                                      )
-                                    ],
-                                  ),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                                width:58,
+                                                height:50,
+                                                decoration: BoxDecoration(
+                                                  color: gray200,
+                                                  border: Border.all(color: gray200),
+                                                  borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(4),    // 좌측 상단 반경 4px
+                                                    topRight: Radius.circular(0),   // 우측 상단 반경 0px
+                                                    bottomRight: Radius.circular(0),// 우측 하단 반경 0px
+                                                    bottomLeft: Radius.circular(4), // 좌측 하단 반경 4px
+                                                  ),
+                                                ),
+                                                child: Center(child: Text('${js.jPlanList[0]['planList'][index]['startTime'].toString().substring(0,5)}',style: f12Gray800w500,))),
+                                            Expanded(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(color: gray200),
+                                                  borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(0),    // 좌측 상단 반경 4px
+                                                    topRight: Radius.circular(4),   // 우측 상단 반경 0px
+                                                    bottomRight: Radius.circular(4),// 우측 하단 반경 0px
+                                                    bottomLeft: Radius.circular(0), // 좌측 하단 반경 4px
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(left: 10),
+                                                  child: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      js.jPlanList[0]['planList'][index]['memo']!=''?PopupMenuButton(
+                                                        offset: Offset(-34, 35),
+                                                        shape: TooltipShape(borderColor:Color(ts.selectTripList[0]['labelColor']),borderWidth: 1),
+                                                        child: SvgPicture.asset('assets/icon/memo.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
+                                                        color: Colors.white,
+                                                        itemBuilder: (_) => <PopupMenuEntry>[
+                                                          PopupMenuItem(
+                                                              enabled: false,
+                                                              padding:EdgeInsets.only(left: 10),
+                                                              child: Text('${js.jPlanList[0]['planList'][index]['memo']}',style: f12mainw600(Color(ts.selectTripList[0]['labelColor'])))
+                                                          ),
+                                                        ],
+                                                      ):const SizedBox(),
+                                                      const SizedBox(width: 4,),
+                                                      Expanded(child: Text('${js.jPlanList[0]['planList'][index]['title']}',style: f12Gray800w500,overflow: TextOverflow.ellipsis,)),
+                                                      PopupMenuButton<int>(
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(4),
+                                                        ),
+                                                        offset: const Offset(-20, 40),
+                                                        padding: EdgeInsets.zero,
+                                                        constraints: BoxConstraints(maxWidth: 125),
+                                                        menuPadding: EdgeInsets.zero,
+                                                        shadowColor: Colors.black.withOpacity(0.4),
+                                                        icon: SvgPicture.asset('assets/icon/columnEllipsis.svg',fit: BoxFit.none,),
+                                                        color: gray50,
+                                                        itemBuilder: (context) => <PopupMenuEntry<int>>[
+                                                          PopupMenuItem<int>(
+                                                            padding: EdgeInsets.zero,
+                                                            value: 1,
+                                                            child: Column(
+                                                              children: [
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left: 12, right: 12),
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    children: [
+                                                                      SvgPicture.asset(
+                                                                        'assets/icon/pencil.svg',
+                                                                        colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                                                        fit: BoxFit.none,
+                                                                      ),
+                                                                      const SizedBox(width: 10),
+                                                                      Text(
+                                                                        '일정 수정',
+                                                                        style: f14Gray800w500,
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          const PopupMenuDivider(height: 1),
+                                                          PopupMenuItem<int>(
+                                                            onTap: (){
+
+                                                              Get.back();
+                                                            },
+                                                            padding: EdgeInsets.zero,
+                                                            value: 2,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children: [
+                                                                  Container(
+                                                                    width:24,
+                                                                    height:24,
+                                                                    child: SvgPicture.asset(
+                                                                      'assets/icon/trashCan.svg',
+                                                                      fit: BoxFit.none,
+                                                                      colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(width: 10),
+                                                                  Text(
+                                                                    '일정 삭제',
+                                                                    style: f14Gray800w500,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          const PopupMenuDivider(height: 1),
+                                                          PopupMenuItem<int>(
+                                                            padding: EdgeInsets.zero,
+                                                            value: 3,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children: [
+                                                                  Container(
+                                                                    width:24,
+                                                                    height:24,
+                                                                    child: SvgPicture.asset(
+                                                                      'assets/bottomNavi/locker.svg',
+                                                                      fit: BoxFit.none,
+                                                                      colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(width: 10),
+                                                                  Text(
+                                                                    '보관함 이동',
+                                                                    style: f14Gray800w500,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                      // SvgPicture.asset('assets/icon/columnEllipsis.svg')
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                    // Container(
+                                    //     width:58,
+                                    //     height:50,
+                                    //     decoration: BoxDecoration(
+                                    //       color: gray200,
+                                    //       border: Border.all(color: gray200),
+                                    //       borderRadius: BorderRadius.only(
+                                    //         topLeft: Radius.circular(4),    // 좌측 상단 반경 4px
+                                    //         topRight: Radius.circular(0),   // 우측 상단 반경 0px
+                                    //         bottomRight: Radius.circular(0),// 우측 하단 반경 0px
+                                    //         bottomLeft: Radius.circular(4), // 좌측 하단 반경 4px
+                                    //       ),
+                                    //     ),
+                                    //     child: Center(child: Text('${js.jPlanList[0]['planList'][index]['startTime'].toString().substring(0,5)}',style: f12Gray800w500,))),
+                                    // Expanded(
+                                    //   child: Container(
+                                    //     decoration: BoxDecoration(
+                                    //       color: Colors.white,
+                                    //       border: Border.all(color: gray200),
+                                    //       borderRadius: BorderRadius.only(
+                                    //         topLeft: Radius.circular(0),    // 좌측 상단 반경 4px
+                                    //         topRight: Radius.circular(4),   // 우측 상단 반경 0px
+                                    //         bottomRight: Radius.circular(4),// 우측 하단 반경 0px
+                                    //         bottomLeft: Radius.circular(0), // 좌측 하단 반경 4px
+                                    //       ),
+                                    //     ),
+                                    //     child: Padding(
+                                    //       padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 14),
+                                    //       child: Row(
+                                    //         crossAxisAlignment: CrossAxisAlignment.center,
+                                    //         children: [
+                                    //           js.jPlanList[0]['planList'][index]['memo']!=''?PopupMenuButton(
+                                    //             offset: Offset(-34, 35),
+                                    //             shape: TooltipShape(borderColor:Color(ts.selectTripList[0]['labelColor']),borderWidth: 1),
+                                    //             child: SvgPicture.asset('assets/icon/memo.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
+                                    //             color: Colors.white,
+                                    //             itemBuilder: (_) => <PopupMenuEntry>[
+                                    //               PopupMenuItem(
+                                    //                   enabled: false,
+                                    //                   padding:EdgeInsets.only(left: 10),
+                                    //                   child: Text('${js.jPlanList[0]['planList'][index]['memo']}',style: f12mainw600(Color(ts.selectTripList[0]['labelColor'])))
+                                    //               ),
+                                    //             ],
+                                    //           ):const SizedBox(),
+                                    //           const SizedBox(width: 4,),
+                                    //           Text('${js.jPlanList[0]['planList'][index]['title']}',style: f12Gray800w500,),
+                                    //           Spacer(),
+                                    //           SvgPicture.asset('assets/icon/columnEllipsis.svg')
+                                    //         ],
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // )
+                                  ],
                                 ),
                               ),
                               const SizedBox(height: 4)
@@ -362,11 +532,11 @@ class _JSchedulePageState extends State<JSchedulePage> {
           )
         ],
       )),
-        floatingActionButton: PlusFloatingButton(
-          backgroundColor: gray900,
-          onPressed: ()  {
-            Get.to(()=>AddPlanPage());
-          },)
+        // floatingActionButton: PlusFloatingButton(
+        //   backgroundColor: gray900,
+        //   onPressed: ()  {
+        //     Get.to(()=>AddPlanPage());
+        //   },)
     );
   }
 }

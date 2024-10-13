@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/main/tripAdd/tirpDirectSearch.dart';
 import '../screen/main/tripAdd/tripSearch.dart';
@@ -125,7 +126,8 @@ void bottomModel(BuildContext context) {
       });
   }
 
-void timeBottomModel(BuildContext context, DateTime selectedTime) {
+void timeBottomModel(BuildContext context) {
+  final js = Get.put(JPlanState());
   showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -163,24 +165,20 @@ void timeBottomModel(BuildContext context, DateTime selectedTime) {
                                 child: SvgPicture.asset('assets/icon/close.svg', color: Colors.white,)),
                           ],
                         ),),
-
                     ),
                     Expanded(
                       child: Container(
                         width: Get.width,
                         child: CupertinoDatePicker(
                           mode: CupertinoDatePickerMode.time,
-                          initialDateTime: selectedTime,
+                          initialDateTime: js.addSelectedDateTime.value,
                           onDateTimeChanged: (DateTime newDateTime) {
-                            setState(() {
-                              selectedTime = newDateTime;
-                            });
+                            js.addSelectedDateTime.value = newDateTime;
                           },
                           use24hFormat: false,
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -196,7 +194,6 @@ void sendBottomModal(BuildContext context,String inviteCode) {
   fToast.init(context);
   showModalBottomSheet(
       context: context,
-
       builder: (builder) {
         return StatefulBuilder(
           builder: (context, StateSetter setState) {

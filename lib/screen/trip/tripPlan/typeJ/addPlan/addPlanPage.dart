@@ -12,11 +12,10 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/googleMap_searchPlace.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchTripPlace.dart';
 import '../../../../../component/bottomModals.dart';
+import '../../../../../component/dialog/daySelect.dart';
 import '../../../../../controller/jPlanState.dart';
 import '../../../../../util/color.dart';
 import '../../../../../util/font.dart';
-
-
 class AddPlanPage extends StatefulWidget {
   const AddPlanPage({super.key});
 
@@ -34,14 +33,18 @@ class _AddPlanPageState extends State<AddPlanPage> {
   DateTime now = DateTime.now();
   TextEditingController planTitleCon = TextEditingController();
   TextEditingController memoCon = TextEditingController();
-  String selectDay = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.now());
-  String selectTime = DateFormat('a hh:mm', 'ko_KR').format(DateTime.now());
+  String selectTime = DateFormat('a hh:mm', 'ko_KR').format(DateTime.now()); /// 시간
 
   @override
   void initState() {
+    js.addDate.value = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.parse('${js.selectedDate.value}'));
+    js.addSelectedDateTime.value = DateTime.now();
+    Future.delayed(Duration.zero,()async{
+    await _setCustomMarker();
+    });
     super.initState();
-    _setCustomMarker();
   }
+
   Future<void> _setCustomMarker() async {
     customIcon = await BitmapDescriptor.fromAssetImage(
       ImageConfiguration(),
@@ -50,6 +53,11 @@ class _AddPlanPageState extends State<AddPlanPage> {
     setState(() {});
   }
 
+  @override
+  void dispose() {
+    js.searchLocation.clear();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -65,7 +73,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
           js.searchLocation.clear();
           Get.back();
         }),
-        body: SingleChildScrollView(
+        body: Obx(()=>SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 44),
             child: Column(
@@ -87,7 +95,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
                       children: [
                         GestureDetector(
                           onTap: (){
-                            print('달력 클릭');
+                            SelectDayBottomSheet2(context,'항공편의 출발 날짜를 선택해 주세요', (){});
                           },
                           child: Row(
                             children: [
@@ -100,14 +108,14 @@ class _AddPlanPageState extends State<AddPlanPage> {
                                   colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
                                 ),
                               ),
-                              Text(selectDay, style: f15gray800w500,),
+                              Text('${js.addDate}', style: f15gray800w500,),
                             ],
                           ),
                         ),
                         const SizedBox(width: 12,),
                         GestureDetector(
                           onTap: (){
-                            timeBottomModel(context, DateTime.now());
+                            timeBottomModel(context);
                           },
                           child: Row(
                             children: [
@@ -118,7 +126,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
                                 ),
                               ),
                               const SizedBox(width: 4,),
-                              Text(selectTime, style: f15gray800w500),
+                              Text('${DateFormat('a hh:mm', 'ko_KR').format(js.addSelectedDateTime.value)}', style: f15gray800w500),
                             ],
                           ),
                         )
@@ -163,7 +171,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
                               js.searchLocation.value = [];
                             },
                             child: SvgPicture.asset(
-                              'assets/icon/smallXRound.svg', fit: BoxFit.none, colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)
+                                'assets/icon/smallXRound.svg', fit: BoxFit.none, colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)
                             ),
                           )
                         ],
@@ -193,11 +201,11 @@ class _AddPlanPageState extends State<AddPlanPage> {
                     },
                     markers: {
                       Marker(
-                          markerId: MarkerId('${js.searchLocation[0]['displayName']['text']}'),
-                          position: LatLng(double.parse('${js.searchLocation[0]['location']['latitude']}'), double.parse('${js.searchLocation[0]['location']['longitude']}')),
-                          onTap: (){
-                            //navigateTo(latitude,longitude, '고기극장');
-                          },
+                        markerId: MarkerId('${js.searchLocation[0]['displayName']['text']}'),
+                        position: LatLng(double.parse('${js.searchLocation[0]['location']['latitude']}'), double.parse('${js.searchLocation[0]['location']['longitude']}')),
+                        onTap: (){
+                          //navigateTo(latitude,longitude, '고기극장');
+                        },
                         icon: customIcon!,
                       )
                     },
@@ -314,23 +322,27 @@ class _AddPlanPageState extends State<AddPlanPage> {
               ],
             ),
           ),
-        ),
+        )),
         bottomSheet: Container(
           color: Colors.white,
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
             child: BlackBottomContainer(onTap: (){
+              DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']); /// 시작 날짜
+              DateTime selectedDate = DateTime.parse(js.addDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
+              int index = selectedDate.difference(startDate).inDays;
               Map data = {
-                "dayAfterStart": 1,
-                "startTime": "14:30",
-                "title": "호텔 체크인 하기",
-                "place": "도쿄 디즈니",
-                "memo": "3시 이후에 체크인 가능",
-                "latitude": 37.4220541,
-                "longitude": -122.08532419999999,
+                "dayAfterStart": index+1,
+                "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
+                "title": planTitleCon.text,
+                "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
+                "memo": memoCon.text,
+                "latitude":js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['latitude']:'',
+                "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
                 "locker": false
               };
               js.addJPlanList(data);
+              Get.back();
             }, title: '저장'),
           ),
         ),
