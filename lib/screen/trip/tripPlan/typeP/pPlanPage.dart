@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:tripStory/controller/pPlanState.dart';
+import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
@@ -15,7 +17,8 @@ class PPlanPage extends StatefulWidget {
 }
 
 class _PPlanPageState extends State<PPlanPage> {
-  Color mainColor = Color(0xff5E91EE);
+  final ts = Get.put(TripState());
+  final ps = Get.put(PPlanState());
   FocusNode _focusNode = FocusNode();
   ScrollController scrollController = ScrollController();
   bool isEdit = false;
@@ -38,6 +41,11 @@ class _PPlanPageState extends State<PPlanPage> {
 
   @override
   void initState() {
+    Future.delayed(Duration.zero,()async{
+      await ps.getPPlanList(false);
+      print('p 플랜리스트는?${ps.pPlanList.value}');
+    });
+
     dayDifference = endDay.difference(startDay).inDays + 1;
     print('${dayDifference}');
     dateList = generateDateRange(startDay, endDay);
@@ -74,14 +82,6 @@ class _PPlanPageState extends State<PPlanPage> {
     print('차이???${difference.inDays}');
     return (difference.inDays)+1;
   }
-
-  /// yyyy.MM.dd 포멧터
-  String customDateFormatter1(String dateString){
-    DateTime date = DateTime.parse(dateString);
-    String formattedDate =DateFormat('yyyy.MM.dd', 'ko_KR').format(date);
-    return formattedDate;
-  }
-
 
   /// M월/d일(E) 포멧터
   String customDateFormatter2(String dateString){
@@ -260,11 +260,11 @@ class _PPlanPageState extends State<PPlanPage> {
                   physics: const ClampingScrollPhysics(),
                   itemBuilder: (BuildContext context, int index) {
                     return '${plans[index]['day']}'.contains('Day')?
-                      /// (+) Day
-                      Column(
+                    /// (+) Day
+                    Column(
                       key: Key('${index}'),
                       children: [
-                       Container(
+                        Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border(
@@ -280,28 +280,28 @@ class _PPlanPageState extends State<PPlanPage> {
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       border: Border.all(
-                                        color: Color(0xff5E91EE), width: 1.5
+                                          color: Color(ts.selectTripList[0]['labelColor']), width: 1.5
                                       ),
                                       borderRadius: BorderRadius.circular(100)
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 12),
-                                    child: Text(plans[index]['day'], style: f12mainw700(Color(0xff5E91EE)),),
+                                    child: Text(plans[index]['day'], style: f12mainw700(Color(ts.selectTripList[0]['labelColor']),),),
                                   ),
                                 ),
                                 const SizedBox(width: 6,),
                                 Text(customDateFormatter2('${plans[index]['date']}'), style: f14Gray800w500,),
                                 Spacer(),
                                 GestureDetector(
-                                    onTap: (){
-                                      print('클릭클릭');
-                                      isEdit = true;
-                                      _focusNode.requestFocus();
-                                      //addPlan(index);
-                                      setState(() {
+                                  onTap: (){
+                                    print('클릭클릭');
+                                    isEdit = true;
+                                    _focusNode.requestFocus();
+                                    //addPlan(index);
+                                    setState(() {
 
-                                      });
-                                    }, child: isEdit?SvgPicture.asset('assets/icon/disabledRoundPlus.svg'):SvgPicture.asset('assets/icon/enabledRoundPlus.svg'),),
+                                    });
+                                  }, child: isEdit?SvgPicture.asset('assets/icon/disabledRoundPlus.svg'):SvgPicture.asset('assets/icon/enabledRoundPlus.svg'),),
                               ],
                             ),
                           ),
@@ -310,100 +310,100 @@ class _PPlanPageState extends State<PPlanPage> {
 
                       ],
                     ):
-                        /// 플랜리스트
-                        Column(
-                          key: Key('${index}'),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 12),
-                              child:
-                              /// 새롭게 추가되는 인덱스 일 경우
-                              addIndex == index?
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: (){
-                                      plans[index]['checked'] = !plans[index]['checked'];
-                                      setState(() {
-                                      });
-                                    },
-                                    child: SvgPicture.asset(
-                                      plans[index]['checked']
-                                          ? 'assets/icon/checked.svg'
-                                          : 'assets/icon/unchecked.svg',
+                    /// 플랜리스트
+                    Column(
+                      key: Key('${index}'),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 12),
+                          child:
+                          /// 새롭게 추가되는 인덱스 일 경우
+                          addIndex == index?
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: (){
+                                  plans[index]['checked'] = !plans[index]['checked'];
+                                  setState(() {
+                                  });
+                                },
+                                child: SvgPicture.asset(
+                                  plans[index]['checked']
+                                      ? 'assets/icon/checked.svg'
+                                      : 'assets/icon/unchecked.svg',
+                                ),
+                              ),
+                              const SizedBox(width: 12,),
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _controller,
+                                  focusNode: _focusNode,
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(6),
+                                      borderSide: BorderSide(width: 1.5, color: Color(0xffEBEBEB)),
                                     ),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(color: Color(0xff3648EB))),
+                                    contentPadding:
+                                    EdgeInsets.only(top: 15, bottom: 15, left: 13, right: 13),
+                                    hintText: '일정을 입력해주세요',
                                   ),
-                                  const SizedBox(width: 12,),
-                                  Expanded(
-                                    child: TextFormField(
-                                          controller: _controller,
-                                          focusNode: _focusNode,
-                                        decoration: InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(6),
-                                            borderSide: BorderSide(width: 1.5, color: Color(0xffEBEBEB)),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(6),
-                                              borderSide: BorderSide(color: Color(0xff3648EB))),
-                                          contentPadding:
-                                          EdgeInsets.only(top: 15, bottom: 15, left: 13, right: 13),
-                                          hintText: '일정을 입력해주세요',
-                                        ),
-                                      onChanged:  (value) {
-                                        setState(() {
-                                          plans[index]['content'] = value;
-                                        });
-                                      },
-                                      onEditingComplete: () {
-                                        // _saveToDatabase();
-                                      },
-                                        ),
-                                  ),
-                                  Container(
-                                      height: 20,
-                                      width: 20,
-                                      child: SvgPicture.asset('assets/icon/ellipsis.svg')),
-                                ],
-                              ):Row(children: [
-                                GestureDetector(
-                                  onTap: (){
-                                    plans[index]['checked'] = !plans[index]['checked'];
+                                  onChanged:  (value) {
                                     setState(() {
+                                      plans[index]['content'] = value;
                                     });
                                   },
-                                  child: plans[index]['checked']
-                                      ? Container(
-                                          width: 20,
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(2),
-                                            color: mainColor,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(left: 5, right: 5, top: 7, bottom: 6),
-                                            child: SvgPicture.asset(
-                                              'assets/icon/check2.svg',
-                                            ),
-                                          ),
-                                  )
-                                      : SvgPicture.asset('assets/icon/unchecked.svg',),
+                                  onEditingComplete: () {
+                                    // _saveToDatabase();
+                                  },
                                 ),
-                                const SizedBox(width: 8,),
-                                ReorderableDragStartListener(
-                                    index : index,
-                                    child: Text('${plans[index]['content']}${index}',style: f14Gray800w500,)),
-                                Spacer(),
-                                Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 9),
-                                      child: SvgPicture.asset('assets/icon/rowEllipsis.svg'),
-                                    )),
-                              ],),
+                              ),
+                              Container(
+                                  height: 20,
+                                  width: 20,
+                                  child: SvgPicture.asset('assets/icon/ellipsis.svg')),
+                            ],
+                          ):Row(children: [
+                            GestureDetector(
+                              onTap: (){
+                                plans[index]['checked'] = !plans[index]['checked'];
+                                setState(() {
+                                });
+                              },
+                              child: plans[index]['checked']
+                                  ? Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(2),
+                                  color: Color(ts.selectTripList[0]['labelColor']),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 5, right: 5, top: 7, bottom: 6),
+                                  child: SvgPicture.asset(
+                                    'assets/icon/check2.svg',
+                                  ),
+                                ),
+                              )
+                                  : SvgPicture.asset('assets/icon/unchecked.svg',),
                             ),
-                            const SizedBox(height: 12,),
-                          ],
-                        );
+                            const SizedBox(width: 8,),
+                            ReorderableDragStartListener(
+                                index : index,
+                                child: Text('${plans[index]['content']}${index}',style: f14Gray800w500,)),
+                            Spacer(),
+                            Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 9),
+                                  child: SvgPicture.asset('assets/icon/rowEllipsis.svg'),
+                                )),
+                          ],),
+                        ),
+                        const SizedBox(height: 12,),
+                      ],
+                    );
                   },
                   onReorder: (int oldIndex, int newIndex) {
                     setState(() {
@@ -464,8 +464,8 @@ class _PPlanPageState extends State<PPlanPage> {
               width: Get.width,
               decoration: BoxDecoration(
                 color: gray50,
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color: gray200),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: gray200),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -476,7 +476,7 @@ class _PPlanPageState extends State<PPlanPage> {
                         onChanged: (con){
                           setState(() {});
                         },
-                        cursorColor: mainColor,
+                        cursorColor: Color(ts.selectTripList[0]['labelColor']),
                         decoration: InputDecoration(
                           isDense: true,
                           contentPadding: EdgeInsets.zero,
@@ -500,7 +500,11 @@ class _PPlanPageState extends State<PPlanPage> {
                     Text('${_controller.text.length}', style: _controller.text.length>0?f11Gray800w600:f11Gray400w600,),
                     Text('/18 ', style: f11Gray400w600,),
                     const SizedBox(width: 8,),
-                    SvgPicture.asset('assets/icon/roundArrowRight.svg')
+                    GestureDetector(
+                        onTap: () async {
+                          await ps.addPPlanList(_controller.text, 2, false);
+                        },
+                        child: SvgPicture.asset('assets/icon/roundArrowRight.svg'))
                   ],
                 ),
               ),
