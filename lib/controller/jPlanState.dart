@@ -14,7 +14,7 @@ class JPlanState extends GetxController{
   final latitude = 0.0.obs;
   final longitude = 0.0.obs;
   final isGoogleExpanded = false.obs;
-  final isSorting = false.obs;
+  final isSorting = false.obs; /// 수정 권한 버튼
   final RxList flightList = [].obs; /// 항공권 저장하는 리스트
 
   final selectedDate = ''.obs; /// 선택된 날짜를 저장하는 값 ex)항공권, 일정 추가 시 선택된 날짜
@@ -25,13 +25,15 @@ class JPlanState extends GetxController{
 
   /// jplan
   final RxList jPlanList = [].obs; /// jplan data 리스트
-
+  final RxMap selectJplan = {}.obs; /// 선택된 jplan 리스트
 
   /// jplan add
   final Rx<DateTime> addSelectedDateTime = DateTime.now().obs;
   final addDate = ''.obs; /// 추가 시킬 때 날짜
+  final editDate = ''.obs; /// 수정 할 때 날짜 변수
   /// planB jList
   final RxList planBJList = [].obs; /// plan B j data 리스트
+  final RxMap firstSwapList = {}.obs; /// 스왑사용시 첫번째로 값 넣는곳
 
   @override
   void onInit() {
@@ -49,7 +51,6 @@ class JPlanState extends GetxController{
   /// jplanList 가져오기
   Future<void> getJPlanList(int day ,bool locker)async{
     jPlanList.value = await apijplanClient.getJPlanList(ts.selectTripList[0]['id'], day, locker);
-
     jPlanList.forEach((day) {
       day['planList'] = day['planList'].map((plan) {
         plan['checked'] = false;
@@ -66,7 +67,11 @@ class JPlanState extends GetxController{
     await apijplanClient.addJPlanList(ts.selectTripList[0]['id'],data);
     jPlanList.refresh();
   }
-
+  /// jplanList 수정
+  Future<void> editJPlanList(Map data)async{
+    await apijplanClient.editJPlanList(ts.selectTripList[0]['id'],data);
+    jPlanList.refresh();
+  }
   /// jplanList 삭제
   Future<void> deleteJPlanList(int planId)async{
     await apijplanClient.deleteJPlan(ts.selectTripList[0]['id'], planId);

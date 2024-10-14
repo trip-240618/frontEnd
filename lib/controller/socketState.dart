@@ -54,16 +54,31 @@ class SocketState extends GetxController{
       destination: '/topic/api/trip/j/${ts.selectTripList[0]['id']}',
       callback: (frame) {
         Map<String, dynamic> result = json.decode(frame.body!);
-        print('?? ${result}');
-        if(result['command']=='create'){
-          print("dasdsadsaa ${(js.selectedIdx.value)+1 }");
-          if((js.selectedIdx.value)+1 == result['data']['dayAfterStart']){
-            js.jPlanList[0]['planList'].add(result['data']);
-        }
-          // if(changed){
-          //   var element = list.removeAt(result['data'][0]);
-          //   list.insert(result['data'][1],element);
-          // }
+        print('??소켓으로 받은 데이터  ${result}');
+        switch (result['command']) {
+          case 'create':
+            if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
+              int insertIndex = js.jPlanList[0]['planList'].length;
+              for (int i = 0; i < js.jPlanList[0]['planList'].length; i++) {
+                if (js.jPlanList[0]['planList'][i]['startTime'].compareTo(result['data']['startTime']) > 0) {
+                  insertIndex = i;
+                  break;
+                }
+              }
+              js.jPlanList[0]['planList'].insert(insertIndex, result['data']);
+            }
+            break;
+          case 'modify':
+            if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
+              for(int i=0;i<js.jPlanList[0]['planList'].length;i++){
+                if(js.jPlanList[0]['planList'][i]['planId'] == result['data']['planId']){
+                  js.jPlanList[0]['planList'][i] = result['data'];
+                }
+              }
+          }
+          default:
+            print("Unknown command");
+            break;
         }
       },
     );
@@ -72,7 +87,7 @@ class SocketState extends GetxController{
     print('순서 변경 요청');
       try {
         stompClient!.send(
-          destination: '/trip/${ts.selectTripList[0]['id']}/plan/j/${day}/edit/register',
+          destination: '/api/trip/${ts.selectTripList[0]['id']}/plan/j/${day}/edit/register',
         );
       } catch (e) {
         print('Error sending message: $e');

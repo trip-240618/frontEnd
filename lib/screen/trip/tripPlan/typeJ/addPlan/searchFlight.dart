@@ -291,8 +291,11 @@ class _SearchFlightState extends State<SearchFlight> {
                                             value: airlines[index]['code']!,
                                             groupValue: selectedAirline,
                                             onChanged: (String? newValue) {
+
+                                              _carrierCon.text = '${airlines[index]['name']} (${airlines[index]['code']})';
                                               setState(() {
-                                                selectedAirline = newValue; // 새로운 값으로 업데이트
+                                                selectedAirline = airlines[index]['code']; // 새로운 값으로 업데이트
+                                                print('???${selectedAirline}');
                                               });
                                             },
                                             fillColor: MaterialStateProperty.resolveWith<Color>(

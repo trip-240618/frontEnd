@@ -65,7 +65,23 @@ class ApiJPlanClient {
       rethrow;
     }
   }
-
+  /// j 수정하기
+  Future<void> editJPlanList(int tripId,Map data) async {
+    try {
+      final response = await dioClient.dio.put(
+          '/trip/${tripId}/plan/j/edit/modify',data: data
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
   /// j 스왑
   Future<void> swapJPlan(int tripId,Map data) async {
     try {

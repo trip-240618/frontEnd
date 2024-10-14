@@ -16,6 +16,7 @@ import '../../../../controller/socketState.dart';
 import '../../../../util/font.dart';
 import '../../../../util/tooltip_shape.dart';
 import 'addPlan/addPlanPage.dart';
+import 'edit_plan_page.dart';
 
 
 class JSchedulePage extends StatefulWidget {
@@ -244,12 +245,15 @@ class _JSchedulePageState extends State<JSchedulePage> {
                             child: SvgPicture.asset('assets/icon/plane.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),)),
                         const SizedBox(width: 8,),
                         GestureDetector(
+                          behavior: HitTestBehavior.opaque,
                           onTap: (){
-                            socket.addEditor(1);
+                            // socket.addEditor(1);
                             js.isSorting.value = !js.isSorting.value;
+                            if(js.isSorting.value==false){
+                              js.firstSwapList.value = {};
+                            }
                           },
-                          child: SvgPicture.asset('assets/icon/change.svg',colorFilter:
-                          ColorFilter.mode(
+                          child: SvgPicture.asset('assets/icon/change.svg',colorFilter: ColorFilter.mode(
                             js.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
                             BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
                           ),),
@@ -257,6 +261,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                       ],
                     ),
                     const SizedBox(height: 9),
+
                     Expanded(
                       child: js.jPlanList.isEmpty?const SizedBox():ReorderableListView.builder(
                         physics: const ClampingScrollPhysics(),
@@ -272,182 +277,220 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                 enabled: false,
                                 child: Row(
                                   children: [
-                                    js.isSorting.value
-                                        ? changeJButton(
-                                        value: js.jPlanList[0]['planList'][index]['checked'],
-                                        onPressed: (){
-                                          js.jPlanList[0]['planList'] = js.jPlanList[0]['planList'].asMap().map((i, plan) {
-                                            return MapEntry(i, {
-                                              ...plan,
-                                              'checked': i == index ? true : false,
-                                            });
-                                          }).values.toList();
-                                          js.jPlanList.refresh();
-                                        }
-                                        )
-                                        : const SizedBox(),
+                                    // js.isSorting.value
+                                    //     ? changeJButton(
+                                    //     value: js.jPlanList[0]['planList'][index]['checked'],
+                                    //     onPressed: (){
+                                    //       js.jPlanList[0]['planList'] = js.jPlanList[0]['planList'].asMap().map((i, plan) {
+                                    //         return MapEntry(i, {
+                                    //           ...plan,
+                                    //           'checked': i == index ? true : false,
+                                    //         });
+                                    //       }).values.toList();
+                                    //       js.jPlanList.refresh();
+                                    //       }
+                                    //     ) : const SizedBox(),
                                     Expanded(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          // border: Border.all(color: gray900),
-                                          borderRadius: BorderRadius.circular(4)
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                                width:58,
-                                                height:50,
-                                                decoration: BoxDecoration(
-                                                  color: gray200,
-                                                  border: Border.all(color: gray200),
-                                                  borderRadius: BorderRadius.only(
-                                                    topLeft: Radius.circular(4),    // 좌측 상단 반경 4px
-                                                    topRight: Radius.circular(0),   // 우측 상단 반경 0px
-                                                    bottomRight: Radius.circular(0),// 우측 하단 반경 0px
-                                                    bottomLeft: Radius.circular(4), // 좌측 하단 반경 4px
-                                                  ),
-                                                ),
-                                                child: Center(child: Text('${js.jPlanList[0]['planList'][index]['startTime'].toString().substring(0,5)}',style: f12Gray800w500,))),
-                                            Expanded(
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(color: gray200),
-                                                  borderRadius: BorderRadius.only(
-                                                    topLeft: Radius.circular(0),    // 좌측 상단 반경 4px
-                                                    topRight: Radius.circular(4),   // 우측 상단 반경 0px
-                                                    bottomRight: Radius.circular(4),// 우측 하단 반경 0px
-                                                    bottomLeft: Radius.circular(0), // 좌측 하단 반경 4px
-                                                  ),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 10),
-                                                  child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    children: [
-                                                      js.jPlanList[0]['planList'][index]['memo']!=''?PopupMenuButton(
-                                                        offset: Offset(-34, 35),
-                                                        shape: TooltipShape(borderColor:Color(ts.selectTripList[0]['labelColor']),borderWidth: 1),
-                                                        child: SvgPicture.asset('assets/icon/memo.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
-                                                        color: Colors.white,
-                                                        itemBuilder: (_) => <PopupMenuEntry>[
-                                                          PopupMenuItem(
-                                                              enabled: false,
-                                                              padding:EdgeInsets.only(left: 10),
-                                                              child: Text('${js.jPlanList[0]['planList'][index]['memo']}',style: f12mainw600(Color(ts.selectTripList[0]['labelColor'])))
-                                                          ),
-                                                        ],
-                                                      ):const SizedBox(),
-                                                      const SizedBox(width: 4,),
-                                                      Expanded(child: Text('${js.jPlanList[0]['planList'][index]['title']}',style: f12Gray800w500,overflow: TextOverflow.ellipsis,)),
-                                                      PopupMenuButton<int>(
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(4),
-                                                        ),
-                                                        offset: const Offset(-20, 40),
-                                                        padding: EdgeInsets.zero,
-                                                        constraints: BoxConstraints(maxWidth: 125),
-                                                        menuPadding: EdgeInsets.zero,
-                                                        shadowColor: Colors.black.withOpacity(0.4),
-                                                        icon: SvgPicture.asset('assets/icon/columnEllipsis.svg',fit: BoxFit.none,),
-                                                        color: gray50,
-                                                        itemBuilder: (context) => <PopupMenuEntry<int>>[
-                                                          PopupMenuItem<int>(
-                                                            padding: EdgeInsets.zero,
-                                                            value: 1,
-                                                            child: Column(
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.only(left: 12, right: 12),
-                                                                  child: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                                    children: [
-                                                                      SvgPicture.asset(
-                                                                        'assets/icon/pencil.svg',
-                                                                        colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
-                                                                        fit: BoxFit.none,
-                                                                      ),
-                                                                      const SizedBox(width: 10),
-                                                                      Text(
-                                                                        '일정 수정',
-                                                                        style: f14Gray800w500,
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          const PopupMenuDivider(height: 1),
-                                                          PopupMenuItem<int>(
-                                                            onTap: (){
+                                      child: GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap:(){
+                                          /// 순서 변경 누를 떄
+                                          if(js.isSorting.value){
+                                            /// 이미 선택된 날짜 한번더 클릭
+                                            if(js.jPlanList[0]['planList'][index]['planId']==js.firstSwapList['planId']){
+                                              js.firstSwapList.value = {};
+                                              js.jPlanList.refresh();
+                                            }
+                                            /// 선택된 리스트 스왑
+                                            else if(js.firstSwapList.isNotEmpty&&js.jPlanList[0]['planList'][index]['planId']!=js.firstSwapList['planId']){
+                                              int swapIndex = js.jPlanList[0]['planList'].indexWhere((item) => item['planId'] == js.firstSwapList['planId']);
 
-                                                              Get.back();
-                                                            },
-                                                            padding: EdgeInsets.zero,
-                                                            value: 2,
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                                                              child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                              var temp = js.jPlanList[0]['planList'][index];
+                                              js.jPlanList[0]['planList'][index] = js.jPlanList[0]['planList'][swapIndex];
+                                              js.jPlanList[0]['planList'][swapIndex] = temp;
+
+                                              var tempStartTime = js.jPlanList[0]['planList'][index]['startTime'];
+                                              js.jPlanList[0]['planList'][index]['startTime'] = js.jPlanList[0]['planList'][swapIndex]['startTime'];
+                                              js.jPlanList[0]['planList'][swapIndex]['startTime'] = tempStartTime;
+
+                                              js.jPlanList.refresh();
+                                              js.firstSwapList.value = {};
+                                              js.firstSwapList.refresh();
+                                            }
+                                            /// 처음에 한번 선택
+                                            else{
+                                              js.firstSwapList.value = js.jPlanList[0]['planList'][index];
+                                              js.jPlanList.refresh();
+                                            }
+                                          }
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: js.isSorting.value&&js.jPlanList[0]['planList'][index]['planId']==js.firstSwapList['planId']?Border.all(color: gray900):null,
+                                            borderRadius: BorderRadius.circular(4)
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                  width:58,
+                                                  height:50,
+                                                  decoration: BoxDecoration(
+                                                    color: gray200,
+                                                    border: Border.all(color: gray200),
+                                                    borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(4),    // 좌측 상단 반경 4px
+                                                      topRight: Radius.circular(0),   // 우측 상단 반경 0px
+                                                      bottomRight: Radius.circular(0),// 우측 하단 반경 0px
+                                                      bottomLeft: Radius.circular(4), // 좌측 하단 반경 4px
+                                                    ),
+                                                  ),
+                                                  child: Center(child: Text('${js.jPlanList[0]['planList'][index]['startTime'].toString().substring(0,5)}',style: f12Gray800w500,))),
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    border: Border.all(color: gray200),
+                                                    borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(0),    // 좌측 상단 반경 4px
+                                                      topRight: Radius.circular(4),   // 우측 상단 반경 0px
+                                                      bottomRight: Radius.circular(4),// 우측 하단 반경 0px
+                                                      bottomLeft: Radius.circular(0), // 좌측 하단 반경 4px
+                                                    ),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(left: 10),
+                                                    child: Row(
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                      children: [
+                                                        js.jPlanList[0]['planList'][index]['memo']!=''?PopupMenuButton(
+                                                          offset: Offset(-34, 35),
+                                                          shape: TooltipShape(borderColor:Color(ts.selectTripList[0]['labelColor']),borderWidth: 1),
+                                                          child: SvgPicture.asset('assets/icon/memo.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
+                                                          color: Colors.white,
+                                                          itemBuilder: (_) => <PopupMenuEntry>[
+                                                            PopupMenuItem(
+                                                                enabled: false,
+                                                                padding:EdgeInsets.only(left: 10),
+                                                                child: Text('${js.jPlanList[0]['planList'][index]['memo']}',style: f12mainw600(Color(ts.selectTripList[0]['labelColor'])))
+                                                            ),
+                                                          ],
+                                                        ):const SizedBox(),
+                                                        const SizedBox(width: 4,),
+                                                        Expanded(child: Text('${js.jPlanList[0]['planList'][index]['title']}',style: f12Gray800w500,overflow: TextOverflow.ellipsis,)),
+                                                        PopupMenuButton<int>(
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(4),
+                                                          ),
+                                                          offset: const Offset(-20, 40),
+                                                          padding: EdgeInsets.zero,
+                                                          constraints: BoxConstraints(maxWidth: 125),
+                                                          menuPadding: EdgeInsets.zero,
+                                                          shadowColor: Colors.black.withOpacity(0.4),
+                                                          icon: SvgPicture.asset('assets/icon/columnEllipsis.svg',fit: BoxFit.none,),
+                                                          color: gray50,
+                                                          itemBuilder: (context) => <PopupMenuEntry<int>>[
+                                                            PopupMenuItem<int>(
+                                                              onTap: (){
+                                                                js.selectJplan.value = js.jPlanList[0]['planList'][index];
+                                                                Get.to(()=>EditPlanPage());
+                                                              },
+                                                              padding: EdgeInsets.zero,
+                                                              value: 1,
+                                                              child: Column(
                                                                 children: [
-                                                                  Container(
-                                                                    width:24,
-                                                                    height:24,
-                                                                    child: SvgPicture.asset(
-                                                                      'assets/icon/trashCan.svg',
-                                                                      fit: BoxFit.none,
-                                                                      colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.only(left: 12, right: 12),
+                                                                    child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      children: [
+                                                                        SvgPicture.asset(
+                                                                          'assets/icon/pencil.svg',
+                                                                          colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                                                          fit: BoxFit.none,
+                                                                        ),
+                                                                        const SizedBox(width: 10),
+                                                                        Text(
+                                                                          '일정 수정',
+                                                                          style: f14Gray800w500,
+                                                                        ),
+                                                                      ],
                                                                     ),
-                                                                  ),
-                                                                  const SizedBox(width: 10),
-                                                                  Text(
-                                                                    '일정 삭제',
-                                                                    style: f14Gray800w500,
                                                                   ),
                                                                 ],
                                                               ),
                                                             ),
-                                                          ),
-                                                          const PopupMenuDivider(height: 1),
-                                                          PopupMenuItem<int>(
-                                                            padding: EdgeInsets.zero,
-                                                            value: 3,
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                                                              child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                                children: [
-                                                                  Container(
-                                                                    width:24,
-                                                                    height:24,
-                                                                    child: SvgPicture.asset(
-                                                                      'assets/bottomNavi/locker.svg',
-                                                                      fit: BoxFit.none,
-                                                                      colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                                            const PopupMenuDivider(height: 1),
+                                                            PopupMenuItem<int>(
+                                                              onTap: (){
+                                                                js.deleteJPlanList(js.jPlanList[0]['planList'][index]['planId']);
+                                                                js.jPlanList[0]['planList'].removeWhere((item) => item['planId'] == js.jPlanList[0]['planList'][index]['planId']);
+                                                                js.jPlanList.refresh();
+                                                              },
+                                                              padding: EdgeInsets.zero,
+                                                              value: 2,
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  children: [
+                                                                    Container(
+                                                                      width:24,
+                                                                      height:24,
+                                                                      child: SvgPicture.asset(
+                                                                        'assets/icon/trashCan.svg',
+                                                                        fit: BoxFit.none,
+                                                                        colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                                                      ),
                                                                     ),
-                                                                  ),
-                                                                  const SizedBox(width: 10),
-                                                                  Text(
-                                                                    '보관함 이동',
-                                                                    style: f14Gray800w500,
-                                                                  ),
-                                                                ],
+                                                                    const SizedBox(width: 10),
+                                                                    Text(
+                                                                      '일정 삭제',
+                                                                      style: f14Gray800w500,
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                      // SvgPicture.asset('assets/icon/columnEllipsis.svg')
-                                                    ],
+                                                            const PopupMenuDivider(height: 1),
+                                                            PopupMenuItem<int>(
+                                                              padding: EdgeInsets.zero,
+                                                              value: 3,
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  children: [
+                                                                    Container(
+                                                                      width:24,
+                                                                      height:24,
+                                                                      child: SvgPicture.asset(
+                                                                        'assets/bottomNavi/locker.svg',
+                                                                        fit: BoxFit.none,
+                                                                        colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                                                      ),
+                                                                    ),
+                                                                    const SizedBox(width: 10),
+                                                                    Text(
+                                                                      '보관함 이동',
+                                                                      style: f14Gray800w500,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        )
+                                                        // SvgPicture.asset('assets/icon/columnEllipsis.svg')
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            )
-                                          ],
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     )
@@ -532,11 +575,11 @@ class _JSchedulePageState extends State<JSchedulePage> {
           )
         ],
       )),
-        // floatingActionButton: PlusFloatingButton(
-        //   backgroundColor: gray900,
-        //   onPressed: ()  {
-        //     Get.to(()=>AddPlanPage());
-        //   },)
+        floatingActionButton: PlusFloatingButton(
+          backgroundColor: gray900,
+          onPressed: ()  {
+            Get.to(()=>AddPlanPage());
+          },)
     );
   }
 }
