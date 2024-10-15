@@ -327,7 +327,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
           color: Colors.white,
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
-            child: BlackBottomContainer(onTap: (){
+            child: BlackBottomContainer(onTap: ()async{
               DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']); /// 시작 날짜
               DateTime selectedDate = DateTime.parse(js.addDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
               int index = selectedDate.difference(startDate).inDays;
@@ -341,6 +341,13 @@ class _AddPlanPageState extends State<AddPlanPage> {
                 "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
                 "locker": false
               };
+              if(js.searchLocation.isNotEmpty){
+               CameraPosition cameraPosition= CameraPosition(
+                    target: LatLng(js.searchLocation[0]['location']['latitude'], js.searchLocation[0]['location']['longitude']),
+                    zoom: 12);
+                final GoogleMapController controller = await js.mapController.future;
+                await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+              }
               js.addJPlanList(data);
               Get.back();
             }, title: '저장'),

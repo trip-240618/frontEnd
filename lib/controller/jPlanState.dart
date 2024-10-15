@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/app/api/jPlanApi.dart';
 import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/util/color.dart';
 import '../app/api/flightApi.dart';
 import '../app/config/dio_client.dart';
+import '../util/custom_marker.dart';
 
 class JPlanState extends GetxController{
   final apiFlightClient = ApiFlightClient(DioClient());
@@ -28,13 +31,16 @@ class JPlanState extends GetxController{
   final RxMap selectJplan = {}.obs; /// 수정 할 때 선택된 jplan 리스트
   final RxList editPlanJList = [].obs; /// 수정할 때 리스트
   final RxMap firstSwapList = {}.obs; /// 스왑 사용시 첫번째로 값 넣는곳
+  final editCheck = false.obs; /// 편집 권한 체크
+  RxSet<Marker> markers = <Marker>{}.obs; /// 커스텀 마커
+  RxSet<Polyline> polyline = <Polyline>{}.obs; /// 커스텀 마커
   /// jplan add
   final Rx<DateTime> addSelectedDateTime = DateTime.now().obs;
   final addDate = ''.obs; /// 추가 시킬 때 날짜
   final editDate = ''.obs; /// 수정 할 때 날짜 변수
   /// planB jList
   final RxList planBJList = [].obs; /// plan B j data 리스트
-
+ 
 
   @override
   void onInit() {
@@ -48,16 +54,50 @@ class JPlanState extends GetxController{
     isGoogleExpanded.value = true;
     super.dispose();
   }
+  /// 지도에 마커 표시
+  Future<void> jplnaMarkerSet() async {
+    markers.clear();
+    List<LatLng> poly = []; // 전체 경로를 담을 리스트
+
+    for (int i = 0; i < jPlanList[0]['planList'].length; i++) {
+      if (jPlanList[0]['planList'][i]['latitude'] != null &&
+          jPlanList[0]['planList'][i]['longitude'] != null) {
+        // Custom icon 생성
+        final icon = await getCustomIcon2(i + 1);
+        // 마커 생성
+        final marker = Marker(
+          markerId: MarkerId(DateTime.now().toString()), // 고유 마커 ID
+          position: LatLng(jPlanList[0]['planList'][i]['latitude'],
+              jPlanList[0]['planList'][i]['longitude']),
+          icon: icon,
+          onTap: () {
+            // 마커 클릭 시 실행할 코드
+          },
+        );
+        markers.add(marker);
+        poly.add(LatLng(jPlanList[0]['planList'][i]['latitude'],
+            jPlanList[0]['planList'][i]['longitude']));
+      }
+    }
+    /// 경로를 그리는 Polyline 객체 생성
+    if (poly.isNotEmpty) {
+      polyline.add(
+        Polyline(
+          polylineId: PolylineId('polyline_1'),
+          patterns: [PatternItem.dash(80), PatternItem.gap(30)],
+          points: poly, // 전체 경로 좌표 리스트
+          color: Color(ts.selectTripList[0]['labelColor']), // 경로 색상
+          width: 3, // 경로 두께
+        ),
+      );
+    }
+  }
 
   /// jplanList 가져오기
   Future<void> getJPlanList(int day ,bool locker)async{
     jPlanList.value = await apijplanClient.getJPlanList(ts.selectTripList[0]['id'], day, locker);
     jPlanList.forEach((day) {
-      day['planList'] = day['planList'].map((plan) {
-        plan['checked'] = false;
-        plan['checked2'] = false;
-        return plan;
-      }).toList();
+       day['checked'] = false;
     });
     print('?? ${jPlanList}');
     jPlanList.refresh();
