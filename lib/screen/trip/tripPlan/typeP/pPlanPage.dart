@@ -10,6 +10,8 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
+import '../../../../controller/socketState.dart';
+
 class PPlanPage extends StatefulWidget {
   const PPlanPage({super.key});
   @override
@@ -19,6 +21,7 @@ class PPlanPage extends StatefulWidget {
 class _PPlanPageState extends State<PPlanPage> {
   final ts = Get.put(TripState());
   final ps = Get.put(PPlanState());
+  final socket = Get.put(SocketState());
   FocusNode _focusNode = FocusNode();
   ScrollController scrollController = ScrollController();
   bool isEdit = false;

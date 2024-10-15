@@ -9,11 +9,13 @@ import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import '../util/custom_marker.dart';
 import 'jPlanState.dart';
+import 'pPlanState.dart';
 
 class SocketState extends GetxController{
   final ts = Get.put(TripState());
   final hs = Get.put(HistoryState());
   final js = Get.put(JPlanState());
+  final ps = Get.put(PPlanState());
   StompClient? stompClient;
 
   @override
@@ -156,6 +158,51 @@ class SocketState extends GetxController{
   void onClose()async{
     stompClient!.deactivate();
     super.onClose();
+  }
+
+  void pOnConnect(StompFrame frame) {
+    print('Connected to P type WebSocket');
+    stompClient!.subscribe(
+      destination: '/topic/api/trip/p/${ts.selectTripList[0]['id']}',
+      callback: (frame) {
+        Map<String, dynamic> result = json.decode(frame.body!);
+        print('??P 소켓으로 받은 데이터  ${result}');
+        switch (result['command']) {
+          case 'create':
+            if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
+              int insertIndex = js.jPlanList[0]['planList'].length;
+              for (int i = 0; i < js.jPlanList[0]['planList'].length; i++) {
+                if (js.jPlanList[0]['planList'][i]['startTime'].compareTo(result['data']['startTime']) > 0) {
+                  insertIndex = i;
+                  break;
+                }
+              }
+              js.jPlanList[0]['planList'].insert(insertIndex, result['data']);
+            }
+            break;
+          // case 'modify':
+          //   if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
+          //     for(int i=0;i<js.jPlanList[0]['planList'].length;i++){
+          //       if(js.jPlanList[0]['planList'][i]['planId'] == result['data']['planId']){
+          //         js.jPlanList[0]['planList'][i] = result['data'];
+          //       }
+          //     }
+          //   }
+          // case 'edit start':
+          //   if ((js.selectedIdx.value) + 1 == result['data']['day']) {
+          //     print('수정 스타트');
+          //   }
+          // case 'swap':
+          //   if ((js.selectedIdx.value) + 1 == result['data'][0]['dayAfterStart']) {
+          //     print('스왑해서 보내준 데이터 ${result['data']}');
+          //     js.jPlanList.value = result['data'];
+          //   }
+          default:
+            print("Unknown command");
+            break;
+        }
+      },
+    );
   }
 
 }

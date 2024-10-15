@@ -20,8 +20,6 @@ class PPlanState extends GetxController{
     DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
     DateTime endDate = DateTime.parse(ts.selectTripList[0]['endDate']);
 
-    print('정렬 전 리스트?${allData}');
-
     for(int i = 1; i<=endDate.difference(startDate).inDays+1; i++){
       Map<String, dynamic>? matchedData;
       for(var data in allData){
@@ -37,11 +35,8 @@ class PPlanState extends GetxController{
       });
 
       pPlanList.value = filterData;
-
+      pPlanList.refresh();
     }
-
-
-   // pPlanList.refresh();
   }
   /// p plan List 추가
   Future<void> addPPlanList(String content, int dayAfterStart, bool locker)async{
