@@ -99,6 +99,24 @@ class ApiJPlanClient {
       rethrow;
     }
   }
+
+  /// j 스왑 취소
+  Future<void> deleteSwapJPlan(int tripId,int day) async {
+    try {
+      final response = await dioClient.dio.get(
+          '/trip/${tripId}/plan/j/${day}/edit/finish'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
   /// j 삭제
   Future<void> deleteJPlan(int tripId,int planId) async {
     try {

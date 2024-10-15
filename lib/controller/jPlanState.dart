@@ -25,15 +25,16 @@ class JPlanState extends GetxController{
 
   /// jplan
   final RxList jPlanList = [].obs; /// jplan data 리스트
-  final RxMap selectJplan = {}.obs; /// 선택된 jplan 리스트
-
+  final RxMap selectJplan = {}.obs; /// 수정 할 때 선택된 jplan 리스트
+  final RxList editPlanJList = [].obs; /// 수정할 때 리스트
+  final RxMap firstSwapList = {}.obs; /// 스왑 사용시 첫번째로 값 넣는곳
   /// jplan add
   final Rx<DateTime> addSelectedDateTime = DateTime.now().obs;
   final addDate = ''.obs; /// 추가 시킬 때 날짜
   final editDate = ''.obs; /// 수정 할 때 날짜 변수
   /// planB jList
   final RxList planBJList = [].obs; /// plan B j data 리스트
-  final RxMap firstSwapList = {}.obs; /// 스왑사용시 첫번째로 값 넣는곳
+
 
   @override
   void onInit() {
@@ -81,7 +82,10 @@ class JPlanState extends GetxController{
   Future<void> swapJPlan(Map data)async {
     await apijplanClient.swapJPlan(ts.selectTripList[0]['id'],data);
   }
-
+  /// jplanList 스왑 취소
+  Future<void> deleteSwapJPlan(int day)async {
+    await apijplanClient.deleteSwapJPlan(ts.selectTripList[0]['id'],day);
+  }
   /// planB jList 가져오기
   Future<void> getPlanBJList(int day, bool locker)async{
     planBJList.value = await apijplanClient.getPlanBJList(ts.selectTripList[0]['id'], day, locker);
