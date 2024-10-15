@@ -76,6 +76,15 @@ class SocketState extends GetxController{
                 }
               }
           }
+          case 'edit start':
+            if ((js.selectedIdx.value) + 1 == result['data']['day']) {
+              print('수정 스타트');
+          }
+          case 'swap':
+            if ((js.selectedIdx.value) + 1 == result['data'][0]['dayAfterStart']) {
+              print('스왑해서 보내준 데이터 ${result['data']}');
+              js.jPlanList.value = result['data'];
+            }
           default:
             print("Unknown command");
             break;
@@ -93,7 +102,6 @@ class SocketState extends GetxController{
         print('Error sending message: $e');
       }
     }
-
 
   @override
   void onClose()async{
