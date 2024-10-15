@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
+import '../util/custom_marker.dart';
 import 'jPlanState.dart';
 
 class SocketState extends GetxController{
@@ -57,16 +59,7 @@ class SocketState extends GetxController{
         print('??소켓으로 받은 데이터  ${result}');
         switch (result['command']) {
           case 'create':
-            if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
-              int insertIndex = js.jPlanList[0]['planList'].length;
-              for (int i = 0; i < js.jPlanList[0]['planList'].length; i++) {
-                if (js.jPlanList[0]['planList'][i]['startTime'].compareTo(result['data']['startTime']) > 0) {
-                  insertIndex = i;
-                  break;
-                }
-              }
-              js.jPlanList[0]['planList'].insert(insertIndex, result['data']);
-            }
+            addData(result);
             break;
           case 'modify':
             if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
@@ -76,15 +69,25 @@ class SocketState extends GetxController{
                 }
               }
           }
+            break;
           case 'edit start':
             if ((js.selectedIdx.value) + 1 == result['data']['day']) {
-              print('수정 스타트');
+              js.jPlanList[0]['checked'] = false;
+              print('수정 스타트${js.jPlanList}');
           }
+            break;
+          case 'edit finish':
+            if ((js.selectedIdx.value) + 1 == result['data']['day']) {
+              js.jPlanList[0]['checked'] = true;
+              print('수정 끝 ${js.jPlanList}');
+            }
+            break;
           case 'swap':
             if ((js.selectedIdx.value) + 1 == result['data'][0]['dayAfterStart']) {
               print('스왑해서 보내준 데이터 ${result['data']}');
               js.jPlanList.value = result['data'];
             }
+            break;
           default:
             print("Unknown command");
             break;
@@ -92,6 +95,7 @@ class SocketState extends GetxController{
       },
     );
   }
+
   void addEditor(int day) async {
     print('순서 변경 요청');
       try {
@@ -103,6 +107,51 @@ class SocketState extends GetxController{
       }
     }
 
+    ///추가 할 때 함수
+  Future<void> addData(Map<String, dynamic> result) async {
+    /// 현재 위치한 시간이랑 같을 때
+    if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
+      /// 하나의 리스트가 들어있을 때
+      if (js.jPlanList.isNotEmpty) {
+        int insertIndex = js.jPlanList[0]['planList'].length;
+        for (int i = 0; i < js.jPlanList[0]['planList'].length; i++) {
+          if (js.jPlanList[0]['planList'][i]['startTime'].compareTo(result['data']['startTime']) > 0) {
+            insertIndex = i;
+            break;
+          }
+        }
+
+        if (result['data']['latitude'] != null && result['data']['longitude'] != null) {
+          final icon = await getCustomIcon2(insertIndex + 1);
+          final marker = Marker(
+            markerId: MarkerId(DateTime.now().toString()), // 고유 마커 ID
+            position: LatLng(result['data']['latitude'], result['data']['longitude']),
+            icon: icon,
+            onTap: () {},
+          );
+          js.markers.add(marker);
+        };
+        js.jPlanList[0]['planList'].insert(insertIndex, result['data']);
+        js.jPlanList.refresh();
+
+      } else {
+        js.jPlanList.add({
+          'dayAfterStart': result['data']['dayAfterStart'],
+          'planList': [result['data']]
+        });
+        final icon = await getCustomIcon2(1);
+        if (result['data']['latitude'] != null && result['data']['longitude'] != null) {
+          final marker = Marker(
+            markerId: MarkerId(DateTime.now().toString()), // 고유 마커 ID
+            position: LatLng(result['data']['latitude'], result['data']['longitude']),
+            icon: icon,
+            onTap: () {},
+          );
+          js.markers.add(marker);
+        }
+      }
+    }
+  }
   @override
   void onClose()async{
     stompClient!.deactivate();

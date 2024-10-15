@@ -35,7 +35,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
   final socket = Get.put(SocketState());
   // int selectIdx = 0;
   ScrollController scrollController = ScrollController();
-  Set<Marker> _markers = {};
   bool isSorting = false;
   bool testCheck = false;
   bool testCheck2 = true;
@@ -45,7 +44,8 @@ class _JSchedulePageState extends State<JSchedulePage> {
     Future.delayed(Duration.zero,()async{
       js.selectedIdx.value = 0;
       js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: 0))}';
-      js.getJPlanList(1, false);
+      await js.getJPlanList(1, false);
+      js.jplnaMarkerSet();
       await js.getFlightList();
     });
     super.initState();
@@ -170,7 +170,8 @@ class _JSchedulePageState extends State<JSchedulePage> {
                 target: LatLng(js.latitude.value, js.longitude.value),
                 zoom: 14.4746,
               ),
-              markers: _markers.toSet(),
+              polylines: js.polyline,
+              markers: js.markers.toSet(),
               myLocationButtonEnabled: false,
               onMapCreated: (GoogleMapController controller) {
                 if (!js.mapController.isCompleted) {
