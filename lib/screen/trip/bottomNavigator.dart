@@ -8,6 +8,7 @@ import 'package:tripStory/screen/trip/locker/lockerTapPage.dart';
 import 'package:tripStory/screen/trip/tripHistory/tripHistoryMain.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/jSchedulePage.dart';
 import 'package:tripStory/screen/trip/setting/trip_edit_page.dart';
+import 'package:tripStory/screen/trip/tripPlan/typeP/pPlanPage.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
@@ -26,9 +27,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   final ts = Get.put(TripState());
   @override
   void initState() {
-
-    _widgetOptions = [JSchedulePage(), LockerTapPage(), TripHistoryMainPage()];
-    // _widgetOptions = [PPlanPage(), LockerTapPage(), TripHistoryMainPage()];
+    _widgetOptions = [ts.selectTripList[0]['type']=='J'? JSchedulePage():PPlanPage(), LockerTapPage(), TripHistoryMainPage()];
     _bottomTabController = TabController(length: 3, vsync: this,initialIndex: 0);
     _currentIndex = 0;
     super.initState();
