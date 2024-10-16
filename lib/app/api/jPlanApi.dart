@@ -118,10 +118,10 @@ class ApiJPlanClient {
     }
   }
   /// j 삭제
-  Future<void> deleteJPlan(int tripId,int planId) async {
+  Future<void> deleteJPlan(int tripId,int planId,int day) async {
     try {
       final response = await dioClient.dio.delete(
-          '/trip/${tripId}/plan/j/delete?planId=$planId'
+          '/trip/${tripId}/plan/j/delete?day=$day&planId=$planId'
       );
       if (response.statusCode == 200) {
         final data = response.data;

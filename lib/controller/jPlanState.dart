@@ -57,6 +57,7 @@ class JPlanState extends GetxController{
   /// 지도에 마커 표시
   Future<void> jplnaMarkerSet() async {
     markers.clear();
+    polyline.clear();
     List<LatLng> poly = []; // 전체 경로를 담을 리스트
 
     for (int i = 0; i < jPlanList[0]['planList'].length; i++) {
@@ -91,6 +92,7 @@ class JPlanState extends GetxController{
         ),
       );
     }
+    print('전체 마커 ?? ${markers}');
   }
 
   /// jplanList 가져오기
@@ -114,8 +116,8 @@ class JPlanState extends GetxController{
     jPlanList.refresh();
   }
   /// jplanList 삭제
-  Future<void> deleteJPlanList(int planId)async{
-    await apijplanClient.deleteJPlan(ts.selectTripList[0]['id'], planId);
+  Future<void> deleteJPlanList(int planId,int day)async{
+    await apijplanClient.deleteJPlan(ts.selectTripList[0]['id'], planId,day);
     jPlanList.refresh();
   }
   /// jplanList 스왑
