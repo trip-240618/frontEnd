@@ -47,6 +47,5 @@ class PPlanState extends GetxController{
   /// p check
   Future<void> checkPPlan(int planId)async{
     await apiPPlanClient.checkPPlan(ts.selectTripList[0]['id'], planId);
-
   }
 }

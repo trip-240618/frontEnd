@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -268,3 +269,4 @@ class SocketState extends GetxController{
   }
 
 }
+
