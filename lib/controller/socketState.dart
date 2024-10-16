@@ -74,34 +74,19 @@ class SocketState extends GetxController{
             deleteJplan(result);
             break;
           case 'modify':
-            if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
-              for(int i=0;i<js.jPlanList[0]['planList'].length;i++){
-                if(js.jPlanList[0]['planList'][i]['planId'] == result['data']['planId']){
-                  js.jPlanList[0]['planList'][i] = result['data'];
-                  if(result['data']['latitude'] != null && result['data']['longitude'] != null){
-                    js.jplnaMarkerSet();
-                  }
-                }
-              }
-            }
+            editJplan(result);
             break;
           case 'edit start':
-            if ((js.selectedIdx.value) + 1 == result['data']['day']) {
-              js.jPlanList[0]['checked'] = false;
-              print('수정 스타트${js.jPlanList}');
-            }
+            checkStartEditorJplan(result);
             break;
           case 'edit finish':
-            if ((js.selectedIdx.value) + 1 == result['data']['day']) {
-              js.jPlanList[0]['checked'] = true;
-              print('수정 끝 ${js.jPlanList}');
-            }
+            endStartEditorJplan(result);
             break;
           case 'swap':
-            if ((js.selectedIdx.value) + 1 == result['data'][0]['dayAfterStart']) {
-              print('스왑해서 보내준 데이터 ${result['data']}');
-              js.jPlanList.value = result['data'];
-            }
+            swapJplan(result);
+            break;
+          case 'wait':
+            swapJplan(result);
             break;
           default:
             print("Unknown command");
@@ -111,7 +96,7 @@ class SocketState extends GetxController{
     );
   }
   /// 순서 변경 클릭
-  void addEditor(int day) async {
+  Future<void> addEditor(int day) async {
     print('순서 변경 요청');
     try {
       stompClient!.send(
@@ -188,7 +173,48 @@ class SocketState extends GetxController{
       js.jplnaMarkerSet();
     }
   }
-
+  /// 수정 할 때 함수
+  Future<void> editJplan(Map<String, dynamic> result) async {
+    if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
+      for(int i=0;i<js.jPlanList[0]['planList'].length;i++){
+        if(js.jPlanList[0]['planList'][i]['planId'] == result['data']['planId']){
+          js.jPlanList[0]['planList'][i] = result['data'];
+          if(result['data']['latitude'] != null && result['data']['longitude'] != null){
+            js.jplnaMarkerSet();
+          }
+        }
+      }
+    }
+  }
+  /// 스왑 할 때 함수
+  Future<void> swapJplan(Map<String, dynamic> result) async {
+    if ((js.selectedIdx.value) + 1 == result['data'][0]['dayAfterStart']) {
+      js.jPlanList.value = result['data'];
+      js.jplnaMarkerSet();
+    }
+  }
+  /// 편집 권한 체크 시작
+  Future<void> checkStartEditorJplan(Map<String, dynamic> result) async {
+    if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
+        js.jPlanList[0]['checked'] = false;
+        // js.editMemberList.value = result['data'];
+        print('수정 스타트${js.jPlanList}');
+    }
+  }
+  /// 편집 권한 체크 종료
+  Future<void> endStartEditorJplan(Map<String, dynamic> result) async {
+    if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
+      js.jPlanList[0]['checked'] = true;
+      js.editMemberList.clear();
+      print('수정 끝 ${js.jPlanList}');
+    }
+  }
+  /// 누가 편집중 일 때
+  Future<void> waitEditorJplan(Map<String, dynamic> result) async {
+    if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
+      js.editMemberList.value = result['data'];
+    }
+  }
   /// p형 소켓
   void pOnConnect(StompFrame frame) {
     print('Connected to P type WebSocket');
