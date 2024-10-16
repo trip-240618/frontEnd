@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -38,9 +39,12 @@ class _JSchedulePageState extends State<JSchedulePage> {
   bool isSorting = false;
   bool testCheck = false;
   bool testCheck2 = true;
+  FToast? fToast;
 
   @override
   void initState() {
+    fToast = FToast();
+    fToast?.init(context);
     Future.delayed(Duration.zero,()async{
       js.selectedIdx.value = 0;
       js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: 0))}';
@@ -249,25 +253,76 @@ class _JSchedulePageState extends State<JSchedulePage> {
                         const SizedBox(width: 8,),
                         GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          onTap: (){
-                            js.isSorting.value = !js.isSorting.value;
-                            socket.addEditor(1);
-                            if(js.isSorting.value){
-                              js.editPlanJList.value = jsonDecode(jsonEncode(js.jPlanList));
+                          onTap: ()async{
+                            await socket.addEditor(1);
+                            if(js.editMemberList.isNotEmpty){
+                              fToast!.showToast(
+                                child: Container(
+                                  width: Get.width,
+                                  height: 58,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff212121).withOpacity(0.7),  // 반투명한 배경
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0x1A000000),
+                                        offset: Offset(0, 4),
+                                        blurRadius: 9,
+                                      ),
+                                      BoxShadow(
+                                        color: Color(0x17000000),
+                                        offset: Offset(0, 16),
+                                        blurRadius: 16,
+                                      ),
+                                      BoxShadow(
+                                        color: Color(0x0D000000),
+                                        offset: Offset(0, 36),
+                                        blurRadius: 21,
+                                      ),
+                                      BoxShadow(
+                                        color: Color(0x03000000),
+                                        offset: Offset(0, 63),
+                                        blurRadius: 25,
+                                      ),
+                                      BoxShadow(
+                                        color: Color(0x00000000),
+                                        offset: Offset(0, 99),
+                                        blurRadius: 28,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/icon/copy.svg',colorFilter: ColorFilter.mode(Colors.white,BlendMode.srcIn)),
+                                      const SizedBox(width: 8,),
+                                      Text('${js.editMemberList[0]['nickname']}님이 일정을 수정중입니다',style: f14whitew600,),
+                                    ],
+                                  )),
+                                ),
+                                gravity: ToastGravity.TOP,
+                                toastDuration: Duration(seconds: 2),
+                              );
                             }else{
-                              Map<String,dynamic> transMap = {
-                                "dayAfterStart": js.editPlanJList[0]['dayAfterStart'],
-                                'orderDtos': (js.editPlanJList[0]['planList'] as List).map((item){
-                                  return {
-                                    'planId': item['planId'],
-                                    'startTime': item['startTime'].substring(0,5),
-                                    'orderByDate': item['orderByDate']
-                                  };
-                                }).toList()
-                              };
-                              js.swapJPlan(transMap);
-                              js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
-                              js.firstSwapList.value = {};
+                              if(js.jPlanList[0]['checked']){
+                                js.isSorting.value = true;
+                                js.editPlanJList.value = jsonDecode(jsonEncode(js.jPlanList));
+                              }else{
+                                Map<String,dynamic> transMap = {
+                                  "dayAfterStart": js.editPlanJList[0]['dayAfterStart'],
+                                  'orderDtos': (js.editPlanJList[0]['planList'] as List).map((item){
+                                    return {
+                                      'planId': item['planId'],
+                                      'startTime': item['startTime'].substring(0,5),
+                                      'orderByDate': item['orderByDate']
+                                    };
+                                  }).toList()
+                                };
+                                await js.swapJPlan(transMap);
+                                js.isSorting.value = false;
+                                js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
+                                js.firstSwapList.value = {};
+                              }
                             }
                           },
                           child: SvgPicture.asset('assets/icon/change.svg',colorFilter: ColorFilter.mode(
@@ -280,7 +335,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                     const SizedBox(height: 9),
                     Expanded(
                       child: js.jPlanList.isEmpty?const SizedBox():js.isSorting.value
-                          ?ReorderableListView.builder(
+                          ? ReorderableListView.builder(
                             physics: const ClampingScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: js.editPlanJList[0]['planList'].length,
@@ -569,7 +624,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                           // });
                         },
                       )
-                          :ReorderableListView.builder(
+                          : ReorderableListView.builder(
                             physics: const ClampingScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: js.jPlanList[0]['planList'].length,
@@ -583,52 +638,11 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                 enabled: false,
                                 child: Row(
                                   children: [
-                                    // js.isSorting.value
-                                    //     ? changeJButton(
-                                    //     value: js.jPlanList[0]['planList'][index]['checked'],
-                                    //     onPressed: (){
-                                    //       js.jPlanList[0]['planList'] = js.jPlanList[0]['planList'].asMap().map((i, plan) {
-                                    //         return MapEntry(i, {
-                                    //           ...plan,
-                                    //           'checked': i == index ? true : false,
-                                    //         });
-                                    //       }).values.toList();
-                                    //       js.jPlanList.refresh();
-                                    //       }
-                                    //     ) : const SizedBox(),
                                     Expanded(
                                       child: GestureDetector(
                                         behavior: HitTestBehavior.opaque,
                                         onTap:(){
-                                          // /// 순서 변경 누를 떄
-                                          // if(js.isSorting.value){
-                                          //   /// 이미 선택된 날짜 한번더 클릭
-                                          //   if(js.jPlanList[0]['planList'][index]['planId']==js.firstSwapList['planId']){
-                                          //     js.firstSwapList.value = {};
-                                          //     js.jPlanList.refresh();
-                                          //   }
-                                          //   /// 선택된 리스트 스왑
-                                          //   else if(js.firstSwapList.isNotEmpty&&js.jPlanList[0]['planList'][index]['planId']!=js.firstSwapList['planId']){
-                                          //     int swapIndex = js.jPlanList[0]['planList'].indexWhere((item) => item['planId'] == js.firstSwapList['planId']);
-                                          //
-                                          //     var temp = js.jPlanList[0]['planList'][index];
-                                          //     js.jPlanList[0]['planList'][index] = js.jPlanList[0]['planList'][swapIndex];
-                                          //     js.jPlanList[0]['planList'][swapIndex] = temp;
-                                          //
-                                          //     var tempStartTime = js.jPlanList[0]['planList'][index]['startTime'];
-                                          //     js.jPlanList[0]['planList'][index]['startTime'] = js.jPlanList[0]['planList'][swapIndex]['startTime'];
-                                          //     js.jPlanList[0]['planList'][swapIndex]['startTime'] = tempStartTime;
-                                          //
-                                          //     js.jPlanList.refresh();
-                                          //     js.firstSwapList.value = {};
-                                          //     js.firstSwapList.refresh();
-                                          //   }
-                                          //   /// 처음에 한번 선택
-                                          //   else{
-                                          //     js.firstSwapList.value = js.jPlanList[0]['planList'][index];
-                                          //     js.jPlanList.refresh();
-                                          //   }
-                                          // }
+
                                         },
                                         child: Row(
                                           children: [
@@ -725,8 +739,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                                           PopupMenuItem<int>(
                                                             onTap: (){
                                                               js.deleteJPlanList(js.jPlanList[0]['planList'][index]['planId'],js.jPlanList[0]['dayAfterStart']);
-                                                              // js.jPlanList[0]['planList'].removeWhere((item) => item['planId'] == js.jPlanList[0]['planList'][index]['planId']);
-                                                              js.jPlanList.refresh();
                                                             },
                                                             padding: EdgeInsets.zero,
                                                             value: 2,

@@ -32,6 +32,7 @@ class JPlanState extends GetxController{
   final RxList editPlanJList = [].obs; /// 수정할 때 리스트
   final RxMap firstSwapList = {}.obs; /// 스왑 사용시 첫번째로 값 넣는곳
   final editCheck = false.obs; /// 편집 권한 체크
+  final editMemberList = [].obs; /// 편집중인 유저 정보
   RxSet<Marker> markers = <Marker>{}.obs; /// 커스텀 마커
   RxSet<Polyline> polyline = <Polyline>{}.obs; /// 커스텀 마커
   /// jplan add
@@ -99,7 +100,7 @@ class JPlanState extends GetxController{
   Future<void> getJPlanList(int day ,bool locker)async{
     jPlanList.value = await apijplanClient.getJPlanList(ts.selectTripList[0]['id'], day, locker);
     jPlanList.forEach((day) {
-       day['checked'] = false;
+       day['checked'] = true;
     });
     print('?? ${jPlanList}');
     jPlanList.refresh();
