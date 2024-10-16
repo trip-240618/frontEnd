@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/controller/userState.dart';
 import '../util/custom_marker.dart';
 import 'jPlanState.dart';
 import 'pPlanState.dart';
@@ -17,6 +18,7 @@ class SocketState extends GetxController{
   final hs = Get.put(HistoryState());
   final js = Get.put(JPlanState());
   final ps = Get.put(PPlanState());
+  final us = Get.put(UserState());
   StompClient? stompClient;
 
   @override
@@ -86,7 +88,7 @@ class SocketState extends GetxController{
             swapJplan(result);
             break;
           case 'wait':
-            swapJplan(result);
+            waitEditorJplan(result);
             break;
           default:
             print("Unknown command");
@@ -197,7 +199,9 @@ class SocketState extends GetxController{
   Future<void> checkStartEditorJplan(Map<String, dynamic> result) async {
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
         js.jPlanList[0]['checked'] = false;
-        // js.editMemberList.value = result['data'];
+        // if(us.userList[0]['uuid']!=result['data']['editorUuid']){
+        //   js.jPlanList[0]['waitList'] = result['data'];
+        // }
         print('수정 스타트${js.jPlanList}');
     }
   }
@@ -205,14 +209,17 @@ class SocketState extends GetxController{
   Future<void> endStartEditorJplan(Map<String, dynamic> result) async {
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
       js.jPlanList[0]['checked'] = true;
-      js.editMemberList.clear();
+      js.jPlanList[0]['waitList'] = [];
       print('수정 끝 ${js.jPlanList}');
     }
   }
   /// 누가 편집중 일 때
   Future<void> waitEditorJplan(Map<String, dynamic> result) async {
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
-      js.editMemberList.value = result['data'];
+
+      if(us.userList[0]['uuid']!=result['data']['editorUuid']){
+        js.jPlanList[0]['waitList'] = result['data'];
+      }
     }
   }
   /// p형 소켓

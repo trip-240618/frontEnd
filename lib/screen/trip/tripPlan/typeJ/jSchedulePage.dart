@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/register/termsForm.dart';
+import 'package:tripStory/component/toast/toast.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchFlight.dart';
@@ -255,59 +256,18 @@ class _JSchedulePageState extends State<JSchedulePage> {
                           behavior: HitTestBehavior.opaque,
                           onTap: ()async{
                             await socket.addEditor(1);
-                            if(js.editMemberList.isNotEmpty){
-                              fToast!.showToast(
-                                child: Container(
-                                  width: Get.width,
-                                  height: 58,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff212121).withOpacity(0.7),  // 반투명한 배경
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color(0x1A000000),
-                                        offset: Offset(0, 4),
-                                        blurRadius: 9,
-                                      ),
-                                      BoxShadow(
-                                        color: Color(0x17000000),
-                                        offset: Offset(0, 16),
-                                        blurRadius: 16,
-                                      ),
-                                      BoxShadow(
-                                        color: Color(0x0D000000),
-                                        offset: Offset(0, 36),
-                                        blurRadius: 21,
-                                      ),
-                                      BoxShadow(
-                                        color: Color(0x03000000),
-                                        offset: Offset(0, 63),
-                                        blurRadius: 25,
-                                      ),
-                                      BoxShadow(
-                                        color: Color(0x00000000),
-                                        offset: Offset(0, 99),
-                                        blurRadius: 28,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset('assets/icon/copy.svg',colorFilter: ColorFilter.mode(Colors.white,BlendMode.srcIn)),
-                                      const SizedBox(width: 8,),
-                                      Text('${js.editMemberList[0]['nickname']}님이 일정을 수정중입니다',style: f14whitew600,),
-                                    ],
-                                  )),
-                                ),
-                                gravity: ToastGravity.TOP,
-                                toastDuration: Duration(seconds: 2),
-                              );
+                            /// 누가 편집중일 때
+                            print('j 리스트?? ${js.jPlanList[0]['waitList']}');
+                            if(js.jPlanList[0]['waitList'].length!=0){
+                              showCustomToast(context, fToast!, '${js.jPlanList[0]['waitList']['nickname']}');
                             }else{
+                              /// 편집 권한 체크 눌렀을 때
                               if(js.jPlanList[0]['checked']){
                                 js.isSorting.value = true;
                                 js.editPlanJList.value = jsonDecode(jsonEncode(js.jPlanList));
-                              }else{
+                              }
+                              /// 편집 권한 해제 했을 때
+                              else{
                                 Map<String,dynamic> transMap = {
                                   "dayAfterStart": js.editPlanJList[0]['dayAfterStart'],
                                   'orderDtos': (js.editPlanJList[0]['planList'] as List).map((item){
