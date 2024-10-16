@@ -26,7 +26,7 @@ class ApiPPlanClient {
     }
   }
   /// P 추가하기
-  Future<List<dynamic>> addPPlanList(int tripId, String content, int dayAfterStart, bool locker) async {
+  Future<void> addPPlanList(int tripId, String content, int dayAfterStart, bool locker) async {
     try {
       final response = await dioClient.dio.post(
           '/trip/${tripId}/plan/p/create',
@@ -38,10 +38,7 @@ class ApiPPlanClient {
       if (response.statusCode == 200) {
         final data = response.data;
         print('data?${data}');
-        if(data.length==0){
-          return [];
-        }
-        return data;
+
       } else {
         throw Exception('Failed to add PPlanList: ${response.statusCode}');
       }
