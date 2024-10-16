@@ -12,7 +12,6 @@ class ApiPPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?${data}');
         if(data.length==0){
           return [];
         }
@@ -46,6 +45,24 @@ class ApiPPlanClient {
       print('Error during auto-login: $e');
       rethrow;
     }
+  }
+
+  /// P check
+  Future<void> checkPPlan(int tripId, int planId) async{
+    try{
+      final response = await dioClient.dio.put(
+          '/trip/${tripId}/plan/p/check?planId=$planId');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+
   }
 
 }

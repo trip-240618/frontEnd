@@ -225,17 +225,39 @@ class SocketState extends GetxController{
         print('??P 소켓으로 받은 데이터  ${result}');
         switch (result['command']) {
           case 'create':
-            print('생성하는 dayAfterStart? ${result['data']['dayAfterStart']}');
-            int insertDayIndex = result['data']['dayAfterStart']-1;
-            ps.pPlanList[insertDayIndex]['planList'].add(result['data']);
-            print('p create');
+            createPPlan(result);
             break;
+          case 'check' :
+            checkPPlan(result);
+
           default:
             print("Unknown command");
             break;
         }
       },
     );
+  }
+
+
+  Future<void> createPPlan(Map<String, dynamic> result) async {
+    print('생성하는 dayAfterStart? ${result['data']['dayAfterStart']}');
+    int insertDayIndex = result['data']['dayAfterStart']-1;
+    ps.pPlanList[insertDayIndex]['planList'].add(result['data']);
+    print('p create');
+  }
+
+  Future<void> checkPPlan(Map<String, dynamic> result) async{
+    print('check? ${result}');
+    int targetPlanId = result['data']['planId'];
+    int dayAfterStart = result['data']['dayAfterStart'];
+
+    final planIndex = ps.pPlanList[dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
+
+    print('planIndex????${planIndex}');
+
+    ps.pPlanList[dayAfterStart-1]['planList'][planIndex]['checkbox'] = result['data']['checkbox'];
+
+    print('p check');
   }
 
 }

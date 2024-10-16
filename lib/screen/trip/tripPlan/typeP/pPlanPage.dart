@@ -320,9 +320,9 @@ class _PPlanPageState extends State<PPlanPage> {
                                           children: [
                                             const SizedBox(height: 16,),
                                             GestureDetector(
-                                              onTap: () {
-                                                ps.pPlanList[dayIndex]['planList'][planIndex]['checkbox'] = !ps.pPlanList[dayIndex]['planList'][planIndex]['checkbox'];
-                                                setState(() {});
+                                              onTap: () async {
+                                                await ps.checkPPlan(ps.pPlanList[dayIndex]['planList'][planIndex]['planId']);
+                                                //ps.pPlanList[dayIndex]['planList'][planIndex]['checkbox'] = !ps.pPlanList[dayIndex]['planList'][planIndex]['checkbox'];
                                               },
                                               child: ps.pPlanList[dayIndex]['planList'][planIndex]['checkbox']?
                                               Container(
