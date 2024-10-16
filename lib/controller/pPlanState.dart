@@ -43,4 +43,10 @@ class PPlanState extends GetxController{
     await apiPPlanClient.addPPlanList(ts.selectTripList[0]['id'],content, dayAfterStart, locker);
     pPlanList.refresh();
   }
+
+  /// p check
+  Future<void> checkPPlan(int planId)async{
+    await apiPPlanClient.checkPPlan(ts.selectTripList[0]['id'], planId);
+
+  }
 }
