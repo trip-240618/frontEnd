@@ -315,6 +315,10 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                             js.editPlanJList[0]['planList'][index]['startTime'] = js.editPlanJList[0]['planList'][swapIndex]['startTime'];
                                             js.editPlanJList[0]['planList'][swapIndex]['startTime'] = tempStartTime;
 
+                                            var newOrderByDate = js.editPlanJList[0]['planList'][index]['orderByDate'];
+                                            js.editPlanJList[0]['planList'][index]['orderByDate'] = js.editPlanJList[0]['planList'][swapIndex]['orderByDate'];
+                                            js.editPlanJList[0]['planList'][swapIndex]['orderByDate'] = newOrderByDate;
+
                                             js.editPlanJList.refresh();
                                             js.firstSwapList.value = {};
                                             js.firstSwapList.refresh();
@@ -424,9 +428,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                                             const PopupMenuDivider(height: 1),
                                                             PopupMenuItem<int>(
                                                               onTap: (){
-                                                                js.deleteJPlanList(js.editPlanJList[0]['planList'][index]['planId']);
-                                                                js.editPlanJList[0]['planList'].removeWhere((item) => item['planId'] == js.editPlanJList[0]['planList'][index]['planId']);
-                                                                js.editPlanJList.refresh();
+                                                                // js.deleteJPlanList(js.editPlanJList[0]['planList'][index]['planId'],js.editPlanJList[0]['dayAfterStart']);
                                                               },
                                                               padding: EdgeInsets.zero,
                                                               value: 2,
@@ -722,8 +724,8 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                                           const PopupMenuDivider(height: 1),
                                                           PopupMenuItem<int>(
                                                             onTap: (){
-                                                              js.deleteJPlanList(js.jPlanList[0]['planList'][index]['planId']);
-                                                              js.jPlanList[0]['planList'].removeWhere((item) => item['planId'] == js.jPlanList[0]['planList'][index]['planId']);
+                                                              js.deleteJPlanList(js.jPlanList[0]['planList'][index]['planId'],js.jPlanList[0]['dayAfterStart']);
+                                                              // js.jPlanList[0]['planList'].removeWhere((item) => item['planId'] == js.jPlanList[0]['planList'][index]['planId']);
                                                               js.jPlanList.refresh();
                                                             },
                                                             padding: EdgeInsets.zero,

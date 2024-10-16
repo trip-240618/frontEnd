@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,6 +53,12 @@ class SocketState extends GetxController{
     super.onInit();
   }
 
+  @override
+  void onClose()async{
+    stompClient!.deactivate();
+    super.onClose();
+  }
+  /// j형 소켓 정보
   void onConnect(StompFrame frame) {
     print('Connected to WebSocket');
     stompClient!.subscribe(
@@ -61,22 +68,28 @@ class SocketState extends GetxController{
         print('??소켓으로 받은 데이터  ${result}');
         switch (result['command']) {
           case 'create':
-            addData(result);
+            createJplan(result);
+            break;
+          case 'delete':
+            deleteJplan(result);
             break;
           case 'modify':
             if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
               for(int i=0;i<js.jPlanList[0]['planList'].length;i++){
                 if(js.jPlanList[0]['planList'][i]['planId'] == result['data']['planId']){
                   js.jPlanList[0]['planList'][i] = result['data'];
+                  if(result['data']['latitude'] != null && result['data']['longitude'] != null){
+                    js.jplnaMarkerSet();
+                  }
                 }
               }
-          }
+            }
             break;
           case 'edit start':
             if ((js.selectedIdx.value) + 1 == result['data']['day']) {
               js.jPlanList[0]['checked'] = false;
               print('수정 스타트${js.jPlanList}');
-          }
+            }
             break;
           case 'edit finish':
             if ((js.selectedIdx.value) + 1 == result['data']['day']) {
@@ -97,20 +110,19 @@ class SocketState extends GetxController{
       },
     );
   }
-
+  /// 순서 변경 클릭
   void addEditor(int day) async {
     print('순서 변경 요청');
-      try {
-        stompClient!.send(
-          destination: '/api/trip/${ts.selectTripList[0]['id']}/plan/j/${day}/edit/register',
-        );
-      } catch (e) {
-        print('Error sending message: $e');
-      }
+    try {
+      stompClient!.send(
+        destination: '/api/trip/${ts.selectTripList[0]['id']}/plan/j/${day}/edit/register',
+      );
+    } catch (e) {
+      print('Error sending message: $e');
     }
-
-    ///추가 할 때 함수
-  Future<void> addData(Map<String, dynamic> result) async {
+  }
+  ///추가 할 때 함수
+  Future<void> createJplan(Map<String, dynamic> result) async {
     /// 현재 위치한 시간이랑 같을 때
     if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
       /// 하나의 리스트가 들어있을 때
@@ -122,8 +134,8 @@ class SocketState extends GetxController{
             break;
           }
         }
-
         if (result['data']['latitude'] != null && result['data']['longitude'] != null) {
+          List<LatLng> poly = [];
           final icon = await getCustomIcon2(insertIndex + 1);
           final marker = Marker(
             markerId: MarkerId(DateTime.now().toString()), // 고유 마커 ID
@@ -132,10 +144,24 @@ class SocketState extends GetxController{
             onTap: () {},
           );
           js.markers.add(marker);
+          js.jPlanList[0]['planList'].forEach((plan) {
+            poly.add(LatLng(plan['latitude'], plan['longitude']));
+          });
+          poly.add(LatLng(result['data']['latitude'], result['data']['longitude']));
+          if (poly.isNotEmpty) {
+            js.polyline.add(
+              Polyline(
+                polylineId: PolylineId('polyline_1'),
+                patterns: [PatternItem.dash(80), PatternItem.gap(30)],
+                points: poly, // 전체 경로 좌표 리스트
+                color: Color(ts.selectTripList[0]['labelColor']), // 경로 색상
+                width: 3, // 경로 두께
+              ),
+            );
+          }
         };
         js.jPlanList[0]['planList'].insert(insertIndex, result['data']);
         js.jPlanList.refresh();
-
       } else {
         js.jPlanList.add({
           'dayAfterStart': result['data']['dayAfterStart'],
@@ -154,12 +180,16 @@ class SocketState extends GetxController{
       }
     }
   }
-  @override
-  void onClose()async{
-    stompClient!.deactivate();
-    super.onClose();
+  /// 삭제 할 때 함수
+  Future<void> deleteJplan(Map<String, dynamic> result) async {
+    /// 현재 위치한 시간이랑 같을 때
+    if (js.jPlanList[0]['dayAfterStart'] == result['data']['dayAfterStart']) {
+      js.jPlanList[0]['planList'].removeWhere((item) => item['planId'] == result['data']['planId']);
+      js.jplnaMarkerSet();
+    }
   }
 
+  /// p형 소켓
   void pOnConnect(StompFrame frame) {
     print('Connected to P type WebSocket');
     stompClient!.subscribe(
