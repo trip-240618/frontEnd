@@ -40,7 +40,7 @@ class PPlanState extends GetxController{
   }
   /// p plan List 추가
   Future<void> addPPlanList(String content, int dayAfterStart, bool locker)async{
-    pPlanList.value = await apiPPlanClient.addPPlanList(ts.selectTripList[0]['id'],content, dayAfterStart, locker);
+    await apiPPlanClient.addPPlanList(ts.selectTripList[0]['id'],content, dayAfterStart, locker);
     pPlanList.refresh();
   }
 }
