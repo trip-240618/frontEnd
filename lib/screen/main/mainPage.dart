@@ -216,19 +216,24 @@ class _MainPageState extends State<MainPage> {
                                               },
                                               child: SvgPicture.asset('assets/icon/send.svg',color: gray900)),
                                           const SizedBox(width: 12),
-                                          GestureDetector(
-                                            behavior: HitTestBehavior.opaque,
-                                            onTap: () async {
+                                          InkWell(
+                                            onTap: ()async{
                                               await ms.bookmarkClick(int.parse('${ms.tripList[index]['id']}'));
                                               ms.tripList[index]['bookmark'] = !ms.tripList[index]['bookmark'];
                                               ms.tripList.refresh();
                                             },
-                                            child: ms.tripList[index]['bookmark']
-                                                ? SvgPicture.asset(
-                                              'assets/icon/checkBookmark.svg',
-                                            )
-                                                : SvgPicture.asset(
-                                              'assets/icon/bookmark.svg',
+                                            highlightColor: Colors.black,
+                                            splashColor: Colors.black,
+                                            child: Container(
+                                              child: ms.tripList[index]['bookmark']
+                                                  ? SvgPicture.asset(
+                                                'assets/icon/checkBookmark.svg',
+                                                fit: BoxFit.none,
+                                              )
+                                                  : SvgPicture.asset(
+                                                'assets/icon/bookmark.svg',
+                                                fit: BoxFit.none,
+                                              ),
                                             ),
                                           )
                                         ],

@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
+import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/screen/trip/tripHistory/history/trip_history_list.dart';
@@ -321,33 +322,15 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(
-                                      child: TextFormField(
-                                        onChanged: (con){
-                                          setState(() {});
-                                        },
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context).viewInsets.bottom + 40),
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          contentPadding: EdgeInsets.zero,
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                          ),
+                                      child: TextMemoFormFields(
+                                          controller: albumTextList[selectIdx],
                                           hintText: '간단한 메모를 기록해 보세요',
-                                          hintStyle: f15gray400w500,
-                                        ),
-                                        keyboardType: TextInputType.multiline,
-                                        maxLines: null,
-                                        focusNode: focusNode,
-                                        controller: albumTextList[selectIdx],
-                                        style: f16gray800w600,
-                                        inputFormatters: <TextInputFormatter>[
-                                          LengthLimitingTextInputFormatter(60),
-                                        ],
-                                      ),
+                                          inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                                          scrollPadding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 40),
+                                          onChanged: (v){
+                                              setState(() {});
+                                          },
+                                      )
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,

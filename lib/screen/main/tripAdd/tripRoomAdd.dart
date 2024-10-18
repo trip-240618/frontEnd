@@ -9,6 +9,7 @@ import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomModals.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/main/typeChoose.dart';
+import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/main/tripAdd/tripCalendar.dart';
@@ -253,6 +254,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                     Container(
                       width: Get.width,
                       decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(4),
                           border: Border.all(color: gray200)
                       ),
@@ -261,29 +263,16 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                         child: Row(
                           children: [
                             Expanded(
-                              child: TextFormField(
-                                controller: tripName,
-                                autofocus: false,
-                                style: f16gray800w600,
-                                onChanged: (v){
-                                  setState(() {});
-                                },
-                                inputFormatters: <TextInputFormatter>[
-                                  LengthLimitingTextInputFormatter(15),
-                                ],
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.zero,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                  ),
+                              child: Container(
+                                child: TextFormFieldComponent(
+                                  controller: tripName,
                                   hintText: '여행방 제목을 입력해주세요',
-                                  hintStyle: f14Gray500w400,
+                                  onChanged: (v){
+                                    setState(() {});
+                                  },
+                                  inputFormatters: [LengthLimitingTextInputFormatter(15)],
                                 ),
-                              ),
+                              )
                             ),
                             const SizedBox(width: 10,),
                             Text('${tripName.text.length}/15')

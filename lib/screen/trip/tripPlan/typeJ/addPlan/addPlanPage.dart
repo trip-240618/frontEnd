@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomContainer.dart';
+import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/googleMap_searchPlace.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchTripPlace.dart';
@@ -236,30 +237,16 @@ class _AddPlanPageState extends State<AddPlanPage> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: TextFormField(
-                            onChanged: (con){
-                              setState(() {});
-                            },
-                            onTapOutside: (e)=>FocusManager.instance.primaryFocus?.unfocus(),
-                            scrollPadding: EdgeInsets.only(
-                                bottom: MediaQuery.of(context).viewInsets.bottom + 40),
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
+                          child: TextFormFieldComponent(
+                              controller: planTitleCon,
                               hintText: '여행 일정을 작성해 주세요',
-                              hintStyle: f15gray400w500,
-                            ),
-                            controller: planTitleCon,
-                            inputFormatters: <TextInputFormatter>[
-                              LengthLimitingTextInputFormatter(20),
-                            ],
-                          ),
+                              inputFormatters: [LengthLimitingTextInputFormatter(20)],
+                              scrollPadding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).viewInsets.bottom + 40),
+                              onChanged: (v){
+                                  setState(() {});
+                              },
+                          )
                         ),
                         const SizedBox(width: 10,),
                         Text('${planTitleCon.text.length}', style: planTitleCon.text.length>0?f11Gray800w600:f11Gray400w600,),
@@ -285,32 +272,18 @@ class _AddPlanPageState extends State<AddPlanPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: TextFormField(
-                            onChanged: (con){
-                              setState(() {});
-                            },
-                            onTapOutside: (e)=>FocusManager.instance.primaryFocus?.unfocus(),
-                            scrollPadding: EdgeInsets.only(
-                                bottom: MediaQuery.of(context).viewInsets.bottom + 160),
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
+                          child: TextMemoFormFields(
+                              controller: memoCon,
                               hintText: '일정 간편 메모를 이용해 보세요',
-                              hintStyle: f15gray400w500,
-                            ),
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            controller: memoCon,
-                            inputFormatters: <TextInputFormatter>[
-                              LengthLimitingTextInputFormatter(100),
-                            ],
-                          ),
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(100),
+                              ],
+                              onChanged: (v){
+                                  setState(() {});
+                              },
+                              scrollPadding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).viewInsets.bottom + 160),
+                          )
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,

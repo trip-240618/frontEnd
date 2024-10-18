@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomContainer.dart';
+import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/util/font.dart';
 import '../../../../util/color.dart';
@@ -76,42 +77,26 @@ class _TagAddPageState extends State<TagAddPage> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: TextFormField(
-                          onChanged: (con){
-                            setState(() {});
-                          },
-                          onFieldSubmitted: (v){
-                            if(tagList.length!=2){
-                              tagList.add({'name': _tagCon.text, 'color':colorList[selectedColor]});
-                              _tagCon.clear();
-                              setState(() {});
-                            }else{
-                              _tagCon.clear();
-                              setState(() {});
-                            }
-                          },
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: EdgeInsets.zero,
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                            ),
+                        child: TextFormFieldComponent2(
+                            controller: _tagCon,
                             hintText: '태그는 2개까지 등록 가능합니다.',
-                            hintStyle: f15gray400w500,
-                          ),
-                          enabled: tagList.length!=2?true:false,
-                          controller: _tagCon,
-                          focusNode: _focusNode,
-                          inputFormatters: <TextInputFormatter>[
-                            LengthLimitingTextInputFormatter(7),
-                          ],
-                        ),
+                            inputFormatters: [LengthLimitingTextInputFormatter(7),],
+                            onChanged: (v){
+                              setState(() {});
+                            },
+                            focusNode: _focusNode,
+                            onFieldSubmitted: (v){
+                              if(tagList.length!=2){
+                                tagList.add({'name': _tagCon.text, 'color':colorList[selectedColor]});
+                                _tagCon.clear();
+                                setState(() {});
+                              }else{
+                                _tagCon.clear();
+                                setState(() {});
+                              }
+                            },
+
+                        )
                       ),
                       const SizedBox(width: 10,),
                       Text('${_tagCon.text.length}', style: _tagCon.text.length>0?f11Gray800w600:f11Gray400w600,),

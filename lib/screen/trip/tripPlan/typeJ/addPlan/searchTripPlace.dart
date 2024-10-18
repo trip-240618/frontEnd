@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
@@ -70,32 +71,18 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                           'assets/icon/search.svg', fit: BoxFit.none, colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
                       const SizedBox(width: 5,),
                       Expanded(
-                        child: TextFormField(
-                          controller: _placeCon,
-                          autofocus: false,
-                          style: f15gray800w500,
-                          onTapOutside: (e)=>FocusManager.instance.primaryFocus?.unfocus(),
-                          onChanged: (v){
-                            setState(() {});
-                          },
-                          onFieldSubmitted: (value) async {
-                            placeList = await apiTripClient.autoLocationGet(_placeCon.text);
-                            print(placeList);
-                            setState(() {});
-                          },
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: EdgeInsets.zero,
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                            ),
+                        child: TextFormFieldComponent(
+                            controller: _placeCon,
                             hintText: '여행장소를 지도에 입력해 보세요',
-                            hintStyle: f15gray400w500,
-                          ),
-                        ),
+                            onChanged: (v){
+                                setState(() {});
+                            },
+                            onFieldSubmitted: (value) async {
+                              placeList = await apiTripClient.autoLocationGet(_placeCon.text);
+                              print(placeList);
+                              setState(() {});
+                            },
+                        )
                       ),
                     ],
 

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
+import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/tripState.dart';
 import '../../../component/appbar.dart';
 import '../../../component/bottomContainer.dart';
@@ -306,30 +307,12 @@ class _TripEditPageState extends State<TripEditPage> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: TextFormField(
-                                  controller: tripName,
-                                  autofocus: false,
-                                  style: f16gray800w600,
-                                  onChanged: (v){
-                                    setState(() {});
-                                  },
-                                  inputFormatters: <TextInputFormatter>[
-                                    LengthLimitingTextInputFormatter(15),
-                                  ],
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    contentPadding: EdgeInsets.zero,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                    ),
+                                child: TextFormFieldComponent(
+                                    controller: tripName,
                                     hintText: '여행방 제목을 입력해주세요',
-                                    hintStyle: f14Gray500w400,
-                                  ),
-
-                                ),
+                                    onChanged: (v){setState(() {});},
+                                    inputFormatters: [ LengthLimitingTextInputFormatter(15),],
+                                )
                               ),
                               const SizedBox(width: 10,),
                               Text('${tripName.text.length}',style: f11Gray800w600,),
