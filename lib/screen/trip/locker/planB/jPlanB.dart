@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:tripStory/controller/jPlanState.dart';
+import 'package:tripStory/screen/trip/locker/planB/add_planB_j.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/addPlanPage.dart';
 
 import '../../../../component/button.dart';
@@ -16,6 +18,7 @@ class JPlanB extends StatefulWidget {
 }
 
 class _JPlanBState extends State<JPlanB> {
+  final js = Get.put(JPlanState());
   List planBList = [
     {"dayAfterStart": 1, "startTime": "18:00", "title": "신주쿠 빔즈 재팬 쇼핑",},
     {"dayAfterStart": 1, "startTime": "18:00", "title": "이세탄 백화점 쇼핑",},
@@ -33,7 +36,9 @@ class _JPlanBState extends State<JPlanB> {
 
   @override
   void initState() {
-
+    Future.delayed(Duration.zero,()async{
+      await js.getPlanBJList();
+    });
     print('dddd');
     print(customDateFormatter2('2024-05-10'));
     super.initState();
@@ -284,7 +289,7 @@ class _JPlanBState extends State<JPlanB> {
         floatingActionButton: PlusFloatingButton(
           backgroundColor: gray900,
           onPressed: ()  {
-            Get.to(()=>AddPlanPage());
+            Get.to(()=>AddPlanBJ());
           },)
     );
   }

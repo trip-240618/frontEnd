@@ -8,7 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomContainer.dart';
-import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/googleMap_searchPlace.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchTripPlace.dart';
@@ -17,17 +16,18 @@ import '../../../../../component/dialog/daySelect.dart';
 import '../../../../../controller/jPlanState.dart';
 import '../../../../../util/color.dart';
 import '../../../../../util/font.dart';
-class AddPlanPage extends StatefulWidget {
-  const AddPlanPage({super.key});
+class AddPlanBJ extends StatefulWidget {
+  const AddPlanBJ({super.key});
 
   @override
-  State<AddPlanPage> createState() => _AddPlanPageState();
+  State<AddPlanBJ> createState() => _AddPlanBJState();
 }
 
-class _AddPlanPageState extends State<AddPlanPage> {
+class _AddPlanBJState extends State<AddPlanBJ> {
   BitmapDescriptor? customIcon;
   final ts = Get.put(TripState());
   final js = Get.put(JPlanState());
+  bool isDateTBD = false; /// 날짜 미정
   Set<Marker> markers = {};
   DateFormat dateFormatter = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR');
   DateFormat timeFormatter = DateFormat('a hh:mm', 'ko_KR');
@@ -41,7 +41,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
     js.addDate.value = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.parse('${js.selectedDate.value}'));
     js.addSelectedDateTime.value = DateTime.now();
     Future.delayed(Duration.zero,()async{
-    await _setCustomMarker();
+      await _setCustomMarker();
     });
     super.initState();
   }
@@ -63,17 +63,18 @@ class _AddPlanPageState extends State<AddPlanPage> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        FocusManager.instance.primaryFocus?.unfocus();
         FocusScope.of(context).unfocus();
         setState(() {
         });
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: BackAppBar(text: '일정 등록',color: Colors.white,
+        appBar: BackAppBar(text: '일정 B안',color: Colors.white,
             onTap: (){
-          js.searchLocation.clear();
-          Get.back();
-        }),
+              js.searchLocation.clear();
+              Get.back();
+            }),
         body: Obx(()=>SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 44),
@@ -94,6 +95,18 @@ class _AddPlanPageState extends State<AddPlanPage> {
                   child: Padding(padding: EdgeInsets.symmetric(vertical: 15,horizontal: 16),
                     child: Row(
                       children: [
+                        isDateTBD?
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 1.67, bottom: 2.5, left: 2.5, right: 6.5),
+                              child: SvgPicture.asset('assets/bottomNavi/schedule.svg', width: 15, height: 15.83, colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
+                                ),
+                              ),
+                            Text('YYYY.MM.DD', style: f15gray400w500,),
+                            const SizedBox(width: 11,),
+                            ],
+                        ) :
                         GestureDetector(
                           onTap: (){
                             SelectDayBottomSheet2(context,'여행 날짜를 선택해 주세요', (){});
@@ -134,6 +147,55 @@ class _AddPlanPageState extends State<AddPlanPage> {
                       ],
                     ),
                   ),
+                ),
+                const SizedBox(height: 6,),
+                Row(
+                  children: [
+                    Spacer(),
+                    isDateTBD?
+                        GestureDetector(
+                          onTap: (){
+                            isDateTBD = !isDateTBD;
+                            setState(() {
+
+                            });
+                          },
+                          child: Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: gray900,
+                              borderRadius: BorderRadius.circular(100)
+                            ),
+                            child: Center(
+                              child: SvgPicture.asset('assets/icon/check2.svg'),
+                            ),
+                          )
+                        )
+                        :GestureDetector(
+                        onTap: (){
+                          isDateTBD = !isDateTBD;
+                          setState(() {
+
+                          });
+                        },
+                        child: Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                width: 1.5,
+                                color: gray300,
+                              ),
+                              borderRadius: BorderRadius.circular(100)
+                          ),
+                        )
+                    ),
+                    const SizedBox(width: 6,),
+                    Text('날짜 미정', style: f12gray600w600,),
+
+                  ],
                 ),
                 const SizedBox(height: 20,),
                 Text('여행 장소', style: f12gray600w600,),
@@ -237,16 +299,29 @@ class _AddPlanPageState extends State<AddPlanPage> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: TextFormFieldComponent(
-                              controller: planTitleCon,
-                              hintText: '여행 일정을 작성해 주세요',
-                              inputFormatters: [LengthLimitingTextInputFormatter(20)],
-                              scrollPadding: EdgeInsets.only(
+                          child: TextFormField(
+                            onChanged: (con){
+                              setState(() {});
+                            },
+                            scrollPadding: EdgeInsets.only(
                                 bottom: MediaQuery.of(context).viewInsets.bottom + 40),
-                              onChanged: (v){
-                                  setState(() {});
-                              },
-                          )
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: EdgeInsets.zero,
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              hintText: '여행 일정을 작성해 주세요',
+                              hintStyle: f15gray400w500,
+                            ),
+                            controller: planTitleCon,
+                            inputFormatters: <TextInputFormatter>[
+                              LengthLimitingTextInputFormatter(20),
+                            ],
+                          ),
                         ),
                         const SizedBox(width: 10,),
                         Text('${planTitleCon.text.length}', style: planTitleCon.text.length>0?f11Gray800w600:f11Gray400w600,),
@@ -272,18 +347,31 @@ class _AddPlanPageState extends State<AddPlanPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: TextMemoFormFields(
-                              controller: memoCon,
-                              hintText: '일정 간편 메모를 이용해 보세요',
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(100),
-                              ],
-                              onChanged: (v){
-                                  setState(() {});
-                              },
-                              scrollPadding: EdgeInsets.only(
+                          child: TextFormField(
+                            onChanged: (con){
+                              setState(() {});
+                            },
+                            scrollPadding: EdgeInsets.only(
                                 bottom: MediaQuery.of(context).viewInsets.bottom + 160),
-                          )
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: EdgeInsets.zero,
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              hintText: '일정 간편 메모를 이용해 보세요',
+                              hintStyle: f15gray400w500,
+                            ),
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            controller: memoCon,
+                            inputFormatters: <TextInputFormatter>[
+                              LengthLimitingTextInputFormatter(100),
+                            ],
+                          ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -311,25 +399,25 @@ class _AddPlanPageState extends State<AddPlanPage> {
               DateTime selectedDate = DateTime.parse(js.addDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
               int index = selectedDate.difference(startDate).inDays;
               Map data = {
-                "dayAfterStart": index+1,
+                "dayAfterStart": isDateTBD?null:index+1,
                 "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
                 "title": planTitleCon.text,
                 "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
                 "memo": memoCon.text,
                 "latitude":js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['latitude']:'',
                 "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
-                "locker": false
+                "locker": true
               };
               if(js.searchLocation.isNotEmpty){
-               CameraPosition cameraPosition= CameraPosition(
+                CameraPosition cameraPosition= CameraPosition(
                     target: LatLng(js.searchLocation[0]['location']['latitude'], js.searchLocation[0]['location']['longitude']),
                     zoom: 12);
                 final GoogleMapController controller = await js.mapController.future;
                 await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
               }
-              js.addJPlanList(data);
+              js.addPlanBJList(data);
               Get.back();
-            }, title: '저장'),
+            }, title: '일정 B안 등록'),
           ),
         ),
 
