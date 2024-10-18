@@ -12,6 +12,9 @@ class PPlanState extends GetxController{
   final RxList pPlanList = [].obs; /// p plan data 리스트
   final RxList ReorderPPlanList = [].obs; /// Reorder
 
+  final selectedWeekIdx = 1.obs; /// 선택된 week 인덱스
+  final RxMap selectPPlan = {}.obs; /// 수정할때 사용하는 선택된 p형 리스트
+
   /// p planList 가져오기
   Future<void> getPPlanList(bool locker)async{
     List allData = await apiPPlanClient.getPPlanList(ts.selectTripList[0]['id'], locker);
@@ -47,5 +50,10 @@ class PPlanState extends GetxController{
   /// p check
   Future<void> checkPPlan(int planId)async{
     await apiPPlanClient.checkPPlan(ts.selectTripList[0]['id'], planId);
+  }
+
+  /// p delete
+  Future<void> deletePPlan(int planId, int day) async {
+    await apiPPlanClient.deletePPlan(ts.selectTripList[0]['id'], planId, day);
   }
 }

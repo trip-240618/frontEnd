@@ -237,6 +237,10 @@ class SocketState extends GetxController{
             break;
           case 'check' :
             checkPPlan(result);
+            break;
+          case 'delete' :
+            deletePPlan(result);
+            break;
 
           default:
             print("Unknown command");
@@ -262,10 +266,22 @@ class SocketState extends GetxController{
     final planIndex = ps.pPlanList[dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
 
     print('planIndex????${planIndex}');
-
     ps.pPlanList[dayAfterStart-1]['planList'][planIndex]['checkbox'] = result['data']['checkbox'];
 
+    ps.pPlanList.refresh();
     print('p check');
+  }
+
+  Future<void> deletePPlan(Map<String, dynamic> result) async{
+    print('delete? ${result}');
+    int targetPlanId = result['data']['planId'];
+    int dayAfterStart = result['data']['dayAfterStart'];
+
+    final planIndex = ps.pPlanList[dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
+    print('planIndex????${planIndex}');
+    ps.pPlanList[dayAfterStart-1]['planList'].removeAt(planIndex);
+    ps.pPlanList.refresh();
+    print('p delete');
   }
 
 }

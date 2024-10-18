@@ -62,7 +62,23 @@ class ApiPPlanClient {
       print('Error during auto-login: $e');
       rethrow;
     }
+  }
 
+  /// P delete
+  Future<void> deletePPlan(int tripId, int planId, int day) async{
+    try{
+      final response = await dioClient.dio.delete(
+          '/trip/${tripId}/plan/p/delete?planId=$planId&day=$day');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
   }
 
 }
