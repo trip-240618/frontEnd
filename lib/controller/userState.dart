@@ -18,7 +18,15 @@ class UserState extends GetxController{
   }
   /// 자동로그인
   Future<void> autoLogin()async{
-    apiUserClient.autoLogin();
+    await apiUserClient.autoLogin();
+  }
+  /// 유저 삭제
+  Future<void> userDelete()async{
+    await apiUserClient.userDelete();
+  }
+  /// 토큰 업데이트
+  Future<void> tokenUpdate(String token)async{
+    await apiUserClient.updateToken(token);
   }
 
   /// 프로필 권한 요청

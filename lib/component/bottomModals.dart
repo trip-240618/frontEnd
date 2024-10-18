@@ -187,7 +187,7 @@ void timeBottomModel(BuildContext context) {
         );
       });
 }
-void sendBottomModal(BuildContext context,String inviteCode) {
+void sendBottomModal(BuildContext context,String inviteCode,int tripId) {
   final ms = Get.put(MainState());
   FToast fToast;
   fToast = FToast();
@@ -230,7 +230,8 @@ void sendBottomModal(BuildContext context,String inviteCode) {
                       const SizedBox(height: 20,),
                       GestureDetector(
                         onTap: (){
-                          ms.kakaoShare();
+                          print('qhsoaoa');
+                          ms.kakaoShare(tripId,inviteCode);
                         },
                         child: Container(
                           child: Padding(
@@ -362,7 +363,7 @@ void appSendBottomModal(BuildContext context,String inviteCode) {
                       const SizedBox(height: 20,),
                       GestureDetector(
                         onTap: (){
-                          ms.kakaoShare();
+                          // ms.kakaoShare();
                         },
                         child: Container(
                           child: Padding(

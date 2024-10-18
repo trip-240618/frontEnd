@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
+import 'package:tripStory/controller/userState.dart';
+import 'package:tripStory/screen/login/loginPage.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../../component/appbar.dart';
 import '../../../../component/bottomContainer.dart';
@@ -14,6 +16,7 @@ class SettingDeletePage extends StatefulWidget {
 }
 
 class _SettingDeletePageState extends State<SettingDeletePage> {
+  final us = Get.put(UserState());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +78,10 @@ class _SettingDeletePageState extends State<SettingDeletePage> {
         padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
         child: BottomContainer(
             onTap: ()async{
-              showConfirmCancelTapDialog(context, '회원탈퇴를 하시겠어요?', '탈퇴', null, (){});
+              showConfirmCancelTapDialog(context, '회원탈퇴를 하시겠어요?', '탈퇴', null, ()async{
+                await us.userDelete();
+                Get.offAll(()=>LoginPage());
+              });
             },title: '확인했어요',isBlack: true),
       ),
     );

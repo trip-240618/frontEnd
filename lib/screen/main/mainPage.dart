@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:popover/popover.dart';
 import 'package:tripStory/app/api/userApi.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
@@ -33,6 +34,18 @@ class _MainPageState extends State<MainPage> {
   bool isLoading = true;
 
   void initState() {
+    kakaoSchemeStream.listen((url) async{
+      Uri uri = Uri.parse(url!);
+      print('url?? ${uri.queryParameters}');
+      /// 쿼리 매개변수 추출
+      String? tripId = uri.queryParameters['tripId'];
+      String? inviteCode = uri.queryParameters['inviteCode'];
+      await ms.tripJoin('${inviteCode}');
+      await ts.getSelectTrip(int.parse(tripId!));
+      Get.to(()=>BottomNavigator());
+    }, onError: (e) {
+      /// 에러 상황의 예외 처리 코드를 작성합니다.
+    });
     Future.delayed(Duration.zero,()async{
       isLoading = false;
       await ms.getComingTrip();
@@ -199,7 +212,7 @@ class _MainPageState extends State<MainPage> {
                                           Spacer(),
                                           ms.selectIdx.value==1?const SizedBox():GestureDetector(
                                               onTap: (){
-                                                sendBottomModal(context,ms.tripList[index]['invitationCode']);
+                                                sendBottomModal(context,ms.tripList[index]['invitationCode'],ms.tripList[index]['id']);
                                               },
                                               child: SvgPicture.asset('assets/icon/send.svg',color: gray900)),
                                           const SizedBox(width: 12),

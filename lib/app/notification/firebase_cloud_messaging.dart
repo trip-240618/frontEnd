@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+
 
 
 // Future<void> dailyAtTimeNotification(int idx, String title,String startDates,String endDates) async {
@@ -71,6 +68,7 @@ import 'package:timezone/timezone.dart' as tz;
 //
 //   return scheduledDate;
 // }
+
 Future<void> onBackgroundMessage(RemoteMessage message) async {
   // await Firebase.initializeApp();
 
@@ -91,24 +89,21 @@ class FCM {
   final bodyCtlr = StreamController<String>.broadcast();
 
   var channel = const AndroidNotificationChannel(
-    'tripFcm', 'tripFcm',
-    description: 'this is fcm channel', // description
+    'trips', 'trips',
+    description: '트립스토리 알림 채널', // description
     importance: Importance.high,
   );
 
   setNotifications() {
-    // FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
-
     foregroundNotification();
 
     backgroundNotification();
     //
     terminateNotification();
-    // final token =// _firebaseMessaging.getToken().then((value) => print('Token: $value'));
   }
   ///버튼 눌렀을 때 포그라운드
   foregroundNotification() {
-    const String darwinNotificationCategoryPlain = 'tripFcm';
+    const String darwinNotificationCategoryPlain = 'trips';
 
     DarwinNotificationCategory(
       darwinNotificationCategoryPlain,
@@ -197,62 +192,10 @@ class FCM {
       bodyCtlr.sink.add(initialMessage.notification!.body!);
     }
   }
+
   dispose() {
     streamCtlr.close();
     bodyCtlr.close();
     titleCtlr.close();
   }
 }
-
-// class FCMController {
-//   final String _serverKey =
-//       "AAAA6RlPOZ0:APA91bHl4TNWSQH8O9s83Qbof11BZgLGrBH3AdM0zZiM4C_152I19xwVS_V8pDQ3aJmw3s88V07pGf9sHy41NsGtuFtJqqkB6rrGPjDlXjHG4U_y3fjfQFqacWW4ppIrVJPbjASu38mp";
-//
-//   Future<void> sendMessage({
-//     required String userToken,
-//     required String title,
-//     required String body,
-//   }) async {
-//     http.Response response;
-//
-//     NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-//       alert: true,
-//       announcement: false,
-//       badge: true,
-//       carPlay: false,
-//       criticalAlert: false,
-//       provisional: false,
-//       sound: true,
-//     );
-//
-//     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-//       print('User granted permission');
-//     } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-//       print('User granted provisional permission');
-//     } else {
-//       print('User declined or has not accepted permission');
-//     }
-//
-//     try {
-//       response = await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-//           headers: <String, String>{'Content-Type': 'application/json', 'Authorization': 'key=$_serverKey'},
-//           body: jsonEncode({
-//             'notification': {'title': title, 'body': body, 'sound': 'true'},
-//             'ttl': '60s',
-//             "content_available": true,
-//             'data': {
-//               'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-//               'id': '1',
-//               'status': 'done',
-//               "action": 'clickSound',
-//             },
-//             // 'topic': 'community',
-//             // 상대방 토큰 값, to -> 단일, registration_ids -> 여러명
-//             'to': userToken
-//             // 'registration_ids': tokenList
-//           }));
-//     } catch (e) {
-//       print('error $e');
-//     }
-//   }
-// }

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
@@ -7,6 +8,9 @@ import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/login/loginPage.dart';
 import 'package:tripStory/screen/main/mainPage.dart';
+
+import '../app/notification/firebase_cloud_messaging.dart';
+import '../app/notification/local_notification_setting.dart';
 
 
 class SplashPage extends StatefulWidget {
@@ -24,7 +28,13 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   void initState() {
-    initPlatformState();
+    Future.delayed(Duration.zero,()async{
+      requestNotificationPermissions();
+      await LocalNotifyCation().initializeNotification();
+      await FCM().setNotifications();
+      initPlatformState();
+    });
+
     super.initState();
   }
 
@@ -35,9 +45,13 @@ class _SplashPageState extends State<SplashPage> {
       jailbroken = true;
     }
     final cookies = await us.apiUserClient.dioClient.getRefreshToken();
-    print('cookies???${cookies}');
+    print('cock?? ${cookies}');
     if (cookies != null) {
-      await us.apiUserClient.autoLogin();
+      String? tokens = await FirebaseMessaging.instance.getToken();
+      await us.autoLogin();
+      if(us.userList.isNotEmpty){
+        await us.tokenUpdate(tokens!);
+      }
     }
     Future.delayed(Duration(seconds: 1), () {
       if (!mounted) return;

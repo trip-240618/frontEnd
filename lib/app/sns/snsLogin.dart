@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tripStory/app/config/dio_client.dart';
 import 'package:tripStory/controller/userState.dart';
 import '../api/userApi.dart';
@@ -96,42 +99,66 @@ Future<void> requestUserInfo() async {
 Future<void> sendTokenToServer(String accessToken,String refreshToken) async {
   final us = Get.put(UserState());
   final dioClient = DioClient();
+  String? tokens = await FirebaseMessaging.instance.getToken();
   /// 백엔드 서버로 토큰 전송
   var response = await http.get(
-    Uri.parse('https://trip-story.site/user/oauth2/callback/kakao?kakaoToken=${accessToken}&fcmToken=abcd')
+    Uri.parse('https://trip-story.site/user/oauth2/callback/kakao?kakaoToken=${accessToken}&fcmToken=$tokens')
   );
   if (response.statusCode == 200) {
     await dioClient.loginCookies('${response.headers['set-cookie']}');
     var decodedBody = utf8.decode(response.bodyBytes);
     var jsonResponse = jsonDecode(decodedBody);
     us.userList.value = [jsonResponse];
-    // print('us???? ${jsonResponse}');
   } else {
     print('서버에 토큰 전송 실패: ${response.statusCode}');
   }
 }
+/// 구글로그인
+Future<void> googleLogin() async {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  try {
+    await _googleSignIn.signIn().then((value)async{
+      print('??구글로그인 값? ${value}');
+      if(value!=null){
+        await requestGoogleInfo(value);
+      }
+    });
+  } catch (error) {
+    print(error);
+  }
+}
 
-// /// 구글 로그인 서버로 데이터
-// Future<void> googleSendData(GoogleSignInAccount user) async {
-//   final dioClient = DioClient();
-//   final apiUserClient = ApiUserClient(dioClient);
-//   final url = 'https://trip-story.site/user/oauth2/login/google';
-//   final userData = {
-//     "displayName": user.displayName,
-//     "email": user.email,
-//     "id": user.id,
-//     "photoUrl": user.photoUrl,
-//     "serverAuthCode": user.serverAuthCode,
-//   };
-//   final response = await httpClient.post(
-//     Uri.parse(url),
-//     headers: {'Content-Type': 'application/json'},
-//     body: jsonEncode(userData),
-//   );
-//   await saveCookies('${response.headers['set-cookie']}');
-//   print('gogole data ? ${response.body}');
-//   print('Google login data sent successfully');
-// }
+/// 구글 로그인 서버로 데이터
+Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
+  final us = Get.put(UserState());
+  final dioClient = DioClient();
+  String? tokens = await FirebaseMessaging.instance.getToken();
+  final url = 'https://trip-story.site/user/oauth2/login/google';
+  print('tk?? ${tokens}');
+  final userData = {
+    "displayName": user.displayName,
+    "email": user.email,
+    "id": user.id,
+    "photoUrl": user.photoUrl,
+    "serverAuthCode": '',
+    'fcmToken':tokens
+  };
+  var response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(userData)
+  );
+  if (response.statusCode == 200) {
+    await dioClient.loginCookies('${response.headers['set-cookie']}');
+    var decodedBody = utf8.decode(response.bodyBytes);
+    var jsonResponse = jsonDecode(decodedBody);
+    us.userList.value = [jsonResponse];
+    print('구글 로그인했을 때 정보 ${us.userList}');
+  } else {
+    print('서버에 토큰 전송 실패: ${response}');
+  }
+
+}
 // /// 애플 로그인 서버로 데이터
 // Future<void> appleSendData(AuthorizationCredentialAppleID user) async {
 //   final url = 'https://trip-story.site/user/oauth2/login/apple';

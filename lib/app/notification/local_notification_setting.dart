@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 class LocalNotifyCation {
@@ -38,3 +40,34 @@ class LocalNotifyCation {
   }
 }
 
+
+/// 알림 권한 여부 설정
+void requestNotificationPermissions() {
+
+  ///fcm
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  /// 안드로이드 일때
+  if (Platform.isAndroid) {
+    FirebaseMessaging.instance.requestPermission(
+      badge: true,
+      alert: true,
+      sound: true,
+    );
+    var channel = AndroidNotificationChannel(
+        'trips', 'trips',
+        description: '트립스토리 알림 채널', // description
+        importance: Importance.high,
+    );
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
+  /// Ios 일 때
+  else {
+    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+}

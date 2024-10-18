@@ -16,8 +16,8 @@ class _KakaoTestState extends State<KakaoTest> {
     kakaoSchemeStream.listen((url) {
       Uri uri = Uri.parse(url!);
       /// 쿼리 매개변수 추출
-      String? key = uri.queryParameters['key'];
-      String? key01 = uri.queryParameters['key_01'];
+      String? key = uri.queryParameters['tripId'];
+      String? key01 = uri.queryParameters['inviteCode'];
       print('key ${key}');
       print('key01 ${key01}');
       Get.to(()=>SecondTest(name: key!));

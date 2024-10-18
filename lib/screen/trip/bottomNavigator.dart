@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/screen/main/mainPage.dart';
 import 'package:tripStory/screen/trip/locker/lockerTapPage.dart';
+import 'package:tripStory/screen/trip/setting/member_list.dart';
+import 'package:tripStory/screen/trip/tripHistory/history/tripHistoryDetail.dart';
 import 'package:tripStory/screen/trip/tripHistory/tripHistoryMain.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/jSchedulePage.dart';
 import 'package:tripStory/screen/trip/setting/trip_edit_page.dart';
@@ -13,7 +17,8 @@ import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
 class BottomNavigator extends StatefulWidget {
-  const BottomNavigator({super.key});
+  final int? notificationIdx;
+  const BottomNavigator({super.key, this.notificationIdx});
 
   @override
   State<BottomNavigator> createState() => _BottomNavigatorState();
@@ -27,9 +32,16 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   final ts = Get.put(TripState());
   @override
   void initState() {
+
     _widgetOptions = [ts.selectTripList[0]['type']=='J'? JSchedulePage():PPlanPage(), LockerTapPage(), TripHistoryMainPage()];
     _bottomTabController = TabController(length: 3, vsync: this,initialIndex: 0);
-    _currentIndex = 0;
+    if(widget.notificationIdx==2){
+      _currentIndex = 2;
+      _bottomTabController.index = 2;
+      // Get.to(()=>TripHistoryDetailPage(selectedIdx: 0, dayIdx: dayIdx, historyId: historyId));
+    }else{
+      _currentIndex = 0;
+    }
     super.initState();
   }
 
@@ -118,32 +130,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                                 const Divider(color: gray200),
                               ],
                             ),
-                          ),
-                          PopupMenuItem(
-                            height: 0,
-                            padding: EdgeInsets.zero,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
-                                  child: Container(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
-                                        const SizedBox(width: 10,),
-                                        Text(
-                                          '삭제하기',
-                                          style: f14Gray800w500,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )])
+                          ),])
                   ],
                 ),
                 const SizedBox(height: 2),
@@ -158,20 +145,25 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                 Row(
                   children: [
                     Spacer(),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: gray200,
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset('assets/icon/userIcon.svg', color: gray900,),
-                            const SizedBox(width: 6,),
-                            Text('${ts.selectTripList[0]['tripMemberDtoList'].length}', style: f14Gray900w700,),
-                            const SizedBox(width: 6,),
-                          ],
+                    GestureDetector(
+                      onTap: (){
+                        Get.to(()=>MemberList());
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: gray200,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset('assets/icon/userIcon.svg', color: gray900,),
+                              const SizedBox(width: 6,),
+                              Text('${ts.selectTripList[0]['tripMemberDtoList'].length}', style: f14Gray900w700,),
+                              const SizedBox(width: 6,),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -191,10 +183,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
           child: TabBar(
             onTap: (index){
               _currentIndex = index;
-
-              setState(() {
-
-              });
+              setState(() {});
             },
             controller: _bottomTabController,
             indicator: BoxDecoration(
