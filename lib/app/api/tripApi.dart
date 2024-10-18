@@ -187,7 +187,7 @@ class ApiTripClient {
   /// 여행방 입장
   Future<List<dynamic>> tripEnter(int tripId) async {
     try {
-      final response = await dioClient.dio.post(
+      final response = await dioClient.dio.get(
           '/trip/enter?tripId=${tripId}');
       if (response.statusCode == 200) {
         final data = response.data;

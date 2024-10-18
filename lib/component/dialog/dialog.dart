@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:tripStory/component/textForm.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
@@ -14,6 +13,7 @@ import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/flight_edit.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
 import '../../util/upper_case.dart';
+import '../textForm/textform.dart';
 
 /// 메세지만 있는 확인용 다이얼로그
 showConfirmTapDialog(

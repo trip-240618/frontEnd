@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../component/textForm.dart';
+import '../../../component/textForm/textform.dart';
 import '../../../controller/mainState.dart';
 import '../../../util/color.dart';
 import '../../../util/font.dart';

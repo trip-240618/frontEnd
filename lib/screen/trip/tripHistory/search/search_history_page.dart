@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripHistory/search/search_history_list.dart';
@@ -68,40 +69,20 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: TextFormField(
-                        style: f15gray800w500,
-                        controller: controller,
-                        focusNode: focusNode,
-                        onFieldSubmitted: (value){
-                          if(value.isNotEmpty){
-                            isSearch = true;
-                            hs.searchTagName(value);
-                            setState(() {});
-                          }
-                        },
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.symmetric(vertical: 16),
-                          hintText: "태그, 닉네임으로 사진을 검색해보세요",
+                      child: TextIconFormFields(
+                          controller: controller,
+                          hintText: '태그, 닉네임으로 사진을 검색해보세요',
+                          icon: 'assets/icon/search.svg',
+                          colorFilter: ColorFilter.mode(Color(0xff5E91EE), BlendMode.srcIn),
                           hintStyle: f15gray400w500,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                          prefixIcon: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12),
-                            child: SvgPicture.asset(
-                              'assets/icon/search.svg',
-                              fit: BoxFit.none, color: Color(0xff5E91EE)
-                            ),
-                          ),
-                        ),
-                      ),
+                          onFieldSubmitted: (value){
+                            if(value.isNotEmpty){
+                              isSearch = true;
+                              hs.searchTagName(value);
+                              setState(() {});
+                            }
+                          },
+                      )
                     ),
                     isSearch?GestureDetector(
                       onTap: (){

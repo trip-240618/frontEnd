@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/controller/mainState.dart';
 import '../../../component/main/typeChoose.dart';
-import '../../../component/textForm.dart';
+import '../../../component/textForm/textform.dart';
 import '../../../util/font.dart';
 
 class TripDirectSearchPage extends StatefulWidget {
