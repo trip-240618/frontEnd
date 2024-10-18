@@ -70,8 +70,9 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     await apiTripClient.bookmarkClick(tripId);
   }
   /// 여행방 참가
-  Future<void> tripJoin(String invitationCode) async {
-    await apiTripClient.tripJoin(invitationCode);
+  Future<Map<String,dynamic>> tripJoin(String invitationCode) async {
+    Map<String,dynamic> data = await apiTripClient.tripJoin(invitationCode);
+    return data;
   }
   /// 여행지 캐쉬 저장
   void preCacheFlagImages(BuildContext context,List<Map<String, dynamic>> country) {
@@ -179,15 +180,19 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   }
 
   ///카카오 공유하기
-  void kakaoShare()async{
+  void kakaoShare(int tripId,String inviteCode)async{
     /// 사용자 정의 템플릿 ID
     int templateId = 109315;
     /// 카카오톡 실행 가능 여부 확인
     bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
-
     if (isKakaoTalkSharingAvailable) {
       try {
-        Uri uri = await ShareClient.instance.shareCustom(templateId: templateId,templateArgs: {'key1': '땃땃슈22!'});
+        Uri uri = await ShareClient.instance.shareCustom(
+            templateId: templateId,
+            templateArgs: {
+              'value1': '${tripId}',
+              'value2':inviteCode
+            });
         await ShareClient.instance.launchKakaoTalk(uri);
         print('카카오톡 공유 완료');
       } catch (error) {
@@ -196,7 +201,10 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     } else {
       try {
         Uri shareUrl = await WebSharerClient.instance.makeCustomUrl(
-            templateId: templateId, templateArgs: {'key1': 'value1'});
+            templateId: templateId, templateArgs: {
+          'value1': '${tripId}',
+          'value2':inviteCode
+        });
         await launchBrowserTab(shareUrl, popupOpen: true);
       } catch (error) {
         print('카카오톡 공유 실패 $error');

@@ -149,7 +149,6 @@ class ApiTripClient {
       rethrow;
     }
   }
-
   /// 북마크 클릭
   Future<void> bookmarkClick(int tripId) async {
     try {
@@ -167,20 +166,22 @@ class ApiTripClient {
     }
   }
   /// 여행방 참여
-  Future<void> tripJoin(String invitationCode) async {
+  Future<Map<String,dynamic>> tripJoin(String invitationCode) async {
     final ts = Get.put(TripState());
     try {
       final response = await dioClient.dio.post(
           '/trip/join?invitationCode=${invitationCode}');
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
+        if(data.length==0){
+          return {};
+        }
+        return data;
       } else {
         throw Exception('error ${response.statusCode}');
       }
     } catch (e) {
-      print('Error during auto-login: $e');
-      rethrow;
+      return {};
     }
   }
   /// 여행방 입장
@@ -203,6 +204,48 @@ class ApiTripClient {
       rethrow;
     }
   }
+  /// 여행방 강퇴
+  Future<void> tripKick(int tripId,String tripType,String uuid) async {
+    try {
+      final response = await dioClient.dio.delete(
+          '/trip/kick?tripId=$tripId&tripType=$tripType&uuid=$uuid');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+        // if(data.length==0){
+        //   return [];
+        // }
+        // return [data];
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
+  /// 여행방 삭제
+  Future<void> tripDelete(int tripId,) async {
+    try {
+      final response = await dioClient.dio.delete(
+          '/trip/delete?tripId=$tripId');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+        // if(data.length==0){
+        //   return [];
+        // }
+        // return [data];
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
   /// 여행방 수정
   Future<void> tripModify(int tripId,String name,String thumbnail,String labelColor,String startDate,String endDate) async {
     final ts = Get.put(TripState());
@@ -221,6 +264,24 @@ class ApiTripClient {
         final data = response.data;
         ts.selectTripList.value = [response.data];
         ts.selectTripList.refresh();
+        print('data?? ${data}');
+      } else {
+        throw Exception('error ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
+  /// 여행방 나가기
+  Future<void> tripLeave(int tripId,String tripType) async {
+    try {
+      final response = await dioClient.dio.delete(
+          '/trip/leave?tripType=$tripType&tripId=$tripId'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
         print('data?? ${data}');
       } else {
         throw Exception('error ${response.statusCode}');

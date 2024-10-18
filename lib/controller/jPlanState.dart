@@ -60,39 +60,41 @@ class JPlanState extends GetxController{
     polyline.clear();
     List<LatLng> poly = []; // 전체 경로를 담을 리스트
 
-    for (int i = 0; i < jPlanList[0]['planList'].length; i++) {
-      if (jPlanList[0]['planList'][i]['latitude'] != null &&
-          jPlanList[0]['planList'][i]['longitude'] != null) {
-        // Custom icon 생성
-        final icon = await getCustomIcon2(i + 1);
-        // 마커 생성
-        final marker = Marker(
-          markerId: MarkerId(DateTime.now().toString()), // 고유 마커 ID
-          position: LatLng(jPlanList[0]['planList'][i]['latitude'],
-              jPlanList[0]['planList'][i]['longitude']),
-          icon: icon,
-          onTap: () {
-            // 마커 클릭 시 실행할 코드
-          },
-        );
-        markers.add(marker);
-        poly.add(LatLng(jPlanList[0]['planList'][i]['latitude'],
-            jPlanList[0]['planList'][i]['longitude']));
+    if(jPlanList.isNotEmpty){
+      for (int i = 0; i < jPlanList[0]['planList'].length; i++) {
+        if (jPlanList[0]['planList'][i]['latitude'] != null &&
+            jPlanList[0]['planList'][i]['longitude'] != null) {
+          // Custom icon 생성
+          final icon = await getCustomIcon2(i + 1);
+          // 마커 생성
+          final marker = Marker(
+            markerId: MarkerId(DateTime.now().toString()), // 고유 마커 ID
+            position: LatLng(jPlanList[0]['planList'][i]['latitude'],
+                jPlanList[0]['planList'][i]['longitude']),
+            icon: icon,
+            onTap: () {
+              // 마커 클릭 시 실행할 코드
+            },
+          );
+          markers.add(marker);
+          poly.add(LatLng(jPlanList[0]['planList'][i]['latitude'],
+              jPlanList[0]['planList'][i]['longitude']));
+        }
       }
+      /// 경로를 그리는 Polyline 객체 생성
+      if (poly.isNotEmpty) {
+        polyline.add(
+          Polyline(
+            polylineId: PolylineId('polyline_1'),
+            patterns: [PatternItem.dash(80), PatternItem.gap(30)],
+            points: poly, // 전체 경로 좌표 리스트
+            color: Color(ts.selectTripList[0]['labelColor']), // 경로 색상
+            width: 3, // 경로 두께
+          ),
+        );
+      }
+      print('전체 마커 ?? ${markers}');
     }
-    /// 경로를 그리는 Polyline 객체 생성
-    if (poly.isNotEmpty) {
-      polyline.add(
-        Polyline(
-          polylineId: PolylineId('polyline_1'),
-          patterns: [PatternItem.dash(80), PatternItem.gap(30)],
-          points: poly, // 전체 경로 좌표 리스트
-          color: Color(ts.selectTripList[0]['labelColor']), // 경로 색상
-          width: 3, // 경로 두께
-        ),
-      );
-    }
-    print('전체 마커 ?? ${markers}');
   }
 
   /// jplanList 가져오기

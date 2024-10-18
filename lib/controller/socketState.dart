@@ -193,25 +193,25 @@ class SocketState extends GetxController{
   Future<void> swapJplan(Map<String, dynamic> result) async {
     if ((js.selectedIdx.value) + 1 == result['data'][0]['dayAfterStart']) {
       js.jPlanList.value = result['data'];
+      js.jPlanList.forEach((day) {
+        day['waitList']=[];
+        day['checked'] = true;
+      });
       js.jplnaMarkerSet();
     }
   }
   /// 편집 권한 체크 시작
   Future<void> checkStartEditorJplan(Map<String, dynamic> result) async {
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
-        js.jPlanList[0]['checked'] = false;
-        // if(us.userList[0]['uuid']!=result['data']['editorUuid']){
-        //   js.jPlanList[0]['waitList'] = result['data'];
-        // }
-        print('수정 스타트${js.jPlanList}');
+        if(us.userList[0]['uuid']!=result['data']['editorUuid']){
+          js.jPlanList[0]['waitList'] = result['data'];
+        }
     }
   }
   /// 편집 권한 체크 종료
   Future<void> endStartEditorJplan(Map<String, dynamic> result) async {
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
-      js.jPlanList[0]['checked'] = true;
       js.jPlanList[0]['waitList'] = [];
-      print('수정 끝 ${js.jPlanList}');
     }
   }
   /// 누가 편집중 일 때

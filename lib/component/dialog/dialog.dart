@@ -117,6 +117,7 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
   final ts = Get.put(TripState());
   bool isRegCheck = false;
   bool isFirstCheck = false;
+  bool isValue =false; /// 값이 있나없나
   showDialog(
       context: context,
       // barrierDismissible: false,
@@ -168,6 +169,10 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
                        padding: const EdgeInsets.only(left: 16,top: 4),
                        child: Text('초대 코드는 영문+숫자 8자리입니다',style: f12redw500,),
                      ),
+                     isRegCheck && !isValue?Padding(
+                       padding: const EdgeInsets.only(left: 16,top: 4),
+                       child: Text('존재하지 않는 초대 코드입니다',style: f12redw500,),
+                     ):const SizedBox(),
                      const SizedBox(height: 80),
                    ],
                  ),
@@ -182,7 +187,14 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
                      final regex = RegExp(r'^[a-zA-Z0-9]+$');
                      if (con.text.length == 8 && regex.hasMatch(con.text)) {
                        isRegCheck = true;
-                       await ms.tripJoin('${con.text}');
+                       Map<String,dynamic> data = await ms.tripJoin('${con.text}');
+                       if(data.isEmpty){
+                        isValue = false;
+                       }else{
+                         await ts.getSelectTrip(data['id']);
+                         Get.back();
+                         Get.to(()=>BottomNavigator());
+                       }
                      }else{
                        isRegCheck = false;
                      }
@@ -252,7 +264,7 @@ CodeDialog(BuildContext context,String code) {
               children: [
                 GestureDetector(
                   onTap: (){
-                    ms.kakaoShare();
+                    // ms.kakaoShare();
                   },
                   child: Container(
                     width: 60,

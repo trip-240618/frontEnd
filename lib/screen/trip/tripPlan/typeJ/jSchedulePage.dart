@@ -21,8 +21,6 @@ import '../../../../util/font.dart';
 import '../../../../util/tooltip_shape.dart';
 import 'addPlan/addPlanPage.dart';
 import 'edit_plan_page.dart';
-
-
 class JSchedulePage extends StatefulWidget {
   const JSchedulePage({super.key});
 
@@ -128,37 +126,37 @@ class _JSchedulePageState extends State<JSchedulePage> {
                         ],
                       )
                           :  GestureDetector(
-                        onTap:(){
-                          js.selectedIdx.value = index;
-                          scrollToIndex(index);
-                          js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index))}';
-                          js.getJPlanList(index+1, false);
-                          print('?? 선택된 날짜 ${js.selectedIdx.value}');
-                          setState(() {});
-                        },
-                        child: Container(
-                          width:36,
-                          height: 54,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 4,top: 4),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f12gray300w600,),
-                                Spacer(),
-                                Container(
-                                    width: 28,
-                                    height: 28,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: gray300
-                                    ),
-                                    child: Center(child: Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f14Whitew700,)))
-                              ],
+                            onTap:()async{
+                                js.selectedIdx.value = index;
+                                scrollToIndex(index);
+                                js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index))}';
+                                await js.getJPlanList(index+1, false);
+                                js.jplnaMarkerSet();
+                                setState(() {});
+                            },
+                            child: Container(
+                              width:36,
+                              height: 54,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 4,top: 4),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text('${DateFormat('E', 'ko').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f12gray300w600,),
+                                    Spacer(),
+                                    Container(
+                                        width: 28,
+                                        height: 28,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: gray300
+                                        ),
+                                        child: Center(child: Text('${DateFormat('d').format(DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index)))}',style: f14Whitew700,)))
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
                       const SizedBox(width: 12)
                     ],
                   );
@@ -252,22 +250,25 @@ class _JSchedulePageState extends State<JSchedulePage> {
                             },
                             child: SvgPicture.asset('assets/icon/plane.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),)),
                         const SizedBox(width: 8,),
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
+                        InkWell(
+                          borderRadius: BorderRadius.circular(100),
                           onTap: ()async{
-                            await socket.addEditor(1);
+                            await socket.addEditor(js.jPlanList[0]['dayAfterStart']);
+                            await Future.delayed(const Duration(milliseconds: 500));
                             /// 누가 편집중일 때
-                            print('j 리스트?? ${js.jPlanList[0]['waitList']}');
                             if(js.jPlanList[0]['waitList'].length!=0){
-                              showCustomToast(context, fToast!, '${js.jPlanList[0]['waitList']['nickname']}');
+                              showCustomToast(context, fToast!, '${js.jPlanList[0]['waitList']['nickname']} 님이 일정을 수정 중입니다');
                             }else{
                               /// 편집 권한 체크 눌렀을 때
                               if(js.jPlanList[0]['checked']){
                                 js.isSorting.value = true;
+                                showCustomToast(context, fToast!, '변경하고 싶은 일정을 선택해 주세요');
+                                js.jPlanList[0]['checked'] = false;
                                 js.editPlanJList.value = jsonDecode(jsonEncode(js.jPlanList));
                               }
                               /// 편집 권한 해제 했을 때
                               else{
+                                js.jPlanList[0]['checked'] = true;
                                 Map<String,dynamic> transMap = {
                                   "dayAfterStart": js.editPlanJList[0]['dayAfterStart'],
                                   'orderDtos': (js.editPlanJList[0]['planList'] as List).map((item){
@@ -285,10 +286,14 @@ class _JSchedulePageState extends State<JSchedulePage> {
                               }
                             }
                           },
-                          child: SvgPicture.asset('assets/icon/change.svg',colorFilter: ColorFilter.mode(
-                            js.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
-                            BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
-                          ),),
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            child: SvgPicture.asset('assets/icon/swap.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(
+                              js.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
+                              BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
+                            ),),
+                          ),
                         ),
                       ],
                     ),

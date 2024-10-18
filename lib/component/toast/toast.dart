@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-void showCustomToast(BuildContext context, FToast fToast, String nickname) {
+void showCustomToast(BuildContext context, FToast fToast, String text) {
   fToast.showToast(
     child: Container(
       width: MediaQuery.of(context).size.width,  // 화면 너비 가져오기
@@ -43,14 +43,22 @@ void showCustomToast(BuildContext context, FToast fToast, String nickname) {
             ),
             const SizedBox(width: 8),
             Text(
-              '$nickname님이 일정을 수정 중입니다',
+              '${text}',
               style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w600),  // f14whitew600 스타일 인라인 적용
             ),
           ],
         ),
       ),
     ),
-    gravity: ToastGravity.TOP,
+    gravity: ToastGravity.BOTTOM,
     toastDuration: const Duration(seconds: 2),
+    positionedToastBuilder: (context, child) {
+      return Positioned(
+        bottom: 100.0, // 바텀에서 50px 패딩 적용
+        left: 20,
+        right: 20,
+        child: child,
+      );
+    },
   );
 }

@@ -47,8 +47,13 @@ class _LoginPageState extends State<LoginPage> {
               // Get.to(()=>MainPage());
             }),
             const SizedBox(height: 18),
-            GoogleContainer(onTap: (){
-              Get.to(()=>MainPage());
+            GoogleContainer(onTap: ()async{
+              await googleLogin();
+              if(us.userList[0]['type']=='register'){
+                Get.to(()=>TermPage());
+              }else if(us.userList[0]['type']=='login'){
+                Get.offAll(()=>MainPage());
+              }
             }),
             const SizedBox(height: 18),
             AppleContainer(onTap: (){})

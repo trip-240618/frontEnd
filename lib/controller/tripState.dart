@@ -24,8 +24,18 @@ class TripState extends GetxController{
   Future<void> modifyTrip(int tripId,String name,String thumbnail,String labelColor,String startDate,String endDate)async{
      await apiTripClient.tripModify(tripId, name, thumbnail, labelColor, startDate, endDate);
   }
-
-
+  /// 여행방 강퇴하기
+  Future<void> kickTrip(int tripId,String tripType,String uuid)async{
+     await apiTripClient.tripKick(tripId,tripType,uuid);
+  }
+  /// 여행방 삭제하기
+  Future<void> deleteTrip(int tripId)async{
+    await apiTripClient.tripDelete(tripId);
+  }
+  /// 여행방 나가기
+  Future<void> leaveTrip(int tripId,String tripType)async{
+    await apiTripClient.tripLeave(tripId,tripType);
+  }
   @override
   void dispose() {
     super.dispose();

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/app/config/dio_client.dart';
 import 'package:tripStory/controller/userState.dart';
@@ -8,6 +9,7 @@ class ApiUserClient {
   final DioClient dioClient;
 
   ApiUserClient(this.dioClient);
+
 
   /// 자동 로그인
   Future<void> autoLogin() async {
@@ -18,9 +20,12 @@ class ApiUserClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        us.userList.value = [data];
-        print('자동로그인 값? ${us.userList.value}');
-        return data;
+        print('타입? ${data['type']}');
+        if(data['type']!='register'){
+          us.userList.value = [data];
+        }else{
+          us.userList.clear();
+        }
       }
     } catch (e) {
       print('Error during auto-login: $e');
@@ -31,6 +36,31 @@ class ApiUserClient {
   Future<void> logOut() async {
     final us = Get.put(UserState());
     try {
+      us.userList.clear();
+      dioClient.deleteCookies();
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+  /// 토큰 업데이트
+  Future<void> updateToken(String token) async {
+    try {
+      final response = await dioClient.dio.put(
+          '/user/update/fcmToken?fcmToken=$token'
+      );
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+  /// 유저 삭제
+  Future<void> userDelete() async {
+    final us = Get.put(UserState());
+    try {
+      final response = await dioClient.dio.delete(
+        '/user/delete/account',
+      );
       us.userList.clear();
       dioClient.deleteCookies();
     } catch (e) {
@@ -54,6 +84,7 @@ class ApiUserClient {
         }
       );
       if (response.statusCode == 200) {
+
         final data = response.data;
         print('data??? ${data}');
         return data;

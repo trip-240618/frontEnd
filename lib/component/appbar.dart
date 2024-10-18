@@ -77,13 +77,16 @@ class TrailingBackAppBar extends StatelessWidget implements PreferredSizeWidget 
         text,
         style: f18Gray900w600,
       ),
-
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 20),
-          child: GestureDetector(
+          child: InkWell(
             onTap: trailingTap,
-            child: svgPicture,
+            borderRadius: BorderRadius.circular(100),
+            child: Container(
+                width: 30,
+                height: 30,
+                child: svgPicture),
           ),
         )
       ],

@@ -42,6 +42,7 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        FocusManager.instance.primaryFocus?.unfocus();
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
@@ -73,15 +74,14 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                           controller: _placeCon,
                           autofocus: false,
                           style: f15gray800w500,
+                          onTapOutside: (e)=>FocusManager.instance.primaryFocus?.unfocus(),
                           onChanged: (v){
                             setState(() {});
                           },
                           onFieldSubmitted: (value) async {
                             placeList = await apiTripClient.autoLocationGet(_placeCon.text);
                             print(placeList);
-                            setState(() {
-
-                            });
+                            setState(() {});
                           },
                           decoration: InputDecoration(
                             isDense: true,

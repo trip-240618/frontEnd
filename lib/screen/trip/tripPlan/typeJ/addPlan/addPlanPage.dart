@@ -240,6 +240,9 @@ class _AddPlanPageState extends State<AddPlanPage> {
                             onChanged: (con){
                               setState(() {});
                             },
+                            onTapOutside: (e)=>FocusManager.instance.primaryFocus?.unfocus(),
+                            scrollPadding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).viewInsets.bottom + 40),
                             decoration: InputDecoration(
                               isDense: true,
                               contentPadding: EdgeInsets.zero,
@@ -286,6 +289,9 @@ class _AddPlanPageState extends State<AddPlanPage> {
                             onChanged: (con){
                               setState(() {});
                             },
+                            onTapOutside: (e)=>FocusManager.instance.primaryFocus?.unfocus(),
+                            scrollPadding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).viewInsets.bottom + 160),
                             decoration: InputDecoration(
                               isDense: true,
                               contentPadding: EdgeInsets.zero,

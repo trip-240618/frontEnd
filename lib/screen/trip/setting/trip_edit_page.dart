@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/tripState.dart';
 import '../../../component/appbar.dart';
 import '../../../component/bottomContainer.dart';
@@ -175,8 +176,14 @@ class _TripEditPageState extends State<TripEditPage> {
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: TrailingBackAppBar(text: '스크랩', backTap: (){Get.back();}, svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),trailingTap: (){
-
+          appBar: TrailingBackAppBar(
+            text: '여행방 설정',
+            backTap: (){Get.back();},
+            svgPicture: SvgPicture.asset('assets/icon/trashCan.svg',fit: BoxFit.none,),
+            trailingTap: (){
+              showConfirmCancelTapDialog(context, '여행방을 삭제하시겠습니까?\n삭제 후 복구는 어렵습니다', '확인',null, (){
+                ts.deleteTrip(ts.selectTripList[0]['id']);
+              });
             },),
           body: Column(
             children: [
