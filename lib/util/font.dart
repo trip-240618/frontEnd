@@ -440,7 +440,16 @@ const TextStyle f16darkGray3w600 = TextStyle(
   height: 1.5,
 );
 
-
+TextStyle f14mainw600(Color fontColor) {
+  return TextStyle(
+    fontFamily: 'Pretendard',
+    fontSize: 14.0,
+    fontWeight: FontWeight.w600,
+    height: 22.0 / 14.0,
+    letterSpacing: 0.0145 * 14.0,
+    color: fontColor,
+  );
+}
 const TextStyle f14gray800w600 = TextStyle(
   fontSize: 14,
   color: gray800,
