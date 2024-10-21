@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart' as imgCom;
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -66,7 +67,11 @@ class UserState extends GetxController{
   }
   /// 프로필 상세 등록
   Future<void> userRegister(String nickName,String profileImg,String thumbnailImg,bool marketing)async{
+    String? tokens = await FirebaseMessaging.instance.getToken();
     apiUserClient.userRegister(nickName, profileImg,thumbnailImg,marketing);
+    if(tokens!=null){
+      apiUserClient.updateToken(tokens);
+    }
   }
   /// 프로필 수정
   Future<void> userModify(String nickName,String memo,String thumbnailImg,String profileImg)async{

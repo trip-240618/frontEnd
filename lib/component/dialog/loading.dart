@@ -21,3 +21,16 @@ class _LoadingWidgetState extends State<LoadingWidget> {
     );
   }
 }
+
+showLoading(BuildContext context) {
+  showDialog(
+    barrierDismissible: false,
+    builder: (ctx) {
+      return Center(child: LoadingAnimationWidget.hexagonDots(
+        color: Colors.white,
+        size: 50,
+      ));
+    },
+    context: context,
+  );
+}

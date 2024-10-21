@@ -36,6 +36,9 @@ class ApiUserClient {
   Future<void> logOut() async {
     final us = Get.put(UserState());
     try {
+      final response = await dioClient.dio.put(
+          '/user/update/fcmToken'
+      );
       us.userList.clear();
       dioClient.deleteCookies();
     } catch (e) {
@@ -128,4 +131,21 @@ class ApiUserClient {
     }
   }
 
+  /// 자동 로그인
+  Future<void> alimTest() async {
+    final us = Get.put(UserState());
+    try {
+      String token ='emwtUZuJG0FrtbysU0sMxv:APA91bGyoUGtmG_DQXiDG0RQmchnvuSKUvgGH3VLophlpVa3RHbiH7XtMG67cuquhADmqdysCZ2zbllZtyTcWySkFBMesGzW258fQJddGoQqOFY1bLnjX6R9Ki6wboAVO3Y2hMeUfGIR';
+      final response = await dioClient.dio.post(
+        '/fcm/test/send?fcmToken=$token'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('타입? ${data}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      us.userList.clear();
+    }
+  }
 }

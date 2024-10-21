@@ -13,7 +13,7 @@ import 'package:tripStory/screen/myPage/myPage.dart';
 import '../../app/config/dio_client.dart';
 import '../../component/bottomModals.dart';
 import '../../component/dialog/loading.dart';
-import '../../component/main/emptyScreen.dart';
+import '../../component/empty/emptyScreen.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
 import '../trip/bottomNavigator.dart';
@@ -89,6 +89,7 @@ class _MainPageState extends State<MainPage> {
         padding: const EdgeInsets.only(left: 20,right: 20,bottom: 44),
         child: Column(
           children: [
+
             Obx(()=> Row(
               children: [
                 GestureDetector(
@@ -163,6 +164,13 @@ class _MainPageState extends State<MainPage> {
               ],
             )),
             const SizedBox(height: 32),
+            GestureDetector(
+                onTap: (){
+                  print('알림 테스트?');
+                  showLoading(context);
+                  // apiUserClient.alimTest();
+                },
+                child: Text('알림 테스트ㅇㅁㅇㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅁㅁㄴ')),
             isLoading?Expanded(child: LoadingWidget()):Obx(()=>Expanded(
               child: SingleChildScrollView(
                 physics: const ClampingScrollPhysics(),

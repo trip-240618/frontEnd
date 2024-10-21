@@ -74,10 +74,11 @@ class ApiHistoryClient {
   Future<Map<String,dynamic>> getDetailHistoryList(int tripId,int historyId) async {
     try {
       final response = await dioClient.dio.get(
-          '/trip/${tripId}/history/detail/${historyId}'
+          '/trip/${tripId}/history/${historyId}'
       );
       if (response.statusCode == 200) {
         final data = response.data;
+        print('data?? ${data}');
         if(data.length==0){
           return {};
         }
@@ -91,7 +92,7 @@ class ApiHistoryClient {
     }
   }
 
-  /// 여행 기록 디테일 가져오기
+  /// 여행 기록 댓글 가져오기
   Future<List> getDetailHistoryCommentList(int tripId,int historyId) async {
     try {
       final response = await dioClient.dio.get(
@@ -141,6 +142,7 @@ class ApiHistoryClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
+        print('댓글 쓸때 데이터?? ${data}');
         if(data.length==0){
           return [];
         }

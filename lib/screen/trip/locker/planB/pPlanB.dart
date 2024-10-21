@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../../../component/button.dart';
+import '../../../../component/button/plusFloating.dart';
 import '../../../../util/color.dart';
 import '../../../../util/font.dart';
 

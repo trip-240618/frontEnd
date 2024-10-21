@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomModals.dart';
 import 'package:intl/intl.dart';
-import 'package:tripStory/component/main/typeChoose.dart';
+import 'package:tripStory/component/button/typeChoose.dart';
 import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';

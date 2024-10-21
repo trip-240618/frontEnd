@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomModals.dart';
-import 'package:tripStory/component/setting/settingArrowRow.dart';
+import 'package:tripStory/component/container/settingArrowRow.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/myPage/editProfilePage.dart';
 import 'package:tripStory/screen/myPage/faq/setting_faq_main.dart';

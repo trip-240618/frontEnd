@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:tripStory/component/bottomContainer.dart';
 import 'package:tripStory/screen/login/register/profile.dart';
 import 'package:tripStory/util/color.dart';
-import '../../../component/register/termsForm.dart';
+import '../../../component/textForm/termsForm.dart';
 import '../../../util/font.dart';
 
 
