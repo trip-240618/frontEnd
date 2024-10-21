@@ -16,17 +16,19 @@ import '../../../../../component/dialog/daySelect.dart';
 import '../../../../../controller/jPlanState.dart';
 import '../../../../../util/color.dart';
 import '../../../../../util/font.dart';
-class AddPlanBJ extends StatefulWidget {
-  const AddPlanBJ({super.key});
+
+class EditPlanBJ extends StatefulWidget {
+  const EditPlanBJ({super.key});
 
   @override
-  State<AddPlanBJ> createState() => _AddPlanBJState();
+  State<EditPlanBJ> createState() => _EditPlanBJState();
 }
 
-class _AddPlanBJState extends State<AddPlanBJ> {
+class _EditPlanBJState extends State<EditPlanBJ> {
   BitmapDescriptor? customIcon;
   final ts = Get.put(TripState());
   final js = Get.put(JPlanState());
+  bool isLoading = true;
   bool isDateTBD = false; /// 날짜 미정
   Set<Marker> markers = {};
   DateFormat dateFormatter = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR');
@@ -38,10 +40,51 @@ class _AddPlanBJState extends State<AddPlanBJ> {
 
   @override
   void initState() {
+    print('선택된 플랜B JList?${js.selectPlanBJList}');
+    /// 날짜 정렬
+    if(js.selectPlanBJList['dayAfterStart']==null){
+      isDateTBD = true;
+      js.selectedDate.value = ts.selectTripList[0]['startDate'];
+    }else{
+      js.selectedDate.value = DateFormat('yyyy-MM-dd').format(
+          DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(
+              Duration(days: js.selectPlanBJList['dayAfterStart']-1)
+          )
+      );
+    }
     js.addDate.value = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.parse('${js.selectedDate.value}'));
-    js.addSelectedDateTime.value = DateTime.now();
+    /// 시간
+    js.addSelectedDateTime.value = DateTime(
+      DateTime.parse(js.selectedDate.value).year,
+      DateTime.parse(js.selectedDate.value).month,
+      DateTime.parse(js.selectedDate.value).day,
+      int.parse(js.selectPlanBJList['startTime'].split(':')[0]), // Hour
+      int.parse(js.selectPlanBJList['startTime'].split(':')[1]), // Minute
+      int.parse(js.selectPlanBJList['startTime'].split(':')[2]), // Second
+    );
+    if(js.selectPlanBJList['place']!=null&&js.selectPlanBJList['place']!=''){
+      Map data = {
+        "formattedAddress": "",
+        "location": {
+          "latitude": js.selectPlanBJList['latitude'],
+          "longitude": js.selectPlanBJList['longitude']
+        },
+        "displayName": {
+          "text": js.selectPlanBJList['place'],
+          "languageCode": "ko"
+        }
+      };
+      js.searchLocation.value = [data];
+      js.searchLocation.refresh();
+    }
+
     Future.delayed(Duration.zero,()async{
+      planTitleCon.text = js.selectPlanBJList['title'];
+      if(js.selectPlanBJList['memo']!=''){
+        memoCon.text =  js.selectPlanBJList['memo'];
+      }
       await _setCustomMarker();
+      isLoading = false;
     });
     super.initState();
   }
@@ -75,7 +118,7 @@ class _AddPlanBJState extends State<AddPlanBJ> {
               js.searchLocation.clear();
               Get.back();
             }),
-        body: Obx(()=>SingleChildScrollView(
+        body: isLoading?SizedBox():Obx(()=>SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 44),
             child: Column(
@@ -101,11 +144,11 @@ class _AddPlanBJState extends State<AddPlanBJ> {
                             Padding(
                               padding: const EdgeInsets.only(top: 1.67, bottom: 2.5, left: 2.5, right: 6.5),
                               child: SvgPicture.asset('assets/bottomNavi/schedule.svg', width: 15, height: 15.83, colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
-                                ),
                               ),
+                            ),
                             Text('YYYY.MM.DD', style: f15gray400w500,),
                             const SizedBox(width: 11,),
-                            ],
+                          ],
                         ) :
                         GestureDetector(
                           onTap: (){
@@ -153,25 +196,25 @@ class _AddPlanBJState extends State<AddPlanBJ> {
                   children: [
                     Spacer(),
                     isDateTBD?
-                        GestureDetector(
-                          onTap: (){
-                            isDateTBD = !isDateTBD;
-                            setState(() {
+                    GestureDetector(
+                        onTap: (){
+                          isDateTBD = !isDateTBD;
+                          setState(() {
 
-                            });
-                          },
-                          child: Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
+                          });
+                        },
+                        child: Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
                               color: gray900,
                               borderRadius: BorderRadius.circular(100)
-                            ),
-                            child: Center(
-                              child: SvgPicture.asset('assets/icon/check2.svg'),
-                            ),
-                          )
+                          ),
+                          child: Center(
+                            child: SvgPicture.asset('assets/icon/check2.svg'),
+                          ),
                         )
+                    )
                         :GestureDetector(
                         onTap: (){
                           isDateTBD = !isDateTBD;
@@ -399,26 +442,28 @@ class _AddPlanBJState extends State<AddPlanBJ> {
               DateTime selectedDate = DateTime.parse(js.addDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
               int index = selectedDate.difference(startDate).inDays;
               Map data =
-                  isDateTBD
-                      ? {
-                        "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
-                        "title": planTitleCon.text,
-                        "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
-                        "memo": memoCon.text,
-                        "latitude":js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['latitude']:'',
-                        "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
-                        "locker": true
-                      }
-                      : {
-                        "dayAfterStart": index+1,
-                        "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
-                        "title": planTitleCon.text,
-                        "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
-                        "memo": memoCon.text,
-                        "latitude":js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['latitude']:'',
-                        "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
-                        "locker": true
-                      };
+              isDateTBD
+                  ? {
+                "planId": js.selectPlanBJList['planId'],
+                "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
+                "title": planTitleCon.text,
+                "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
+                "memo": memoCon.text,
+                "latitude":js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['latitude']:'',
+                "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
+                "locker": true
+              }
+                  : {
+                "planId": js.selectPlanBJList['planId'],
+                "dayAfterStart": index+1,
+                "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
+                "title": planTitleCon.text,
+                "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
+                "memo": memoCon.text,
+                "latitude":js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['latitude']:'',
+                "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
+                "locker": true
+              };
 
               if(js.searchLocation.isNotEmpty){
                 CameraPosition cameraPosition= CameraPosition(
@@ -427,11 +472,11 @@ class _AddPlanBJState extends State<AddPlanBJ> {
                 final GoogleMapController controller = await js.mapController.future;
                 await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
               }
-              await js.addPlanBJList(data).then((_) async {
+              await js.editJPlanList(data).then((_) async {
                 await js.getPlanBJList();
               });
               Get.back();
-            }, title: '일정 B안 등록'),
+            }, title: '일정 B안 수정'),
           ),
         ),
 

@@ -31,11 +31,7 @@ class ApiJPlanClient {
   Future<List> getPlanBJList(int tripId,bool locker) async {
     try {
       final response = await dioClient.dio.get(
-          '/trip/$tripId/plan/j/list',
-          queryParameters: {
-            'day': null,
-            'locker': locker,
-          }
+          '/trip/${tripId}/plan/j/list?locker=$locker'
       );
       if (response.statusCode == 200) {
         final data = response.data;
@@ -156,4 +152,25 @@ class ApiJPlanClient {
       rethrow;
     }
   }
+
+  /// planB j 리스트 삭제
+  Future<void> deleteBJPlan(int tripId,int planId,int day) async {
+    try {
+      final response = await dioClient.dio.delete(
+        day == 0
+            ?'/trip/${tripId}/plan/j/delete?planId=$planId'
+            : '/trip/${tripId}/plan/j/delete?day=$day&planId=$planId'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
 }

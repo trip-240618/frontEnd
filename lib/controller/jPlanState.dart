@@ -40,6 +40,7 @@ class JPlanState extends GetxController{
   final editDate = ''.obs; /// 수정 할 때 날짜 변수
   /// planB jList
   final RxList planBJList = [].obs; /// plan B j data 리스트
+  final RxMap selectPlanBJList = {}.obs; /// 수정 할 때 선택된 plan B j  리스트
  
 
   @override
@@ -134,14 +135,23 @@ class JPlanState extends GetxController{
   /// planB jList 가져오기
   Future<void> getPlanBJList()async{
     planBJList.value = await apijplanClient.getPlanBJList(ts.selectTripList[0]['id'], true);
+    planBJList.forEach((day) {
+      day['checked'] = true;
+    });
     print('planBJList?? ${planBJList}');
     planBJList.refresh();
   }
   /// planB jList 추가
   Future<void> addPlanBJList(Map data)async{
-    await apijplanClient.addJPlanList(ts.selectTripList[0]['id'],data);
+    await apijplanClient.addBJPlanList(ts.selectTripList[0]['id'],data);
     planBJList.refresh();
   }
+  /// planB jList 삭제
+  Future<void> deletePlanBJList(int planId,int? day)async{
+   await apijplanClient.deleteBJPlan(ts.selectTripList[0]['id'], planId,day??0);
+   jPlanList.refresh();
+  }
+
 
   /// 항공권 목록 정보 가져오기
   Future<void> getFlightList()async{
