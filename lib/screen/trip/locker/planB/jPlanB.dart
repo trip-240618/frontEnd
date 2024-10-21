@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/addPlanPage.dart';
 
-import '../../../../component/button.dart';
+import '../../../../component/button/plusFloating.dart';
 import '../../../../util/color.dart';
 import '../../../../util/font.dart';
 

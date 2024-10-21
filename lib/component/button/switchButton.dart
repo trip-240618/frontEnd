@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../util/color.dart';
+import '../../util/color.dart';
 
 
 class SwitchButton extends StatefulWidget {

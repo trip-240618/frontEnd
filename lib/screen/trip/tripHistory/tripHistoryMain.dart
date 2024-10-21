@@ -11,7 +11,8 @@ import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripHistory/search/search_history_page.dart';
 import 'package:tripStory/util/color.dart';
-import '../../../imageTest.dart';
+
+import '../../../util/bottomSheetHeader.dart';
 import '../../../util/font.dart';
 import 'package:intl/intl.dart' as intl;
 import 'history/tripHistoryDetail.dart';

@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tripStory/app/config/dio_client.dart';
 import 'package:tripStory/controller/userState.dart';
 import '../api/userApi.dart';
@@ -158,6 +159,45 @@ Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
     print('서버에 토큰 전송 실패: ${response}');
   }
 
+}
+
+/// 애플 로그인
+Future<void> appleLogin() async {
+  final dioClient = DioClient();
+  final us = Get.put(UserState());
+  String? tokens = await FirebaseMessaging.instance.getToken();
+  await SignInWithApple.getAppleIDCredential(scopes: [
+    AppleIDAuthorizationScopes.email,
+    AppleIDAuthorizationScopes.fullName,
+    // 사용할 사용자 정보 범위
+  ]).then((AuthorizationCredentialAppleID user)async{
+    print('user??? ${user}');
+    final url = 'https://trip-story.site/user/oauth2/login/apple';
+    final body = {
+      "email":'${user.email}',
+      "displayName": "${user.authorizationCode}",
+      "familyName": "${user.familyName}",
+      "givenName": "${user.givenName}",
+      "identityToken": "${user.identityToken}",
+      "state":"${user.state}",
+      "userIdentifier": "${user.userIdentifier}",
+      'fcmToken':tokens
+    };
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+    if (response.statusCode == 200) {
+      await dioClient.loginCookies('${response.headers['set-cookie']}');
+      var decodedBody = utf8.decode(response.bodyBytes);
+      var jsonResponse = jsonDecode(decodedBody);
+      us.userList.value = [jsonResponse];
+    }
+  }).onError((error, stackTrace) {
+    if (error is PlatformException) return;
+    print('error ? ${error}');
+  });
 }
 // /// 애플 로그인 서버로 데이터
 // Future<void> appleSendData(AuthorizationCredentialAppleID user) async {

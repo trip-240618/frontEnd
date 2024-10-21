@@ -6,6 +6,7 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../component/appbar.dart';
+import '../../../component/dialog/dialog.dart';
 import '../../../util/font.dart';
 
 class MemberList extends StatefulWidget {
@@ -149,14 +150,16 @@ class _MemberListState extends State<MemberList> {
                           ):const SizedBox(),
                           Text('${memberList[index]['nickname']}',style: f15gray800w500,),
                           Spacer(),
-                          !leaderCheck?const SizedBox():
+                          !leaderCheck && us.userList[0]['uuid']!=memberList[index]['uuid'] ?const SizedBox():
                           us.userList[0]['uuid']==memberList[index]['uuid']
                               ? GestureDetector(
                                   onTap: ()async{
-                                    print('?? ${ts.selectTripList[0]['type']}');
-                                    await ts.leaveTrip(ts.selectTripList[0]['id'], ts.selectTripList[0]['type']);
-                                    Get.back();
-                                    Get.back();
+                                    showConfirmCancelTapDialog(context, '여행방을 나가시겠습니까?', '확인',null, ()async{
+                                      await ts.leaveTrip(ts.selectTripList[0]['id'], ts.selectTripList[0]['type']);
+                                      Get.back();
+                                      Get.back();
+                                      Get.back();
+                                    });
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
