@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/util/font.dart';
-
 import '../util/color.dart';
 
 class BottomContainer extends StatelessWidget {

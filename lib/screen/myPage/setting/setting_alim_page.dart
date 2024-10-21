@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/component/switchButton.dart';
+import 'package:tripStory/component/button/switchButton.dart';
 import '../../../component/appbar.dart';
 import '../../../util/font.dart';
 

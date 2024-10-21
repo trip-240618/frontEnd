@@ -10,7 +10,7 @@ class ApiNotificationClient {
   Future<List> getNotificationList(String title) async {
     try {
       final response = await dioClient.dio.get(
-        '/notification/list?title=$title'
+          title==''?'/notification/list':'/notification/list?title=$title'
       );
       if (response.statusCode == 200) {
         final data = response.data;
@@ -27,5 +27,21 @@ class ApiNotificationClient {
       rethrow;
     }
   }
-
+  /// 단일 알림 체크
+  Future<void> readNotification(int notificationId) async {
+    try {
+      final response = await dioClient.dio.put(
+          '/notification/read?notificationId=$notificationId'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
 }

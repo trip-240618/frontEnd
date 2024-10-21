@@ -4,7 +4,7 @@ import 'package:tripStory/screen/myPage/setting/cancel/setting_delete_page.dart'
 import 'package:tripStory/screen/myPage/setting/setting_alim_page.dart';
 import '../../../component/appbar.dart';
 import '../../../component/dialog/dialog.dart';
-import '../../../component/setting/settingArrowRow.dart';
+import '../../../component/container/settingArrowRow.dart';
 import '../../../controller/userState.dart';
 import '../../../util/color.dart';
 import '../../../util/font.dart';
@@ -70,7 +70,7 @@ class _SettingMainPageState extends State<SettingMainPage> {
                   const SizedBox(height: 10,),
                   GestureDetector(
                     onTap: (){
-                      showConfirmCancelTapDialog(context, '로그아웃을 하시겠어요?', '탈퇴',null, (){
+                      showConfirmCancelTapDialog(context, '로그아웃을 하시겠어요?', '확인',null, (){
                         us.logOut();
                         Get.offAll(()=>LoginPage());
                       });

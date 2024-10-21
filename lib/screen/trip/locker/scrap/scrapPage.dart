@@ -6,7 +6,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:tripStory/component/button.dart';
+import 'package:tripStory/component/button/plusFloating.dart';
 import 'package:tripStory/controller/scrapState.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/trip/locker/scrap/scrap_edit.dart';

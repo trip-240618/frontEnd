@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/app/sns/snsLogin.dart';
-import 'package:tripStory/component/login/snsContainer.dart';
+import 'package:tripStory/component/container/snsContainer.dart';
 import 'package:tripStory/controller/userState.dart';
 import '../../util/font.dart';
 import '../main/mainPage.dart';
@@ -56,7 +56,14 @@ class _LoginPageState extends State<LoginPage> {
               }
             }),
             const SizedBox(height: 18),
-            AppleContainer(onTap: (){})
+            AppleContainer(onTap: ()async{
+              await appleLogin();
+              if(us.userList[0]['type']=='register'){
+                Get.to(()=>TermPage());
+              }else if(us.userList[0]['type']=='login'){
+                Get.offAll(()=>MainPage());
+              }
+            })
           ],
         ),
       ),

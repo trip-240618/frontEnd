@@ -9,6 +9,7 @@ import '../../../util/color.dart';
 import '../../../util/font.dart';
 import 'package:intl/intl.dart';
 import '../../trip/bottomNavigator.dart';
+import '../../trip/tripHistory/notification/noti_history_detail.dart';
 
 class NotificationMain extends StatefulWidget {
   const NotificationMain({super.key});
@@ -24,7 +25,7 @@ class _NotificationMainState extends State<NotificationMain> {
   final us = Get.put(UserState());
   @override
   void initState() {
-    notis.getNotificationList('여행 일정');
+    notis.getNotificationList('');
     super.initState();
   }
   @override
@@ -64,6 +65,7 @@ class _NotificationMainState extends State<NotificationMain> {
                 GestureDetector(
                   onTap: (){
                     notis.selectTabIndex.value = 0;
+                    notis.getNotificationList('');
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -80,6 +82,7 @@ class _NotificationMainState extends State<NotificationMain> {
                 GestureDetector(
                   onTap: (){
                     notis.selectTabIndex.value = 1;
+                    notis.getNotificationList('여행 일정');
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -96,6 +99,7 @@ class _NotificationMainState extends State<NotificationMain> {
                 GestureDetector(
                   onTap: (){
                     notis.selectTabIndex.value = 2;
+                    notis.getNotificationList('여행 기록');
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -123,9 +127,23 @@ class _NotificationMainState extends State<NotificationMain> {
                         children: [
                           GestureDetector(
                             onTap: ()async{
-                              // await ts.getSelectTrip(notis.notificationList[index]['tripId']);
-                              // Get.back();
-                              Get.off(()=>BottomNavigator(notificationIdx: 2,));
+                              /// 여행일정 쪽 코드는 -> 바텀으로 보내버리고
+                              /// 여행 기록 쪽 코드는 기록 디테일만 보내기로
+                              if(notis.notificationList[index]['title']=='여행 일정'){
+                                Uri uri = Uri.parse(notis.notificationList[index]['destination']);
+                                String? tripId = uri.queryParameters['tripId'];
+                                await ts.getSelectTrip(int.parse(tripId!));
+                                Get.off(()=>BottomNavigator(notificationIdx: 0));
+                              }else{
+                                notis.notificationList[index]['read'] = true;
+                                notis.notificationList.refresh();
+                                notis.readNotification(notis.notificationList[index]['id']);
+                                Uri uri = Uri.parse(notis.notificationList[index]['destination']);
+                                String? tripId = uri.queryParameters['tripId'];
+                                String? historyId = uri.queryParameters['historyId'];
+                                await notis.getNotificationDetail(int.parse(tripId!), int.parse(historyId!));
+                                Get.to(()=>NotiHistoryDetail(tripId: int.parse(tripId),historyId: int.parse(historyId),));
+                              }
                             },
                             child: Container(
                                 width: Get.width,
@@ -144,7 +162,7 @@ class _NotificationMainState extends State<NotificationMain> {
                                         width: 20,
                                         height: 20,
                                         decoration: BoxDecoration(
-                                            color: yellowColor,
+                                            color: Color(int.parse(notis.notificationList[index]['labelColor'])),
                                             shape: BoxShape.circle
                                         ),
                                         child: SvgPicture.asset('assets/icon/smallalert.svg',fit: BoxFit.none,),

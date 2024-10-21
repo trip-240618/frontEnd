@@ -6,7 +6,7 @@ import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/screen/trip/locker/planB/add_planB_j.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/addPlanPage.dart';
 
-import '../../../../component/button.dart';
+import '../../../../component/button/plusFloating.dart';
 import '../../../../util/color.dart';
 import '../../../../util/font.dart';
 

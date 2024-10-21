@@ -10,9 +10,9 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>ko</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>카메라 접근 허용 시 원하는 사진으로 프로필 등록이 가능합니다 접근을 허용하시겠습니까?</string>
+		<string>앨범 접근 허용 시 원하는 사진으로 프로필 등록이 가능합니다 접근을 허용하시겠습니까?</string>
 		<key>NSCameraUsageDescription</key>
-		<string>To capture profile photo please grant camera access</string>
+        <string>"트립스토리"가 사진을 촬영 또는 첨부하여 여행기록 등 관련 기능을 사용하기 위해선 접근 허용이 필요합니다</string>
 		<key>FirebaseAppDelegateProxyEnabled</key>
 		<string>0</string>
 		<key>CADisableMinimumFrameDurationOnPhone</key>

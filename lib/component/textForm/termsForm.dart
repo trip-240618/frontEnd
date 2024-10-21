@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../../util/color.dart';
 import '../../util/font.dart';
 
@@ -56,55 +55,6 @@ class termsForm extends StatelessWidget {
                 // color:  value == true  ? Colors.black : hintColor,
               ))
         ],
-      ),
-    );
-  }
-}
-
-
-/// j형 순서 변경
-class changeJButton extends StatelessWidget {
-  final VoidCallback? onPressed;
-  final bool value;
-
-  const changeJButton({Key? key, this.onPressed, required this.value}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onPressed,
-      child: Container(
-        height: 50,
-        width: 40,
-
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            AnimatedCrossFade(
-              duration: const Duration(milliseconds: 200),
-              crossFadeState: value == true ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-              firstChild: Container(
-                width:25,
-                height: 25,
-                decoration: BoxDecoration(
-                    color: gray900,
-                    shape: BoxShape.circle
-                ),
-                child: SvgPicture.asset('assets/icon/smallCheck.svg',fit: BoxFit.none),
-              ),
-              secondChild: Container(
-                width:25,
-                height: 25,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Color(0xffE0E0E0),width: 1.5),
-                    shape: BoxShape.circle
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

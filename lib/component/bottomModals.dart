@@ -12,7 +12,6 @@ import '../util/color.dart';
 import '../util/font.dart';
 import 'bottomContainer.dart';
 
-
 void bottomModel(BuildContext context) {
   final ms = Get.put(MainState());
 
@@ -187,6 +186,7 @@ void timeBottomModel(BuildContext context) {
         );
       });
 }
+
 void sendBottomModal(BuildContext context,String inviteCode,int tripId) {
   final ms = Get.put(MainState());
   FToast fToast;
@@ -230,7 +230,6 @@ void sendBottomModal(BuildContext context,String inviteCode,int tripId) {
                       const SizedBox(height: 20,),
                       GestureDetector(
                         onTap: (){
-                          print('qhsoaoa');
                           ms.kakaoShare(tripId,inviteCode);
                         },
                         child: Container(
