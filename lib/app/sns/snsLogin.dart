@@ -101,6 +101,7 @@ Future<void> sendTokenToServer(String accessToken,String refreshToken) async {
   final us = Get.put(UserState());
   final dioClient = DioClient();
   String? tokens = await FirebaseMessaging.instance.getToken();
+  print('?? tokesn??${tokens}');
   /// 백엔드 서버로 토큰 전송
   var response = await http.get(
     Uri.parse('https://trip-story.site/user/oauth2/callback/kakao?kakaoToken=${accessToken}&fcmToken=$tokens')
@@ -133,7 +134,13 @@ Future<void> googleLogin() async {
 Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
   final us = Get.put(UserState());
   final dioClient = DioClient();
-  String? tokens = await FirebaseMessaging.instance.getToken();
+  String? tokens;
+  if(Platform.isIOS){
+    tokens = await FirebaseMessaging.instance.getAPNSToken();
+    print('tokens?? ${tokens}');
+  }else{
+    tokens = await FirebaseMessaging.instance.getToken();
+  }
   final url = 'https://trip-story.site/user/oauth2/login/google';
   print('tk?? ${tokens}');
   final userData = {

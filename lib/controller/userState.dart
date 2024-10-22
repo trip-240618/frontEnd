@@ -9,6 +9,7 @@ import '../app/api/userApi.dart';
 import '../app/config/dio_client.dart';
 class UserState extends GetxController{
   final userList =[].obs; /// 유저 정보 리스트
+  final mapFirstLoading = false.obs; /// 처음 맵 로딩
   final dioClient = DioClient();
   final apiUserClient = ApiUserClient(DioClient());
   final apiFileClient = ApiFileClient(DioClient());

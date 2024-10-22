@@ -43,7 +43,6 @@ class LocalNotifyCation {
 
 /// 알림 권한 여부 설정
 void requestNotificationPermissions() {
-
   ///fcm
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   /// 안드로이드 일때

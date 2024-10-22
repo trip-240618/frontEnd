@@ -45,7 +45,6 @@ class _SplashPageState extends State<SplashPage> {
       jailbroken = true;
     }
     final cookies = await us.apiUserClient.dioClient.getRefreshToken();
-    print('cock?? ${cookies}');
     if (cookies != null) {
       String? tokens = await FirebaseMessaging.instance.getToken();
       await us.autoLogin();
