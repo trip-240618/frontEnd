@@ -36,8 +36,8 @@ class SocketState extends GetxController{
             HttpHeaders.cookieHeader: '$accessToken;$refreshToken',
           },
           beforeConnect: () async {
-            print('waiting to connect...');
-            await Future.delayed(const Duration(milliseconds: 200));
+            // print('waiting to connect...');
+            // await Future.delayed(const Duration(milliseconds: 200));
             print('connecting...');
           },
           onWebSocketError: (dynamic error) {

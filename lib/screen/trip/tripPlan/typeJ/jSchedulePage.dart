@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,6 +9,7 @@ import 'package:tripStory/component/textForm/termsForm.dart';
 import 'package:tripStory/component/toast/toast.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/searchFlight.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../../app/api/flightApi.dart';
@@ -32,14 +32,15 @@ class _JSchedulePageState extends State<JSchedulePage> {
   final apiFlightClient = ApiFlightClient(DioClient());
   final js = Get.put(JPlanState());
   final ts = Get.put(TripState());
+  final us = Get.put(UserState());
   final socket = Get.put(SocketState());
-  // int selectIdx = 0;
+
   ScrollController scrollController = ScrollController();
   bool isSorting = false;
   bool testCheck = false;
   bool testCheck2 = true;
   FToast? fToast;
-
+  Future _mapFuture = Future.delayed(Duration(milliseconds: 700), () => true);
   @override
   void initState() {
     fToast = FToast();
@@ -58,7 +59,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
   void scrollToIndex(int index) {
     double itemWidth = 36 + 12;
     double scrollOffset = itemWidth * index;
-
     scrollController.animateTo(
       scrollOffset,
       duration: Duration(milliseconds: 300),
@@ -165,24 +165,50 @@ class _JSchedulePageState extends State<JSchedulePage> {
             ),
           ),
           const SizedBox(height: 15),
-          Container(
-            width: Get.width,
-            height: js.isGoogleExpanded.value?300:154,
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(js.latitude.value, js.longitude.value),
-                zoom: 14.4746,
-              ),
-              polylines: js.polyline,
-              markers: js.markers.toSet(),
-              myLocationButtonEnabled: false,
-              onMapCreated: (GoogleMapController controller) {
-                if (!js.mapController.isCompleted) {
-                  js.mapController.complete(controller);
-                }
-              },
+        Container(
+          width: Get.width,
+          height: js.isGoogleExpanded.value ? 300 : 154,
+          child: us.mapFirstLoading.value
+              ? GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: LatLng(js.latitude.value, js.longitude.value),
+              zoom: 14.4746,
             ),
+            polylines: js.polyline,
+            markers: js.markers.toSet(),
+            myLocationButtonEnabled: false,
+            onMapCreated: (GoogleMapController controller) {
+              if (!js.mapController.isCompleted) {
+                js.mapController.complete(controller);
+              }
+            },
+          )
+              : FutureBuilder(
+                future: _mapFuture,
+                builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              }
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                us.mapFirstLoading.value = true;
+              });
+              return GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(js.latitude.value, js.longitude.value),
+                  zoom: 14.4746,
+                ),
+                polylines: js.polyline,
+                markers: js.markers.toSet(),
+                myLocationButtonEnabled: false,
+                onMapCreated: (GoogleMapController controller) {
+                  if (!js.mapController.isCompleted) {
+                    js.mapController.complete(controller);
+                  }
+                },
+              );
+            },
           ),
+        ),
           GestureDetector(
               behavior: HitTestBehavior.opaque,
               onVerticalDragUpdate: (details) {
