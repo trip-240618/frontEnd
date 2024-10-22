@@ -17,7 +17,7 @@ class PPlanState extends GetxController{
 
   /// p planList 가져오기
   Future<void> getPPlanList(bool locker)async{
-    List allData = await apiPPlanClient.getPPlanList(ts.selectTripList[0]['id'], locker);
+    List allData = await apiPPlanClient.getPPlanList(ts.selectTripList[0]['id'],1, locker);
     List filterData = [];
 
     DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
