@@ -465,6 +465,8 @@ class _EditPlanBJState extends State<EditPlanBJ> {
                 "locker": true
               };
 
+              print('내가 보낼 data?${data}');
+
               if(js.searchLocation.isNotEmpty){
                 CameraPosition cameraPosition= CameraPosition(
                     target: LatLng(js.searchLocation[0]['location']['latitude'], js.searchLocation[0]['location']['longitude']),
