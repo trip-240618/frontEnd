@@ -89,7 +89,6 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     selectedCity.value = '';
     tripLeaveType.value = '';
     pickedImage.value =null;
-
     tripDestination.value ='';
     tripDate.value = [];
   }
@@ -140,22 +139,15 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
       String type,
       List tripDate,
       String tripDestination) async {
-   if(type==''
-       ||tripDestination ==''
-       ||tripDate.length==0){
-     print('빈칸을 확인해주세요');
-     return {};
-   }else{
-     Map<String, dynamic> createData = await apiTripClient.tripCreate(
-         thumbnailUrl,
-         name,
-         color,
-         type,
-         '${tripDate[0]}',
-         tripDate.length==1?'':'${tripDate[1]}',
-         tripDestination);
-     return createData;
-   }
+    Map<String, dynamic> createData = await apiTripClient.tripCreate(
+        thumbnailUrl,
+        name,
+        color,
+        type,
+        '${tripDate[0]}',
+        tripDate.length==1?'':'${tripDate[1]}',
+        tripDestination);
+    return createData;
   }
   /// 여행방 썸네일 요청
   Future<Map<String, dynamic>> tripThumbnailUpload(XFile xfile) async {
@@ -167,6 +159,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
       minHeight: 400,
     );
     Map<String, dynamic> data = await apiFileClient.fileUrlGet(1);
+    print('넣을데이터?? ${data['preSignedUrls'][0]}');
     for (int i = 0; i < 1; i++) {
       final response = await http.put(
         Uri.parse(data['preSignedUrls'][i]),

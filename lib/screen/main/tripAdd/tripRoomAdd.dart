@@ -9,6 +9,7 @@ import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomModals.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/button/typeChoose.dart';
+import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
@@ -432,25 +433,43 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
         padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
         child: BottomContainer(
             onTap: ()async{
-              if(pickedImage!=null){
-                Map<String, dynamic> thumbnailUrl = await ms.tripThumbnailUpload(pickedImage!);
+              if (tripName.text.trim().isEmpty ||
+                  selectedColor == null ||
+                  tripType == '' ||
+                  ms.tripDate.isEmpty ||
+                  ms.tripDestination == '') {
+                showOnlyConfirmTapDialog(context, '여행방 정보를 전부 입력해주세요', () {
+                  Get.back();
+                });
+              } else {
+                showLoading(context);
+                String thumbnailUrl = '';
+                if (pickedImage != null) {
+                  Map<String, dynamic> thumbnailData = await ms.tripThumbnailUpload(pickedImage!);
+                  thumbnailUrl = thumbnailData['preSignedUrls'][0].toString().split('?')[0];
+                }
                 Map<String, dynamic> createData = await ms.createRoom(
-                    thumbnailUrl['preSignedUrls'][0].toString().split('?')[0],
+                    thumbnailUrl,
                     tripName.text,
                     '${colorList[selectedColor!]}',
                     tripType,
                     ms.tripDate,
                     ms.tripDestination.value
                 );
-                print(createData.length);
-                if(createData.length!=0){
-                  print('???sssss ${createData}');
+                if (createData.isNotEmpty) {
                   await ts.getSelectTrip(createData['tripId']);
-                  CodeDialog(context,createData['invitationCode']);
+                  Get.back();
+                  CodeDialog(context, createData['invitationCode']);
                 }
               }
-        },title: '저장'),
-      ),
+        },title: '저장',
+          isBlack:
+          tripName.text.trim().isEmpty||
+              selectedColor==null||
+              tripType==''||
+              ms.tripDate.isEmpty||
+              ms.tripDestination==''?false:true,),
+        ),
       ),
     );
   }

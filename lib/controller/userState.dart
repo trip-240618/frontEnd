@@ -8,6 +8,7 @@ import '../app/api/fileApi.dart';
 import '../app/api/userApi.dart';
 import '../app/config/dio_client.dart';
 class UserState extends GetxController{
+
   final userList =[].obs; /// 유저 정보 리스트
   final mapFirstLoading = false.obs; /// 처음 맵 로딩
   final dioClient = DioClient();
@@ -67,9 +68,9 @@ class UserState extends GetxController{
     return data;
   }
   /// 프로필 상세 등록
-  Future<void> userRegister(String nickName,String profileImg,String thumbnailImg,bool marketing)async{
+  Future<void> userRegister(String name,String memo,String profileImg,String thumbnailImg,bool marketing)async{
     String? tokens = await FirebaseMessaging.instance.getToken();
-    apiUserClient.userRegister(nickName, profileImg,thumbnailImg,marketing);
+    userList.value=[await apiUserClient.userRegister(name, memo,profileImg,thumbnailImg,marketing)];
     if(tokens!=null){
       apiUserClient.updateToken(tokens);
     }

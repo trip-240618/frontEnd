@@ -72,24 +72,20 @@ class ApiUserClient {
     }
   }
   /// 유저 정보 디테일
-  Future<Map<String, dynamic>> userRegister(String nickName,String profileImg,String thumbnailImg,bool marketing) async {
-    final us = Get.put(UserState());
+  Future<Map<String, dynamic>> userRegister(String nickName,String memo,String profileImg,String thumbnailImg,bool marketing) async {
     try {
-      print('dasdasda ${marketing}');
       final response = await dioClient.dio.put(
         '/user/register',
         data: {
           'nickname':'${nickName}',
-          'memo':'ㅇㅁㄴㅇ',
+          'memo':memo,
           'profileImg':'${profileImg}',
           'thumbnail':'${thumbnailImg}',
           "marketing": marketing
         }
       );
       if (response.statusCode == 200) {
-
         final data = response.data;
-        print('data??? ${data}');
         return data;
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');

@@ -174,6 +174,9 @@ class SocketState extends GetxController{
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['dayAfterStart']) {
       js.jPlanList[0]['planList'].removeWhere((item) => item['planId'] == result['data']['planId']);
       js.jplnaMarkerSet();
+    }else if(result['data']['dayAfterStart']==-1){
+      js.jPlanList[0]['planList'].removeWhere((item) => item['planId'] == result['data']['planId']);
+      js.jplnaMarkerSet();
     }
   }
   /// 수정 할 때 함수
