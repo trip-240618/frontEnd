@@ -80,7 +80,6 @@ class ApiTripClient {
       String country,
       ) async {
     try {
-      print('??? ${startDate.toString().split(' ')[0]}');
       final response = await dioClient.dio.post(
           '/trip/create',
           data:
@@ -263,6 +262,7 @@ class ApiTripClient {
       if (response.statusCode == 200) {
         final data = response.data;
         ts.selectTripList.value = [response.data];
+        ts.selectTripList[0]['labelColor'] = int.parse(ts.selectTripList[0]['labelColor']);
         ts.selectTripList.refresh();
         print('data?? ${data}');
       } else {

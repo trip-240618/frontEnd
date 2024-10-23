@@ -7,8 +7,10 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
+import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/screen/main/mainPage.dart';
 import '../../../component/appbar.dart';
 import '../../../component/bottomContainer.dart';
 import '../../../component/bottomModals.dart';
@@ -179,11 +181,17 @@ class _TripEditPageState extends State<TripEditPage> {
           resizeToAvoidBottomInset: false,
           appBar: TrailingBackAppBar(
             text: '여행방 설정',
-            backTap: (){Get.back();},
+            backTap: (){
+              Get.back();
+              },
             svgPicture: SvgPicture.asset('assets/icon/trashCan.svg',fit: BoxFit.none,),
-            trailingTap: (){
-              showConfirmCancelTapDialog(context, '여행방을 삭제하시겠습니까?\n삭제 후 복구는 어렵습니다', '확인',null, (){
+            trailingTap: ()async{
+              showConfirmCancelTapDialog(context, '여행방을 삭제하시겠습니까?\n삭제 후 복구는 어렵습니다', '확인',null, ()async{
+                showLoading(context);
                 ts.deleteTrip(ts.selectTripList[0]['id']);
+                await ms.getComingTrip();
+                Get.back();
+                Get.offAll(()=>MainPage());
               });
             },),
           body: Column(
@@ -209,7 +217,7 @@ class _TripEditPageState extends State<TripEditPage> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(4),
                                   child: CachedNetworkImage(
-                                    imageUrl: ms.tripList[0]['thumbnail'],
+                                    imageUrl: ts.selectTripList[0]['thumbnail'],
                                     width: 80,
                                     height: 80,
                                     imageBuilder: (context, imageProvider) => Container(
@@ -449,18 +457,23 @@ class _TripEditPageState extends State<TripEditPage> {
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
             child: BottomContainer(
-                onTap: ()async{
-                  String thumbnail = pickedImage != null
-                      ? (await ms.tripThumbnailUpload(pickedImage!))['preSignedUrls'][0].toString().split('?')[0]
-                      : ts.selectTripList[0]['thumbnail'];
-                  await ts.modifyTrip(
+                onTap: (){
+                  showConfirmCancelTapDialog(context, '여행 날짜를 변경할 경우\n작성한 기록들은 모두 초기화 됩니다', '확인', null, ()async{
+
+                    String thumbnail = pickedImage != null
+                        ? (await ms.tripThumbnailUpload(pickedImage!))['preSignedUrls'][0].toString().split('?')[0]
+                        : ts.selectTripList[0]['thumbnail'];
+                    print('dasd ${thumbnail}');
+                    await ts.modifyTrip(
                     ts.selectTripList[0]['id'],
                     tripName.text,
                     thumbnail,
                     '${colorList[selectedColor!]}',
                     ts.selectTripList[0]['startDate'],
                     ts.selectTripList[0]['endDate'],
-                  );
+                    );
+                    Get.back();
+                  });
                 },title: '수정 완료',isBlack: true,),
           ),
         ),

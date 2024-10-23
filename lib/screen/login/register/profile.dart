@@ -228,12 +228,13 @@ class _ProfileScreenState extends State<ProfilePage> {
                       Map<String, dynamic> thumbnailUrl = await us.profileThumbnailUpload(pickedImage!);
                       await us.userRegister(
                           nameCon.text,
+                          '',
                           '${url['preSignedUrls'][0].toString().split('?')[0]}',
                           '${thumbnailUrl['preSignedUrls'][0].toString().split('?')[0]}',
                           widget.marketing);
                       Get.offAll(()=>SuccessPage());
                     }else{
-                      await us.userRegister(nameCon.text, '','',widget.marketing);
+                      await us.userRegister(nameCon.text,'', '','',widget.marketing);
                       Get.offAll(()=>SuccessPage());
                     }
                   }else{

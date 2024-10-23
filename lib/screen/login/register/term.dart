@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/bottomContainer.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/screen/login/register/profile.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../component/textForm/termsForm.dart';
+import '../../../component/url_launch.dart';
 import '../../../util/font.dart';
 
 
@@ -129,6 +131,7 @@ class _TermPageState extends State<TermPage> {
                           setState(() {});
                         },
                         onPressed2: () async {
+                         await urlLaunch('');
                         }),
                   ),
                   const SizedBox(height: 10),
@@ -196,7 +199,9 @@ class _TermPageState extends State<TermPage> {
                   if(isChecked){
                     Get.to(()=>ProfilePage(marketing: maratCheck,));
                   }else{
-                    print('약관을 수락해주세요');
+                    showOnlyConfirmTapDialog(context, '약관에 동의해주세요', (){
+                      Get.back();
+                    });
                   }
                 },title: '다음',isBlack: isChecked?true:false,)
           ],

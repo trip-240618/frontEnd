@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/main/mainPage.dart';
 import 'package:tripStory/screen/trip/locker/lockerTapPage.dart';
 import 'package:tripStory/screen/trip/setting/member_list.dart';
@@ -30,11 +31,14 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   int _currentIndex = 0;
   final ms = Get.put(MainState());
   final ts = Get.put(TripState());
+  final us = Get.put(UserState());
   @override
   void initState() {
 
     _widgetOptions = [ts.selectTripList[0]['type']=='J'? JSchedulePage():PPlanPage(), LockerTapPage(), TripHistoryMainPage()];
     _bottomTabController = TabController(length: 3, vsync: this,initialIndex: 0);
+    var myMember = ts.selectTripList[0]['tripMemberDtoList'].firstWhere((member) => member['uuid'] == us.userList[0]['uuid'])['leader'];
+    print('??member?? ${myMember}');
     if(widget.notificationIdx==2){
       _currentIndex = 2;
       _bottomTabController.index = 2;
@@ -88,7 +92,8 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                         ],
                       ),
                     ),
-                    PopupMenuButton(
+                    ts.selectTripList[0]['tripMemberDtoList'].firstWhere((member) => member['uuid'] == us.userList[0]['uuid'])['leader']
+                        ?PopupMenuButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -131,6 +136,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                               ],
                             ),
                           ),])
+                        :const SizedBox(width: 24)
                   ],
                 ),
                 const SizedBox(height: 2),

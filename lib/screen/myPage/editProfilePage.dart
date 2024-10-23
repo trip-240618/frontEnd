@@ -29,6 +29,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     Future.delayed(Duration.zero,(){
+      print('us?? ${us.userList[0]}');
       _nickCon.text = us.userList[0]['name'];
       _memoCon.text = us.userList[0]['memo'];
       setState(() {});
@@ -64,7 +65,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     pickedImage = await ms.getSingleImage(ImageSource.gallery,context,pickedImage);
                     setState(() {});
                   },
-                  child: pickedImage==null&&us.userList[0]['thumbnail']!=''?
+                  child: pickedImage==null&&(us.userList[0]['thumbnail']!=''&&us.userList[0]['thumbnail']!=null)?
                   Center(
                     child: Container(
                       width: 98,

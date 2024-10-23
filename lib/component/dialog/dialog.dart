@@ -283,7 +283,6 @@ CodeDialog(BuildContext context,String code) {
                       ms.roomReset();
                       Get.back();
                       Get.back();
-
                       Get.to(()=>BottomNavigator());
                     },
                     behavior: HitTestBehavior.opaque,
@@ -313,19 +312,28 @@ CodeDialog(BuildContext context,String code) {
 showOnlyConfirmTapDialog(BuildContext context, String title, VoidCallback confirmTap) {
   showDialog(
       context: context,
-      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(20),
           ),
-          contentPadding: const EdgeInsets.only(top: 35, bottom: 35),
+          contentPadding: EdgeInsets.zero,
+          insetPadding: EdgeInsets.symmetric(horizontal: 20),
           content: Container(
             width: Get.width,
-            child: Text(
-              '${title}',
-              textAlign: TextAlign.center,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 32,top: 36),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${title}',
+                    style: f18Gray800w600,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
@@ -335,16 +343,13 @@ showOnlyConfirmTapDialog(BuildContext context, String title, VoidCallback confir
                   child: GestureDetector(
                     onTap: confirmTap,
                     behavior: HitTestBehavior.opaque,
-                    child: Center(
-                      child: Container(
-                        width: Get.width,
-                        height: 42,
-                        decoration: BoxDecoration( borderRadius: BorderRadius.circular(8)),
-                        child: Center(
-                            child: Text(
-                              '확인',
-                            )),
-                      ),
+                    child: Container(
+                      height: 58,
+                      decoration: BoxDecoration( borderRadius: BorderRadius.circular(10),color: Colors.black,),
+                      child: Center(
+                          child: Text(
+                            '확인', style: f16whitew400,
+                          )),
                     ),
                   ),
                 ),
