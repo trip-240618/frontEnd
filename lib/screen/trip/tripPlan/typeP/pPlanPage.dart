@@ -9,7 +9,6 @@ import 'package:tripStory/controller/pPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
-
 import '../../../../controller/socketState.dart';
 
 class PPlanPage extends StatefulWidget {
@@ -33,7 +32,9 @@ class _PPlanPageState extends State<PPlanPage> {
 
   @override
   void initState() {
-    totalDays = DateTime.parse(ts.selectTripList[0]['endDate']).difference(DateTime.parse(ts.selectTripList[0]['startDate'])).inDays+1;
+    ps.totalDays.value = DateTime.parse(ts.selectTripList[0]['endDate']).difference(DateTime.parse(ts.selectTripList[0]['startDate'])).inDays+1;
+    print('이게뭐임?${ps.totalDays.value}');
+    /// totalday / week*7 이 나머지가 7 이상이면 7, 아니면 나머지만큼
     Future.delayed(Duration.zero,()async{
       await ps.getPPlanList(false);
 
@@ -245,7 +246,7 @@ class _PPlanPageState extends State<PPlanPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              totalDays <=7
+              ps.totalDays.value <=7
               ? const SizedBox()
               : Container(
                 color: gray50,
@@ -254,9 +255,10 @@ class _PPlanPageState extends State<PPlanPage> {
                     children: [
                       ps.selectedWeekIdx.value > 1
                           ? GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           if (ps.selectedWeekIdx.value > 1) {
                             ps.selectedWeekIdx.value--;
+                            await ps.getPPlanList(false);
                           }
                         },
                         child: SvgPicture.asset('assets/icon/leftCaret.svg'),
@@ -265,12 +267,13 @@ class _PPlanPageState extends State<PPlanPage> {
                       const SizedBox(width: 4,),
                       Text('WEEK ${ps.selectedWeekIdx}', style: f14mainw600(Color(ts.selectTripList[0]['labelColor']),)),
                       const SizedBox(width: 4,),
-                      totalDays-(ps.selectedWeekIdx.value*7)>0
+                      ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0
                           ? GestureDetector(
-                          onTap: (){
-                            if(totalDays-(ps.selectedWeekIdx.value*7)>0){
+                          onTap: () async {
+                            if(ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0){
                               print('ps.selectedWeekIdx??${ps.selectedWeekIdx.value}');
                               ps.selectedWeekIdx.value ++;
+                              await ps.getPPlanList(false);
                             }
                           },
                           child: SvgPicture.asset('assets/icon/rightCaret.svg'))
@@ -322,7 +325,7 @@ class _PPlanPageState extends State<PPlanPage> {
                                     ),
                                   ),
                                   const SizedBox(width: 6,),
-                                  Text('${DateFormat('M.d (E)', 'ko').format(DateTime.parse(ts.selectTripList[0]['startDate']).add(Duration(days: dayIndex)))}', style: f14Gray800w500,),
+                                  Text('${DateFormat('M.d (E)', 'ko').format(DateTime.parse(ts.selectTripList[0]['startDate']).add(Duration(days: int.parse('${ps.pPlanList[dayIndex]['dayAfterStart']}')-1)))}', style: f14Gray800w500,),
                                   Spacer(),
                                   GestureDetector(
                                     onTap: (){

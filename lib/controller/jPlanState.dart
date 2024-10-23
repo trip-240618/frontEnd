@@ -138,6 +138,11 @@ class JPlanState extends GetxController{
     planBJList.forEach((day) {
       day['checked'] = true;
     });
+    planBJList.sort((a, b) {
+      if (a['dayAfterStart'] == null) return 1; // a가 null이면 뒤로 보냄
+      if (b['dayAfterStart'] == null) return -1; // b가 null이면 a가 앞에 옴
+      return a['dayAfterStart'].compareTo(b['dayAfterStart']); // 오름차순 정렬
+    });
     print('planBJList?? ${planBJList}');
     planBJList.refresh();
   }

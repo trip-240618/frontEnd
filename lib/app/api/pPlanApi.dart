@@ -8,14 +8,14 @@ class ApiPPlanClient {
   Future<List<dynamic>> getPPlanList(int tripId,int week, bool locker) async {
     try {
       final response = await dioClient.dio.get(
-          '/trip/${tripId}/plan/p/list?week?=$week&locker=$locker'
+          '/trip/${tripId}/plan/p/list?week=$week&locker=$locker'
       );
       if (response.statusCode == 200) {
         final data = response.data;
         if(data.length==0){
           return [];
         }
-        return data;
+        return [data];
       } else {
         throw Exception('Failed to get PPlanList: ${response.statusCode}');
       }
