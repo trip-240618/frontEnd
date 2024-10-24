@@ -131,7 +131,7 @@ class _TermPageState extends State<TermPage> {
                           setState(() {});
                         },
                         onPressed2: () async {
-                         await urlLaunch('');
+                         await urlLaunch('https://trip-story.site/service.html');
                         }),
                   ),
                   const SizedBox(height: 10),
@@ -145,7 +145,9 @@ class _TermPageState extends State<TermPage> {
                           updateAllCheckStatus();
                           setState(() {});
                         },
-                        onPressed2: () async {}),
+                        onPressed2: () async {
+                          await urlLaunch('https://trip-story.site/privacy.html');
+                        }),
                   ),
                   const SizedBox(height: 10),
                   Container(
@@ -159,6 +161,7 @@ class _TermPageState extends State<TermPage> {
                           setState(() {});
                         },
                         onPressed2: () async {
+                          await urlLaunch('https://trip-story.site/location.html');
                         }),
                   ),
                   const SizedBox(height: 10),
@@ -173,6 +176,7 @@ class _TermPageState extends State<TermPage> {
                           setState(() {});
                         },
                         onPressed2: () async {
+                          await urlLaunch('https://trip-story.site/offer.html');
                         }),
                   ),
                   const SizedBox(height: 10),
@@ -187,7 +191,7 @@ class _TermPageState extends State<TermPage> {
                           setState(() {});
                         },
                         onPressed2: () async {
-
+                          await urlLaunch('https://trip-story.site/marketing.html');
                         }),
                   ),
                 ],
