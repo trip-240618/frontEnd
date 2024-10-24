@@ -684,18 +684,17 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                                             const PopupMenuDivider(height: 1),
                                                             PopupMenuItem<int>(
                                                               onTap: ()async{
-                                                                print('??? ${js.jPlanList[0]['planList'][index]}');
                                                                 showLoading(context);
                                                                 Map data = {
                                                                   "planId": js.jPlanList[0]['planList'][index]['planId'],
-                                                                  "dayAfterStart": -1,
+                                                                  "dayAfterStart": js.jPlanList[0]['planList'][index]['dayAfterStart'],
                                                                   "startTime": js.jPlanList[0]['planList'][index]['startTime'],
                                                                   "title": js.jPlanList[0]['planList'][index]['title'],
                                                                   "memo": js.jPlanList[0]['planList'][index]['memo'],
                                                                   "place": js.jPlanList[0]['planList'][index]['place']==''?js.jPlanList[0]['planList'][index]['place']:'',
                                                                   "latitude":js.jPlanList[0]['planList'][index]['place']==''?js.jPlanList[0]['planList'][index]['latitude']:'',
                                                                   "longitude": js.jPlanList[0]['planList'][index]['place']==''?js.jPlanList[0]['planList'][index]['longitude']:'',
-                                                                  "locker": false
+                                                                  "locker": true
                                                                 };
                                                                 await js.editJPlanList(data);
                                                                 Get.back();

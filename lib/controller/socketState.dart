@@ -170,11 +170,9 @@ class SocketState extends GetxController{
   }
   /// 삭제 할 때 함수
   Future<void> deleteJplan(Map<String, dynamic> result) async {
+    print('result?? ${result}');
     /// 현재 위치한 시간이랑 같을 때
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['dayAfterStart']) {
-      js.jPlanList[0]['planList'].removeWhere((item) => item['planId'] == result['data']['planId']);
-      js.jplnaMarkerSet();
-    }else if(result['data']['dayAfterStart']==-1){
       js.jPlanList[0]['planList'].removeWhere((item) => item['planId'] == result['data']['planId']);
       js.jplnaMarkerSet();
     }
