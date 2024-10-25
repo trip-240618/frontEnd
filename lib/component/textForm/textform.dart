@@ -89,11 +89,14 @@ class TextIconFormFields extends StatelessWidget {
   final ColorFilter? colorFilter;
   final TextStyle? hintStyle;
   final ValueChanged<String>? onFieldSubmitted;
+  final FocusNode? focusNode;
+  final bool? isUnfocus;
+  final TextInputType? textInputType;
   const TextIconFormFields(
       {Key? key,
         required this.controller,
         required this.hintText,
-        required this.icon, this.onChanged, this.inputFormatters, this.colorFilter, this.hintStyle, this.onFieldSubmitted,
+        required this.icon, this.onChanged, this.inputFormatters, this.colorFilter, this.hintStyle, this.onFieldSubmitted, this.focusNode, this.isUnfocus, this.textInputType,
       })
       : super(key: key);
 
@@ -104,11 +107,17 @@ class TextIconFormFields extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         textAlignVertical: TextAlignVertical.center,
-        style: f16gray800w600,
+        style: f15gray800w500,
         onChanged: onChanged,
+        focusNode: focusNode,
         onFieldSubmitted: onFieldSubmitted,
         inputFormatters: inputFormatters,
-        onTapOutside: (e)=>FocusManager.instance.primaryFocus?.unfocus(),
+        keyboardType: textInputType,
+        onTapOutside: (e) {
+          if (isUnfocus != true) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
+        },
         decoration: InputDecoration(
             isDense: true,
             contentPadding:EdgeInsets.symmetric(vertical: 15,horizontal: 16),
@@ -138,39 +147,38 @@ class TextMemoFormFields extends StatelessWidget {
   final ValueChanged? onChanged;
   final List<TextInputFormatter>? inputFormatters;
   final EdgeInsets? scrollPadding;
-
+  final FocusNode? focusNode;
   const TextMemoFormFields(
       {Key? key,
         required this.controller,
         required this.hintText,
-        this.onChanged, this.inputFormatters, this.scrollPadding,
+        this.onChanged, this.inputFormatters, this.scrollPadding, this.focusNode,
       })
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: TextFormField(
-        onChanged: onChanged,
-        controller: controller,
-        onTapOutside: (e)=>FocusManager.instance.primaryFocus?.unfocus(),
-        scrollPadding:scrollPadding ?? EdgeInsets.all(20.0),
-        decoration: InputDecoration(
-          isDense: true,
-          contentPadding: EdgeInsets.zero,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-          hintText: '${hintText}',
-          hintStyle: f15gray400w500,
+    return TextFormField(
+      onChanged: onChanged,
+      controller: controller,
+      focusNode: focusNode,
+      onTapOutside: (e)=>FocusManager.instance.primaryFocus?.unfocus(),
+      scrollPadding:scrollPadding ?? EdgeInsets.all(20.0),
+      decoration: InputDecoration(
+        isDense: true,
+        contentPadding: EdgeInsets.zero,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide.none,
         ),
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        inputFormatters: inputFormatters,
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide.none,
+        ),
+        hintText: '${hintText}',
+        hintStyle: f15gray400w500,
       ),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+      inputFormatters: inputFormatters,
     );
   }
 }

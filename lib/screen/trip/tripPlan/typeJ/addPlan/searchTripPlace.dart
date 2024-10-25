@@ -5,12 +5,14 @@ import 'package:get/get.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../../../app/api/tripApi.dart';
 import '../../../../../app/config/dio_client.dart';
+import '../../../../../component/loading/loading.dart';
 import '../../../../../util/font.dart';
 
 
@@ -27,6 +29,7 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
   final js = Get.put(JPlanState());
   final ts = Get.put(TripState());
   List placeList = [];
+  bool isLoading = false;
 
   /// 주소와 세컨드 주소의 중복값을 제거해서 장소 이름을 추출
   String getPlaceName(String address, String secondaryAddress) {
@@ -78,7 +81,13 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                                 setState(() {});
                             },
                             onFieldSubmitted: (value) async {
+                              setState(() {
+                                isLoading = true;
+                              });
                               placeList = await apiTripClient.autoLocationGet(_placeCon.text);
+                              setState(() {
+                                isLoading = false;
+                              });
                               print(placeList);
                               setState(() {});
                             },
@@ -89,7 +98,7 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                   ),
                 ),
               ),
-              placeList.isEmpty ? const SizedBox():
+             isLoading?LoadingList(context):placeList.isEmpty ? const SizedBox():
               Expanded(
                 child: ListView.builder(
                     shrinkWrap: true,

@@ -133,7 +133,7 @@ class _NotificationMainState extends State<NotificationMain> {
                                 Uri uri = Uri.parse(notis.notificationList[index]['destination']);
                                 String? tripId = uri.queryParameters['tripId'];
                                 await ts.getSelectTrip(int.parse(tripId!));
-                                Get.off(()=>BottomNavigator(notificationIdx: 0));
+                                Get.off(()=>BottomNavigator());
                               }else{
                                 notis.notificationList[index]['read'] = true;
                                 notis.notificationList.refresh();

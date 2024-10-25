@@ -199,13 +199,11 @@ class HistoryState extends GetxController{
           ),
         ],
     )).then((paths) async{
-      // totalAlbumList.value = paths;
       for (AssetPathEntity asset in paths) {
         await asset.getAssetListRange(start: 0, end: 5000).then((images)async{
           if (images.isNotEmpty) {
             final album = AlbumModel(id: asset.id, name: asset.name, images: images);
             albums.add(album);
-            albums.refresh();
             if(images.length!=0){
               await PhotoCachingManager().requestCacheAssets(
                 assets: images,
@@ -214,6 +212,7 @@ class HistoryState extends GetxController{
                 ),
               );
               }
+            albums.refresh();
             }
         });
       }
