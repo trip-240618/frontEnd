@@ -4,6 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
+import 'package:tripStory/component/dialog/loading.dart';
+import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/addFlight.dart';
@@ -117,7 +120,6 @@ class _SearchFlightState extends State<SearchFlight> {
   void initState() {
     super.initState();
     js.selectedDateReset();
-
     _focusNode.addListener(() {
       setState(() {});
     });
@@ -147,92 +149,54 @@ class _SearchFlightState extends State<SearchFlight> {
                 children: [
                   Text('출발일', style: f12gray600w600,),
                   const SizedBox(height: 8,),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: gray50,
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(width: 1, color: gray200),
-                    ),
-                    child: Padding(padding: EdgeInsets.symmetric(vertical: 15,horizontal: 16),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: (){
-                              SelectDayBottomSheet(context,'항공편의 출발 날짜를 선택해 주세요', (){});
-                            },
+                  GestureDetector(
+                    onTap: (){
+                      SelectDayBottomSheet(context,'항공편의 출발 날짜를 선택해 주세요', (){});
+                    },
+                    child: Builder(
+                      builder: (context) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: gray50,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(width: 1, color: gray200),
+                          ),
+                          child: Padding(padding: EdgeInsets.symmetric(vertical: 15,horizontal: 16),
                             child: Row(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 1.67, bottom: 2.5, left: 2.5, right: 6.5),
-                                  child: SvgPicture.asset(
-                                    'assets/bottomNavi/schedule.svg',
-                                    width: 15,
-                                    height: 15.83,
-                                    colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
-                                  ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 1.67, bottom: 2.5, left: 2.5, right: 6.5),
+                                      child: SvgPicture.asset(
+                                        'assets/bottomNavi/schedule.svg',
+                                        width: 15,
+                                        height: 15.83,
+                                        colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
+                                      ),
+                                    ),
+                                    Obx(()=>Text('${DateFormat('yyyy.MM.dd (EEE)', 'ko').format(DateFormat('yyyy-MM-dd').parse(js.selectedDate.value))}', style: f15gray800w500,),)
+                                  ],
                                 ),
-                                Obx(()=>Text('${DateFormat('yyyy.MM.dd (EEE)', 'ko').format(DateFormat('yyyy-MM-dd').parse(js.selectedDate.value))}', style: f15gray800w500,),)
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        );
+                      }
                     ),
                   ),
                   const SizedBox(height: 20,),
                   Text('항공사', style: f12gray600w600,),
                   const SizedBox(height: 8,),
-                  TextFormField(
-                    style: f15gray800w500,
+                  TextIconFormFields(
                     controller: _carrierCon,
+                    hintText: '항공사명 또는 코드를 입력해주세요',
+                    icon: 'assets/icon/search.svg',
+                    colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
+                    hintStyle: f15gray400w500,
+                    onFieldSubmitted: (value){},
                     focusNode: _focusNode,
-                    onFieldSubmitted: (value){
-                      // Get.to(()=>SearchHistoryResult());
-                    },
-                    onChanged: (v){
-                      if(v==''){
-                        print('v?? ${v}');
-                        airlines = [
-                          {'name': '대한항공', 'code': 'KE'},
-                          {'name': '아시아나항공', 'code': 'OZ'},
-                          {'name': '티웨이항공', 'code': 'TW'},
-                          {'name': '제주항공', 'code': '7C'},
-                          {'name': '진에어', 'code': 'LJ'},
-                        ];
-                      }else{
-                        airlines = totalAirLine
-                            .where((airline) => airline['name']!.contains(v))
-                            .toList();
-                      }
-                      setState(() {});
-                    },
-                    decoration: InputDecoration(
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 16),
-                      hintText: "항공사명 또는 코드를 입력해주세요",
-                      hintStyle: f15gray400w500,
-                      filled: true,
-                      fillColor: gray50,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(1),
-                        borderSide: BorderSide(color: gray200, width: 1),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(1),
-                        borderSide: BorderSide(color: gray200, width: 1),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(1),
-                        borderSide: BorderSide(color: gray200, width: 1),
-                      ),
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: SvgPicture.asset('assets/icon/search.svg',
-                          fit: BoxFit.none,
-                          colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
-                        ),
-                      ),
-                    ),
+                    isUnfocus: true,
                   ),
                   _focusNode.hasFocus?GestureDetector(
                     onTap: (){},
@@ -291,7 +255,6 @@ class _SearchFlightState extends State<SearchFlight> {
                                             value: airlines[index]['code']!,
                                             groupValue: selectedAirline,
                                             onChanged: (String? newValue) {
-
                                               _carrierCon.text = '${airlines[index]['name']} (${airlines[index]['code']})';
                                               setState(() {
                                                 selectedAirline = airlines[index]['code']; // 새로운 값으로 업데이트
@@ -325,47 +288,17 @@ class _SearchFlightState extends State<SearchFlight> {
                   const SizedBox(height: 20,),
                   Text('편명', style: f12gray600w600,),
                   const SizedBox(height: 8,),
-                  TextFormField(
-                    style: f15gray800w500,
+                  TextIconFormFields(
                     controller: _flightNumCon,
-                    onFieldSubmitted: (value){
-                      // Get.to(()=>SearchHistoryResult());
-                    },
-                    onChanged: (v){
-                      setState(() {});
-                    },
+                    hintText: '항공사명 또는 코드를 입력해주세요',
+                    icon: 'assets/icon/pencil.svg',
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    keyboardType: TextInputType.numberWithOptions(),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 16),
-                      hintText: "항공편명을 입력해주세요",
-                      hintStyle: f15gray400w500,
-                      filled: true,
-                      fillColor: gray50,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(1),
-                        borderSide: BorderSide(color: gray200, width: 1),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(1),
-                        borderSide: BorderSide(color: gray200, width: 1),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(1),
-                        borderSide: BorderSide(color: gray200, width: 1),
-                      ),
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: SvgPicture.asset(
-                            'assets/icon/pencil.svg',
-                            fit: BoxFit.none,
-                          colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
-                        ),
-                      ),
-                    ),
+                    textInputType: TextInputType.number,
+                    colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
+                    hintStyle: f15gray400w500,
+                    onFieldSubmitted: (value){},
                   ),
                   _isFlightNotFound==true?Padding(
                     padding: const EdgeInsets.only(left: 16,top: 4),
@@ -379,24 +312,27 @@ class _SearchFlightState extends State<SearchFlight> {
             padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
             child: BottomContainer(
                 onTap: ()async{
-                  print('항공권 요청중 --');
-                 await js.searchFlight(int.parse(_flightNumCon.text),selectedAirline!);
-                 if(js.flightList.isNotEmpty){
-                   print('항공편명은?${_carrierCon.text}');
-                   _isFlightNotFound = false;
-                   Get.to(()=>AddFlight(flightName: '${_carrierCon.text}',))?.then((v)=>{
+                 if(_carrierCon.text.trim().isEmpty || _flightNumCon.text.trim().isEmpty){
+                   showOnlyConfirmTapDialog(context, '빈칸을 입력해주세요', (){
+                     Get.back();
+                   });
+                 }else{
+                   showLoading(context);
+                   await js.searchFlight(int.parse(_flightNumCon.text),selectedAirline!);
+                   Get.back();
+                   if(js.flightList.isNotEmpty){
+                     _isFlightNotFound = false;
+                     Get.to(()=>AddFlight(flightName: '${_carrierCon.text}',))?.then((v)=>{
                      _flightNumCon.clear(),
                      _carrierCon.clear(),
-                   });
-
+                      selectedAirline=null
+                     });
+                   }
+                   else{
+                     _isFlightNotFound = true;
+                   }
+                   setState(() {});
                  }
-                 else{
-                   _isFlightNotFound = true;
-                 }
-                 setState(() {
-
-                 });
-                  //Get.to(()=>AddFlight());
                 },title: '조회하기',isBlack: _carrierCon.text.trim().isEmpty||_flightNumCon.text.trim().isEmpty?false:true),
           ),
         ),

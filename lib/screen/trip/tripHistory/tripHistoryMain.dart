@@ -40,6 +40,9 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   void initState() {
     Future.delayed(Duration.zero,()async{
       await hs.getHistoryList(ts.selectTripList[0]['id']);
+      if(hs.albums.isEmpty){
+        hs.getAlbums();
+      }
       maps.addMarkersFromHistory();
       setState(() {});
     });

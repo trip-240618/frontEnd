@@ -26,7 +26,7 @@ class _AlbumPageState extends State<AlbumPage> {
   Timer? _debounce;
   @override
   void initState() {
-    hs.getAlbums();
+    // hs.getAlbums();
     scrollController.addListener(onScroll);
     super.initState();
   }

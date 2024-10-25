@@ -218,7 +218,6 @@ class SocketState extends GetxController{
   /// 누가 편집중 일 때
   Future<void> waitEditorJplan(Map<String, dynamic> result) async {
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
-
       if(us.userList[0]['uuid']!=result['data']['editorUuid']){
         js.jPlanList[0]['waitList'] = result['data'];
       }

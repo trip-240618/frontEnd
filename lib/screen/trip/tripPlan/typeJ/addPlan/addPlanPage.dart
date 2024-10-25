@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomContainer.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/googleMap_searchPlace.dart';
@@ -28,13 +29,9 @@ class _AddPlanPageState extends State<AddPlanPage> {
   BitmapDescriptor? customIcon;
   final ts = Get.put(TripState());
   final js = Get.put(JPlanState());
-  Set<Marker> markers = {};
-  DateFormat dateFormatter = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR');
-  DateFormat timeFormatter = DateFormat('a hh:mm', 'ko_KR');
-  DateTime now = DateTime.now();
   TextEditingController planTitleCon = TextEditingController();
   TextEditingController memoCon = TextEditingController();
-  String selectTime = DateFormat('a hh:mm', 'ko_KR').format(DateTime.now()); /// 시간
+  FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
@@ -57,6 +54,8 @@ class _AddPlanPageState extends State<AddPlanPage> {
   @override
   void dispose() {
     js.searchLocation.clear();
+    planTitleCon.dispose();
+    memoCon.dispose();
     super.dispose();
   }
   @override
@@ -274,6 +273,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
                         Expanded(
                           child: TextMemoFormFields(
                               controller: memoCon,
+                              focusNode: focusNode,
                               hintText: '일정 간편 메모를 이용해 보세요',
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(100),
@@ -282,7 +282,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
                                   setState(() {});
                               },
                               scrollPadding: EdgeInsets.only(
-                                bottom: MediaQuery.of(context).viewInsets.bottom + 160),
+                                bottom: MediaQuery.of(context).viewInsets.bottom + 130),
                           )
                         ),
                         Row(
@@ -297,7 +297,11 @@ class _AddPlanPageState extends State<AddPlanPage> {
                   ),
                 ),
                 const SizedBox(height: 75,),
-                SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+                SizedBox(height:
+                MediaQuery.of(context).viewInsets.bottom > 130
+                    ? MediaQuery.of(context).viewInsets.bottom - 100
+                    : 0
+                ),
               ],
             ),
           ),
@@ -307,28 +311,34 @@ class _AddPlanPageState extends State<AddPlanPage> {
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
             child: BlackBottomContainer(onTap: ()async{
-              DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']); /// 시작 날짜
-              DateTime selectedDate = DateTime.parse(js.addDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
-              int index = selectedDate.difference(startDate).inDays;
-              Map data = {
-                "dayAfterStart": index+1,
-                "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
-                "title": planTitleCon.text,
-                "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
-                "memo": memoCon.text,
-                "latitude":js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['latitude']:'',
-                "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
-                "locker": false
-              };
-              if(js.searchLocation.isNotEmpty){
-               CameraPosition cameraPosition= CameraPosition(
-                    target: LatLng(js.searchLocation[0]['location']['latitude'], js.searchLocation[0]['location']['longitude']),
-                    zoom: 12);
-                final GoogleMapController controller = await js.mapController.future;
-                await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+              if(planTitleCon.text.trim().isEmpty){
+                showOnlyConfirmTapDialog(context, '여행 일정을 작성해주세요', (){
+                  Get.back();
+                });
+              }else{
+                DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']); /// 시작 날짜
+                DateTime selectedDate = DateTime.parse(js.addDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
+                int index = selectedDate.difference(startDate).inDays;
+                Map data = {
+                  "dayAfterStart": index+1,
+                  "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
+                  "title": planTitleCon.text,
+                  "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
+                  "memo": memoCon.text,
+                  "latitude":js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['latitude']:'',
+                  "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
+                  "locker": false
+                };
+                if(js.searchLocation.isNotEmpty){
+                  CameraPosition cameraPosition= CameraPosition(
+                      target: LatLng(js.searchLocation[0]['location']['latitude'], js.searchLocation[0]['location']['longitude']),
+                      zoom: 12);
+                  final GoogleMapController controller = await js.mapController.future;
+                  await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+                }
+                js.addJPlanList(data);
+                Get.back();
               }
-              js.addJPlanList(data);
-              Get.back();
             }, title: '저장'),
           ),
         ),

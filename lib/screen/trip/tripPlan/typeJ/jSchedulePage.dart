@@ -281,7 +281,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                           borderRadius: BorderRadius.circular(100),
                           onTap: ()async{
                             await socket.addEditor(js.jPlanList[0]['dayAfterStart']);
-                            await Future.delayed(const Duration(milliseconds: 500));
+                            await Future.delayed(const Duration(milliseconds: 100));
                             /// 누가 편집중일 때
                             if(js.jPlanList[0]['waitList'].length!=0){
                               showCustomToast(context, fToast!, '${js.jPlanList[0]['waitList']['nickname']} 님이 일정을 수정 중입니다');
@@ -295,6 +295,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                               }
                               /// 편집 권한 해제 했을 때
                               else{
+                                showLoading(context);
                                 js.jPlanList[0]['checked'] = true;
                                 Map<String,dynamic> transMap = {
                                   "dayAfterStart": js.editPlanJList[0]['dayAfterStart'],
@@ -309,6 +310,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                 await js.swapJPlan(transMap);
                                 js.isSorting.value = false;
                                 js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
+                                Get.back();
                                 js.firstSwapList.value = {};
                               }
                             }
