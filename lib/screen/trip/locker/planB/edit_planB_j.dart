@@ -42,7 +42,7 @@ class _EditPlanBJState extends State<EditPlanBJ> {
   void initState() {
     print('선택된 플랜B JList?${js.selectPlanBJList}');
     /// 날짜 정렬
-    if(js.selectPlanBJList['dayAfterStart']==null){
+    if(js.selectPlanBJList['dayAfterStart']==-1){
       isDateTBD = true;
       js.selectedDate.value = ts.selectTripList[0]['startDate'];
     }else{
@@ -152,7 +152,7 @@ class _EditPlanBJState extends State<EditPlanBJ> {
                         ) :
                         GestureDetector(
                           onTap: (){
-                            SelectDayBottomSheet2(context,'여행 날짜를 선택해 주세요', (){});
+                            SelectDayBottomSheet2(context,'여행 날짜를 선택해 주세요');
                           },
                           child: Row(
                             children: [
@@ -442,20 +442,9 @@ class _EditPlanBJState extends State<EditPlanBJ> {
               DateTime selectedDate = DateTime.parse(js.addDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
               int index = selectedDate.difference(startDate).inDays;
               Map data =
-              isDateTBD
-                  ? {
+               {
                 "planId": js.selectPlanBJList['planId'],
-                "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
-                "title": planTitleCon.text,
-                "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
-                "memo": memoCon.text,
-                "latitude":js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['latitude']:'',
-                "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
-                "locker": true
-              }
-                  : {
-                "planId": js.selectPlanBJList['planId'],
-                "dayAfterStart": index+1,
+                "dayAfterStart": isDateTBD?-1:index+1,
                 "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
                 "title": planTitleCon.text,
                 "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
@@ -464,19 +453,10 @@ class _EditPlanBJState extends State<EditPlanBJ> {
                 "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
                 "locker": true
               };
-
               print('내가 보낼 data?${data}');
 
-              if(js.searchLocation.isNotEmpty){
-                CameraPosition cameraPosition= CameraPosition(
-                    target: LatLng(js.searchLocation[0]['location']['latitude'], js.searchLocation[0]['location']['longitude']),
-                    zoom: 12);
-                final GoogleMapController controller = await js.mapController.future;
-                await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-              }
-              await js.editJPlanList(data).then((_) async {
-                await js.getPlanBJList();
-              });
+              await js.editJPlanList(data);
+              await js.getPlanBJList();
               Get.back();
             }, title: '일정 B안 수정'),
           ),

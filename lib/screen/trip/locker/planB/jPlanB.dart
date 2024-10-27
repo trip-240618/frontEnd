@@ -7,6 +7,7 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/locker/planB/add_planB_j.dart';
 import 'package:tripStory/screen/trip/locker/planB/edit_planB_j.dart';
 import '../../../../component/button/plusFloating.dart';
+import '../../../../component/dialog/daySelect.dart';
 import '../../../../util/color.dart';
 import '../../../../util/font.dart';
 import '../../../../util/tooltip_shape.dart';
@@ -63,7 +64,7 @@ class _JPlanBState extends State<JPlanB> {
                               vertical: 12, horizontal: 20),
                           child: Row(
                             children: [
-                              js.planBJList[dayIndex]['dayAfterStart']!=null?
+                              js.planBJList[dayIndex]['dayAfterStart']!=-1?
                               Container(
                                 decoration: BoxDecoration(
                                     color: Colors.white,
@@ -80,7 +81,7 @@ class _JPlanBState extends State<JPlanB> {
                               const SizedBox(
                                 width: 6,
                               ),
-                              js.planBJList[dayIndex]['dayAfterStart']!=null?Text('${DateFormat('M.d (E)', 'ko').format(DateTime.parse(ts.selectTripList[0]['startDate']).add(Duration(days: js.planBJList[dayIndex]['dayAfterStart']-1)))}', style: f14Gray800w500,):SizedBox(),
+                              js.planBJList[dayIndex]['dayAfterStart']!=-1?Text('${DateFormat('M.d (E)', 'ko').format(DateTime.parse(ts.selectTripList[0]['startDate']).add(Duration(days: js.planBJList[dayIndex]['dayAfterStart']-1)))}', style: f14Gray800w500,):SizedBox(),
                               Spacer(),
                               Container(
                                 width: 20,
@@ -113,7 +114,7 @@ class _JPlanBState extends State<JPlanB> {
                         children: [
                           AnimatedSize(
                               duration: Duration(milliseconds: 500),
-                              curve: Curves.easeInOut,
+                              curve: Curves.easeOutBack,
                               child: js.planBJList[dayIndex]['checked']==true?Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 20),
                                 child: Container(
@@ -259,6 +260,13 @@ class _JPlanBState extends State<JPlanB> {
                                                                     ),
                                                                     const PopupMenuDivider(height: 1),
                                                                     PopupMenuItem<int>(
+                                                                      onTap: () async {
+                                                                        js.selectJplan.value =js.planBJList[dayIndex]['planList'][planIndex];
+                                                                        js.selectJplan['locker'] = false;
+                                                                        js.selectJplan['dayAfterStart'] == -1?SelectDayBottomSheet2(context,'일정이동시 날짜 지정이 필요해요','일정 이동')
+                                                                            :await js.editJPlanList(js.selectJplan.value);
+                                                                        await js.getPlanBJList();
+                                                                      },
                                                                       padding: EdgeInsets.zero,
                                                                       value: 3,
                                                                       child: Padding(
