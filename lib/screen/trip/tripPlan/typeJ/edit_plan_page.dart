@@ -125,7 +125,7 @@ class _EditPlanPageState extends State<EditPlanPage> {
                       children: [
                         GestureDetector(
                           onTap: (){
-                            SelectDayBottomSheet2(context,'항공편의 출발 날짜를 선택해 주세요', (){});
+                            SelectDayBottomSheet2(context,'항공편의 출발 날짜를 선택해 주세요');
                           },
                           child: Row(
                             children: [
