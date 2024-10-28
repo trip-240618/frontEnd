@@ -128,6 +128,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                       )
                           :  GestureDetector(
                             onTap:()async{
+
                                 js.selectedIdx.value = index;
                                 scrollToIndex(index);
                                 js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index))}';
@@ -198,7 +199,8 @@ class _JSchedulePageState extends State<JSchedulePage> {
                   target: LatLng(js.latitude.value, js.longitude.value),
                   zoom: 14.4746,
                 ),
-                polylines: js.polyline,
+
+                polylines: Set<Polyline>.of(js.polyline),
                 markers: js.markers.toSet(),
                 myLocationButtonEnabled: false,
                 onMapCreated: (GoogleMapController controller) {

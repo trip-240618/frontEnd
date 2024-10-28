@@ -64,7 +64,18 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                         onTap: ()async{
-                          await ms.getComingTrip();
+                          switch (ms.selectIdx.value) {
+                            case 0:
+                              await ms.getComingTrip();
+                              break;
+                            case 1:
+                              await ms.getLastTrip();
+                              break;
+                            case 2:
+                              await ms.getBookMarkTrip();
+                              break;
+                            default:
+                          }
                           Get.back();
                         },
                         child: SvgPicture.asset('assets/icon/home.svg',

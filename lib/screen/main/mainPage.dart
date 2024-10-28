@@ -164,13 +164,13 @@ class _MainPageState extends State<MainPage> {
               ],
             )),
             const SizedBox(height: 32),
-            GestureDetector(
-                onTap: (){
-                  print('알림 테스트?');
-                  showLoading(context);
-                  // apiUserClient.alimTest();
-                },
-                child: Text('알림 테스트ㅇㅁㅇㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅁㅁㄴ')),
+            // GestureDetector(
+            //     onTap: (){
+            //       print('알림 테스트?');
+            //       showLoading(context);
+            //       // apiUserClient.alimTest();
+            //     },
+            //     child: Text('알림 테스트ㅇㅁㅇㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅁㅁㄴ')),
             isLoading?Expanded(child: LoadingWidget()):Obx(()=>Expanded(
               child: SingleChildScrollView(
                 physics: const ClampingScrollPhysics(),
@@ -289,7 +289,7 @@ class _MainPageState extends State<MainPage> {
                                                   ),
                                                 ),
                                                 // placeholder: (context, url) => const CircularProgressIndicator(),
-                                                // errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                errorWidget: (context, url, error) => DefaultImageScreen(context),
                                               ),
                                             ),
                                           ),

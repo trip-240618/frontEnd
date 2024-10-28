@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/bottomContainer.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import '../../controller/tripState.dart';
@@ -130,6 +131,10 @@ SelectDayDialog(BuildContext context, String title, VoidCallback onTap) {
                                 Get.back();
                                 hs.selectedDate.value = selectedDate!;
                                 Get.to(()=>AlbumPage());
+                              }else{
+                                showOnlyConfirmTapDialog(context, '날짜를 선택해주세요', (){
+                                  Get.back();
+                                });
                               }
                             },
                             behavior: HitTestBehavior.opaque,
