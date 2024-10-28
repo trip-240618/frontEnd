@@ -23,12 +23,13 @@ class _PPlanPageState extends State<PPlanPage> {
   final socket = Get.put(SocketState());
   FocusNode _focusNode = FocusNode();
   ScrollController scrollController = ScrollController();
-  bool isEdit = false;
+  bool isSorting = false; /// 리오더블
+  bool isEdit = false; /// 추가, 수정중인지 여부
   /// Text Con
   TextEditingController _controller = TextEditingController();
   int totalDays = 1; /// 여행 총 day 수
   int selectWeek = 0;
-  int addIndex = -1;
+  int selectDayIdx = 0;
 
   @override
   void initState() {
@@ -43,8 +44,9 @@ class _PPlanPageState extends State<PPlanPage> {
 
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
-        // 포커스 해제 시 동작
-        // _saveToDatabase();
+        removeLastPlan();
+        Navigator.of(context).pop();
+        isEdit = false;
       }
     });
     super.initState();
@@ -55,48 +57,15 @@ class _PPlanPageState extends State<PPlanPage> {
     super.dispose();
   }
 
-  void _saveToDatabase(){
-    // print(plans[addIndex]);
-    // if(plans[addIndex]['content'] != ''){
-    //   int newIndex = addIndex - differenceDayCnt(plans[addIndex]['date']);
-    //   print('추가될 인덱스는???${newIndex}');
-    //   planList.insert(newIndex,plans[addIndex] );
-    //
-    // }
-    // addIndex = -1;
-  }
-
-  int differenceDayCnt(String day){
-    DateTime date = DateTime.parse(day);
-    Duration difference = date.difference(DateTime.parse(ts.selectTripList[0]['startDate']));
-    print('차이???${difference.inDays}');
-    return (difference.inDays)+1;
-  }
-
-  /// M월/d일(E) 포멧터
-  String customDateFormatter2(String dateString){
-    DateTime date = DateTime.parse(dateString);
-    String formattedDate = DateFormat('M.d (E)', 'ko').format(date);
-    return formattedDate;
-  }
-
-  /// 시작일, 종료일 사이의 날짜를 리스트로 생성
-  List generateDateRange(DateTime startDay, DateTime endDay) {
-    List dateList = [];
-    for (DateTime date = startDay; date.isBefore(endDay.add(Duration(days: 1))); date = date.add(Duration(days: 1))) {
-      dateList.add(DateFormat('yyyy-MM-dd').format(date));
-    }
-    return dateList;
-  }
 
   /// (+) Day 버튼을 클릭시 해당 Day의 맨 밑에 새로운 플랜 추가
   void addPlan(int index){
     FocusScope.of(context).unfocus();
-    if(addIndex != -1){
-      print('작성하다만거');
-     // print(plans[addIndex]);
-      _saveToDatabase();
-    }
+    // if(addIndex != -1){
+    //   print('작성하다만거');
+    //  // print(plans[addIndex]);
+    //   _saveToDatabase();
+    // }
 
 
 
@@ -128,106 +97,209 @@ class _PPlanPageState extends State<PPlanPage> {
   //
   //   });
   }
-  void showCustomBottomSheet(BuildContext context) {
+  /// 일정 추가 바텀 시트
+  void showAddBottomSheet(BuildContext context) {
+    _controller.clear();
     Scaffold.of(context).showBottomSheet((BuildContext context) {
         return Container(
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Color(0x1AD4D4D4),
-                offset: Offset(0, -3),
-                blurRadius: 6,
-              ),
-              BoxShadow(
-                color: Color(0x17D4D4D4),
-                offset: Offset(0, -10),
-                blurRadius: 10,
-              ),
-              BoxShadow(
-                color: Color(0x0DD4D4D4),
-                offset: Offset(0, -23),
-                blurRadius: 14,
-              ),
-              BoxShadow(
-                color: Color(0x03D4D4D4),
-                offset: Offset(0, -40),
-                blurRadius: 16,
-              ),
-              BoxShadow(
-                color: Color(0x00D4D4D4),
-                offset: Offset(0, -63),
-                blurRadius: 18,
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.grey[200]!),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        onChanged: (con) {
-                          setState(() {});
-                        },
-                        cursorColor: Colors.blue, // Replace with dynamic color
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                          hintText: '여행 일정을 입력해주세요',
-                          hintStyle: TextStyle(color: Colors.grey[400]),
-                        ),
-                        controller: _controller,
-                        focusNode: _focusNode,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(18),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      '${_controller.text.length}',
-                      style: _controller.text.length > 0
-                          ? TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold)
-                          : TextStyle(color: Colors.grey[400]),
-                    ),
-                    Text(
-                      '/18 ',
-                      style: TextStyle(color: Colors.grey[400]),
-                    ),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () async {
-                        // 여기에 계획 추가 로직
+        width: Get.width,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x1AD4D4D4),
+              offset: Offset(0, -3),
+              blurRadius: 6,
+            ),
+            BoxShadow(
+              color: Color(0x17D4D4D4),
+              offset: Offset(0, -10),
+              blurRadius: 10,
+            ),
+            BoxShadow(
+              color: Color(0x0DD4D4D4),
+              offset: Offset(0, -23),
+              blurRadius: 14,
+            ),
+            BoxShadow(
+              color: Color(0x03D4D4D4),
+              offset: Offset(0, -40),
+              blurRadius: 16,
+            ),
+            BoxShadow(
+              color: Color(0x00D4D4D4),
+              offset: Offset(0, -63),
+              blurRadius: 18,
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+          child: Container(
+            width: Get.width,
+            decoration: BoxDecoration(
+              color: gray50,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: gray200),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      onChanged: (con){
+                        setState(() {});
                       },
-                      child: Icon(Icons.arrow_forward), // 아이콘은 대체하세요
+                      cursorColor: Color(ts.selectTripList[0]['labelColor']),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: '여행 일정을 입력해주세요',
+                        hintStyle: f15gray400w500,
+                      ),
+                      controller: _controller,
+                      focusNode: _focusNode,
+                      inputFormatters: <TextInputFormatter>[
+                        LengthLimitingTextInputFormatter(18),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 10,),
+                  Text('${_controller.text.length}', style: _controller.text.length>0?f11Gray800w600:f11Gray400w600,),
+                  Text('/18 ', style: f11Gray400w600,),
+                  const SizedBox(width: 8,),
+                  GestureDetector(
+                      onTap: () async {
+                        print(_controller.text);
+                        print(ps.pPlanList[selectDayIdx]['dayAfterStart']);
+                        removeLastPlan();
+                        await ps.addPPlanList(_controller.text, ps.pPlanList[selectDayIdx]['dayAfterStart'], false);
+                        Get.back();
+                        isEdit = false;
+                      },
+                      child: SvgPicture.asset('assets/icon/roundArrowRight.svg'))
+                ],
               ),
             ),
           ),
-        );
+        ),
+      );
       },
     );
   }
 
+  /// 일정 수정 바텀 시트
+  void showEditBottomSheet(BuildContext context) {
+    _controller.text = ps.selectPPlan['content'];
+    Scaffold.of(context).showBottomSheet((BuildContext context) {
+      return Container(
+        width: Get.width,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x1AD4D4D4),
+              offset: Offset(0, -3),
+              blurRadius: 6,
+            ),
+            BoxShadow(
+              color: Color(0x17D4D4D4),
+              offset: Offset(0, -10),
+              blurRadius: 10,
+            ),
+            BoxShadow(
+              color: Color(0x0DD4D4D4),
+              offset: Offset(0, -23),
+              blurRadius: 14,
+            ),
+            BoxShadow(
+              color: Color(0x03D4D4D4),
+              offset: Offset(0, -40),
+              blurRadius: 16,
+            ),
+            BoxShadow(
+              color: Color(0x00D4D4D4),
+              offset: Offset(0, -63),
+              blurRadius: 18,
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+          child: Container(
+            width: Get.width,
+            decoration: BoxDecoration(
+              color: gray50,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: gray200),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      onChanged: (con){
+                        setState(() {});
+                      },
+                      cursorColor: Color(ts.selectTripList[0]['labelColor']),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: '여행 일정을 입력해주세요',
+                        hintStyle: f15gray400w500,
+                      ),
+                      controller: _controller,
+                      focusNode: _focusNode,
+                      inputFormatters: <TextInputFormatter>[
+                        LengthLimitingTextInputFormatter(18),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10,),
+                  Text('${_controller.text.length}', style: _controller.text.length>0?f11Gray800w600:f11Gray400w600,),
+                  Text('/18 ', style: f11Gray400w600,),
+                  const SizedBox(width: 8,),
+                  GestureDetector(
+                      onTap: () async {
+                        if(_controller.text != ''){
+                          ps.selectPPlan['content'] = _controller.text;
+                          await ps.editPPlanList(ps.selectPPlan.value);
+                          Get.back();
+                          isEdit = false;
+                        }
+                      },
+                      child: SvgPicture.asset('assets/icon/smallpencil.svg')),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+    );
+  }
+
+  /// 포커스를 벗어나면 임시 추가된 빈 일정 항목을 삭제
+  void removeLastPlan(){
+    var lastPlan = ps.pPlanList[selectDayIdx]['planList'].last;
+    if(lastPlan['planId']==null){
+      ps.pPlanList[selectDayIdx]['planList'].removeLast();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -329,11 +401,27 @@ class _PPlanPageState extends State<PPlanPage> {
                                   Spacer(),
                                   GestureDetector(
                                     onTap: (){
-                                      print('클릭클릭');
-                                      isEdit = true;
+                                      print(dayIndex);
+                                      if(isEdit == false){
+                                        /// 선택한 day만 펼치고 나머지는 닫기
+                                        for (int i = 0; i < ps.pPlanList.length; i++) {
+                                          ps.pPlanList[i]['checked'] = (i == dayIndex);
+                                        }
 
-                                      _focusNode.requestFocus();
-                                      //addPlan(index);
+
+                                        selectDayIdx = dayIndex; /// 이후 포커스 없을때 삭제하기 위해서 인덱스 저장
+                                        ps.pPlanList[dayIndex]['planList'].add({
+                                          'planId': null,
+                                          'dayAfterStart': ps.pPlanList[dayIndex]['dayAfterStart'],
+                                          'orderByDate': 0,
+                                          'writerUuid': '',
+                                          'content': '',
+                                          'checkbox': false,
+                                        });
+                                        showAddBottomSheet(context);
+                                        isEdit = true;
+                                        _focusNode.requestFocus();
+                                      }
                                       setState(() {
 
                                       });
@@ -419,7 +507,8 @@ class _PPlanPageState extends State<PPlanPage> {
                                                   PopupMenuItem<int>(
                                                     onTap: (){
                                                       ps.selectPPlan.value = ps.pPlanList[dayIndex]['planList'][planIndex];
-                                                     // Get.to(()=>EditPlanPage());
+                                                      showEditBottomSheet(context);
+                                                      _focusNode.requestFocus();
                                                     },
                                                     padding: EdgeInsets.zero,
                                                     value: 1,
@@ -532,92 +621,6 @@ class _PPlanPageState extends State<PPlanPage> {
             ],
           ),
         ),
-        // bottomSheet: isEdit?
-        // Container(
-        //   width: Get.width,
-        //   decoration: BoxDecoration(
-        //     color: Colors.white,
-        //     boxShadow: [
-        //       BoxShadow(
-        //         color: Color(0x1AD4D4D4),
-        //         offset: Offset(0, -3),
-        //         blurRadius: 6,
-        //       ),
-        //       BoxShadow(
-        //         color: Color(0x17D4D4D4),
-        //         offset: Offset(0, -10),
-        //         blurRadius: 10,
-        //       ),
-        //       BoxShadow(
-        //         color: Color(0x0DD4D4D4),
-        //         offset: Offset(0, -23),
-        //         blurRadius: 14,
-        //       ),
-        //       BoxShadow(
-        //         color: Color(0x03D4D4D4),
-        //         offset: Offset(0, -40),
-        //         blurRadius: 16,
-        //       ),
-        //       BoxShadow(
-        //         color: Color(0x00D4D4D4),
-        //         offset: Offset(0, -63),
-        //         blurRadius: 18,
-        //       ),
-        //     ],
-        //   ),
-        //   child: Padding(
-        //     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-        //     child: Container(
-        //       width: Get.width,
-        //       decoration: BoxDecoration(
-        //         color: gray50,
-        //         borderRadius: BorderRadius.circular(4),
-        //         border: Border.all(color: gray200),
-        //       ),
-        //       child: Padding(
-        //         padding: const EdgeInsets.all(16),
-        //         child: Row(
-        //           children: [
-        //             Expanded(
-        //               child: TextFormField(
-        //                 onChanged: (con){
-        //                   setState(() {});
-        //                 },
-        //                 cursorColor: Color(ts.selectTripList[0]['labelColor']),
-        //                 decoration: InputDecoration(
-        //                   isDense: true,
-        //                   contentPadding: EdgeInsets.zero,
-        //                   enabledBorder: OutlineInputBorder(
-        //                     borderSide: BorderSide.none,
-        //                   ),
-        //                   focusedBorder: OutlineInputBorder(
-        //                     borderSide: BorderSide.none,
-        //                   ),
-        //                   hintText: '여행 일정을 입력해주세요',
-        //                   hintStyle: f15gray400w500,
-        //                 ),
-        //                 controller: _controller,
-        //                 focusNode: _focusNode,
-        //                 inputFormatters: <TextInputFormatter>[
-        //                   LengthLimitingTextInputFormatter(18),
-        //                 ],
-        //               ),
-        //             ),
-        //             const SizedBox(width: 10,),
-        //             Text('${_controller.text.length}', style: _controller.text.length>0?f11Gray800w600:f11Gray400w600,),
-        //             Text('/18 ', style: f11Gray400w600,),
-        //             const SizedBox(width: 8,),
-        //             GestureDetector(
-        //                 onTap: () async {
-        //                   await ps.addPPlanList(_controller.text, 2, false);
-        //                 },
-        //                 child: SvgPicture.asset('assets/icon/roundArrowRight.svg'))
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ):null,
       ),
     );
   }

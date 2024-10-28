@@ -359,6 +359,7 @@ SelectDayBottomSheet2(
                           js.selectJplan['dayAfterStart'] = js.selectedIdx.value+1;
                           print('index ${ js.selectJplan.value}');
                           await js.editJPlanList(js.selectJplan.value);
+                          await js.getPlanBJList();
                           Get.back();
                         }, title: buttonName!):const SizedBox(),
                       ],
