@@ -136,7 +136,7 @@ class _SettingMainPageState extends State<SettingMainPage> {
                   SettingArrowRow(
                       title: '약관 및 정책',
                       onTap: ()async{
-                        await urlLaunch('https://trip-story.site/privacy.html');
+                        await urlLaunch('https://trip-story.site/policy/privacy');
                       })
                 ],
               ),

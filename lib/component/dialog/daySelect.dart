@@ -337,7 +337,7 @@ SelectDayBottomSheet2(
                                 ),
                                 value: dateList[idx],
                                 contentPadding: EdgeInsets.zero,
-                                groupValue: js.addDate.value,
+                                groupValue: edit?js.editDate.value:js.addDate.value,
                                 onChanged: (String? newValue) {
                                   if(edit){
                                     js.editDate.value = newValue!;

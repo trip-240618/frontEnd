@@ -263,8 +263,8 @@ class _JPlanBState extends State<JPlanB> {
                                                                       onTap: () async {
                                                                         js.selectJplan.value =js.planBJList[dayIndex]['planList'][planIndex];
                                                                         js.selectJplan['locker'] = false;
-                                                                        js.selectJplan['dayAfterStart'] == -1?SelectDayBottomSheet2(context,'일정이동시 날짜 지정이 필요해요','일정 이동')
-                                                                            :await js.editJPlanList(js.selectJplan.value);
+                                                                        // js.selectJplan['dayAfterStart'] == -1?SelectDayBottomSheet2(context,'일정이동시 날짜 지정이 필요해요','일정 이동')
+                                                                        //     :await js.editJPlanList(js.selectJplan.value);
                                                                         await js.getPlanBJList();
                                                                       },
                                                                       padding: EdgeInsets.zero,
