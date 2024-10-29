@@ -109,7 +109,7 @@ class _AddPlanBJState extends State<AddPlanBJ> {
                         ) :
                         GestureDetector(
                           onTap: (){
-                            SelectDayBottomSheet2(context,'여행 날짜를 선택해 주세요');
+                            ButtonSelectDayBottomSheet(context,'여행 날짜를 선택해 주세요');
                           },
                           child: Row(
                             children: [
