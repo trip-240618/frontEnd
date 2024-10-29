@@ -383,9 +383,10 @@ SelectDayBottomSheet2(
 
 }
 ButtonSelectDayBottomSheet(
-    BuildContext context, String title, VoidCallback onTap, String buttonName){
+    BuildContext context, String title,[String? buttonName]){
   final js = Get.put(JPlanState());
   final ts = Get.put(TripState());
+  String selectedDate =  DateFormat('yyyy.MM.dd (EEE)', 'ko').format(DateFormat('yyyy-MM-dd').parse(js.planBSelectedDate.value));
   final List<String> dateList = List.generate(
     DateTime.parse('${ts.selectTripList[0]['endDate']}').difference(DateTime.parse('${ts.selectTripList[0]['startDate']}')).inDays + 1, (index) => DateFormat('yyyy.MM.dd (EEE)', 'ko').format(
     DateTime.parse('${ts.selectTripList[0]['startDate']}').add(Duration(days: index)),
@@ -444,11 +445,11 @@ ButtonSelectDayBottomSheet(
                                 ),
                                 value: dateList[idx],
                                 contentPadding: EdgeInsets.zero,
-                                groupValue: js.addDate.value,
+                                groupValue: selectedDate,
                                 onChanged: (String? newValue) {
-
-                                  js.addDate.value = newValue!;
-                                  js.addDate.refresh();
+                                  js.planBSelectedIdx.value = idx;
+                                  selectedDate = newValue!;
+                                  js.selectedDate.value = DateFormat('yyyy-MM-dd').format(DateFormat('yyyy.MM.dd (EEE)', 'ko').parse(selectedDate));
                                   setState((){});
                                 },
                                 dense: true,
@@ -469,7 +470,13 @@ ButtonSelectDayBottomSheet(
                             },
                           ),
                         ),
-                        BlackBottomContainer(onTap: onTap, title: buttonName)
+                        buttonName!=null?BlackBottomContainer(onTap: () async {
+                          js.selectJplan['dayAfterStart'] = js.planBSelectedIdx.value+1;
+                          print('index ${ js.selectJplan.value}');
+                          await js.editJPlanList(js.selectJplan.value);
+                          await js.getPlanBJList();
+                          Get.back();
+                        }, title: buttonName!):const SizedBox(),
                       ],
                     ),
                   ),

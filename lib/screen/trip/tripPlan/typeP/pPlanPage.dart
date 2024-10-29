@@ -399,6 +399,13 @@ class _PPlanPageState extends State<PPlanPage> {
                                   const SizedBox(width: 6,),
                                   Text('${DateFormat('M.d (E)', 'ko').format(DateTime.parse(ts.selectTripList[0]['startDate']).add(Duration(days: int.parse('${ps.pPlanList[dayIndex]['dayAfterStart']}')-1)))}', style: f14Gray800w500,),
                                   Spacer(),
+                                  Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                        //ts.selectTripList[0]['startDate']
+                                    ),
+                                  ),
                                   GestureDetector(
                                     onTap: (){
                                       print(dayIndex);
