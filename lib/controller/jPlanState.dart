@@ -40,7 +40,9 @@ class JPlanState extends GetxController{
   final Rx<DateTime> addSelectedDateTime = DateTime.now().obs;
   final addDate = ''.obs; /// 추가 시킬 때 날짜
   final editDate = ''.obs; /// 수정 할 때 날짜 변수
-  /// planB jList
+  /// planB
+  final planBSelectedIdx = 0.obs; /// planB선택된 날짜 인덱스
+  final planBSelectedDate = ''.obs; /// planB 선택된 날짜를 저장하는 값
   final RxList planBJList = [].obs; /// plan B j data 리스트
   final RxMap selectPlanBJList = {}.obs; /// 수정 할 때 선택된 plan B j  리스트
 
