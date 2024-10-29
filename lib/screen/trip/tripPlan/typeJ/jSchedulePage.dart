@@ -199,7 +199,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
                   target: LatLng(js.latitude.value, js.longitude.value),
                   zoom: 14.4746,
                 ),
-
                 polylines: Set<Polyline>.of(js.polyline),
                 markers: js.markers.toSet(),
                 myLocationButtonEnabled: false,

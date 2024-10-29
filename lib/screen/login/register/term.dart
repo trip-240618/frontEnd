@@ -131,7 +131,7 @@ class _TermPageState extends State<TermPage> {
                           setState(() {});
                         },
                         onPressed2: () async {
-                         await urlLaunch('https://trip-story.site/service.html');
+                         await urlLaunch('https://trip-story.site/policy/service');
                         }),
                   ),
                   const SizedBox(height: 10),
@@ -146,7 +146,7 @@ class _TermPageState extends State<TermPage> {
                           setState(() {});
                         },
                         onPressed2: () async {
-                          await urlLaunch('https://trip-story.site/privacy.html');
+                          await urlLaunch('https://trip-story.site/policy/privacy');
                         }),
                   ),
                   const SizedBox(height: 10),
@@ -161,7 +161,7 @@ class _TermPageState extends State<TermPage> {
                           setState(() {});
                         },
                         onPressed2: () async {
-                          await urlLaunch('https://trip-story.site/location.html');
+                          await urlLaunch('https://trip-story.site/policy/location');
                         }),
                   ),
                   const SizedBox(height: 10),
@@ -176,7 +176,7 @@ class _TermPageState extends State<TermPage> {
                           setState(() {});
                         },
                         onPressed2: () async {
-                          await urlLaunch('https://trip-story.site/offer.html');
+                          await urlLaunch('https://trip-story.site/policy/offerl');
                         }),
                   ),
                   const SizedBox(height: 10),
@@ -191,7 +191,7 @@ class _TermPageState extends State<TermPage> {
                           setState(() {});
                         },
                         onPressed2: () async {
-                          await urlLaunch('https://trip-story.site/marketing.html');
+                          await urlLaunch('https://trip-story.site/policy/marketing');
                         }),
                   ),
                 ],
