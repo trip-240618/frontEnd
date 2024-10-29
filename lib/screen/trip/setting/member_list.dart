@@ -153,8 +153,9 @@ class _MemberListState extends State<MemberList> {
                           !leaderCheck && us.userList[0]['uuid']!=memberList[index]['uuid'] ?const SizedBox():
                           us.userList[0]['uuid']==memberList[index]['uuid']
                               ? GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
                                   onTap: ()async{
-                                    showConfirmCancelTapDialog(context, '여행방을 나가시겠습니까?', '확인',null, ()async{
+                                    showConfirmCancelTapDialog(context, '여행방을 나가시겠습니까?','확인',null, ()async{
                                       await ts.leaveTrip(ts.selectTripList[0]['id'], ts.selectTripList[0]['type']);
                                       Get.back();
                                       Get.back();

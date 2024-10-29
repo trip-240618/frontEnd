@@ -124,7 +124,6 @@ class TextIconFormFields extends StatelessWidget {
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: gray200),
             ),
-            fillColor: Colors.red,
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: gray200), // 포커스된 상태에서 보더 색상 변경
             ),
@@ -139,7 +138,65 @@ class TextIconFormFields extends StatelessWidget {
     );
   }
 }
+/// 아이콘 뒤에 배경
+class TextIconBackFormFields extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final String icon;
+  final ValueChanged? onChanged;
+  final List<TextInputFormatter>? inputFormatters;
+  final ColorFilter? colorFilter;
+  final TextStyle? hintStyle;
+  final ValueChanged<String>? onFieldSubmitted;
+  final FocusNode? focusNode;
+  final bool? isUnfocus;
+  final TextInputType? textInputType;
+  const TextIconBackFormFields(
+      {Key? key,
+        required this.controller,
+        required this.hintText,
+        required this.icon, this.onChanged, this.inputFormatters, this.colorFilter, this.hintStyle, this.onFieldSubmitted, this.focusNode, this.isUnfocus, this.textInputType,
+      })
+      : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: gray50,
+      child: TextFormField(
+        controller: controller,
+        textAlignVertical: TextAlignVertical.center,
+        style: f15gray800w500,
+        onChanged: onChanged,
+        focusNode: focusNode,
+        onFieldSubmitted: onFieldSubmitted,
+        inputFormatters: inputFormatters,
+        keyboardType: textInputType,
+        onTapOutside: (e) {
+          if (isUnfocus != true) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
+        },
+        decoration: InputDecoration(
+            isDense: true,
+            contentPadding:EdgeInsets.symmetric(vertical: 15,horizontal: 16),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide.none,
+            ),
+            hintText: '${hintText}',
+            hintStyle: hintStyle==null?f15gray800w500:hintStyle,
+            prefixIcon: Padding(
+              padding:  EdgeInsets.only(left: 8),
+              child: SvgPicture.asset('${icon}',fit: BoxFit.none,colorFilter: colorFilter),
+            )
+        ),
+      ),
+    );
+  }
+}
 /// 메모 텍스트 필드
 class TextMemoFormFields extends StatelessWidget {
   final TextEditingController controller;
