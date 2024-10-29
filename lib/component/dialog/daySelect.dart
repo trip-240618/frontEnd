@@ -273,14 +273,16 @@ SelectDayBottomSheet(BuildContext context, String title, VoidCallback? onTap){
 }
 
 SelectDayBottomSheet2(
-    BuildContext context, String title,[String? buttonName,]
+    BuildContext context,
+    String title,
+    bool edit
     ){
   final js = Get.put(JPlanState());
   final ts = Get.put(TripState());
   final List<String> dateList = List.generate(
     DateTime.parse('${ts.selectTripList[0]['endDate']}').difference(DateTime.parse('${ts.selectTripList[0]['startDate']}')).inDays + 1, (index) => DateFormat('yyyy.MM.dd (EEE)', 'ko').format(
     DateTime.parse('${ts.selectTripList[0]['startDate']}').add(Duration(days: index)),
-  ),
+    ),
   );
   showModalBottomSheet(
       context: context,
@@ -337,9 +339,12 @@ SelectDayBottomSheet2(
                                 contentPadding: EdgeInsets.zero,
                                 groupValue: js.addDate.value,
                                 onChanged: (String? newValue) {
-                                  js.selectedIdx.value = idx;
-                                  js.addDate.value = newValue!;
-                                  js.addDate.refresh();
+                                  if(edit){
+                                    js.editDate.value = newValue!;
+                                  }else{
+                                    js.addDate.value = newValue!;
+                                    js.addDate.refresh();
+                                  }
                                   setState((){});
                                 },
                                 dense: true,
@@ -360,27 +365,15 @@ SelectDayBottomSheet2(
                             },
                           ),
                         ),
-                        buttonName!=null?BlackBottomContainer(onTap: () async {
-                          js.selectJplan['dayAfterStart'] = js.selectedIdx.value+1;
-                          print('index ${ js.selectJplan.value}');
-                          await js.editJPlanList(js.selectJplan.value);
-                          await js.getPlanBJList();
-                          Get.back();
-                        }, title: buttonName!):const SizedBox(),
                       ],
                     ),
                   ),
                 ),
-
               );
             }
-
         );
       }
-
   );
-
-
 }
 ButtonSelectDayBottomSheet(
     BuildContext context, String title, VoidCallback onTap, String buttonName){

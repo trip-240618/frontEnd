@@ -5,6 +5,7 @@ import 'package:tripStory/screen/myPage/setting/setting_alim_page.dart';
 import '../../../component/appbar.dart';
 import '../../../component/dialog/dialog.dart';
 import '../../../component/container/settingArrowRow.dart';
+import '../../../component/url_launch.dart';
 import '../../../controller/userState.dart';
 import '../../../util/color.dart';
 import '../../../util/font.dart';
@@ -134,8 +135,8 @@ class _SettingMainPageState extends State<SettingMainPage> {
                   const SizedBox(height: 16,),
                   SettingArrowRow(
                       title: '약관 및 정책',
-                      onTap: (){
-
+                      onTap: ()async{
+                        await urlLaunch('https://trip-story.site/privacy.html');
                       })
                 ],
               ),

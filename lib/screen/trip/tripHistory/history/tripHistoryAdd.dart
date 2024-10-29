@@ -82,7 +82,6 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                   style: f16gray900w700,
                 ),
                 Spacer(),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -380,9 +379,9 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                   dateList.add(DateFormat('yyyy-MM-dd').format(startDate.add(Duration(days: i))));
                 }
                 int index = dateList.indexOf(hs.selectedDate.value.toString().replaceAll(".", '-').split(' ')[0]);
-                print('?? ${index}');
                 await hs.addHistory(ts.selectTripList[0]['id'], totalList);
-               Get.to(()=>TripHistoryList(index: index,));
+               Get.back();
+               Get.off(()=>TripHistoryList(index: index,));
              },title: '업로드',count: hs.selectAlbumList.length),
            ),
         ),

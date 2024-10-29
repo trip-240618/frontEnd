@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/app/api/jPlanApi.dart';
 import 'package:tripStory/controller/tripState.dart';
-import 'package:tripStory/util/color.dart';
 import '../app/api/flightApi.dart';
 import '../app/config/dio_client.dart';
 import '../util/custom_marker.dart';
@@ -106,77 +104,6 @@ class JPlanState extends GetxController{
       }
     }
   }
-  List<LatLng> simplifyPolyline(List<LatLng> points, double tolerance) {
-    if (points.isEmpty) return [];
-
-    List<LatLng> simplified = [];
-
-    // 첫 번째와 마지막 점을 추가
-    simplified.add(points.first);
-    simplified.add(points.last);
-
-    // 재귀적으로 단순화하는 함수
-    void simplify(List<LatLng> polyline, List<LatLng> output) {
-      if (polyline.length < 3) {
-        output.addAll(polyline);
-        return;
-      }
-
-      double maxDistance = 0;
-      int index = 0;
-
-      // 첫 번째와 마지막 점을 기준으로 최대 거리 찾기
-      for (int i = 1; i < polyline.length - 1; i++) {
-        double distance = pointToLineDistance(polyline[i], polyline.first, polyline.last);
-        if (distance > maxDistance) {
-          maxDistance = distance;
-          index = i;
-        }
-      }
-
-      // 최대 거리가 주어진 허용 오차보다 큰 경우
-      if (maxDistance > tolerance) {
-        simplify(polyline.sublist(0, index + 1), output);
-        simplify(polyline.sublist(index), output);
-      }
-    }
-
-    simplify(points, simplified);
-    return simplified;
-  }
-  // 점과 선 사이의 거리 계산
-  double pointToLineDistance(LatLng point, LatLng start, LatLng end) {
-    double A = point.latitude - start.latitude;
-    double B = point.longitude - start.longitude;
-    double C = end.latitude - start.latitude;
-    double D = end.longitude - start.longitude;
-
-    double dot = A * C + B * D;
-    double len_sq = C * C + D * D;
-    double param = -1.0;
-
-    if (len_sq != 0) { // 0으로 나누지 않도록
-      param = dot / len_sq;
-    }
-
-    double xx, yy;
-
-    if (param < 0) {
-      xx = start.latitude;
-      yy = start.longitude;
-    } else if (param > 1) {
-      xx = end.latitude;
-      yy = end.longitude;
-    } else {
-      xx = start.latitude + param * C;
-      yy = start.longitude + param * D;
-    }
-
-    double dx = point.latitude - xx;
-    double dy = point.longitude - yy;
-    return sqrt(dx * dx + dy * dy); ;
-  }
-
   /// jplanList 가져오기
   Future<void> getJPlanList(int day ,bool locker)async{
     jPlanList.value = await apijplanClient.getJPlanList(ts.selectTripList[0]['id'], day, locker);

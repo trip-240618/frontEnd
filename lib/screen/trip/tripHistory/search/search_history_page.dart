@@ -69,7 +69,7 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: TextIconFormFields(
+                      child: TextIconBackFormFields(
                           controller: controller,
                           hintText: '태그, 닉네임으로 사진을 검색해보세요',
                           icon: 'assets/icon/search.svg',
@@ -93,8 +93,7 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                       },
                       child: SvgPicture.asset(
                           'assets/icon/smallXRound.svg',
-                          colorFilter:
-                          ColorFilter.mode(gray900, BlendMode.srcIn)),
+                          colorFilter: ColorFilter.mode(gray900, BlendMode.srcIn)),
                     ):const SizedBox(),
                     const SizedBox(width: 16,)
                   ],
