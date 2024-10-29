@@ -47,6 +47,24 @@ class ApiPPlanClient {
     }
   }
 
+  /// p edit
+  Future<void> editPPlanList(int tripId, Map data) async{
+    try{
+      final response = await dioClient.dio.put(
+          '/trip/${tripId}/plan/p/modify',data: data
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
   /// P check
   Future<void> checkPPlan(int tripId, int planId) async{
     try{

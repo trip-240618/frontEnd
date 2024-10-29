@@ -9,9 +9,9 @@ class PPlanState extends GetxController{
 
   final apiPPlanClient = ApiPPlanClient(DioClient());
 
+
   final RxList pPlanList = [].obs; /// p plan data 리스트
   final RxList ReorderPPlanList = [].obs; /// Reorder
-
   final selectedWeekIdx = 1.obs; /// 선택된 week 인덱스
   final totalDays = 1.obs;
   final RxMap selectPPlan = {}.obs; /// 수정할때 사용하는 선택된 p형 리스트
@@ -19,17 +19,13 @@ class PPlanState extends GetxController{
   /// p planList 가져오기
   Future<void> getPPlanList(bool locker)async{
     List allData = await apiPPlanClient.getPPlanList(ts.selectTripList[0]['id'],selectedWeekIdx.value, locker);
-    print('allData??${allData}');
-    print(allData.length);
     List filterData = [];
 
     int dayIdx = (selectedWeekIdx.value*7)<=totalDays.value? 7: totalDays.value-((selectedWeekIdx.value-1)*7);
-    print('dayIdx??${dayIdx}');
     for(int i = 1; i<=dayIdx; i++){
       int startIdx = ((selectedWeekIdx.value-1)*7)+i;
       Map<String, dynamic>? matchedData;
       for(var data in allData[0]['dayList']){
-        print('datadata??${data}');
         if(data['day']==startIdx){
           matchedData = data;
           break;
@@ -43,12 +39,17 @@ class PPlanState extends GetxController{
 
     }
     pPlanList.value = filterData;
-    print('정렬완 ${pPlanList.value}');
     pPlanList.refresh();
   }
   /// p plan List 추가
   Future<void> addPPlanList(String content, int dayAfterStart, bool locker)async{
     await apiPPlanClient.addPPlanList(ts.selectTripList[0]['id'],content, dayAfterStart, locker);
+    pPlanList.refresh();
+  }
+
+  /// jplanList 수정
+  Future<void> editPPlanList(Map data)async{
+    await apiPPlanClient.editPPlanList(ts.selectTripList[0]['id'],data);
     pPlanList.refresh();
   }
 

@@ -123,6 +123,7 @@ class SocketState extends GetxController{
           }
         }
         if (result['data']['latitude'] != null && result['data']['longitude'] != null) {
+          print('result${result}');
           List<LatLng> poly = [];
           final icon = await getCustomIcon2(insertIndex + 1);
           final marker = Marker(
@@ -133,6 +134,7 @@ class SocketState extends GetxController{
           );
           js.markers.add(marker);
           js.jPlanList[0]['planList'].forEach((plan) {
+            if(plan['latitude']!=null|| plan['longitude']!=null)
             poly.add(LatLng(plan['latitude'], plan['longitude']));
           });
           poly.add(LatLng(result['data']['latitude'], result['data']['longitude']));
@@ -241,7 +243,8 @@ class SocketState extends GetxController{
           case 'delete' :
             deletePPlan(result);
             break;
-
+          case 'modify' :
+            editPPlan(result);
           default:
             print("Unknown command");
             break;
@@ -250,14 +253,29 @@ class SocketState extends GetxController{
     );
   }
 
-
+  /// p형 추가 할 때 함수
   Future<void> createPPlan(Map<String, dynamic> result) async {
     print('생성하는 dayAfterStart? ${result['data']['dayAfterStart']}');
     int insertDayIndex = result['data']['dayAfterStart']-1;
     ps.pPlanList[insertDayIndex]['planList'].add(result['data']);
     print('p create');
+    ps.pPlanList.refresh();
   }
+  /// p형 수정 할 때 함수
+  Future<void> editPPlan(Map<String, dynamic> result) async{
+    print('edit? ${result}');
+    int targetPlanId = result['data']['planId'];
+    int dayAfterStart = result['data']['dayAfterStart'];
 
+    final planIndex = ps.pPlanList[dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
+
+    print('planIndex????${planIndex}');
+    ps.pPlanList[dayAfterStart-1]['planList'][planIndex]['content'] = result['data']['content'];
+
+    ps.pPlanList.refresh();
+    print('p edit');
+  }
+  /// p형 체크박스 클릭 함수
   Future<void> checkPPlan(Map<String, dynamic> result) async{
     print('check? ${result}');
     int targetPlanId = result['data']['planId'];
@@ -271,7 +289,7 @@ class SocketState extends GetxController{
     ps.pPlanList.refresh();
     print('p check');
   }
-
+  /// p형 삭제 할 때 함수
   Future<void> deletePPlan(Map<String, dynamic> result) async{
     print('delete? ${result}');
     int targetPlanId = result['data']['planId'];
