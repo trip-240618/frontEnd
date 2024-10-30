@@ -23,7 +23,6 @@ class _PPlanPageState extends State<PPlanPage> {
   final socket = Get.put(SocketState());
   FocusNode _focusNode = FocusNode();
   ScrollController scrollController = ScrollController();
-  bool isSorting = false; /// 리오더블
   bool isEdit = false; /// 추가, 수정중인지 여부
   /// Text Con
   TextEditingController _controller = TextEditingController();
@@ -38,8 +37,6 @@ class _PPlanPageState extends State<PPlanPage> {
     /// totalday / week*7 이 나머지가 7 이상이면 7, 아니면 나머지만큼
     Future.delayed(Duration.zero,()async{
       await ps.getPPlanList(false);
-
-      print('p 플랜리스트는?${ps.pPlanList.value}');
     });
 
     _focusNode.addListener(() {
@@ -178,9 +175,9 @@ class _PPlanPageState extends State<PPlanPage> {
                   GestureDetector(
                       onTap: () async {
                         print(_controller.text);
-                        print(ps.pPlanList[selectDayIdx]['dayAfterStart']);
+                        print(ps.pPlanList[0]['dayList'][selectDayIdx]['dayAfterStart']);
                         removeLastPlan();
-                        await ps.addPPlanList(_controller.text, ps.pPlanList[selectDayIdx]['dayAfterStart'], false);
+                        await ps.addPPlanList(_controller.text, ps.pPlanList[0]['dayList'][selectDayIdx]['dayAfterStart'], false);
                         Get.back();
                         isEdit = false;
                       },
@@ -295,9 +292,9 @@ class _PPlanPageState extends State<PPlanPage> {
 
   /// 포커스를 벗어나면 임시 추가된 빈 일정 항목을 삭제
   void removeLastPlan(){
-    var lastPlan = ps.pPlanList[selectDayIdx]['planList'].last;
+    var lastPlan = ps.pPlanList[0]['dayList'][selectDayIdx]['planList'].last;
     if(lastPlan['planId']==null){
-      ps.pPlanList[selectDayIdx]['planList'].removeLast();
+      ps.pPlanList[0]['dayList'][selectDayIdx]['planList'].removeLast();
     }
   }
 
@@ -337,7 +334,7 @@ class _PPlanPageState extends State<PPlanPage> {
                       )
                           : const SizedBox(width: 12),
                       const SizedBox(width: 4,),
-                      Text('WEEK ${ps.selectedWeekIdx}', style: f14mainw600(Color(ts.selectTripList[0]['labelColor']),)),
+                      Text('WEEK ${ps.pPlanList[0]['week']}', style: f14mainw600(Color(ts.selectTripList[0]['labelColor']),)),
                       const SizedBox(width: 4,),
                       ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0
                           ? GestureDetector(
@@ -349,27 +346,146 @@ class _PPlanPageState extends State<PPlanPage> {
                             }
                           },
                           child: SvgPicture.asset('assets/icon/rightCaret.svg'))
-                          :const SizedBox()
-                      ,
+                          :const SizedBox(),
+                      Spacer(),
+                      InkWell(
+                        borderRadius: BorderRadius.circular(100),
+                        onTap: () async {
+                          if(ps.isSorting == false){
+                            print(true);
+                            await ps.makeReorderableList();
+                            ps.isSorting.value = true;
+                            ps.isSorting.refresh();
+                          }else{
+                            print(false);
+                            ps.isSorting.value = false;
+                            ps.isSorting.refresh();
+                          }
+
+                        },
+                        child: Container(
+                          width: 20,
+                          height: 20,
+                          child: SvgPicture.asset('assets/icon/swap.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(
+                            ps.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
+                            BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
+                          ),),
+                        ),
+                      )
                     ],
                   ),)
                 ),
               ),
+              ps.isSorting.value?
+              Obx(()=>Container(
+                color: gray50,
+                child: ReorderableListView.builder(
+                  shrinkWrap: true,
+                  itemCount: ps.ReorderPPlanList[0]['dayList'].length,
+                  physics: const ClampingScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return ps.ReorderPPlanList[0]['dayList'][index]['type'] == 'day'?
+                    Container(
+                      key: Key('${index}'),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border(
+                          top: BorderSide(width: 1, color: gray200),
+                          bottom: BorderSide(width: 1, color: gray200),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(
+                                      color: Color(ts.selectTripList[0]['labelColor']), width: 1.5
+                                  ),
+                                  borderRadius: BorderRadius.circular(100)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 12),
+                                child: Text('Day ${ps.ReorderPPlanList[0]['dayList'][index]['data']}', style: f12mainw700(Color(ts.selectTripList[0]['labelColor']),),),
+                              ),
+                            ),
+                            const SizedBox(width: 6,),
+                            Text('${DateFormat('M.d (E)', 'ko').format(DateTime.parse(ts.selectTripList[0]['startDate']).add(Duration(days: int.parse('${ps.ReorderPPlanList[0]['dayList'][index]['data']}')-1)))}', style: f14Gray800w500,),
+                          ],
+                        ),
+                      ),
+                    ):
+                    Container(
+                        key: Key('${index}'),
+                        color: gray50,
+                        child: Padding(
+                          padding: ps.ReorderPPlanList[0]['dayList'][index-1]['type']=='day'?const EdgeInsets.only(left: 20, right: 20,top: 16, bottom: 16):const EdgeInsets.only(left: 20, right: 20, bottom: 16),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 16,),
+                              ps.ReorderPPlanList[0]['dayList'][index]['data']['checkbox']?
+                              Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(2),
+                                  color: Color(ts.selectTripList[0]['labelColor']),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 5, right: 5, top: 7, bottom: 6),
+                                  child: SvgPicture.asset(
+                                    'assets/icon/check2.svg',
+                                  ),
+                                ),
+                              )
+                                  :SvgPicture.asset('assets/icon/unchecked.svg',
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  '${ps.ReorderPPlanList[0]['dayList'][index]['data']['content']}',
+                                  style: f14Gray800w500,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Container(
+                                width: 20,
+                                height: 20,
+                                child: SvgPicture.asset('assets/icon/rowEllipsis.svg'),
+                              )
+                            ],
+                          ),
+                        )
+                    );
+                  }, onReorder: (int oldIndex, int newIndex) {
+                  if (oldIndex == 0 || newIndex == 0) {
+                    return;
+                  }
+                  if(oldIndex<newIndex){
+                    newIndex -= 1;
+                  }
+                },
+                )
+              ))
+              :
               Obx(()=>Container(
                 color: gray50,
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: ps.pPlanList.length,
+                  itemCount: ps.pPlanList[0]['dayList'].length,
                   physics: const ClampingScrollPhysics(),
                   itemBuilder: (BuildContext context, int dayIndex) {
                     return Column(
                       children: [
                         GestureDetector(
                           onTap: (){
-                            ps.pPlanList[dayIndex]['checked'] = !ps.pPlanList[dayIndex]['checked'];
-                            setState(() {
-
-                            });
+                            ps.pPlanList[0]['dayList'][dayIndex]['isExpanded'] = !ps.pPlanList[0]['dayList'][dayIndex]['isExpanded'];
+                            ps.pPlanList.refresh();
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -393,33 +509,53 @@ class _PPlanPageState extends State<PPlanPage> {
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 12),
-                                      child: Text('Day ${ps.pPlanList[dayIndex]['dayAfterStart']}', style: f12mainw700(Color(ts.selectTripList[0]['labelColor']),),),
+                                      child: Text('Day ${ps.pPlanList[0]['dayList'][dayIndex]['dayAfterStart']}', style: f12mainw700(Color(ts.selectTripList[0]['labelColor']),),),
                                     ),
                                   ),
                                   const SizedBox(width: 6,),
-                                  Text('${DateFormat('M.d (E)', 'ko').format(DateTime.parse(ts.selectTripList[0]['startDate']).add(Duration(days: int.parse('${ps.pPlanList[dayIndex]['dayAfterStart']}')-1)))}', style: f14Gray800w500,),
+                                  Text('${DateFormat('M.d (E)', 'ko').format(DateTime.parse(ts.selectTripList[0]['startDate']).add(Duration(days: int.parse('${ps.pPlanList[0]['dayList'][dayIndex]['dayAfterStart']}')-1)))}', style: f14Gray800w500,),
                                   Spacer(),
-                                  Container(
-                                    width: 20,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                        //ts.selectTripList[0]['startDate']
-                                    ),
-                                  ),
+                                  ps.pPlanList[0]['dayList'][dayIndex]['planList'].where((plan) => plan['checkbox'] == true).length == 0
+                                      ? const SizedBox(width: 20,)
+                                      : Container(
+                                          width: 20,
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            color: Color(ts.selectTripList[0]['labelColor']),
+                                            borderRadius: BorderRadius.circular(100),
+                                          ),
+                                          child: Center(
+                                            child: Text('${ps.pPlanList[0]['dayList'][dayIndex]['planList'].where((plan) => plan['checkbox'] == true).length}', style: f12Whitew700,),
+                                          ),
+                                        ),
+                                  ps.pPlanList[0]['dayList'][dayIndex]['planList'].where((plan) => plan['checkbox'] == false).length == 0
+                                      ? const SizedBox()
+                                      : Padding( padding: const EdgeInsets.only(left: 4),
+                                          child: Container(
+                                            width: 20,
+                                            height: 20,
+                                            decoration: BoxDecoration(
+                                              color: gray400,
+                                              borderRadius: BorderRadius.circular(100),
+                                            ),
+                                            child: Center(
+                                              child: Text('${ps.pPlanList[0]['dayList'][dayIndex]['planList'].where((plan) => plan['checkbox'] == false).length}', style: f12Whitew700,),
+                                            ),
+                                          ),
+                                        ),
+                                  const SizedBox(width: 10,),
                                   GestureDetector(
                                     onTap: (){
                                       print(dayIndex);
                                       if(isEdit == false){
                                         /// 선택한 day만 펼치고 나머지는 닫기
-                                        for (int i = 0; i < ps.pPlanList.length; i++) {
-                                          ps.pPlanList[i]['checked'] = (i == dayIndex);
+                                        for (int i = 0; i < ps.pPlanList[0]['dayList'].length; i++) {
+                                          ps.pPlanList[0]['dayList'][i]['isExpanded'] = (i == dayIndex);
                                         }
-
-
                                         selectDayIdx = dayIndex; /// 이후 포커스 없을때 삭제하기 위해서 인덱스 저장
-                                        ps.pPlanList[dayIndex]['planList'].add({
+                                        ps.pPlanList[0]['dayList'][dayIndex]['planList'].add({
                                           'planId': null,
-                                          'dayAfterStart': ps.pPlanList[dayIndex]['dayAfterStart'],
+                                          'dayAfterStart': ps.pPlanList[0]['dayList'][dayIndex]['dayAfterStart'],
                                           'orderByDate': 0,
                                           'writerUuid': '',
                                           'content': '',
@@ -445,17 +581,17 @@ class _PPlanPageState extends State<PPlanPage> {
                             AnimatedSize(
                               duration: Duration(milliseconds: 500),
                               curve: Curves.easeInOut,
-                              child: ps.pPlanList[dayIndex]['checked'] == true
+                              child: ps.pPlanList[0]['dayList'][dayIndex]['isExpanded'] == true
                                   ? Padding(
-                                padding: ps.pPlanList[dayIndex]['planList'].length==0?EdgeInsets.zero:EdgeInsets.only(top: 16),
+                                padding: ps.pPlanList[0]['dayList'][dayIndex]['planList'].length==0?EdgeInsets.zero:EdgeInsets.only(top: 16),
                                 child: Container(
                                   color: gray50,
                                   child: ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: ps.pPlanList[dayIndex]['planList'].length==0?1:ps.pPlanList[dayIndex]['planList'].length,
+                                    itemCount: ps.pPlanList[0]['dayList'][dayIndex]['planList'].length==0?1:ps.pPlanList[0]['dayList'][dayIndex]['planList'].length,
                                     physics: const ClampingScrollPhysics(),
                                     itemBuilder: (context, planIndex) {
-                                      return ps.pPlanList[dayIndex]['planList'].length==0?const SizedBox(height: 16,):Padding(
+                                      return ps.pPlanList[0]['dayList'][dayIndex]['planList'].length==0?const SizedBox(height: 16,):Padding(
                                         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
@@ -465,10 +601,10 @@ class _PPlanPageState extends State<PPlanPage> {
                                             const SizedBox(height: 16,),
                                             GestureDetector(
                                               onTap: () async {
-                                                await ps.checkPPlan(ps.pPlanList[dayIndex]['planList'][planIndex]['planId']);
-                                                //ps.pPlanList[dayIndex]['planList'][planIndex]['checkbox'] = !ps.pPlanList[dayIndex]['planList'][planIndex]['checkbox'];
+                                                await ps.checkPPlan(ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['planId']);
+                                                //ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['checkbox'] = !ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['checkbox'];
                                               },
-                                              child: ps.pPlanList[dayIndex]['planList'][planIndex]['checkbox']?
+                                              child: ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['checkbox']?
                                               Container(
                                                 width: 20,
                                                 height: 20,
@@ -489,7 +625,7 @@ class _PPlanPageState extends State<PPlanPage> {
                                             const SizedBox(width: 12),
                                             Expanded(
                                               child: Text(
-                                                '${ps.pPlanList[dayIndex]['planList'][planIndex]['content']}',
+                                                '${ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['content']}',
                                                 style: f14Gray800w500,
                                               ),
                                             ),
@@ -513,7 +649,7 @@ class _PPlanPageState extends State<PPlanPage> {
                                                 itemBuilder: (context) => <PopupMenuEntry<int>>[
                                                   PopupMenuItem<int>(
                                                     onTap: (){
-                                                      ps.selectPPlan.value = ps.pPlanList[dayIndex]['planList'][planIndex];
+                                                      ps.selectPPlan.value = ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex];
                                                       showEditBottomSheet(context);
                                                       _focusNode.requestFocus();
                                                     },
@@ -546,8 +682,8 @@ class _PPlanPageState extends State<PPlanPage> {
                                                   const PopupMenuDivider(height: 1),
                                                   PopupMenuItem<int>(
                                                     onTap: () async {
-                                                      print('난 이걸 지울거야${ps.pPlanList[dayIndex]['planList'][planIndex]}');
-                                                      await ps.deletePPlan(ps.pPlanList[dayIndex]['planList'][planIndex]['planId'], ps.pPlanList[dayIndex]['planList'][planIndex]['dayAfterStart']);
+                                                      print('난 이걸 지울거야${ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]}');
+                                                      await ps.deletePPlan(ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['planId'], ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['dayAfterStart']);
                                                     },
                                                     padding: EdgeInsets.zero,
                                                     value: 2,
