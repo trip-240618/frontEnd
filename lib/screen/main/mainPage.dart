@@ -89,7 +89,6 @@ class _MainPageState extends State<MainPage> {
         padding: const EdgeInsets.only(left: 20,right: 20,bottom: 44),
         child: Column(
           children: [
-
             Obx(()=> Row(
               children: [
                 GestureDetector(
