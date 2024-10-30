@@ -257,7 +257,7 @@ class SocketState extends GetxController{
   Future<void> createPPlan(Map<String, dynamic> result) async {
     print('생성하는 dayAfterStart? ${result['data']['dayAfterStart']}');
     int insertDayIndex = result['data']['dayAfterStart']-1;
-    ps.pPlanList[insertDayIndex]['planList'].add(result['data']);
+    ps.pPlanList[0]['dayList'][insertDayIndex]['planList'].add(result['data']);
     print('p create');
     ps.pPlanList.refresh();
   }
@@ -267,10 +267,10 @@ class SocketState extends GetxController{
     int targetPlanId = result['data']['planId'];
     int dayAfterStart = result['data']['dayAfterStart'];
 
-    final planIndex = ps.pPlanList[dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
+    final planIndex = ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
 
     print('planIndex????${planIndex}');
-    ps.pPlanList[dayAfterStart-1]['planList'][planIndex]['content'] = result['data']['content'];
+    ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'][planIndex]['content'] = result['data']['content'];
 
     ps.pPlanList.refresh();
     print('p edit');
@@ -281,10 +281,10 @@ class SocketState extends GetxController{
     int targetPlanId = result['data']['planId'];
     int dayAfterStart = result['data']['dayAfterStart'];
 
-    final planIndex = ps.pPlanList[dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
+    final planIndex = ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
 
     print('planIndex????${planIndex}');
-    ps.pPlanList[dayAfterStart-1]['planList'][planIndex]['checkbox'] = result['data']['checkbox'];
+    ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'][planIndex]['checkbox'] = result['data']['checkbox'];
 
     ps.pPlanList.refresh();
     print('p check');
@@ -295,9 +295,9 @@ class SocketState extends GetxController{
     int targetPlanId = result['data']['planId'];
     int dayAfterStart = result['data']['dayAfterStart'];
 
-    final planIndex = ps.pPlanList[dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
+    final planIndex = ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
     print('planIndex????${planIndex}');
-    ps.pPlanList[dayAfterStart-1]['planList'].removeAt(planIndex);
+    ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].removeAt(planIndex);
     ps.pPlanList.refresh();
     print('p delete');
   }

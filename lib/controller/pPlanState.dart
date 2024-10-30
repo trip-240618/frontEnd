@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:tripStory/controller/tripState.dart';
 
@@ -15,12 +17,14 @@ class PPlanState extends GetxController{
   final selectedWeekIdx = 1.obs; /// 선택된 week 인덱스
   final totalDays = 1.obs;
   final RxMap selectPPlan = {}.obs; /// 수정할때 사용하는 선택된 p형 리스트
+  final isSorting = false.obs; /// 수정 권한 버튼
 
   /// p planList 가져오기
   Future<void> getPPlanList(bool locker)async{
     List allData = await apiPPlanClient.getPPlanList(ts.selectTripList[0]['id'],selectedWeekIdx.value, locker);
     List filterData = [];
 
+    print('기존 데이터?${allData}');
     int dayIdx = (selectedWeekIdx.value*7)<=totalDays.value? 7: totalDays.value-((selectedWeekIdx.value-1)*7);
     for(int i = 1; i<=dayIdx; i++){
       int startIdx = ((selectedWeekIdx.value-1)*7)+i;
@@ -33,12 +37,18 @@ class PPlanState extends GetxController{
       }
       filterData.add({
         'dayAfterStart':startIdx,
-        'checked':true,
+        'isExpanded':true,
         'planList':matchedData!=null?matchedData['planList']:[],
       });
 
     }
-    pPlanList.value = filterData;
+    allData[0]['dayList'] = filterData;
+    allData.forEach((day) {
+      day['waitList']=[];
+      day['checked'] = true;
+    });
+    pPlanList.value = allData;
+    print('완성된 pPlanList?${pPlanList}');
     pPlanList.refresh();
   }
   /// p plan List 추가
@@ -61,5 +71,29 @@ class PPlanState extends GetxController{
   /// p delete
   Future<void> deletePPlan(int planId, int day) async {
     await apiPPlanClient.deletePPlan(ts.selectTripList[0]['id'], planId, day);
+  }
+
+  Future<void> makeReorderableList() async{
+    List allData = jsonDecode(jsonEncode(pPlanList));
+    List filterData = [];
+    allData[0]['dayList'].forEach((day) {
+      Map<String, dynamic> dayData = {
+        'type': 'day',
+        'data': day['dayAfterStart'],
+      };
+      filterData.add(dayData);
+      day['planList'].forEach((plans){
+        Map<String, dynamic> planData = {
+          'type': 'plan',
+          'data': plans,
+        };
+        filterData.add(planData);
+      });
+    });
+    allData[0].remove('waitList');
+    allData[0].remove('checked');
+    allData[0]['dayList'] = filterData;
+    ReorderPPlanList.value = allData;
+    print(ReorderPPlanList);
   }
 }
