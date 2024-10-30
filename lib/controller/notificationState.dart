@@ -12,6 +12,8 @@ class NotiState extends GetxController{
   final notificationList = [].obs;
   final notificationHistory = {}.obs; /// 알림에서 들어가는 여행 기록 리스트
   final notificationComment = [].obs; /// 알림에서 들어가는 여행 댓글
+
+
   /// 알림 기록 가져오기
   Future<void> getNotificationList(String title)async{
     notificationList.value = await apiNotificationClient.getNotificationList(title);

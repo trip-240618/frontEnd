@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/button/switchButton.dart';
+import 'package:tripStory/controller/notificationState.dart';
+import 'package:tripStory/controller/userState.dart';
 import '../../../component/appbar.dart';
 import '../../../util/font.dart';
 
@@ -12,14 +14,22 @@ class SettingAlimPage extends StatefulWidget {
 }
 
 class _SettingAlimPageState extends State<SettingAlimPage> {
-  bool test = false;
+  final us = Get.put(UserState());
+  @override
+  void initState() {
+    Future.delayed(Duration.zero,()async{
+      us.getNotificationSetting();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BackAppBar(text: '알림 설정', onTap: () {
         Get.back();
       },color: Colors.white,),
-      body: Padding(
+      body: Obx(()=>Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
@@ -36,9 +46,10 @@ class _SettingAlimPageState extends State<SettingAlimPage> {
                 ),
                 Spacer(),
                 SwitchButton(onTap: (){
-                  test = !test;
-                  setState(() {});
-                }, value: test)
+                  us.userAlimSetting['activePlan'] = !us.userAlimSetting['activePlan'];
+                  us.userAlimSetting.refresh();
+                  us.changeNotificationSetting(us.userAlimSetting);
+                }, value: us.userAlimSetting['activePlan']??true)
               ],
             ),
             const SizedBox(height: 30,),
@@ -54,9 +65,10 @@ class _SettingAlimPageState extends State<SettingAlimPage> {
                 ),
                 Spacer(),
                 SwitchButton(onTap: (){
-                  test = !test;
-                  setState(() {});
-                }, value: test)
+                  us.userAlimSetting['activeLikeReply'] = !us.userAlimSetting['activeLikeReply'];
+                  us.userAlimSetting.refresh();
+                  us.changeNotificationSetting(us.userAlimSetting);
+                }, value: us.userAlimSetting['activeLikeReply']??true)
               ],
             ),
             const SizedBox(height: 30,),
@@ -72,15 +84,16 @@ class _SettingAlimPageState extends State<SettingAlimPage> {
                 ),
                 Spacer(),
                 SwitchButton(onTap: (){
-                  test = !test;
-                  setState(() {});
-                }, value: test)
+                  us.userAlimSetting['activeMarketing'] = !us.userAlimSetting['activeMarketing'];
+                  us.userAlimSetting.refresh();
+                  us.changeNotificationSetting(us.userAlimSetting);
+                }, value: us.userAlimSetting['activeMarketing']??true)
               ],
             ),
             const SizedBox(height: 24,),
           ],
         ),
-      ),
+      )),
     );
   }
 }

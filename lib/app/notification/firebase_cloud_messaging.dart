@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:tripStory/controller/userState.dart';
 
 
 
@@ -83,6 +85,7 @@ Future<void> onBackgroundMessage(RemoteMessage message) async {
 
 class FCM {
   final _firebaseMessaging = FirebaseMessaging.instance;
+  final us = Get.put(UserState());
   var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final streamCtlr = StreamController<String>.broadcast();
   final titleCtlr = StreamController<String>.broadcast();
@@ -142,25 +145,23 @@ class FCM {
       categoryIdentifier: darwinNotificationCategoryPlain,
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      print('111');
-      flutterLocalNotificationsPlugin.show(
-          message.hashCode,
-          message.notification?.title,
-          message.notification?.body,
-          NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                icon: '@mipmap/ic_launcher',
-              ),
-              iOS: iosNotificationDetails
-          ),
-          payload: '${message?.data}');
-      print('eeeee');
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print(message);
+      if(!us.notiDuplicationList.contains(message.messageId)){
+        us.notiDuplicationList.add(message.messageId);
+        flutterLocalNotificationsPlugin.show(
+            message.hashCode,
+            message.notification?.title,
+            message.notification?.body,
+            NotificationDetails(
+                android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  channelDescription: channel.description,
+                  icon: '@mipmap/ic_launcher',
+                ),
+                iOS: iosNotificationDetails
+            ),
+            payload: '${message.data}');
+      }
     });
   }
 
@@ -168,11 +169,6 @@ class FCM {
     FirebaseMessaging.onMessageOpenedApp.listen(
           (message) async {
         Map<String, dynamic> dataMap = json.decode('${message.data}');
-        // print('ㄴㄹㅁㄴㅁㅁㅁㅁ : ${message.notification!.title!}');
-        // print('ㄴㄹㅁㄴㅁㅁㅁㅁ22 : ${message.notification!.body!}');
-        // print('ㄴㄹㅁㄴㅁㅁㅁㅁ33 : ${dataMap['name']}');
-
-        // up.fcmDocId = '${message.data['docId']}';
         titleCtlr.sink.add(message.notification!.title!);
         bodyCtlr.sink.add(message.notification!.body!);
       },

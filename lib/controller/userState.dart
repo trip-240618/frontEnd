@@ -5,16 +5,19 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../app/api/fileApi.dart';
+import '../app/api/notificationApi.dart';
 import '../app/api/userApi.dart';
 import '../app/config/dio_client.dart';
 class UserState extends GetxController{
 
   final userList =[].obs; /// 유저 정보 리스트
   final mapFirstLoading = false.obs; /// 처음 맵 로딩
+  final notiDuplicationList = [].obs; /// 로컬 노티 두번울리는거 방지 (ios 18 이상 에러)
+  final userAlimSetting = {}.obs; /// 유저 알림 셋팅
   final dioClient = DioClient();
   final apiUserClient = ApiUserClient(DioClient());
   final apiFileClient = ApiFileClient(DioClient());
-
+  final apiNotificationClient = ApiNotificationClient(DioClient());
   /// 로그아웃
   Future<void> logOut()async{
     apiUserClient.logOut();
@@ -32,6 +35,14 @@ class UserState extends GetxController{
     await apiUserClient.updateToken(token);
   }
 
+  /// 알림 셋팅 가져오기
+  Future<void> getNotificationSetting()async{
+    userAlimSetting.value = await apiNotificationClient.getNotificationSetting();
+  }
+  /// 알림 셋팅 변경하기
+  Future<void> changeNotificationSetting(Map maps)async{
+    userAlimSetting.value = await apiNotificationClient.changeNotificationSetting(maps);
+  }
   /// 프로필 권한 요청
   Future<Map<String, dynamic>> profileFileUpload(XFile xfile)async{
     Map<String, dynamic> data = await apiFileClient.fileUrlGet(1);

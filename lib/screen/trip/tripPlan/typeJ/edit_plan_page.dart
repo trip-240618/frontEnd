@@ -358,6 +358,7 @@ class _EditPlanPageState extends State<EditPlanPage> {
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
             child: BlackBottomContainer(onTap: (){
+
               DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']); /// 시작 날짜
               DateTime selectedDate = DateTime.parse(js.editDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
               int index = selectedDate.difference(startDate).inDays;
@@ -373,6 +374,12 @@ class _EditPlanPageState extends State<EditPlanPage> {
                 "locker": false
               };
               js.editJPlanList(data);
+              if(js.selectJplan['dayAfterStart']-1!=index){
+                js.jPlanList.forEach((dayData) {
+                  dayData['planList'].removeWhere((plan) => plan['planId'] == js.selectJplan['planId']);
+                });
+                js.jPlanList.refresh();
+              }
               Get.back();
             }, title: '수정'),
           ),
