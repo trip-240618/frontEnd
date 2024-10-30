@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/component/textForm/textform.dart';
@@ -13,7 +12,6 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/main/mainPage.dart';
 import '../../../component/appbar.dart';
 import '../../../component/bottomContainer.dart';
-import '../../../component/bottomModals.dart';
 import '../../../controller/mainState.dart';
 import '../../../util/color.dart';
 import '../../../util/font.dart';
@@ -189,8 +187,8 @@ class _TripEditPageState extends State<TripEditPage> {
               showConfirmCancelTapDialog(context, '여행방을 삭제하시겠습니까?\n삭제 후 복구는 어렵습니다', '확인',null, ()async{
                 showLoading(context);
                 ts.deleteTrip(ts.selectTripList[0]['id']);
-                await ms.getComingTrip();
-                Get.back();
+                ms.selectIdx.value = 0;
+                ms.selectIdx.refresh();
                 Get.offAll(()=>MainPage());
               });
             },),

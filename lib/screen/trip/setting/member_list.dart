@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
+import 'package:tripStory/screen/main/mainPage.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../component/appbar.dart';
 import '../../../component/dialog/dialog.dart';
@@ -19,6 +21,7 @@ class MemberList extends StatefulWidget {
 class _MemberListState extends State<MemberList> {
   final ts = Get.put(TripState());
   final us = Get.put(UserState());
+  final ms = Get.put(MainState());
   bool leaderCheck = false;
   List memberList = [];
   @override
@@ -157,9 +160,9 @@ class _MemberListState extends State<MemberList> {
                                   onTap: ()async{
                                     showConfirmCancelTapDialog(context, '여행방을 나가시겠습니까?','확인',null, ()async{
                                       await ts.leaveTrip(ts.selectTripList[0]['id'], ts.selectTripList[0]['type']);
-                                      Get.back();
-                                      Get.back();
-                                      Get.back();
+                                      ms.selectIdx.value = 0;
+                                      ms.selectIdx.refresh();
+                                      Get.offAll(()=>MainPage());
                                     });
                                   },
                                   child: Container(
