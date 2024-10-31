@@ -9,6 +9,7 @@ import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/userState.dart';
 import '../../component/bottomContainer.dart';
+import '../../component/empty/emptyScreen.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
 
@@ -87,7 +88,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 ),
                               ),
                               // placeholder: (context, url) => const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                              errorWidget: (context, url, error) => DefaultProfileScreen(context),
                             ),
                           ),
                           Positioned(

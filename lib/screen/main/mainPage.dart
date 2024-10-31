@@ -12,6 +12,7 @@ import 'package:tripStory/screen/main/tripAdd/tripRoomAdd.dart';
 import 'package:tripStory/screen/myPage/myPage.dart';
 import '../../app/config/dio_client.dart';
 import '../../component/bottomModals.dart';
+import '../../component/button/popup_list.dart';
 import '../../component/dialog/loading.dart';
 import '../../component/empty/emptyScreen.dart';
 import '../../util/color.dart';
@@ -418,69 +419,6 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-class ListItems extends StatelessWidget {
-  final int index;
-  const ListItems({Key? key, required this.index}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final ms = Get.put(MainState());
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      itemCount: ms.tripList[index]['tripMemberDtoList'].length,
-      shrinkWrap: true,
-      physics: const ClampingScrollPhysics(),
-      itemBuilder: (context, idx){
-        return Column(
-          children: [
-            Container(
-              height: 50,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 12,right: 12,top: 12),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 24,
-                            height: 24,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: CachedNetworkImage(
-                                imageUrl: ms.tripList[index]['tripMemberDtoList'][idx]['profileImg']==''?'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/userImage%2F6sYlEQ7iIBAkqplhqe3E?alt=media':'${ms.tripList[index]['tripMemberDtoList'][idx]['profileImg']}',
-                                imageBuilder: (context, imageProvider) => Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.fill
-                                    ),
-                                  ),
-                                ),
-                                // placeholder: (context, url) => const CircularProgressIndicator(),
-                                errorWidget: (context, url, error) => const Icon(Icons.error),
-                              ),
-                            ),
-                          ),
-                          Expanded(child: Text('${ms.tripList[index]['tripMemberDtoList'][idx]['nickname']}',style: f14Gray800w500,overflow: TextOverflow.ellipsis,)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Divider(color: gray200,height: 5,)
-                ],
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
 Future<int> getLongestNicknameLength(List<dynamic> tripMemberDtoList) async{
   int longestLength = 0;
 
@@ -493,14 +431,15 @@ Future<int> getLongestNicknameLength(List<dynamic> tripMemberDtoList) async{
   return longestLength;
   print('가장 긴 닉네임의 길이: $longestLength');
 }
-double calculateTextWidth(String text, TextStyle style) {
-  final TextPainter textPainter = TextPainter(
-    text: TextSpan(text: text, style: style),
-    maxLines: 1,
-    textDirection: TextDirection.ltr,
-  )..layout(minWidth: 0, maxWidth: double.infinity);
 
-  return textPainter.size.width;
-}
+// double calculateTextWidth(String text, TextStyle style) {
+//   final TextPainter textPainter = TextPainter(
+//     text: TextSpan(text: text, style: style),
+//     maxLines: 1,
+//     textDirection: TextDirection.ltr,
+//   )..layout(minWidth: 0, maxWidth: double.infinity);
+//
+//   return textPainter.size.width;
+// }
 
 

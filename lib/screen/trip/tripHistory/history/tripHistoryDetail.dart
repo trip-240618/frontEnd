@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
+import '../../../../component/empty/emptyScreen.dart';
 import '../../../../controller/historyState.dart';
 import '../../../../util/color.dart';
 import '../../../../util/font.dart';
@@ -86,7 +87,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                         fit: BoxFit.fill,
                         // placeholder: (context, url) =>
                         // const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => DefaultProfileScreen(context),
                       ),
                       Positioned(
                           top: 30,
@@ -351,7 +352,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                         fit: BoxFit.fill,
                                         // placeholder: (context, url) =>
                                         // const CircularProgressIndicator(),
-                                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                                        errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                       ),
                                     ),
                                     const SizedBox(width: 8,),

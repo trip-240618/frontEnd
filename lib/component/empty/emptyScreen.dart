@@ -30,3 +30,31 @@ Widget DefaultImageScreen(BuildContext context) {
     child: SvgPicture.asset('assets/icon/default.svg',fit: BoxFit.none,),
   );
 }
+Widget DefaultProfileScreen(BuildContext context) {
+  return Container(
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: gray200
+    ),
+    child: SvgPicture.asset('assets/icon/defaultIcon.svg',fit: BoxFit.none,),
+  );
+}
+Widget SettingDefaultProfileScreen(BuildContext context) {
+  return Container(
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: gray200
+    ),
+    width: 80,
+    height: 80,
+    child: Align(
+      alignment: Alignment.center,
+      child: SvgPicture.asset(
+        'assets/icon/defaultIcon.svg',
+        width: 24, // 원하는 아이콘 크기로 설정
+        height: 24,
+        fit: BoxFit.contain,
+      ),
+    ),
+  );
+}

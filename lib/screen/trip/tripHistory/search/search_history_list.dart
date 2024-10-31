@@ -7,6 +7,7 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripHistory/search/search_full_map.dart';
 import 'package:tripStory/screen/trip/tripHistory/search/search_history_detail.dart';
 import '../../../../component/appbar.dart';
+import '../../../../component/empty/emptyScreen.dart';
 import '../../../../util/color.dart';
 import '../../../../util/font.dart';
 
@@ -100,7 +101,7 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
                             ),
                           ),
                           // placeholder: (context, url) => const CircularProgressIndicator(),
-                          // errorWidget: (context, url, error) => const Icon(Icons.error),
+                          errorWidget: (context, url, error) => DefaultProfileScreen(context),
                         ),
                       ),
                     ),
@@ -143,7 +144,7 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
                                     ),
                                   ),
                                 ),
-                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                                errorWidget: (context, url, error) => DefaultProfileScreen(context),
                               ),
                             ),
                             Positioned(
@@ -183,7 +184,7 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
                                       ),
                                     ),
                                   ),
-                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                                  errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                 ),
                               ),
                             ),

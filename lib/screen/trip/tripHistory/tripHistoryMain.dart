@@ -12,6 +12,7 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripHistory/search/search_history_page.dart';
 import 'package:tripStory/util/color.dart';
 
+import '../../../component/empty/emptyScreen.dart';
 import '../../../util/bottomSheetHeader.dart';
 import '../../../util/font.dart';
 import 'package:intl/intl.dart' as intl;
@@ -253,7 +254,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                           ),
                                                                         ),
                                                                       ),
-                                                                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                                      errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                                                     ),
                                                                   ),
                                                                   Positioned(
@@ -293,7 +294,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                             ),
                                                                           ),
                                                                         ),
-                                                                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                                        errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                                                       ),
                                                                     ),
                                                                   ),

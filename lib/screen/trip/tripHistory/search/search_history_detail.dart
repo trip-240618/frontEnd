@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import '../../../../component/empty/emptyScreen.dart';
 import '../../../../controller/historyState.dart';
 import '../../../../controller/tripState.dart';
 import '../../../../controller/userState.dart';
@@ -348,7 +349,7 @@ class _SearchHistoryDetailState extends State<SearchHistoryDetail> {
                                           fit: BoxFit.fill,
                                           // placeholder: (context, url) =>
                                           // const CircularProgressIndicator(),
-                                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                                          errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                         ),
                                       ),
                                       const SizedBox(width: 8,),

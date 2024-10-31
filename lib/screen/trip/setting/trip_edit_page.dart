@@ -12,6 +12,7 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/main/mainPage.dart';
 import '../../../component/appbar.dart';
 import '../../../component/bottomContainer.dart';
+import '../../../component/empty/emptyScreen.dart';
 import '../../../controller/mainState.dart';
 import '../../../util/color.dart';
 import '../../../util/font.dart';
@@ -227,7 +228,7 @@ class _TripEditPageState extends State<TripEditPage> {
                                       ),
                                     ),
                                     // placeholder: (context, url) => const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                                    errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                   ),
                                 ),
                                 // ClipRRect(
