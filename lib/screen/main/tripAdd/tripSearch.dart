@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../component/empty/emptyScreen.dart';
 import '../../../component/textForm/textform.dart';
 import '../../../controller/mainState.dart';
 import '../../../util/color.dart';
@@ -225,8 +226,7 @@ class _TripSearchPageState extends State<TripSearchPage> {
                                       fit: BoxFit.fill,
                                       // placeholder: (context, url) =>
                                       // const CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
+                                      errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                     ),
                                   ),
                                 ),

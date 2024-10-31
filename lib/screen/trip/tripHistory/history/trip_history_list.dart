@@ -7,6 +7,7 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripHistory/history/tripHistoryDetail.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../../component/appbar.dart';
+import '../../../../component/empty/emptyScreen.dart';
 import '../../../../util/font.dart';
 import 'package:intl/intl.dart';
 class TripHistoryList extends StatefulWidget {
@@ -95,7 +96,7 @@ class _TripHistoryListState extends State<TripHistoryList> {
                                     ),
                                   ),
                                 ),
-                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                                errorWidget: (context, url, error) => DefaultProfileScreen(context),
                               ),
                             ),
                             Positioned(
@@ -135,7 +136,7 @@ class _TripHistoryListState extends State<TripHistoryList> {
                                       ),
                                     ),
                                   ),
-                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                                  errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                 ),
                               ),
                             ),

@@ -72,8 +72,8 @@ class _SettingMainPageState extends State<SettingMainPage> {
                   GestureDetector(
                     onTap: (){
                       showConfirmCancelTapDialog(context, '로그아웃을 하시겠어요?', '확인',null, (){
-                        us.logOut();
                         Get.offAll(()=>LoginPage());
+                        us.logOut();
                       });
                     },
                       child: Container(

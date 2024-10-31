@@ -9,6 +9,7 @@ import 'package:tripStory/screen/main/mainPage.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../component/appbar.dart';
 import '../../../component/dialog/dialog.dart';
+import '../../../component/empty/emptyScreen.dart';
 import '../../../util/font.dart';
 
 class MemberList extends StatefulWidget {
@@ -99,7 +100,7 @@ class _MemberListState extends State<MemberList> {
                                         ),
                                       ),
                                       // placeholder: (context, url) => const CircularProgressIndicator(),
-                                      // errorWidget: (context, url, error) => const Icon(Icons.error),
+                                      errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                     ),
                                   ),
                                 ),
@@ -129,7 +130,7 @@ class _MemberListState extends State<MemberList> {
                                         ),
                                       ),
                                       // placeholder: (context, url) => const CircularProgressIndicator(),
-                                      // errorWidget: (context, url, error) => const Icon(Icons.error),
+                                      errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                     ),
                                   ),
                                 ),
