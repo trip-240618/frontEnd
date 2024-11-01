@@ -99,4 +99,40 @@ class ApiPPlanClient {
     }
   }
 
+  /// p 리오더블 취소
+  Future<void> deleteReorderPPlan(int tripId,int week) async {
+    try {
+      final response = await dioClient.dio.get(
+          '/trip/${tripId}/plan/p/${week}/edit/finish'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> reorderPPlan(int tripId, Map data) async{
+    print('내가 보낼 데이터??${data}');
+    try {
+      final response = await dioClient.dio.put(
+          '/trip/${tripId}/plan/p/edit/move',data: data
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
 }
