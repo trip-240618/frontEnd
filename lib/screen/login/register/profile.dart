@@ -123,7 +123,6 @@ class _ProfileScreenState extends State<ProfilePage> {
                             bottom: 0,
                             right: 0,
                             child: SvgPicture.asset('assets/icon/plus.svg',))
-
                       ],
                     ),
                   ),),

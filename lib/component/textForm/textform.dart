@@ -205,11 +205,13 @@ class TextMemoFormFields extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final EdgeInsets? scrollPadding;
   final FocusNode? focusNode;
+  final int? maxLine;
+  final TextInputType? textInputType;
   const TextMemoFormFields(
       {Key? key,
         required this.controller,
         required this.hintText,
-        this.onChanged, this.inputFormatters, this.scrollPadding, this.focusNode,
+        this.onChanged, this.inputFormatters, this.scrollPadding, this.focusNode, this.maxLine, this.textInputType,
       })
       : super(key: key);
 
@@ -233,7 +235,7 @@ class TextMemoFormFields extends StatelessWidget {
         hintText: '${hintText}',
         hintStyle: f15gray400w500,
       ),
-      keyboardType: TextInputType.multiline,
+      keyboardType: textInputType,
       maxLines: null,
       inputFormatters: inputFormatters,
     );

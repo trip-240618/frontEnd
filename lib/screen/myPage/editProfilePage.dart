@@ -6,6 +6,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
+import 'package:tripStory/component/dialog/loading.dart';
+import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/userState.dart';
 import '../../component/bottomContainer.dart';
@@ -196,29 +199,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: TextFormField(
-                            controller: _nickCon,
-                            autofocus: false,
-                            style: f16gray800w600,
-                            onChanged: (v){
-                              setState(() {});
-                            },
-                            inputFormatters: <TextInputFormatter>[
-                              LengthLimitingTextInputFormatter(8),
-                            ],
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
+                          child: TextFormFieldComponent(
+                              controller: _nickCon,
                               hintText: '닉네임을 입력해주세요',
-                              hintStyle: f14Gray500w400,
-                            ),
-                          ),
+                              onChanged: (v){setState(() {});},
+                              inputFormatters: <TextInputFormatter>[
+                                LengthLimitingTextInputFormatter(8),
+                              ],
+                          )
                         ),
                         const SizedBox(width: 10,),
                         Text('${_nickCon.text.length}',style: f11Gray800w600,),
@@ -244,33 +232,42 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: TextFormField(
-                            onChanged: (con){
-                              setState(() {});
-                            },
-                            scrollPadding: EdgeInsets.only(
-                                bottom: MediaQuery.of(context).viewInsets.bottom + 40),
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
+                          child: TextMemoFormFields(
+                              controller: _memoCon,
                               hintText: '자기소개를 작성해 주세요',
-                              hintStyle: f15gray400w500,
-                            ),
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            controller: _memoCon,
-                            style: f16gray800w600,
-                            inputFormatters: <TextInputFormatter>[
-                              LengthLimitingTextInputFormatter(16),
-                            ],
-                          ),
-                        ),
+                              textInputType: TextInputType.text,
+                              onChanged: (v){setState(() {});},
+                              inputFormatters: <TextInputFormatter>[
+                                  LengthLimitingTextInputFormatter(16),
+                                ],
+                            )),
+                        //   TextFormField(
+                        //     onChanged: (con){
+                        //       setState(() {});
+                        //     },
+                        //     scrollPadding: EdgeInsets.only(
+                        //         bottom: MediaQuery.of(context).viewInsets.bottom + 40),
+                        //     decoration: InputDecoration(
+                        //       isDense: true,
+                        //       contentPadding: EdgeInsets.zero,
+                        //       enabledBorder: OutlineInputBorder(
+                        //         borderSide: BorderSide.none,
+                        //       ),
+                        //       focusedBorder: OutlineInputBorder(
+                        //         borderSide: BorderSide.none,
+                        //       ),
+                        //       hintText: '자기소개를 작성해 주세요',
+                        //       hintStyle: f15gray400w500,
+                        //     ),
+                        //     keyboardType: TextInputType.multiline,
+                        //     maxLines: null,
+                        //     controller: _memoCon,
+                        //     style: f16gray800w600,
+                        //     inputFormatters: <TextInputFormatter>[
+                        //       LengthLimitingTextInputFormatter(16),
+                        //     ],
+                        //   ),
+                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -291,21 +288,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
           padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
           child: BottomContainer(
               onTap: ()async{
-                if(pickedImage!=null){
-                  Map<String, dynamic> url = await us.profileFileUpload(pickedImage!);
-                  Map<String, dynamic> thumbnailUrl = await us.profileThumbnailUpload(pickedImage!);
-                  await us.userModify(
-                      _nickCon.text,
-                      _memoCon.text,
-                      '${thumbnailUrl['preSignedUrls'][0].toString().split('?')[0]}',
-                      '${url['preSignedUrls'][0].toString().split('?')[0]}');
-                }else{
-                  await us.userModify(
-                      _nickCon.text,
-                      _memoCon.text,
-                      '${us.userList[0]['thumbnail']}',
-                      '${us.userList[0]['profileImg']}');
-                }
+                showConfirmCancelTapDialog(context, '프로필을 수정하시겠습니까?', '확인', null, ()async{
+                  if(pickedImage!=null){
+                    Map<String, dynamic> url = await us.profileFileUpload(pickedImage!);
+                    Map<String, dynamic> thumbnailUrl = await us.profileThumbnailUpload(pickedImage!);
+                    await us.userModify(
+                        _nickCon.text,
+                        _memoCon.text,
+                        '${thumbnailUrl['preSignedUrls'][0].toString().split('?')[0]}',
+                        '${url['preSignedUrls'][0].toString().split('?')[0]}');
+                  }else{
+                    await us.userModify(
+                        _nickCon.text,
+                        _memoCon.text,
+                        '${us.userList[0]['thumbnail']}',
+                        '${us.userList[0]['profileImg']}');
+                  }
+                  Get.back();
+                });
               },title: '저장하기',isBlack: true),
         ),
       ),

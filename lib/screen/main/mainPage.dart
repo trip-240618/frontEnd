@@ -278,7 +278,7 @@ class _MainPageState extends State<MainPage> {
                                             height: 66,
                                             child: ClipRRect(
                                               borderRadius: BorderRadius.circular(4),
-                                              child: CachedNetworkImage(
+                                              child: ms.tripList[index]['thumbnail']==''?DefaultImageScreen(context):CachedNetworkImage(
                                                 imageUrl:'${ms.tripList[index]['thumbnail']}',
                                                 imageBuilder: (context, imageProvider) => Container(
                                                   decoration: BoxDecoration(
@@ -288,8 +288,9 @@ class _MainPageState extends State<MainPage> {
                                                     ),
                                                   ),
                                                 ),
-                                                // placeholder: (context, url) => const CircularProgressIndicator(),
-                                                errorWidget: (context, url, error) => DefaultImageScreen(context),
+                                                errorWidget: (context, url, error) {
+                                                  return DefaultImageScreen(context);
+                                                },
                                               ),
                                             ),
                                           ),

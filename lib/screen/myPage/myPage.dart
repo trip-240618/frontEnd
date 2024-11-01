@@ -11,6 +11,7 @@ import 'package:tripStory/screen/myPage/setting/setting_main_page.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:get/get.dart';
+import '../../component/dialog/loading.dart';
 import '../../component/empty/emptyScreen.dart';
 import 'notice/setting_noti_main.dart';
 
@@ -121,15 +122,18 @@ class _MyPageState extends State<MyPage> {
   List myCountries = []; /// 내가 여행한 나라
   List type = ['낭만주의 즉흥러', '문화 탐방형', '핫플 정복자', '마운틴 러버', '맛집 수집가'];
   final us = Get.put(UserState());
-
+  bool isLoading = true;
   @override
   void initState() {
-    us.getCountrySetting();
-    for(int i=0;i<us.countryList.length;i++){
-      var matchingCountry = countries.where((country) => country['name'] == us.countryList[i]['country']);
-      myCountries.add(matchingCountry.first);
-    }
-    setState(() {});
+    Future.delayed(Duration.zero,()async{
+      await us.getCountrySetting();
+      for(int i=0;i<us.countryList.length;i++){
+        var matchingCountry = countries.where((country) => country['name'] == us.countryList[i]['country']);
+        myCountries.add(matchingCountry.first);
+      }
+      isLoading = false;
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -144,10 +148,12 @@ class _MyPageState extends State<MyPage> {
           Get.to(()=>SettingMainPage());
         },
         color: Colors.white,),
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          children: [
+      body: isLoading
+          ?Center(child: LoadingWidget())
+          :SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+           children: [
             /// 프로필 사진 및 프로필
             GestureDetector(
               onTap: (){
@@ -172,18 +178,19 @@ class _MyPageState extends State<MyPage> {
                             child: Stack(
                               children: [
                                 Positioned(
-                                  child:
-                                  ClipRRect(
+                                  child: Obx(()=>ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: CachedNetworkImage(
-                                      imageUrl: '${us.userList[0]['profileImg']}',
+                                    child: us.userList[0]['profileImg'] == ''?SettingDefaultProfileScreen(context):CachedNetworkImage(
+                                      imageUrl: us.userList[0]['profileImg'],
                                       width: 80,
                                       height: 80,
                                       fit: BoxFit.fill,
                                       // placeholder: (context, url) =>// const CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) =>  SettingDefaultProfileScreen(context),
+                                      errorWidget: (context, url, error) {
+                                        return SettingDefaultProfileScreen(context);
+                                      },
                                     ),
-                                  ),
+                                  )),
                                 ),
                                 Positioned(
                                   right: 0,
@@ -218,29 +225,6 @@ class _MyPageState extends State<MyPage> {
                         ))
                       ],
                     ),
-                    // const SizedBox(height: 38,),
-                    // /// 여행 유형
-                    // Wrap(
-                    //   direction: Axis.horizontal,
-                    //   alignment: WrapAlignment.start,
-                    //   runAlignment: WrapAlignment.start,
-                    //   spacing: 6,
-                    //   runSpacing: 10,
-                    //   children: type.map<Widget>((item) {
-                    //     return Container(
-                    //       padding: EdgeInsets.symmetric(horizontal: 8,vertical: 3.5),
-                    //       decoration: BoxDecoration(
-                    //         color: gray200,
-                    //         borderRadius: BorderRadius.circular(8),
-                    //       ),
-                    //       child: Text(
-                    //         '# ${item}',
-                    //         style: f14gray600w500
-                    //       ),
-                    //     );
-                    //   }).toList(
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -255,7 +239,7 @@ class _MyPageState extends State<MyPage> {
                   Text('다녀온 여행지', style: f20gray800w700,),
                   const SizedBox(height: 15,),
                   /// 국내, 해외
-                  Row(
+                  Obx(()=>Row(
                     children: [
                       Text('국내 ${us.countryList.where((entry) => entry['country'] == '대한민국').length}',
                           style: f14bluew600
@@ -265,46 +249,53 @@ class _MyPageState extends State<MyPage> {
                         style: f14redw600,
                       ),
                     ],
-                  ),
+                  )),
                   SizedBox(height: 31,),
-                  Obx(()=>ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: us.countryList.length,
-                      itemBuilder: (context, index){
-                        return Column(
-                          children: [
-                            Row(
-                              children: [
-                                /// 국가 이미지
-                                Container(
-                                  width: 32,
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: gray50,width: 1.25)
-                                  ),
-                                  child: CachedNetworkImage(
-                                    imageUrl: '${myCountries[index]['image']}',
+                  Obx(()=>ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: 200.0, // 원하는 maxHeight 설정
+                    ),
+                    child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        physics: const ClampingScrollPhysics(),
+                        itemCount: us.countryList.length,
+                        itemBuilder: (context, index){
+                          return Column(
+                            children: [
+                              Row(
+                                children: [
+                                  /// 국가 이미지
+                                  Container(
                                     width: 32,
                                     height: 24,
-                                    fit: BoxFit.fill,
-                                    // placeholder: (context, url) =>
-                                    // const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => const CircularProgressIndicator(),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: gray50,width: 1.25)
+                                    ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: '${myCountries[index]['image']}',
+                                      width: 32,
+                                      height: 24,
+                                      fit: BoxFit.fill,
+                                      // placeholder: (context, url) =>
+                                      // const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) {
+                                        return const CircularProgressIndicator();
+                                      },
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 12,),
-                                Text(
-                                  '${us.countryList[index]['country']} (${us.countryList[index]['visitCnt']})',
-                                  style: f16gray800w600,
-                                ),
-                              ],
-                            ),
-                            index!=us.countryList.length-1? const SizedBox(height: 24,):const SizedBox(height: 28,)
-                          ],
-                        );
-                      })),
+                                  const SizedBox(width: 12,),
+                                  Text(
+                                    '${us.countryList[index]['country']} (${us.countryList[index]['visitCnt']})',
+                                    style: f16gray800w600,
+                                  ),
+                                ],
+                              ),
+                              index!=us.countryList.length-1? const SizedBox(height: 24,):const SizedBox(height: 28,)
+                            ],
+                          );
+                        }),
+                  )),
                 ],
               ),
             ),
