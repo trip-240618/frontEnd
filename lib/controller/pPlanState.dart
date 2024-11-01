@@ -72,7 +72,7 @@ class PPlanState extends GetxController{
   Future<void> deletePPlan(int planId, int day) async {
     await apiPPlanClient.deletePPlan(ts.selectTripList[0]['id'], planId, day);
   }
-
+  /// 리오더블 형태로 변경
   Future<void> makeReorderableList() async{
     List allData = jsonDecode(jsonEncode(pPlanList));
     List filterData = [];
@@ -95,5 +95,32 @@ class PPlanState extends GetxController{
     allData[0]['dayList'] = filterData;
     ReorderPPlanList.value = allData;
     print(ReorderPPlanList);
+  }
+  /// 리오더블 형식을 다시 pPlanList 형태로 되돌리기
+  Future<Map<String,dynamic>> revertList() async{
+    List allData = ReorderPPlanList;
+    List filterData = [];
+    allData[0]['dayList'].forEach((day) {
+      if(day['type']=='plan'){
+        Map<String, dynamic> dayData = {
+          'planId': day['data']['planId'],
+          'dayAfterStart': day['data']['dayAfterStart'],
+          'orderByDate':day['data']['orderByDate'],
+        };
+        filterData.add(dayData);
+      }
+    });
+    allData[0]['dayList'] = filterData;
+    return allData[0];
+  }
+
+  /// p 리오더블 취소
+  Future<void> deleteReorderPPlan(int week) async {
+    await apiPPlanClient.deleteReorderPPlan(ts.selectTripList[0]['id'], week);
+  }
+
+  /// p 리오더블
+  Future<void> reorderPPlan(Map data) async {
+    await apiPPlanClient.reorderPPlan(ts.selectTripList[0]['id'], data);
   }
 }

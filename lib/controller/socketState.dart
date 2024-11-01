@@ -245,6 +245,12 @@ class SocketState extends GetxController{
             break;
           case 'modify' :
             editPPlan(result);
+          case 'edit start' :
+            checkStartEditorPPlan(result);
+          case 'edit finish':
+            endStartEditorPPlan(result);
+          case 'move':
+            print('move??${result}');
           default:
             print("Unknown command");
             break;
@@ -300,6 +306,34 @@ class SocketState extends GetxController{
     ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].removeAt(planIndex);
     ps.pPlanList.refresh();
     print('p delete');
+  }
+
+  /// p형 순서 변경 요청
+ Future<void> pAddEditor(int week) async {
+    print('순서 변경 요청');
+    try {
+      stompClient!.send(
+        destination: '/api/trip/${ts.selectTripList[0]['id']}/plan/p/${week}/edit/register',
+      );
+    } catch (e) {
+      print('Error sending message: $e');
+    }
+  }
+
+  /// p형 편집 권한 체크 시작
+  Future<void> checkStartEditorPPlan(Map<String, dynamic> result) async {
+    print('result??${result}');
+    if (ps.pPlanList[0]['week'] == result['data']['week']) {
+      if(us.userList[0]['uuid']!=result['data']['uuid']){
+        ps.pPlanList[0]['waitList'] = result['data'];
+      }
+    }
+  }
+  /// p형 편집 종료
+  Future<void> endStartEditorPPlan(Map<String, dynamic> result) async {
+    if (ps.pPlanList[0]['week'] == result['data']['week']) {
+      ps.pPlanList[0]['waitList'] = [];
+    }
   }
 
 }

@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/controller/pPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
+import '../../../../component/dialog/loading.dart';
+import '../../../../component/toast/toast.dart';
 import '../../../../controller/socketState.dart';
 
 class PPlanPage extends StatefulWidget {
@@ -29,9 +32,11 @@ class _PPlanPageState extends State<PPlanPage> {
   int totalDays = 1; /// 여행 총 day 수
   int selectWeek = 0;
   int selectDayIdx = 0;
-
+  FToast? fToast;
   @override
   void initState() {
+    fToast = FToast();
+    fToast?.init(context);
     ps.totalDays.value = DateTime.parse(ts.selectTripList[0]['endDate']).difference(DateTime.parse(ts.selectTripList[0]['startDate'])).inDays+1;
     print('이게뭐임?${ps.totalDays.value}');
     /// totalday / week*7 이 나머지가 7 이상이면 7, 아니면 나머지만큼
@@ -351,16 +356,34 @@ class _PPlanPageState extends State<PPlanPage> {
                             InkWell(
                               borderRadius: BorderRadius.circular(100),
                               onTap: () async {
-                                if(ps.isSorting == false){
-                                  print(true);
-                                  await ps.makeReorderableList();
-                                  ps.isSorting.value = true;
-                                  ps.isSorting.refresh();
+                                await socket.pAddEditor(ps.pPlanList[0]['week']);
+                                await Future.delayed(const Duration(milliseconds: 100));
+                                /// p형 편집중 여부
+                                if(ps.pPlanList[0]['waitList'].length!=0){
+                                  showCustomToast(context, fToast!, '${ps.pPlanList[0]['waitList']['nickname']} 님이 일정을 수정 중입니다');
                                 }else{
-                                  print(false);
-                                  ps.isSorting.value = false;
-                                  ps.isSorting.refresh();
+                                  if(ps.pPlanList[0]['checked']){
+                                    ps.isSorting.value = true;
+                                    showCustomToast(context, fToast!, '순서를 변경 하고 싶은 일정을 길게 터치해 주세요');
+                                    ps.pPlanList[0]['checked'] = false;
+                                    await ps.makeReorderableList();
+                                    ps.isSorting.refresh();
+                                  }
+                                  /// 편집 종료
+                                  else{
+                                    showLoading(context);
+                                    ps.pPlanList[0]['checked'] = true;
+                                    Map<String,dynamic> moveData = await ps.revertList();
+
+                                    await ps.reorderPPlan(moveData);
+
+                                    await ps.deleteReorderPPlan(ps.ReorderPPlanList[0]['week']);
+                                    ps.isSorting.value = false;
+                                    Get.back();
+                                    ps.ReorderPPlanList.value = []; /// 리오더블 초기화
+                                  }
                                 }
+
 
                               },
                               child: Container(
