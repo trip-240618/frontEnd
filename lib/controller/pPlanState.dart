@@ -111,7 +111,26 @@ class PPlanState extends GetxController{
       }
     });
     allData[0]['dayList'] = filterData;
-    return allData[0];
+
+    List transformedList = allData.map((weekData) {
+      var groupedDayList = <int, List<Map<String, dynamic>>>{};
+
+      weekData['dayList'].forEach((plan) {
+        groupedDayList.putIfAbsent(plan['dayAfterStart'], () => []).add(plan);
+      });
+
+      return {
+        'week': weekData['week'],
+        'dayList': groupedDayList.entries.map((entry) => {
+          'day': entry.key,
+          'planList': entry.value
+        }).toList()
+      };
+    }).toList();
+
+    print('최종 리스트?${transformedList}');
+
+    return transformedList[0];
   }
 
   /// p 리오더블 취소
