@@ -41,9 +41,9 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   void initState() {
     Future.delayed(Duration.zero,()async{
       await hs.getHistoryList(ts.selectTripList[0]['id']);
-      if(hs.albums.isEmpty){
-        hs.getAlbums();
-      }
+      // if(hs.albums.isEmpty){
+      //   hs.getAlbums();
+      // }
       maps.addMarkersFromHistory();
       setState(() {});
     });
@@ -191,13 +191,13 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                           decoration: BoxDecoration(
                                                               color: Colors.white,
                                                               border: Border.all(
-                                                                  color: Color(0xff5E91EE), width: 1
+                                                                  color: Color(ts.selectTripList[0]['labelColor']), width: 1
                                                               ),
                                                               borderRadius: BorderRadius.circular(100)
                                                           ),
                                                           child: Padding(
                                                             padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 12),
-                                                            child: Text('Day ${index + 1}', style: f12mainw700(Color(0xff5E91EE)),),
+                                                            child: Text('Day ${index + 1}', style: f12mainw700(Color(ts.selectTripList[0]['labelColor'])),),
                                                           ),
                                                         ),
                                                         const SizedBox(width: 6,),
@@ -210,7 +210,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                             width: 20,
                                                             height: 20,
                                                             decoration: BoxDecoration(
-                                                              color: hs.historyList[index]['historyList'].length==0?gray400:Color(0xff5E91EE),
+                                                              color: hs.historyList[index]['historyList'].length==0?gray400:Color(ts.selectTripList[0]['labelColor']),
                                                               borderRadius: BorderRadius.circular(100),
                                                             ),
                                                             child: Center(child: Text('${hs.historyList[index]['historyList'].length}', style: f11whitew600,))),
@@ -242,8 +242,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                               child: Stack(
                                                                 children: [
                                                                   Positioned(
-                                                                    child: CachedNetworkImage(
-                                                                      //imageUrl: 'https://firebasestorage.googleapis.com/v0/b/circlet-9c202.appspot.com/o/studyImage%2F1EjyruHeHaU6ZQpNe22L?alt=media',
+                                                                    child: hs.historyList[index]['historyList'][idx]['thumbnail']==''?DefaultProfileScreen(context):CachedNetworkImage(
                                                                       imageUrl: '${hs.historyList[index]['historyList'][idx]['thumbnail']}',
                                                                       imageBuilder: (context, imageProvider) => Container(
                                                                         decoration: BoxDecoration(
@@ -283,7 +282,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                     child: Container(
                                                                       width: 20,
                                                                       height: 20,
-                                                                      child: CachedNetworkImage(
+                                                                      child: hs.historyList[index]['historyList'][idx]['profileImage']==''?DefaultProfileScreen(context):CachedNetworkImage(
                                                                         imageUrl: '${hs.historyList[index]['historyList'][idx]['profileImage']}',
                                                                         imageBuilder: (context, imageProvider) => Container(
                                                                           decoration: BoxDecoration(
@@ -377,7 +376,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                     padding: const EdgeInsets.symmetric(vertical: 12,horizontal: 16),
                     child: Row(
                       children: [
-                        SvgPicture.asset('assets/icon/search.svg', color: Color(0xff5E91EE),),
+                        SvgPicture.asset('assets/icon/search.svg', color: Color(ts.selectTripList[0]['labelColor']),),
                         const SizedBox(width: 4),
                         Text('태그, 닉네임으로 사진을 검색해보세요',style: f15gray400w500)
                       ],

@@ -49,10 +49,10 @@ class _TripHistoryListState extends State<TripHistoryList> {
                   width: 58,
                   height: 24,
                   decoration: BoxDecoration(
-                      border: Border.all(color: pastelBlue,width: 1.5),
+                      border: Border.all(color: Color(ts.selectTripList[0]['labelColor']),width: 1.5),
                       borderRadius: BorderRadius.circular(100)
                   ),
-                  child: Center(child: Text('Day 1',style: f12blueW700)),
+                  child: Center(child: Text('Day ${widget.index!+1}',style: f12mainw700(Color(ts.selectTripList[0]['labelColor'])))),
                 ),
                 const SizedBox(width: 6,),
                 Text(

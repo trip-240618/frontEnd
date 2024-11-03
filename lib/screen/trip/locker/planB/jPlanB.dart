@@ -29,9 +29,7 @@ class _JPlanBState extends State<JPlanB> {
     Future.delayed(Duration.zero,()async{
       await js.getPlanBJList();
       isLoading = false;
-      setState(() {
-
-      });
+      setState(() {});
     });
     super.initState();
   }

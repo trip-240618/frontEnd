@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,6 +16,8 @@ import '../screen/trip/tripHistory/history/model/detailItem.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+import '../screen/trip/tripHistory/history/tripHistoryAdd.dart';
+
 class HistoryState extends GetxController{
   final ts = Get.put(TripState());
   final apiHistoryClient = ApiHistoryClient(DioClient());
@@ -27,7 +30,8 @@ class HistoryState extends GetxController{
   final RxList imgUrl = [].obs; /// img url 저장하기
   final selectedDate = ''.obs; /// 사진 등록 할 때 날짜 선택
   final RxList addTagList = [].obs;/// 태그 추가할 리스트
-
+  final historyTotalLen = 0.obs; /// 여행 기록 총 길이
+  final uploadingLoading = false.obs; /// 사진 업로드 로딩
   ///댓글 리스트
   final RxList<DetailItem> detailList = <DetailItem>[].obs;
 
@@ -76,6 +80,10 @@ class HistoryState extends GetxController{
       });
     }
     historyList.value = filterDate;
+    /// 전체 길이
+    historyTotalLen.value = historyList.fold(0, (sum, item) {
+      return sum + (item['historyList'] as List).length;
+    });
   }
 
   /// 댓글 목록 가져오기
@@ -165,11 +173,12 @@ class HistoryState extends GetxController{
   }
 
   /// 사진 업로드
-  Future<Map<String, dynamic>> historyFileUpload(List files)async{
-    Map<String, dynamic> data = await apiFileClient.historyUrlGet(files.length);
+  Future<Map<String, dynamic>> historyFileUpload(List files,BuildContext context)async{
+    List fileCopies = List.from(files);
+    Map<String, dynamic> data = await apiFileClient.historyUrlGet(fileCopies.length);
     imgUrl.value = data['preSignedUrls'];
     for(int i=0;i<data['preSignedUrls'].length;i++){
-      File? file = await files[i].file;
+      File? file = await fileCopies[i].file;
       final fileBytes = await file!.readAsBytes();
       final response = await http.put(Uri.parse(data['preSignedUrls'][i]),
         headers: {
@@ -177,7 +186,11 @@ class HistoryState extends GetxController{
         },
         body: fileBytes,
       );
+      await precacheImage(CachedNetworkImageProvider('${Uri.parse(data['preSignedUrls'][i].toString().split('?')[0])}'), context);
+      print('업로드 완료 ${i}');
     }
+    uploadingLoading.value = true;
+    print('업로드 완전히 완료');
     return data;
   }
 
@@ -222,17 +235,18 @@ class HistoryState extends GetxController{
     });
   }
 
-  Future getSingleCamera(ImageSource imageSource) async {
+  Future getSingleCamera(ImageSource imageSource,BuildContext context) async {
     final XFile? pickedFile = await _picker.pickImage(source: imageSource);
     if (pickedFile != null) {
-      // setState(() {
-      //   _pickedImage = XFile(pickedFile.path);
-      // });
+      AssetEntity? assetEntity = await PhotoManager.editor.saveImageWithPath(pickedFile.path,title: '');
+      await addToSelectedAlbum(assetEntity!);
+      historyFileUpload(selectAlbumList,context);
+      Get.to(()=>TripHistoryAddPage());
     }
   }
 
   /// 앨범 선택
-  void addToSelectedAlbum(AssetEntity image) {
+  Future<void> addToSelectedAlbum(AssetEntity image) async{
     selectAlbumList.add(image);
     albums.refresh();
   }
@@ -275,8 +289,11 @@ class HistoryState extends GetxController{
         'historyList': matchedData != null ? matchedData['historyList'] : [],
       });
     }
-    print('추가 ${filterDate}');
     historyList.value = filterDate;
+    historyTotalLen.value = historyList.fold(0, (sum, item) {
+      return sum + (item['historyList'] as List).length;
+    });
+    print('완료');
     selectAlbumList.clear();
     addTagList.clear();
     selectAlbumIndex.value = 0;
@@ -371,7 +388,7 @@ class HistoryState extends GetxController{
   }
 
   Future<bool> requestCameraPermission(BuildContext context) async {
-    PermissionStatus status = await Permission.photos.status;
+    PermissionStatus status = await Permission.camera.status;
     if (status.isPermanentlyDenied) {
       /// 사용자가 권한을 '영구적으로 거부'한 경우
       showOnlyConfirmTapDialog(context, '권한을 설정해주시기 바랍니다', (){
@@ -387,7 +404,7 @@ class HistoryState extends GetxController{
     }
     /// 권한이 부여되지 않은 경우 요청
     if (!status.isGranted) {
-      status = await Permission.photos.request();
+      status = await Permission.camera.request();
       return false;
     }
     else {
