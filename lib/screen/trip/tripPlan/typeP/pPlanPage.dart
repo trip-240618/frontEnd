@@ -360,11 +360,11 @@ class _PPlanPageState extends State<PPlanPage> {
                                 await Future.delayed(const Duration(milliseconds: 100));
                                 /// p형 편집중 여부
                                 if(ps.pPlanList[0]['waitList'].length!=0){
-                                  showCustomToast(context, fToast!, '${ps.pPlanList[0]['waitList']['nickname']} 님이 일정을 수정 중입니다');
+                                  showCustomToast(context, fToast!, '${ps.pPlanList[0]['waitList']['nickname']} 님이 일정을 수정 중입니다',true);
                                 }else{
                                   if(ps.pPlanList[0]['checked']){
                                     ps.isSorting.value = true;
-                                    showCustomToast(context, fToast!, '순서를 변경 하고 싶은 일정을 길게 터치해 주세요');
+                                    showCustomToast(context, fToast!, '순서를 변경 하고 싶은 일정을 길게 터치해 주세요',true);
                                     ps.pPlanList[0]['checked'] = false;
                                     await ps.makeReorderableList();
                                     ps.isSorting.refresh();
