@@ -395,11 +395,10 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                      int index = dateList.indexOf(hs.selectedDate.value.toString().replaceAll(".", '-').split(' ')[0]);
                      await hs.addHistory(ts.selectTripList[0]['id'], totalList);
                      Get.back();
+                     Get.back();
                      Get.off(()=>TripHistoryList(index: index));
-                     print("모든 작업이 완료되었습니다.");
                    }
                  });
-
                }
              },title: '업로드',count: hs.selectAlbumList.length),
            ),

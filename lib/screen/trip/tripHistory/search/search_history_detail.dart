@@ -38,6 +38,7 @@ class _SearchHistoryDetailState extends State<SearchHistoryDetail> {
     selectedPageIdx = widget.pageIdx;
     pageController = PageController(initialPage: selectedPageIdx);
     Future.delayed(Duration.zero,()async{
+
       hs.getDetailHistoryCommentList(ts.selectTripList[0]['id'], widget.historyId);
     });
     super.initState();
@@ -263,16 +264,20 @@ class _SearchHistoryDetailState extends State<SearchHistoryDetail> {
                         ),
                       ],
                     ),
-                    Container(
+                    hs.searchList[pageIdx]['tags'][0]==null?Container(
                       width: Get.width,
-                      color:gray50,
+                      height: 52,
+                      color: gray50,
+                    ):Container(
+                      width: Get.width,
+                      color: gray50,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                         child: Wrap(
                           direction: Axis.horizontal,
                           alignment: WrapAlignment.start,
                           spacing: 12,
-                          children: (hs.searchList[pageIdx]['tags'] != null ? hs.searchList[pageIdx]['tags'] : []).map<Widget>((tag) {
+                          children: hs.searchList[pageIdx]['tags'].map<Widget>((tag) {
                             return Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -289,8 +294,9 @@ class _SearchHistoryDetailState extends State<SearchHistoryDetail> {
                                       width: 16,
                                       height: 16,
                                       decoration: BoxDecoration(
-                                          color: Color(int.parse('0xff${tag['tagColor']}')), // 태그 색깔
-                                          shape: BoxShape.circle),
+                                        color: Color(int.parse('0xff${tag['tagColor']}')), // 태그 색깔
+                                        shape: BoxShape.circle,
+                                      ),
                                       child: Center(
                                         child: Text('#', style: f12whitew500),
                                       ),

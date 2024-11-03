@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-void showCustomToast(BuildContext context, FToast fToast, String text) {
+void showCustomToast(BuildContext context, FToast fToast, String text, bool isIcon) {
   fToast.showToast(
     child: Container(
       width: MediaQuery.of(context).size.width,  // 화면 너비 가져오기
@@ -37,7 +37,7 @@ void showCustomToast(BuildContext context, FToast fToast, String text) {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(
+            isIcon?SizedBox():SvgPicture.asset(
               'assets/icon/copy.svg',
               colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
             ),

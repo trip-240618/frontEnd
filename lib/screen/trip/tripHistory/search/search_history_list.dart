@@ -32,6 +32,7 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
     return Scaffold(
       appBar: TrailingBackAppBar(
         text: '사진 검색',
+        color: Colors.white,
         backTap: (){Get.back();},
         svgPicture: SvgPicture.asset( 'assets/icon/map.svg',fit: BoxFit.none,),
         trailingTap: (){
@@ -90,7 +91,7 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
                       height: 24,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
-                        child: CachedNetworkImage(
+                        child: hs.selectedTagList[0]['thumbnail']==''?DefaultProfileScreen(context):CachedNetworkImage(
                           imageUrl:'${hs.selectedTagList[0]['thumbnail']}',
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
@@ -133,7 +134,7 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
                         child: Stack(
                           children: [
                             Positioned(
-                              child: CachedNetworkImage(
+                              child: hs.searchList[index]['thumbnail']==''?DefaultProfileScreen(context):CachedNetworkImage(
                                 imageUrl: '${hs.searchList[index]['thumbnail']}',
                                 imageBuilder: (context, imageProvider) => Container(
                                   decoration: BoxDecoration(
@@ -173,7 +174,7 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
                               child: Container(
                                 width: 20,
                                 height: 20,
-                                child: CachedNetworkImage(
+                                child: hs.searchList[index]['profileImage']==''?DefaultProfileScreen(context):CachedNetworkImage(
                                   imageUrl: '${hs.searchList[index]['profileImage']}',
                                   imageBuilder: (context, imageProvider) => Container(
                                     decoration: BoxDecoration(

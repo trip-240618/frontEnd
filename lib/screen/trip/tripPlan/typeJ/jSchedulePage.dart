@@ -281,38 +281,42 @@ class _JSchedulePageState extends State<JSchedulePage> {
                         InkWell(
                           borderRadius: BorderRadius.circular(100),
                           onTap: ()async{
-                            await socket.addEditor(js.jPlanList[0]['dayAfterStart']);
-                            await Future.delayed(const Duration(milliseconds: 100));
-                            /// 누가 편집중일 때
-                            if(js.jPlanList[0]['waitList'].length!=0){
-                              showCustomToast(context, fToast!, '${js.jPlanList[0]['waitList']['nickname']} 님이 일정을 수정 중입니다');
+                            if(js.jPlanList.isEmpty){
+                              showCustomToast(context, fToast!, '순서를 변경할 일정이 없습니다',true);
                             }else{
-                              /// 편집 권한 체크 눌렀을 때
-                              if(js.jPlanList[0]['checked']){
-                                js.isSorting.value = true;
-                                showCustomToast(context, fToast!, '변경하고 싶은 일정을 선택해 주세요');
-                                js.jPlanList[0]['checked'] = false;
-                                js.editPlanJList.value = jsonDecode(jsonEncode(js.jPlanList));
-                              }
-                              /// 편집 권한 해제 했을 때
-                              else{
-                                showLoading(context);
-                                js.jPlanList[0]['checked'] = true;
-                                Map<String,dynamic> transMap = {
-                                  "dayAfterStart": js.editPlanJList[0]['dayAfterStart'],
-                                  'orderDtos': (js.editPlanJList[0]['planList'] as List).map((item){
-                                    return {
-                                      'planId': item['planId'],
-                                      'startTime': item['startTime'].substring(0,5),
-                                      'orderByDate': item['orderByDate']
-                                    };
-                                  }).toList()
-                                };
-                                await js.swapJPlan(transMap);
-                                js.isSorting.value = false;
-                                js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
-                                Get.back();
-                                js.firstSwapList.value = {};
+                              await socket.addEditor(js.jPlanList[0]['dayAfterStart']);
+                              await Future.delayed(const Duration(milliseconds: 100));
+                              /// 누가 편집중일 때
+                              if(js.jPlanList[0]['waitList'].length!=0){
+                                showCustomToast(context, fToast!, '${js.jPlanList[0]['waitList']['nickname']} 님이 일정을 수정 중입니다',true);
+                              }else{
+                                /// 편집 권한 체크 눌렀을 때
+                                if(js.jPlanList[0]['checked']){
+                                  js.isSorting.value = true;
+                                  showCustomToast(context, fToast!, '변경하고 싶은 일정을 선택해 주세요',true);
+                                  js.jPlanList[0]['checked'] = false;
+                                  js.editPlanJList.value = jsonDecode(jsonEncode(js.jPlanList));
+                                }
+                                /// 편집 권한 해제 했을 때
+                                else{
+                                  showLoading(context);
+                                  js.jPlanList[0]['checked'] = true;
+                                  Map<String,dynamic> transMap = {
+                                    "dayAfterStart": js.editPlanJList[0]['dayAfterStart'],
+                                    'orderDtos': (js.editPlanJList[0]['planList'] as List).map((item){
+                                      return {
+                                        'planId': item['planId'],
+                                        'startTime': item['startTime'].substring(0,5),
+                                        'orderByDate': item['orderByDate']
+                                      };
+                                    }).toList()
+                                  };
+                                  await js.swapJPlan(transMap);
+                                  js.isSorting.value = false;
+                                  js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
+                                  Get.back();
+                                  js.firstSwapList.value = {};
+                                }
                               }
                             }
                           },

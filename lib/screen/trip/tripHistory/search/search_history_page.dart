@@ -74,7 +74,7 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                           controller: controller,
                           hintText: '태그, 닉네임으로 사진을 검색해보세요',
                           icon: 'assets/icon/search.svg',
-                          colorFilter: ColorFilter.mode(Color(0xff5E91EE), BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']), BlendMode.srcIn),
                           hintStyle: f15gray400w500,
                           onFieldSubmitted: (value){
                             if(value.isNotEmpty){
@@ -168,7 +168,7 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                               height: 24,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(4),
-                                child: CachedNetworkImage(
+                                child: info['thumbnail']==''?DefaultProfileScreen(context):CachedNetworkImage(
                                   imageUrl:'${info['thumbnail']}',
                                   imageBuilder: (context, imageProvider) => Container(
                                     decoration: BoxDecoration(
@@ -371,7 +371,7 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                                       height: 24,
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(4),
-                                        child: CachedNetworkImage(
+                                        child: user['thumbnail']==''?DefaultProfileScreen(context):CachedNetworkImage(
                                           imageUrl:'${user['thumbnail']}',
                                           imageBuilder: (context, imageProvider) => Container(
                                             decoration: BoxDecoration(
