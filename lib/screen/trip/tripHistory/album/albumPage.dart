@@ -26,7 +26,7 @@ class _AlbumPageState extends State<AlbumPage> {
   Timer? _debounce;
   @override
   void initState() {
-    // hs.getAlbums();
+    hs.getAlbums();
     scrollController.addListener(onScroll);
     super.initState();
   }
@@ -38,9 +38,6 @@ class _AlbumPageState extends State<AlbumPage> {
       isScoll = true;
       setState(() {});
     });
-    // if (scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
-    //   hs.loadMoreImages(hs.totalAlbumList[0]);
-    // }
   }
 
   @override
@@ -59,13 +56,17 @@ class _AlbumPageState extends State<AlbumPage> {
             },
             child: Row(
               children: [
-                GestureDetector(
+                InkWell(
+                  borderRadius: BorderRadius.circular(100),
                   onTap: (){
                     Get.back();
                   },
-                  child: SvgPicture.asset(
-                    'assets/icon/leftArrow.svg',
-                    fit: BoxFit.none,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    child: SvgPicture.asset(
+                      'assets/icon/leftArrow.svg',
+                    ),
                   ),
                 ),
                 Spacer(),
@@ -110,8 +111,11 @@ class _AlbumPageState extends State<AlbumPage> {
                         fit: StackFit.expand,
                         children: [
                           if (index==0) GestureDetector(
-                            onTap: (){
-                              hs.getSingleCamera(ImageSource.camera);
+                            onTap: ()async{
+                              bool isRequest = await hs.requestCameraPermission(context);
+                              if(isRequest){
+                                hs.getSingleCamera(ImageSource.camera,context);
+                              }
                             },
                             child: Container(
                               width: Get.width,
@@ -126,7 +130,9 @@ class _AlbumPageState extends State<AlbumPage> {
                               if(hs.selectAlbumList.contains(hs.albums[0].images[index-1])){
                                 hs.removeFromSelectedAlbum(hs.albums[0].images[index-1]);
                               }else{
-                                hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
+                                if(hs.selectAlbumList.length<=9){
+                                  hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
+                                }
                               }
                             },
                             child: AssetEntityImage(
@@ -144,12 +150,14 @@ class _AlbumPageState extends State<AlbumPage> {
                               top: 8,
                               right: 8,
                               child: hs.selectAlbumList.contains(hs.albums[hs.selectAlbumIndex.value].images[index-1])
-                                  ?GestureDetector(
+                                  ? GestureDetector(
                                 onTap:(){
                                   if(hs.selectAlbumList.contains(hs.albums[0].images[index-1])){
                                     hs.removeFromSelectedAlbum(hs.albums[0].images[index-1]);
                                   }else{
-                                    hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
+                                    if(hs.selectAlbumList.length<=9){
+                                      hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
+                                    }
                                   }
                                 },
                                 child: Container(
@@ -164,12 +172,14 @@ class _AlbumPageState extends State<AlbumPage> {
                                     width: 8,height: 6,fit: BoxFit.none,),
                                 ),
                               )
-                                  :GestureDetector(
+                                  : GestureDetector(
                                 onTap:(){
                                   if(hs.selectAlbumList.contains(hs.albums[0].images[index-1])){
                                     hs.removeFromSelectedAlbum(hs.albums[0].images[index-1]);
                                   }else{
-                                    hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
+                                    if(hs.selectAlbumList.length<=9){
+                                      hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
+                                    }
                                   }
                                 },
                                 child: Container(
@@ -263,30 +273,6 @@ class _AlbumPageState extends State<AlbumPage> {
                                           ],
                                         ),
                                       )
-                                      // ClipRRect(
-                                      //   borderRadius: BorderRadius.circular(4),
-                                      //   child: AssetEntityImage(
-                                      //     gaplessPlayback: true,
-                                      //     filterQuality: FilterQuality.high,
-                                      //     isOriginal: false,
-                                      //     width: 80,
-                                      //     height: 80,
-                                      //     thumbnailSize: ThumbnailSize.square(isScoll ? 500 : 25),
-                                      //     thumbnailFormat: ThumbnailFormat.png,
-                                      //     hs.selectAlbumList[index],
-                                      //     fit: BoxFit.cover,
-                                      //   ),
-                                      // ),
-                                      // Positioned(
-                                      //   top: 6,
-                                      //   right: 6,
-                                      //   child: GestureDetector(
-                                      //     onTap: () {
-                                      //       hs.removeFromSelectedAlbum(hs.selectAlbumList[index]);
-                                      //     },
-                                      //     child: SvgPicture.asset('assets/icon/xicon.svg'),
-                                      //   ),
-                                      // ),
                                     ],
                                   ),
                                   const SizedBox(width: 8),
@@ -301,7 +287,7 @@ class _AlbumPageState extends State<AlbumPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 20,right: 20),
                         child: BlackCountContainer(onTap: (){
-                          hs.historyFileUpload(hs.selectAlbumList);
+                          hs.historyFileUpload(hs.selectAlbumList,context);
                           Get.to(()=>TripHistoryAddPage());
                         },title: '선택완료',count: hs.selectAlbumList.length,),
                       ),
