@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:tripStory/controller/tripState.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
 
@@ -286,4 +288,98 @@ class TextIconFormFields2 extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 바텀시트 형태의 textForm필드
+TextFormSheet(BuildContext context, String hintText,TextEditingController controller,FocusNode focusNode,VoidCallback onTap){
+  final ts = Get.put(TripState());
+  Scaffold.of(context).showBottomSheet((BuildContext context) {
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            width: Get.width,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x1AD4D4D4),
+                  offset: Offset(0, -3),
+                  blurRadius: 6,
+                ),
+                BoxShadow(
+                  color: Color(0x17D4D4D4),
+                  offset: Offset(0, -10),
+                  blurRadius: 10,
+                ),
+                BoxShadow(
+                  color: Color(0x0DD4D4D4),
+                  offset: Offset(0, -23),
+                  blurRadius: 14,
+                ),
+                BoxShadow(
+                  color: Color(0x03D4D4D4),
+                  offset: Offset(0, -40),
+                  blurRadius: 16,
+                ),
+                BoxShadow(
+                  color: Color(0x00D4D4D4),
+                  offset: Offset(0, -63),
+                  blurRadius: 18,
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+              child: Container(
+                width: Get.width,
+                decoration: BoxDecoration(
+                  color: gray50,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: gray200),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          onChanged: (con){
+                            setState(() {});
+                          },
+                          cursorColor: Color(ts.selectTripList[0]['labelColor']),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
+                            hintText: hintText,
+                            hintStyle: f15gray400w500,
+                          ),
+                          controller: controller,
+                          focusNode: focusNode,
+                          inputFormatters: <TextInputFormatter>[
+                            LengthLimitingTextInputFormatter(18),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 10,),
+                      Text('${controller.text.length}', style: controller.text.length>0?f11Gray800w600:f11Gray400w600,),
+                      Text('/18 ', style: f11Gray400w600,),
+                      const SizedBox(width: 8,),
+                      GestureDetector(
+                          onTap: onTap,
+                          child: SvgPicture.asset('assets/icon/roundArrowRight.svg'))
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+    );
+  });
 }

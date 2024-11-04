@@ -11,13 +11,15 @@ class PPlanState extends GetxController{
 
   final apiPPlanClient = ApiPPlanClient(DioClient());
 
-
   final RxList pPlanList = [].obs; /// p plan data 리스트
   final RxList ReorderPPlanList = [].obs; /// Reorder
   final selectedWeekIdx = 1.obs; /// 선택된 week 인덱스
   final totalDays = 1.obs;
   final RxMap selectPPlan = {}.obs; /// 수정할때 사용하는 선택된 p형 리스트
   final isSorting = false.obs; /// 수정 권한 버튼
+
+  final RxList planBPList = [].obs; /// planB p 리스트
+  final RxMap selectPlanBPList = {}.obs; /// 수정할때 사용하는 선택된 p형 리스트
 
   /// p planList 가져오기
   Future<void> getPPlanList(bool locker)async{
@@ -51,13 +53,13 @@ class PPlanState extends GetxController{
     print('완성된 pPlanList?${pPlanList}');
     pPlanList.refresh();
   }
-  /// p plan List 추가
-  Future<void> addPPlanList(String content, int dayAfterStart, bool locker)async{
-    await apiPPlanClient.addPPlanList(ts.selectTripList[0]['id'],content, dayAfterStart, locker);
+  /// p plan 추가
+  Future<void> addPPlanList(Map data)async{
+    await apiPPlanClient.addPPlanList(ts.selectTripList[0]['id'],data);
     pPlanList.refresh();
   }
 
-  /// jplanList 수정
+  /// p plan 수정
   Future<void> editPPlanList(Map data)async{
     await apiPPlanClient.editPPlanList(ts.selectTripList[0]['id'],data);
     pPlanList.refresh();
@@ -142,4 +144,24 @@ class PPlanState extends GetxController{
   Future<void> reorderPPlan(Map data) async {
     await apiPPlanClient.reorderPPlan(ts.selectTripList[0]['id'], data);
   }
+
+  /// planB pList 가져오기
+  Future<void> getPlanBPList()async{
+    planBPList.value = await apiPPlanClient.getPlanBPList(ts.selectTripList[0]['id'],true);
+    planBPList.refresh();
+  }
+
+  /// p 일정에서 보관함 이동 혹은 보관함에서 일정 이동
+  Future<void> lockerMovePPlanList(Map data)async{
+    await apiPPlanClient.lockerMovePPlanList(ts.selectTripList[0]['id'],data);
+    pPlanList.refresh();
+  }
+
+
+//
+  // /// planB add
+  // Future<void> addPlanBPList(String content)async{
+  //   await apiPPlanClient.addPPlanList(ts.selectTripList[0]['id'],content, true);
+  //   pPlanList.refresh();
+  // }
 }
