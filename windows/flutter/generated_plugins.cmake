@@ -6,8 +6,11 @@ list(APPEND FLUTTER_PLUGIN_LIST
   cloud_firestore
   file_selector_windows
   firebase_core
+  gal
+  irondash_engine_context
   permission_handler_windows
   share_plus
+  super_native_extensions
   url_launcher_windows
 )
 

@@ -383,8 +383,6 @@ class _PPlanPageState extends State<PPlanPage> {
                                     ps.ReorderPPlanList.value = []; /// 리오더블 초기화
                                   }
                                 }
-
-
                               },
                               child: Container(
                                 width: 20,
