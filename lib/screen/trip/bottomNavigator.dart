@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
+import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
@@ -28,19 +30,14 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   final ms = Get.put(MainState());
   final ts = Get.put(TripState());
   final us = Get.put(UserState());
+  final js = Get.put(JPlanState());
   @override
   void initState() {
     _widgetOptions = [ts.selectTripList[0]['type']=='J'? JSchedulePage():PPlanPage(), LockerTapPage(), TripHistoryMainPage()];
     _bottomTabController = TabController(length: 3, vsync: this,initialIndex: 0);
     var myMember = ts.selectTripList[0]['tripMemberDtoList'].firstWhere((member) => member['uuid'] == us.userList[0]['uuid'])['leader'];
 
-    // if(widget.notificationIdx==2){
-    //   _currentIndex = 2;
-    //   _bottomTabController.index = 2;
-    //   // Get.to(()=>TripHistoryDetailPage(selectedIdx: 0, dayIdx: dayIdx, historyId: historyId));
-    // }else{
-    //   _currentIndex = 0;
-    // }
+
     super.initState();
   }
 
@@ -190,8 +187,21 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
           height: 70,
           child: TabBar(
             onTap: (index){
-              _currentIndex = index;
-              setState(() {});
+              if(js.jPlanList[0]['waitList'].length==0 && js.jPlanList[0]['checked']==false){
+                _bottomTabController.index = 0;
+                showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
+                  js.jPlanList[0]['checked'] = true;
+                  js.isSorting.value = false;
+                  _currentIndex = index;
+                  _bottomTabController.index = index;
+                  js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
+                  setState(() {});
+                  Get.back();
+                });
+              }else{
+                _currentIndex = index;
+                setState(() {});
+              }
             },
             controller: _bottomTabController,
             indicator: BoxDecoration(

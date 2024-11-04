@@ -374,12 +374,12 @@ class _EditPlanPageState extends State<EditPlanPage> {
                 "locker": false
               };
               js.editJPlanList(data);
-              if(js.selectJplan['dayAfterStart']-1!=index){
-                js.jPlanList.forEach((dayData) {
-                  dayData['planList'].removeWhere((plan) => plan['planId'] == js.selectJplan['planId']);
-                });
-                js.jPlanList.refresh();
-              }
+              // if(js.selectJplan['dayAfterStart']-1!=index){
+              //   js.jPlanList.forEach((dayData) {
+              //     dayData['planList'].removeWhere((plan) => plan['planId'] == js.selectJplan['planId']);
+              //   });
+              //   js.jPlanList.refresh();
+              // }
               Get.back();
             }, title: '수정'),
           ),

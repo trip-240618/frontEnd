@@ -261,11 +261,10 @@ class ApiHistoryClient {
         }
         return data;
       } else {
-        throw Exception('Failed to auto-login: ${response.statusCode}');
+        return [];
       }
     } catch (e) {
-      print('Error during auto-login: $e');
-      rethrow;
+      return [];
     }
   }
 }

@@ -78,7 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(4),
-                            child: CachedNetworkImage(
+                            child: us.userList[0]['thumbnail']==''?DefaultProfileScreen(context):CachedNetworkImage(
                               imageUrl: us.userList[0]['thumbnail'],
                               width: 80,
                               height: 80,

@@ -120,7 +120,6 @@ Future<void> googleLogin() async {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   try {
     await _googleSignIn.signIn().then((value)async{
-      print('??구글로그인 값? ${value}');
       if(value!=null){
         await requestGoogleInfo(value);
       }

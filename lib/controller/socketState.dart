@@ -181,14 +181,41 @@ class SocketState extends GetxController{
   }
   /// 수정 할 때 함수
   Future<void> editJplan(Map<String, dynamic> result) async {
-    if ((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
+    /// 일정의 날짜를 수정할 때 ( 다른 날짜로 이동할 때 )
+    if(js.jPlanList[0]['dayAfterStart']!=result['data']['dayAfterStart']){
+      js.jPlanList.forEach((dayData) {
+        dayData['planList'].removeWhere((plan) => plan['planId'] == result['data']['planId']);
+      });
+      js.jPlanList.refresh();
+    }
+    /// 같은 날짜 일 때
+    else if((js.selectedIdx.value) + 1 == result['data']['dayAfterStart']) {
+      bool duplicateCheck = false;
       for(int i=0;i<js.jPlanList[0]['planList'].length;i++){
+        /// 만약 같으면
         if(js.jPlanList[0]['planList'][i]['planId'] == result['data']['planId']){
+          duplicateCheck = true;
           js.jPlanList[0]['planList'][i] = result['data'];
           if(result['data']['latitude'] != null && result['data']['longitude'] != null){
             js.jplnaMarkerSet();
           }
+          break;
         }
+      }
+      /// 하나라도 일치 안하면 추가 된 것
+      if(!duplicateCheck){
+        int insertIndex = js.jPlanList[0]['planList'].length;
+        for (int i = 0; i < js.jPlanList[0]['planList'].length; i++) {
+          if (js.jPlanList[0]['planList'][i]['startTime'].compareTo(result['data']['startTime']) > 0) {
+            insertIndex = i;
+            break;
+          }
+        }
+        js.jPlanList[0]['planList'].insert(insertIndex, result['data']);
+        if(result['data']['latitude'] != null && result['data']['longitude'] != null){
+          js.jplnaMarkerSet();
+        }
+        js.jPlanList.refresh();
       }
     }
   }
