@@ -128,13 +128,27 @@ class _JSchedulePageState extends State<JSchedulePage> {
                       )
                           :  GestureDetector(
                             onTap:()async{
-
+                              if(js.jPlanList[0]['waitList'].length==0 && js.jPlanList[0]['checked']==false){
+                                showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
+                                  js.jPlanList[0]['checked'] = true;
+                                  js.isSorting.value = false;
+                                  js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
+                                  js.selectedIdx.value = index;
+                                  scrollToIndex(index);
+                                  js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index))}';
+                                  await js.getJPlanList(index+1, false);
+                                  js.jplnaMarkerSet();
+                                  setState(() {});
+                                  Get.back();
+                                });
+                              }else{
                                 js.selectedIdx.value = index;
                                 scrollToIndex(index);
                                 js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index))}';
                                 await js.getJPlanList(index+1, false);
                                 js.jplnaMarkerSet();
                                 setState(() {});
+                              }
                             },
                             child: Container(
                               width:36,
@@ -265,8 +279,8 @@ class _JSchedulePageState extends State<JSchedulePage> {
                           ),
                         ),
                         Spacer(),
-                        js.flightList.isEmpty?
-                        GestureDetector(
+                        js.flightList.isEmpty
+                            ? GestureDetector(
                             onTap: (){
                               Get.to(()=>SearchFlight());
                             },
@@ -329,6 +343,29 @@ class _JSchedulePageState extends State<JSchedulePage> {
                             ),),
                           ),
                         ),
+                        js.jPlanList.isNotEmpty && js.jPlanList[0]['waitList'].length==0 && js.jPlanList[0]['checked']==false
+                            ? GestureDetector(
+                            onTap: ()async{
+                              showLoading(context);
+                              js.jPlanList[0]['checked'] = true;
+                              Map<String,dynamic> transMap = {
+                                "dayAfterStart": js.editPlanJList[0]['dayAfterStart'],
+                                'orderDtos': (js.editPlanJList[0]['planList'] as List).map((item){
+                                  return {
+                                    'planId': item['planId'],
+                                    'startTime': item['startTime'].substring(0,5),
+                                    'orderByDate': item['orderByDate']
+                                  };
+                                }).toList()
+                              };
+                              await js.swapJPlan(transMap);
+                              js.isSorting.value = false;
+                              js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
+                              Get.back();
+                              js.firstSwapList.value = {};
+                            },
+                            child: Text('완료',style: f12gray600w600,))
+                            :const SizedBox()
                       ],
                     ),
                     const SizedBox(height: 9),
@@ -744,59 +781,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                           ),
                                         ),
                                       )
-                                      // Container(
-                                      //     width:58,
-                                      //     height:50,
-                                      //     decoration: BoxDecoration(
-                                      //       color: gray200,
-                                      //       border: Border.all(color: gray200),
-                                      //       borderRadius: BorderRadius.only(
-                                      //         topLeft: Radius.circular(4),    // 좌측 상단 반경 4px
-                                      //         topRight: Radius.circular(0),   // 우측 상단 반경 0px
-                                      //         bottomRight: Radius.circular(0),// 우측 하단 반경 0px
-                                      //         bottomLeft: Radius.circular(4), // 좌측 하단 반경 4px
-                                      //       ),
-                                      //     ),
-                                      //     child: Center(child: Text('${js.jPlanList[0]['planList'][index]['startTime'].toString().substring(0,5)}',style: f12Gray800w500,))),
-                                      // Expanded(
-                                      //   child: Container(
-                                      //     decoration: BoxDecoration(
-                                      //       color: Colors.white,
-                                      //       border: Border.all(color: gray200),
-                                      //       borderRadius: BorderRadius.only(
-                                      //         topLeft: Radius.circular(0),    // 좌측 상단 반경 4px
-                                      //         topRight: Radius.circular(4),   // 우측 상단 반경 0px
-                                      //         bottomRight: Radius.circular(4),// 우측 하단 반경 0px
-                                      //         bottomLeft: Radius.circular(0), // 좌측 하단 반경 4px
-                                      //       ),
-                                      //     ),
-                                      //     child: Padding(
-                                      //       padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 14),
-                                      //       child: Row(
-                                      //         crossAxisAlignment: CrossAxisAlignment.center,
-                                      //         children: [
-                                      //           js.jPlanList[0]['planList'][index]['memo']!=''?PopupMenuButton(
-                                      //             offset: Offset(-34, 35),
-                                      //             shape: TooltipShape(borderColor:Color(ts.selectTripList[0]['labelColor']),borderWidth: 1),
-                                      //             child: SvgPicture.asset('assets/icon/memo.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
-                                      //             color: Colors.white,
-                                      //             itemBuilder: (_) => <PopupMenuEntry>[
-                                      //               PopupMenuItem(
-                                      //                   enabled: false,
-                                      //                   padding:EdgeInsets.only(left: 10),
-                                      //                   child: Text('${js.jPlanList[0]['planList'][index]['memo']}',style: f12mainw600(Color(ts.selectTripList[0]['labelColor'])))
-                                      //               ),
-                                      //             ],
-                                      //           ):const SizedBox(),
-                                      //           const SizedBox(width: 4,),
-                                      //           Text('${js.jPlanList[0]['planList'][index]['title']}',style: f12Gray800w500,),
-                                      //           Spacer(),
-                                      //           SvgPicture.asset('assets/icon/columnEllipsis.svg')
-                                      //         ],
-                                      //       ),
-                                      //     ),
-                                      //   ),
-                                      // )
                                     ],
                                   ),
                                   const SizedBox(height: 4)

@@ -140,6 +140,7 @@ class JPlanState extends GetxController{
   Future<void> deleteSwapJPlan(int day)async {
     await apijplanClient.deleteSwapJPlan(ts.selectTripList[0]['id'],day);
   }
+
   /// planB jList 가져오기
   Future<void> getPlanBJList()async{
     planBJList.value = await apijplanClient.getPlanBJList(ts.selectTripList[0]['id'], true);
@@ -154,6 +155,7 @@ class JPlanState extends GetxController{
     print('planBJList?? ${planBJList}');
     planBJList.refresh();
   }
+
   /// planB jList 추가
   Future<void> addPlanBJList(Map data)async{
     await apijplanClient.addBJPlanList(ts.selectTripList[0]['id'],data);
@@ -204,8 +206,4 @@ class JPlanState extends GetxController{
       flightList[0]['arrivalAirport_kr'],
     );
   }
-
-
-
-
 }

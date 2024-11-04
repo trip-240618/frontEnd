@@ -180,7 +180,7 @@ class _MyPageState extends State<MyPage> {
                                 Positioned(
                                   child: Obx(()=>ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: us.userList[0]['profileImg'] == ''?SettingDefaultProfileScreen(context):CachedNetworkImage(
+                                    child: us.userList.isEmpty||us.userList[0]['profileImg'] == ''?SettingDefaultProfileScreen(context):CachedNetworkImage(
                                       imageUrl: us.userList[0]['profileImg'],
                                       width: 80,
                                       height: 80,
@@ -272,7 +272,7 @@ class _MyPageState extends State<MyPage> {
                                     decoration: BoxDecoration(
                                         border: Border.all(color: gray50,width: 1.25)
                                     ),
-                                    child: CachedNetworkImage(
+                                    child: myCountries.isEmpty?const CircularProgressIndicator():CachedNetworkImage(
                                       imageUrl: '${myCountries[index]['image']}',
                                       width: 32,
                                       height: 24,
