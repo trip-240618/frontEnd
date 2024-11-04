@@ -21,3 +21,33 @@
 | google_places_flutter      | `2.0.9` |
 | flutter_quill              | `10.4.5` |
 | flutter_quill_extensions   | `10.4.5` |
+
+### 🗂 Folder Structure
+```
+lib
+├── App
+│   ├── API
+│   ├── Config
+│   ├── Notification
+│   ├── Permission
+│   └── Sns
+├── Component
+│   ├── Button
+│   ├── Container
+│   ├── Dialog
+│   ├── History
+│   ├── Loading
+│   ├── TextForm
+│   └── Toast
+├── Controller
+│   └── State
+├── Screen
+│   ├── Login
+│   ├── Main
+│   ├── MyPage
+│   └── Trip
+└──  Util
+     ├── Color
+     ├── CustomMarker
+     └── Font
+```
