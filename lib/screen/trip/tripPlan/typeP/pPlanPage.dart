@@ -24,12 +24,12 @@ class _PPlanPageState extends State<PPlanPage> {
   final ts = Get.put(TripState());
   final ps = Get.put(PPlanState());
   final socket = Get.put(SocketState());
+  bool isLoading = true;
   FocusNode _focusNode = FocusNode();
   ScrollController scrollController = ScrollController();
   bool isEdit = false; /// 추가, 수정중인지 여부
   /// Text Con
   TextEditingController _controller = TextEditingController();
-  int totalDays = 1; /// 여행 총 day 수
   int selectWeek = 0;
   int selectDayIdx = 0;
   FToast? fToast;
@@ -38,10 +38,12 @@ class _PPlanPageState extends State<PPlanPage> {
     fToast = FToast();
     fToast?.init(context);
     ps.totalDays.value = DateTime.parse(ts.selectTripList[0]['endDate']).difference(DateTime.parse(ts.selectTripList[0]['startDate'])).inDays+1;
-    print('이게뭐임?${ps.totalDays.value}');
-    /// totalday / week*7 이 나머지가 7 이상이면 7, 아니면 나머지만큼
     Future.delayed(Duration.zero,()async{
       await ps.getPPlanList(false);
+      isLoading = false;
+      setState(() {
+
+      });
     });
 
     _focusNode.addListener(() {
@@ -59,46 +61,6 @@ class _PPlanPageState extends State<PPlanPage> {
     super.dispose();
   }
 
-
-  /// (+) Day 버튼을 클릭시 해당 Day의 맨 밑에 새로운 플랜 추가
-  void addPlan(int index){
-    FocusScope.of(context).unfocus();
-    // if(addIndex != -1){
-    //   print('작성하다만거');
-    //  // print(plans[addIndex]);
-    //   _saveToDatabase();
-    // }
-
-
-
-   // print('${plans[index]}');
-
-    ///lastIndex는 추가하려는 Day의 플랜들 중 가장 끝에 있는 리스트의 인덱스
-  //  int lastIndex = plans.lastIndexWhere((item) => item['date'] == plans[index]['date']);
-  //   int newIndex = lastIndex+1;
-  //   print('추가할 인덱스${newIndex}');
-  //
-  //   /// 추가될 newIndex가 기존 리스트의 크기보다 작을경우 newIndex 위치에 insert
-  //   if(newIndex<plans.length){
-  //     int order = plans[lastIndex].containsKey('order')?(plans[lastIndex]['order']):0;
-  //     plans.insert(newIndex, {'date':plans[index]['date'],'content':'', 'checked':false,'order':order});
-  //     addIndex = newIndex;
-  //     _controller.text = '';
-  //     _focusNode.requestFocus();
-  //   }
-  //   /// 추가될 newIndex가 기존 리스트의 크기 이상일 경우 add
-  //   else{
-  //     plans.add({'date':plans[index]['date'],'content':'', 'checked':false,'order':0});
-  //     addIndex = index+1;
-  //     print('add??${addIndex}');
-  //     _controller.text = '';
-  //     _focusNode.requestFocus();
-  //   }
-  //   print(plans);
-  //   setState(() {
-  //
-  //   });
-  }
   /// 일정 추가 바텀 시트
   void showAddBottomSheet(BuildContext context) {
     _controller.clear();
@@ -182,7 +144,13 @@ class _PPlanPageState extends State<PPlanPage> {
                         print(_controller.text);
                         print(ps.pPlanList[0]['dayList'][selectDayIdx]['dayAfterStart']);
                         removeLastPlan();
-                        await ps.addPPlanList(_controller.text, ps.pPlanList[0]['dayList'][selectDayIdx]['dayAfterStart'], false);
+                        Map data = {
+                          "content":'${_controller.text}',
+                          "dayAfterStart": ps.pPlanList[0]['dayList'][selectDayIdx]['dayAfterStart'],
+                          "locker": false
+                        };
+
+                        await ps.addPPlanList(data);
                         Get.back();
                         isEdit = false;
                       },
@@ -312,7 +280,8 @@ class _PPlanPageState extends State<PPlanPage> {
         setState(() {
         });
       },
-      child: Scaffold(
+      child: isLoading?SizedBox():Scaffold(
+        backgroundColor: gray50,
         resizeToAvoidBottomInset: false, //포커스시 바텀시트 안올라옴
         body: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
@@ -320,38 +289,41 @@ class _PPlanPageState extends State<PPlanPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ps.totalDays.value <=7
-                  ? const SizedBox()
-                  : Container(
+              Container(
                       color: gray50,
                       child: Padding(padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                         child: Row(
                           children: [
-                            ps.selectedWeekIdx.value > 1
-                                ? GestureDetector(
-                                  onTap: () async {
-                                    if (ps.selectedWeekIdx.value > 1) {
-                                      ps.selectedWeekIdx.value--;
-                                      await ps.getPPlanList(false);
-                                    }
-                                  },
-                                  child: SvgPicture.asset('assets/icon/leftCaret.svg'),
-                                )
-                                : const SizedBox(width: 12),
-                            const SizedBox(width: 4,),
-                            Text('WEEK ${ps.pPlanList[0]['week']}', style: f14mainw600(Color(ts.selectTripList[0]['labelColor']),)),
-                            const SizedBox(width: 4,),
-                            ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0
-                                ? GestureDetector(
-                                    onTap: () async {
-                                      if(ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0){
-                                        print('ps.selectedWeekIdx??${ps.selectedWeekIdx.value}');
-                                        ps.selectedWeekIdx.value ++;
-                                        await ps.getPPlanList(false);
-                                      }
-                                    },
-                                    child: SvgPicture.asset('assets/icon/rightCaret.svg'))
-                                :const SizedBox(),
+                            ps.totalDays.value <=7
+                                ? const SizedBox()
+                                : Row(
+                                    children: [
+                                      ps.selectedWeekIdx.value > 1
+                                          ? GestureDetector(
+                                        onTap: () async {
+                                          if (ps.selectedWeekIdx.value > 1) {
+                                            ps.selectedWeekIdx.value--;
+                                            await ps.getPPlanList(false);
+                                          }
+                                        },
+                                        child: SvgPicture.asset('assets/icon/leftCaret.svg'),
+                                      )
+                                          : const SizedBox(width: 12),
+                                      const SizedBox(width: 4,),
+                                      Text('WEEK ${ps.pPlanList[0]['week']}', style: f14mainw600(Color(ts.selectTripList[0]['labelColor']),)),
+                                      const SizedBox(width: 4,),
+                                      ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0
+                                          ? GestureDetector(
+                                          onTap: () async {
+                                            if(ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0){
+                                              print('ps.selectedWeekIdx??${ps.selectedWeekIdx.value}');
+                                              ps.selectedWeekIdx.value ++;
+                                              await ps.getPPlanList(false);
+                                            }
+                                          },
+                                          child: SvgPicture.asset('assets/icon/rightCaret.svg'))
+                                          :const SizedBox(),
+                                    ],),
                             Spacer(),
                             InkWell(
                               borderRadius: BorderRadius.circular(100),
@@ -383,8 +355,6 @@ class _PPlanPageState extends State<PPlanPage> {
                                     ps.ReorderPPlanList.value = []; /// 리오더블 초기화
                                   }
                                 }
-
-
                               },
                               child: Container(
                                 width: 20,
@@ -715,7 +685,6 @@ class _PPlanPageState extends State<PPlanPage> {
                                                   const PopupMenuDivider(height: 1),
                                                   PopupMenuItem<int>(
                                                     onTap: () async {
-                                                      print('난 이걸 지울거야${ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]}');
                                                       await ps.deletePPlan(ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['planId'], ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['dayAfterStart']);
                                                     },
                                                     padding: EdgeInsets.zero,
@@ -746,6 +715,11 @@ class _PPlanPageState extends State<PPlanPage> {
                                                   ),
                                                   const PopupMenuDivider(height: 1),
                                                   PopupMenuItem<int>(
+                                                    onTap: () async {
+                                                      ps.selectPPlan.value = ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex];
+                                                      ps.selectPPlan['locker'] = true;
+                                                      await ps.lockerMovePPlanList(ps.selectPPlan.value);
+                                                    },
                                                     padding: EdgeInsets.zero,
                                                     value: 3,
                                                     child: Padding(

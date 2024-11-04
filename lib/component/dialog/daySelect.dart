@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/bottomContainer.dart';
 import 'package:tripStory/controller/jPlanState.dart';
+import 'package:tripStory/controller/pPlanState.dart';
 import '../../controller/tripState.dart';
 import 'package:tripStory/controller/historyState.dart';
 import '../../screen/trip/tripHistory/album/albumPage.dart';
@@ -375,11 +376,17 @@ SelectDayBottomSheet2(
       }
   );
 }
-ButtonSelectDayBottomSheet(
-    BuildContext context, String title,[String? buttonName]){
+ButtonSelectDayBottomSheet(BuildContext context, String title,[String? buttonName]){
   final js = Get.put(JPlanState());
+  final ps = Get.put(PPlanState());
   final ts = Get.put(TripState());
-  String selectedDate =  DateFormat('yyyy.MM.dd (EEE)', 'ko').format(DateFormat('yyyy-MM-dd').parse(js.planBSelectedDate.value));
+  int selectedIdx = 0;
+  String selectedDate =  DateFormat('yyyy.MM.dd (EEE)', 'ko').format(DateFormat('yyyy-MM-dd').parse(
+      ts.selectTripList[0]['type']=='J'
+          ? js.planBSelectedDate.value
+          : ts.selectTripList[0]['startDate']
+  )
+  );
   final List<String> dateList = List.generate(
     DateTime.parse('${ts.selectTripList[0]['endDate']}').difference(DateTime.parse('${ts.selectTripList[0]['startDate']}')).inDays + 1, (index) => DateFormat('yyyy.MM.dd (EEE)', 'ko').format(
     DateTime.parse('${ts.selectTripList[0]['startDate']}').add(Duration(days: index)),
@@ -440,9 +447,11 @@ ButtonSelectDayBottomSheet(
                                 contentPadding: EdgeInsets.zero,
                                 groupValue: selectedDate,
                                 onChanged: (String? newValue) {
-                                  js.planBSelectedIdx.value = idx;
+                                  selectedIdx = idx;
                                   selectedDate = newValue!;
-                                  js.selectedDate.value = DateFormat('yyyy-MM-dd').format(DateFormat('yyyy.MM.dd (EEE)', 'ko').parse(selectedDate));
+                                  if(ts.selectTripList[0]['type']=='J'){
+                                    js.planBSelectedDate.value = DateFormat('yyyy-MM-dd').format(DateFormat('yyyy.MM.dd (EEE)', 'ko').parse(selectedDate));
+                                  }
                                   setState((){});
                                 },
                                 dense: true,
@@ -464,10 +473,16 @@ ButtonSelectDayBottomSheet(
                           ),
                         ),
                         buttonName!=null?BlackBottomContainer(onTap: () async {
-                          js.selectJplan['dayAfterStart'] = js.planBSelectedIdx.value+1;
-                          print('index ${ js.selectJplan.value}');
-                          await js.editJPlanList(js.selectJplan.value);
-                          await js.getPlanBJList();
+                          if(ts.selectTripList[0]['type']=='J'){
+                            js.selectPlanBJList['dayAfterStart'] = selectedIdx+1;
+                            await js.editJPlanList(js.selectPlanBJList.value);
+                            await js.getPlanBJList();
+                          }
+                          if(ts.selectTripList[0]['type']=='P'){
+                            ps.selectPlanBPList['dayAfterStart'] = selectedIdx+1;
+                            await ps.lockerMovePPlanList(ps.selectPlanBPList.value);
+                            await ps.getPlanBPList();
+                          }
                           Get.back();
                         }, title: buttonName!):const SizedBox(),
                       ],

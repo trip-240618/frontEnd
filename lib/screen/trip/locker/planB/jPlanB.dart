@@ -255,12 +255,11 @@ class _JPlanBState extends State<JPlanB> {
                                                                   PopupMenuItem<int>(
                                                                     onTap: () async {
                                                                       js.selectPlanBJList.value = js.planBJList[dayIndex]['planList'][planIndex];
-                                                                      print('이거뭐야??${js.selectPlanBJList.value}');
-                                                                      // js.selectJplan.value =js.planBJList[dayIndex]['planList'][planIndex];
-                                                                      // js.selectJplan['locker'] = false;
-                                                                      // js.selectJplan['dayAfterStart'] == -1?ButtonSelectDayBottomSheet(context,'일정이동시 날짜 지정이 필요해요','일정 이동')
-                                                                      //     :await js.editJPlanList(js.selectJplan.value);
-                                                                      // await js.getPlanBJList();
+                                                                      js.planBSelectedDate.value = ts.selectTripList[0]['startDate'];
+                                                                      js.selectPlanBJList['locker'] = false;
+                                                                      js.selectPlanBJList['dayAfterStart'] == -1?ButtonSelectDayBottomSheet(context,'일정이동시 날짜 지정이 필요해요','일정 이동')
+                                                                      :await js.editJPlanList(js.selectPlanBJList.value);
+                                                                      await js.getPlanBJList();
                                                                     },
                                                                     padding: EdgeInsets.zero,
                                                                     value: 3,
