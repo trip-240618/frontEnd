@@ -102,7 +102,7 @@ class _TripCalendarState extends State<TripCalendar> {
             }else{
               ms.tripDate.value = _rangeDatePickerValueWithDefaultValue;
             }
-
+            Get.back();
           }, title: '저장'),
         ),
       ),
