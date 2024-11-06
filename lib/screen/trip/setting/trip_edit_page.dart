@@ -395,7 +395,7 @@ class _TripEditPageState extends State<TripEditPage> {
                           const SizedBox(height: 8),
                           Obx(() => GestureDetector(
                             onTap: ()async{
-                              Get.to(()=>TripCalendar(edit: true));
+                              //Get.to(()=>TripCalendar(edit: true));
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -457,7 +457,7 @@ class _TripEditPageState extends State<TripEditPage> {
             padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
             child: BottomContainer(
                 onTap: (){
-                  showConfirmCancelTapDialog(context, '여행 날짜를 변경할 경우\n작성한 기록들은 모두 초기화 됩니다', '확인', null, ()async{
+                  showConfirmCancelTapDialog(context, '여행방 설정을 변경하시겠습니까?', '확인', null, ()async{
 
                     String thumbnail = pickedImage != null
                         ? (await ms.tripThumbnailUpload(pickedImage!))['preSignedUrls'][0].toString().split('?')[0]
