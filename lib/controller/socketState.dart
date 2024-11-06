@@ -272,12 +272,19 @@ class SocketState extends GetxController{
             break;
           case 'modify' :
             editPPlan(result);
+            break;
           case 'edit start' :
             checkStartEditorPPlan(result);
+            break;
           case 'edit finish':
             endStartEditorPPlan(result);
+            break;
           case 'move':
-            print('move??${result}');
+            movePPlan(result);
+            break;
+          case 'wait':
+            waitEditorPPlan(result);
+            break;
           default:
             print("Unknown command");
             break;
@@ -310,34 +317,24 @@ class SocketState extends GetxController{
   }
   /// p형 체크박스 클릭 함수
   Future<void> checkPPlan(Map<String, dynamic> result) async{
-    print('check? ${result}');
     int targetPlanId = result['data']['planId'];
     int dayAfterStart = result['data']['dayAfterStart'];
-
     final planIndex = ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
-
-    print('planIndex????${planIndex}');
     ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'][planIndex]['checkbox'] = result['data']['checkbox'];
-
     ps.pPlanList.refresh();
-    print('p check');
   }
   /// p형 삭제 할 때 함수
   Future<void> deletePPlan(Map<String, dynamic> result) async{
-    print('delete? ${result}');
     int targetPlanId = result['data']['planId'];
     int dayAfterStart = result['data']['dayAfterStart'];
-
     final planIndex = ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
-    print('planIndex????${planIndex}');
     ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].removeAt(planIndex);
     ps.pPlanList.refresh();
-    print('p delete');
   }
 
   /// p형 순서 변경 요청
  Future<void> pAddEditor(int week) async {
-    print('순서 변경 요청');
+    print('p형 순서 변경 요청');
     try {
       stompClient!.send(
         destination: '/api/trip/${ts.selectTripList[0]['id']}/plan/p/${week}/edit/register',
@@ -349,7 +346,6 @@ class SocketState extends GetxController{
 
   /// p형 편집 권한 체크 시작
   Future<void> checkStartEditorPPlan(Map<String, dynamic> result) async {
-    print('result??${result}');
     if (ps.pPlanList[0]['week'] == result['data']['week']) {
       if(us.userList[0]['uuid']!=result['data']['uuid']){
         ps.pPlanList[0]['waitList'] = result['data'];
@@ -363,5 +359,45 @@ class SocketState extends GetxController{
     }
   }
 
+  Future<void> movePPlan(Map<String, dynamic> result) async {
+    print('move??${result}');
+    if(ps.selectedWeekIdx.value == result['data']['week']){
+      List allData = [result['data']];
+      List filterData = [];
+      int dayIdx = (ps.selectedWeekIdx.value*7)<=ps.totalDays.value? 7: ps.totalDays.value-((ps.selectedWeekIdx.value-1)*7);
+      for(int i = 1; i<=dayIdx; i++){
+        int startIdx = ((ps.selectedWeekIdx.value-1)*7)+i;
+        Map<String, dynamic>? matchedData;
+        for(var data in allData[0]['dayList']){
+          if(data['day']==startIdx){
+            matchedData = data;
+            break;
+          }
+        }
+        filterData.add({
+          'dayAfterStart':startIdx,
+          'isExpanded':true,
+          'planList':matchedData!=null?matchedData['planList']:[],
+        });
+
+      }
+      allData[0]['dayList'] = filterData;
+      allData.forEach((day) {
+        day['waitList']=[];
+        day['checked'] = true;
+      });
+      ps.pPlanList.value = allData;
+      print('완성된 pPlanList?${ps.pPlanList}');
+      ps.pPlanList.refresh();
+    }
+  }
+  /// 누가 편집중 일 때
+  Future<void> waitEditorPPlan(Map<String, dynamic> result) async {
+    if (ps.pPlanList[0]['week'] == result['data']['week']) {
+      if(us.userList[0]['uuid']!=result['data']['uuid']){
+        ps.pPlanList[0]['waitList'] = result['data'];
+      }
+    }
+  }
 }
 

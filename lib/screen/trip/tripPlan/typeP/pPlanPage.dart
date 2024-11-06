@@ -290,6 +290,14 @@ class _PPlanPageState extends State<PPlanPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
+                height: 16,
+                width: Get.width,
+                decoration: BoxDecoration(
+                  color: Colors.white
+                ),
+
+              ),
+              Container(
                       color: gray50,
                       child: Padding(padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                         child: Row(
@@ -346,13 +354,11 @@ class _PPlanPageState extends State<PPlanPage> {
                                     showLoading(context);
                                     ps.pPlanList[0]['checked'] = true;
                                     Map<String,dynamic> moveData = await ps.revertList();
-
                                     await ps.reorderPPlan(moveData);
-
                                     await ps.deleteReorderPPlan(ps.ReorderPPlanList[0]['week']);
                                     ps.isSorting.value = false;
+                                    ps.isSorting.refresh();
                                     Get.back();
-                                    ps.ReorderPPlanList.value = []; /// 리오더블 초기화
                                   }
                                 }
                               },
@@ -466,7 +472,7 @@ class _PPlanPageState extends State<PPlanPage> {
                     ps.ReorderPPlanList[0]['dayList'].insert(newIndex, item);
                     print(ps.ReorderPPlanList[0]['dayList'][newIndex]);
 
-                    ps.ReorderPPlanList[0]['dayList'][newIndex]['data']['orderByDate'] = null;
+                    ps.ReorderPPlanList[0]['dayList'][newIndex]['data']['orderByDate'] = -1;
                     ps.ReorderPPlanList[0]['dayList'][newIndex]['data']['dayAfterStart'] =
                     ps.ReorderPPlanList[0]['dayList'][newIndex-1]['type'] == 'day'? ps.ReorderPPlanList[0]['dayList'][newIndex-1]['data']:ps.ReorderPPlanList[0]['dayList'][newIndex-1]['data']['dayAfterStart'];
 
@@ -605,7 +611,6 @@ class _PPlanPageState extends State<PPlanPage> {
                                             GestureDetector(
                                               onTap: () async {
                                                 await ps.checkPPlan(ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['planId']);
-                                                //ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['checkbox'] = !ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['checkbox'];
                                               },
                                               child: ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['checkbox']?
                                               Container(
@@ -718,6 +723,8 @@ class _PPlanPageState extends State<PPlanPage> {
                                                     onTap: () async {
                                                       ps.selectPPlan.value = ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex];
                                                       ps.selectPPlan['locker'] = true;
+                                                      ps.selectPPlan['dayAfterStart'] = 0;
+                                                      print('???${ ps.selectPPlan.value}');
                                                       await ps.lockerMovePPlanList(ps.selectPPlan.value);
                                                     },
                                                     padding: EdgeInsets.zero,

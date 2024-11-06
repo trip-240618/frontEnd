@@ -103,6 +103,7 @@ class _PPlanBState extends State<PPlanB> {
                                           if(_controller.text != ''){
                                             ps.selectPlanBPList['content'] = _controller.text;
                                             await ps.editPPlanList(ps.selectPlanBPList.value);
+                                            await ps.getPlanBPList();
                                             Get.back();
                                           }
                                         });

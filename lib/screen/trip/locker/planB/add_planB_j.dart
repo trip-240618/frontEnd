@@ -38,8 +38,15 @@ class _AddPlanBJState extends State<AddPlanBJ> {
 
   @override
   void initState() {
-    js.addDate.value = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.parse('${js.selectedDate.value}'));
-    js.addSelectedDateTime.value = DateTime.now();
+    js.planBSelectedDate.value = ts.selectTripList[0]['startDate'];
+    js.planBAddSelectedDateTime.value = DateTime(
+      DateTime.parse(js.planBSelectedDate.value).year,
+      DateTime.parse(js.planBSelectedDate.value).month,
+      DateTime.parse(js.planBSelectedDate.value).day,
+      DateTime.now().hour, // Hour
+      DateTime.now().minute, // Minute
+      DateTime.now().second, // Second
+    );
     Future.delayed(Duration.zero,()async{
       await _setCustomMarker();
     });
@@ -122,7 +129,7 @@ class _AddPlanBJState extends State<AddPlanBJ> {
                                   colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
                                 ),
                               ),
-                              Text('${js.addDate}', style: f15gray800w500,),
+                              Text('${DateFormat('yyyy.MM.dd (EEE)', 'ko').format(DateTime.parse(js.planBSelectedDate.value))}', style: f15gray800w500,),
                             ],
                           ),
                         ),
@@ -140,7 +147,7 @@ class _AddPlanBJState extends State<AddPlanBJ> {
                                 ),
                               ),
                               const SizedBox(width: 4,),
-                              Text('${DateFormat('a hh:mm', 'ko_KR').format(js.addSelectedDateTime.value)}', style: f15gray800w500),
+                              Text('${DateFormat('a hh:mm', 'ko_KR').format(js.planBAddSelectedDateTime.value)}', style: f15gray800w500),
                             ],
                           ),
                         )
@@ -396,7 +403,7 @@ class _AddPlanBJState extends State<AddPlanBJ> {
             padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
             child: BlackBottomContainer(onTap: ()async{
               DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']); /// 시작 날짜
-              DateTime selectedDate = DateTime.parse(js.addDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
+              DateTime selectedDate = DateTime.parse(js.planBSelectedDate.value);/// 선택된 날짜
               int index = selectedDate.difference(startDate).inDays;
               Map data =
                       {

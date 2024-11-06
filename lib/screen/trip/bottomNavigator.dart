@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/mainState.dart';
+import 'package:tripStory/controller/pPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/trip/locker/lockerTapPage.dart';
@@ -31,6 +32,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   final ts = Get.put(TripState());
   final us = Get.put(UserState());
   final js = Get.put(JPlanState());
+  final ps = Get.put(PPlanState());
   @override
   void initState() {
     _widgetOptions = [ts.selectTripList[0]['type']=='J'? JSchedulePage():PPlanPage(), LockerTapPage(), TripHistoryMainPage()];
@@ -161,13 +163,13 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                           child: Row(
                             children: [
                               SvgPicture.asset('assets/icon/userIcon.svg', color: gray900,),
-                              const SizedBox(width: 6,),
+                              const SizedBox(width: 7,),
                               Text('${ts.selectTripList[0]['tripMemberDtoList'].length}', style: f14Gray900w700,),
-                              const SizedBox(width: 6,),
+                              const SizedBox(width: 5,),
                             ],
                           ),
                         ),
@@ -188,20 +190,41 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
           height: 70,
           child: TabBar(
             onTap: (index){
-              if(js.jPlanList[0]['waitList'].length==0 && js.jPlanList[0]['checked']==false){
-                _bottomTabController.index = 0;
-                showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
-                  js.jPlanList[0]['checked'] = true;
-                  js.isSorting.value = false;
+              /// J형 편집 종료
+              if(ts.selectTripList[0]['type']=='J'){
+                if(js.jPlanList[0]['waitList'].length==0 && js.jPlanList[0]['checked']==false){
+                  _bottomTabController.index = 0;
+                  showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
+                    js.jPlanList[0]['checked'] = true;
+                    js.isSorting.value = false;
+                    _currentIndex = index;
+                    _bottomTabController.index = index;
+                    js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
+                    setState(() {});
+                    Get.back();
+                  });
+                }else{
                   _currentIndex = index;
-                  _bottomTabController.index = index;
-                  js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
                   setState(() {});
-                  Get.back();
-                });
-              }else{
-                _currentIndex = index;
-                setState(() {});
+                }
+              }
+              /// P형 편집 종료
+              if(ts.selectTripList[0]['type']=='P'){
+                if(ps.pPlanList[0]['waitList'].length==0 && ps.pPlanList[0]['checked']==false){
+                  _bottomTabController.index = 0;
+                  showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
+                    ps.pPlanList[0]['checked'] = true;
+                    ps.isSorting.value = false;
+                    _currentIndex = index;
+                    _bottomTabController.index = index;
+                    ps.deleteReorderPPlan(ps.ReorderPPlanList[0]['week']);
+                    setState(() {});
+                    Get.back();
+                  });
+                }else{
+                  _currentIndex = index;
+                  setState(() {});
+                }
               }
             },
             controller: _bottomTabController,
