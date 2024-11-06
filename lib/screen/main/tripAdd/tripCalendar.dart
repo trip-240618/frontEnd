@@ -31,19 +31,30 @@ class _TripCalendarState extends State<TripCalendar> {
     return Scaffold(
       appBar: BackAppBar(text: '', onTap: (){
         Get.back();
-      }),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('여행 시작일과 종료일을',style: f20gray900w700,),
-            Text('설정해 주세요',style: f20gray900w700,),
-            const SizedBox(height: 30,),
-            Expanded(
+      }, color: Colors.white,),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('여행 시작일과 종료일을',style: f20gray900w700,),
+                Text('설정해 주세요',style: f20gray900w700,),
+                const SizedBox(height: 6,),
+                Text('당일 일정도 선택 가능해요:)', style: f12Gray400w600,)
+              ],
+            ),
+          ),
+          const SizedBox(height: 16,),
+          Expanded(
+            child: Container(
+              color: gray50,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: CalendarDatePicker2(
                     config: CalendarDatePicker2Config(
                       // 선택된 날짜들 사이의 색
@@ -54,7 +65,7 @@ class _TripCalendarState extends State<TripCalendar> {
                       controlsHeight: 0,
                       // 오늘 날짜의 텍스트 스타일
                       todayTextStyle: f14Whitew700,
-                      monthTextStyle: f16gray800w700,
+                      //monthTextStyle: f16gray800w700,
                       selectedDayTextStyle: f14Whitew700,
                       controlsTextStyle: f12gray900w700,
                       hideScrollViewTopHeader: true,
@@ -70,9 +81,9 @@ class _TripCalendarState extends State<TripCalendar> {
                     },
                     value: _rangeDatePickerValueWithDefaultValue),
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
       bottomSheet: Container(
         color: Colors.white,

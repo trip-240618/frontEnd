@@ -100,12 +100,12 @@ class PPlanState extends GetxController{
   }
   /// 리오더블 형식을 다시 pPlanList 형태로 되돌리기
   Future<Map<String,dynamic>> revertList() async{
-    List allData = ReorderPPlanList;
+    List allData = jsonDecode(jsonEncode(ReorderPPlanList));
     List filterData = [];
     allData[0]['dayList'].forEach((day) {
       if(day['type']=='plan'){
         Map<String, dynamic> dayData = {
-          'planId': day['data']['planId'],
+          'id': day['data']['planId'],
           'dayAfterStart': day['data']['dayAfterStart'],
           'orderByDate':day['data']['orderByDate'],
         };

@@ -44,20 +44,20 @@ class _EditPlanBJState extends State<EditPlanBJ> {
     /// 날짜 정렬
     if(js.selectPlanBJList['dayAfterStart']==-1){
       isDateTBD = true;
-      js.selectedDate.value = ts.selectTripList[0]['startDate'];
+      js.planBSelectedDate.value = ts.selectTripList[0]['startDate'];
     }else{
-      js.selectedDate.value = DateFormat('yyyy-MM-dd').format(
+      js.planBSelectedDate.value = DateFormat('yyyy-MM-dd').format(
           DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(
               Duration(days: js.selectPlanBJList['dayAfterStart']-1)
           )
       );
     }
-    js.addDate.value = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.parse('${js.selectedDate.value}'));
+    js.planBAddDate.value = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.parse('${js.planBSelectedDate.value}'));
     /// 시간
     js.addSelectedDateTime.value = DateTime(
-      DateTime.parse(js.selectedDate.value).year,
-      DateTime.parse(js.selectedDate.value).month,
-      DateTime.parse(js.selectedDate.value).day,
+      DateTime.parse(js.planBSelectedDate.value).year,
+      DateTime.parse(js.planBSelectedDate.value).month,
+      DateTime.parse(js.planBSelectedDate.value).day,
       int.parse(js.selectPlanBJList['startTime'].split(':')[0]), // Hour
       int.parse(js.selectPlanBJList['startTime'].split(':')[1]), // Minute
       int.parse(js.selectPlanBJList['startTime'].split(':')[2]), // Second
@@ -152,7 +152,6 @@ class _EditPlanBJState extends State<EditPlanBJ> {
                         ) :
                         GestureDetector(
                           onTap: (){
-
                             ButtonSelectDayBottomSheet(context,'여행 날짜를 선택해 주세요');
                           },
                           child: Row(
@@ -166,7 +165,7 @@ class _EditPlanBJState extends State<EditPlanBJ> {
                                   colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
                                 ),
                               ),
-                              Text('${js.addDate}', style: f15gray800w500,),
+                              Text('${DateFormat('yyyy.MM.dd (EEE)', 'ko').format(DateTime.parse(js.planBSelectedDate.value))}', style: f15gray800w500,),
                             ],
                           ),
                         ),
@@ -440,7 +439,7 @@ class _EditPlanBJState extends State<EditPlanBJ> {
             padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
             child: BlackBottomContainer(onTap: ()async{
               DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']); /// 시작 날짜
-              DateTime selectedDate = DateTime.parse(js.addDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
+              DateTime selectedDate = DateTime.parse(js.planBSelectedDate.value);/// 선택된 날짜
               int index = selectedDate.difference(startDate).inDays;
               Map data =
                {
