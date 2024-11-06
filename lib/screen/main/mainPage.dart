@@ -11,6 +11,7 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/main/tripAdd/tripRoomAdd.dart';
 import 'package:tripStory/screen/myPage/myPage.dart';
 import '../../app/config/dio_client.dart';
+import '../../app/notification/firebase_cloud_messaging.dart';
 import '../../component/bottomModals.dart';
 import '../../component/button/popup_list.dart';
 import '../../component/dialog/loading.dart';
@@ -50,6 +51,10 @@ class _MainPageState extends State<MainPage> {
     Future.delayed(Duration.zero,()async{
       isLoading = false;
       await ms.getComingTrip();
+      if(!ms.firstInit.value){
+        ms.firstInit.value = true;
+        await FCM().setNotifications();
+      }
       setState(() {});
       print('처음 가져오기 ${ms.tripList.length}');
     });

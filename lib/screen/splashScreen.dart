@@ -31,7 +31,7 @@ class _SplashPageState extends State<SplashPage> {
     Future.delayed(Duration.zero,()async{
       requestNotificationPermissions();
       await LocalNotifyCation().initializeNotification();
-      await FCM().setNotifications();
+      // await FCM().setNotifications();
       initPlatformState();
     });
 

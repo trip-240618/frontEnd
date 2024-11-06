@@ -2,14 +2,18 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/controller/userState.dart';
+import '../../controller/notificationState.dart';
 import '../../controller/tripState.dart';
 import '../../screen/trip/bottomNavigator.dart';
+import '../../screen/trip/tripHistory/notification/noti_history_detail.dart';
 
 
 class FCM {
   final us = Get.put(UserState());
   final ts = Get.put(TripState());
+  NotiState notis = Get.put(NotiState());
   var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final streamCtlr = StreamController<String>.broadcast();
   final titleCtlr = StreamController<String>.broadcast();
@@ -95,24 +99,33 @@ class FCM {
           (message) async {
           Uri uri = Uri.parse(message.data['destination']);
           print('uri?? ${uri}');
-          // String? tripId = uri.queryParameters['tripId'];
-          // await ts.getSelectTrip(int.parse(tripId!));
-          // Get.to(()=>BottomNavigator());
+          String? tripId = uri.queryParameters['tripId'];
+          String? historyId = uri.queryParameters['historyId'];
+          if(historyId!=null){
+            await notis.getNotificationDetail(int.parse(tripId!), int.parse(historyId!));
+            Get.to(()=>NotiHistoryDetail(tripId: int.parse(tripId),historyId: int.parse(historyId),));
+          }else{
+            await ts.getSelectTrip(int.parse(tripId!));
+            Get.to(()=>BottomNavigator());
+          }
       },
     );
   }
 
   terminateNotification() async {
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-
-    if (initialMessage != null) {
-      //
-      // print('ㅋㅋㅋㅋㅋ : ${initialMessage.notification!.title!}');
-      // print('ㅋㅋㅋㅋㅋㅋ22 : ${initialMessage.notification!.body!}');
-      // print('ㅋㅋㅋㅋㅋㅋ33 : ${initialMessage.data['name']}');
-
-      titleCtlr.sink.add(initialMessage.notification!.title!);
-      bodyCtlr.sink.add(initialMessage.notification!.body!);
+    RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
+    if (message != null) {
+      Uri uri = Uri.parse(message.data['destination']);
+      print('uri?? ${uri}');
+      String? tripId = uri.queryParameters['tripId'];
+      String? historyId = uri.queryParameters['historyId'];
+      if(historyId!=null){
+        await notis.getNotificationDetail(int.parse(tripId!), int.parse(historyId!));
+        Get.to(()=>NotiHistoryDetail(tripId: int.parse(tripId),historyId: int.parse(historyId),));
+      }else{
+        await ts.getSelectTrip(int.parse(tripId!));
+        Get.to(()=>BottomNavigator());
+      }
     }
   }
 
