@@ -25,7 +25,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   TextEditingController tripDirectSearchCon = TextEditingController(); /// 여행지 직접 검색
   final selectedCity = ''.obs; /// 선택한 여행지
   final tripLeaveType = ''.obs; /// 여행타입 선택
-
+  final firstInit = false.obs; /// 처음 실행 됬을 때
   /// trip main
   final RxList tripList = <dynamic>[].obs; /// 여행지 목록 리스트
 

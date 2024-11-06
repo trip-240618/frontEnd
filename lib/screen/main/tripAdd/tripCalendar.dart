@@ -65,9 +65,8 @@ class _TripCalendarState extends State<TripCalendar> {
                       controlsHeight: 0,
                       // 오늘 날짜의 텍스트 스타일
                       todayTextStyle: f14Whitew700,
-                      //monthTextStyle: f16gray800w700,
                       selectedDayTextStyle: f14Whitew700,
-                      controlsTextStyle: f12gray900w700,
+                      controlsTextStyle: f16gray800w700,
                       hideScrollViewTopHeader: true,
                       weekdayLabels: ['일', '월', '화', '수', '목', '금', '토'],
                         weekdayLabelTextStyle: f12gray400w500,
