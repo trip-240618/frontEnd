@@ -1,91 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/controller/userState.dart';
+import '../../controller/tripState.dart';
+import '../../screen/trip/bottomNavigator.dart';
 
-
-
-// Future<void> dailyAtTimeNotification(int idx, String title,String startDates,String endDates) async {
-//
-//
-//   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-//   // await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-//   //     ?.deleteNotificationChannelGroup('id');
-//   await flutterLocalNotificationsPlugin.zonedSchedule(
-//       idx, // 알림 ID (유일해야 함)
-//     '${title}', // 알림 제목
-//     '${title}약 먹을 시간입니다', // 알림 내용
-//     _setNotiTime(startDates,endDates), /// 알림 시간 설정,
-//     //   _nextInstanceOfMonday(),
-//     const NotificationDetails(
-//       android: AndroidNotificationDetails('id', 'Channel Name'),
-//     ),
-//     uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-//     matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
-//   );
-// }
-//
-// tz.TZDateTime _setNotiTime(String startDates,String endDates) {
-//   tz.initializeTimeZones();
-//   tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
-//   final parsedDate = DateTime.parse(startDates);
-//   final startYear = parsedDate.year;
-//   final startMonth = parsedDate.month;
-//   final startDay = parsedDate.day;
-//   final parsedDate2 = DateTime.parse(endDates);
-//   final endYear = parsedDate2.year;
-//   final endMonth = parsedDate2.month;
-//   final endDay = parsedDate2.day;
-//   /// 시작일
-//   final startDate = tz.TZDateTime(tz.local, startYear, startMonth, startDay, 00, 00);
-//   /// 종료일
-//   final endDate = tz.TZDateTime(tz.local, endYear, endMonth, endDay, 23, 59);
-//   var now = tz.TZDateTime.now(tz.local); /// 현재시간
-//
-//     if (now.isAfter(startDate) && now.isBefore(endDate)) {
-//       now = tz.TZDateTime.now(tz.local);
-//       /// 오늘이 화요일 또는 목요일인지 확인
-//       if (now.weekday == DateTime.tuesday || now.weekday == DateTime.thursday) {
-//         /// 알림 시간을 설정
-//         return tz.TZDateTime(tz.local, now.year, now.month, now.day, 16, 41);
-//       }
-//       else{
-//         return tz.TZDateTime(tz.local, now.year, now.month, now.day, 0, 0);
-//       }
-//     }
-//     /// 기본적으로 현재 시간보다 이전의 시간을 반환하여 알림이 울리지 않도록 함
-//     return tz.TZDateTime(tz.local, now.year, now.month, now.day, 0, 0);
-// }
-
-// tz.TZDateTime _nextInstanceOfMonday() {
-//   final now = tz.TZDateTime.now(tz.local);
-//   tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, 17, 0);
-//
-//   while (scheduledDate.weekday != DateTime.monday && scheduledDate.weekday != DateTime.thursday) {
-//     scheduledDate = scheduledDate.add(const Duration(days: 1));
-//     print('가나다');
-//   }
-//
-//   return scheduledDate;
-// }
-
-Future<void> onBackgroundMessage(RemoteMessage message) async {
-  // await Firebase.initializeApp();
-
-  if (message.data.containsKey('data')) {
-    final data = message.data['data'];
-  }
-
-  if (message.data.containsKey('notification')) {
-    final notification = message.data['notification'];
-  }
-}
 
 class FCM {
-  final _firebaseMessaging = FirebaseMessaging.instance;
   final us = Get.put(UserState());
+  final ts = Get.put(TripState());
   var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final streamCtlr = StreamController<String>.broadcast();
   final titleCtlr = StreamController<String>.broadcast();
@@ -147,6 +71,7 @@ class FCM {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       if(!us.notiDuplicationList.contains(message.messageId)){
         us.notiDuplicationList.add(message.messageId);
+        print('프론트 데이터?? ${message.data}');
         flutterLocalNotificationsPlugin.show(
             message.hashCode,
             message.notification?.title,
@@ -168,13 +93,15 @@ class FCM {
   backgroundNotification() async {
     FirebaseMessaging.onMessageOpenedApp.listen(
           (message) async {
-        Map<String, dynamic> dataMap = json.decode('${message.data}');
-        titleCtlr.sink.add(message.notification!.title!);
-        bodyCtlr.sink.add(message.notification!.body!);
+          Uri uri = Uri.parse(message.data['destination']);
+          print('uri?? ${uri}');
+          // String? tripId = uri.queryParameters['tripId'];
+          // await ts.getSelectTrip(int.parse(tripId!));
+          // Get.to(()=>BottomNavigator());
       },
     );
   }
-  //
+
   terminateNotification() async {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 

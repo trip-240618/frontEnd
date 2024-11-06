@@ -72,6 +72,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                               await ms.getBookMarkTrip();
                               break;
                             default:
+                              break;
                           }
                           Get.back();
                         },
