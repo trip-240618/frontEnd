@@ -128,7 +128,9 @@ class _JSchedulePageState extends State<JSchedulePage> {
                       )
                           :  GestureDetector(
                             onTap:()async{
-                              if(js.jPlanList[0]['waitList'].length==0 && js.jPlanList[0]['checked']==false){
+                              if(js.jPlanList.isNotEmpty &&
+                                  (js.jPlanList[0]['waitList'] ?? []).isEmpty &&
+                                  js.jPlanList[0]['checked'] == false){
                                 showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
                                   js.jPlanList[0]['checked'] = true;
                                   js.isSorting.value = false;
@@ -295,7 +297,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                         InkWell(
                           borderRadius: BorderRadius.circular(100),
                           onTap: ()async{
-                            if(js.jPlanList.isEmpty){
+                            if(js.jPlanList.isEmpty || js.jPlanList[0]['planList'].length==0){
                               showCustomToast(context, fToast!, '순서를 변경할 일정이 없습니다',true);
                             }else{
                               await socket.addEditor(js.jPlanList[0]['dayAfterStart']);
@@ -343,7 +345,9 @@ class _JSchedulePageState extends State<JSchedulePage> {
                             ),),
                           ),
                         ),
-                        js.jPlanList.isNotEmpty && js.jPlanList[0]['waitList'].length==0 && js.jPlanList[0]['checked']==false
+                        js.jPlanList.isNotEmpty &&
+                            (js.jPlanList[0]['waitList'] ?? []).isEmpty &&
+                            js.jPlanList[0]['checked'] == false
                             ? GestureDetector(
                             onTap: ()async{
                               showLoading(context);

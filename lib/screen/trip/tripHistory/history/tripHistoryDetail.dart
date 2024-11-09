@@ -42,7 +42,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
     Future.delayed(Duration.zero,()async{
       hs.getDetailHistoryCommentList(ts.selectTripList[0]['id'], hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['id']);
     });
-    print('사진 데이터? ${hs.historyList[widget.dayIdx]}');
+    print('댓글 리스트?? ${hs.historyComment}');
     super.initState();
   }
   @override
@@ -270,6 +270,8 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                          errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                        ),
                                       const SizedBox(width: 8,),
+                                      Text('${hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['nickname']}',style: f12whitew600,),
+                                      const SizedBox(width: 4,),
                                       Text('${hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['photoDate']}',style: f12whitew600,)
                                     ],
                                   ),
@@ -387,7 +389,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                     const SizedBox(width: 8,),
                                     Text('${hs.historyComment[index]['nickname']}'),
                                     const SizedBox(width: 6,),
-                                    Text('지금'),
+                                    Text('${hs.timeFormat(hs.historyComment[index]['createDate'])}',style: f11gray400w500,),
                                     Spacer(),
                                     us.userList[0]['uuid']==hs.historyComment[index]['writerUuid']
                                         ?PopupMenuButton(
