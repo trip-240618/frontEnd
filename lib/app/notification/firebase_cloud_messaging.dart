@@ -116,7 +116,6 @@ class FCM {
     RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
     if (message != null) {
       Uri uri = Uri.parse(message.data['destination']);
-      print('uri?? ${uri}');
       String? tripId = uri.queryParameters['tripId'];
       String? historyId = uri.queryParameters['historyId'];
       if(historyId!=null){

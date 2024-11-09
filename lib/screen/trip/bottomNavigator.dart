@@ -192,7 +192,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
             onTap: (index){
               /// J형 편집 종료
               if(ts.selectTripList[0]['type']=='J'){
-                if(js.jPlanList[0]['waitList'].length==0 && js.jPlanList[0]['checked']==false){
+                if(js.jPlanList.isNotEmpty&&js.jPlanList[0]['waitList'].length==0 && js.jPlanList[0]['checked']==false){
                   _bottomTabController.index = 0;
                   showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
                     js.jPlanList[0]['checked'] = true;
