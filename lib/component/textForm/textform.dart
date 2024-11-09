@@ -346,6 +346,9 @@ TextFormSheet(BuildContext context, String hintText,TextEditingController contro
                           onChanged: (con){
                             setState(() {});
                           },
+                          onFieldSubmitted: (value){
+                            onTap();
+                          },
                           cursorColor: Color(ts.selectTripList[0]['labelColor']),
                           decoration: InputDecoration(
                             isDense: true,
@@ -371,7 +374,10 @@ TextFormSheet(BuildContext context, String hintText,TextEditingController contro
                       Text('/18 ', style: f11Gray400w600,),
                       const SizedBox(width: 8,),
                       GestureDetector(
-                          onTap: onTap,
+                          onTap: (){
+                            onTap();
+                            Get.back();
+                          },
                           child: SvgPicture.asset('assets/icon/roundArrowRight.svg'))
                     ],
                   ),
