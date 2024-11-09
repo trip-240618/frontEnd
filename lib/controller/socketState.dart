@@ -304,33 +304,41 @@ class SocketState extends GetxController{
   }
   /// p형 수정 할 때 함수
   Future<void> editPPlan(Map<String, dynamic> result) async{
-    print('edit? ${result}');
+    int week = ((result['data']['dayAfterStart'] - 1) ~/ 7) + 1;
+    int dayIndex = (result['data']['dayAfterStart'] - 1) % 7;
     int targetPlanId = result['data']['planId'];
-    int dayAfterStart = result['data']['dayAfterStart'];
-
-    final planIndex = ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
-
-    print('planIndex????${planIndex}');
-    ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'][planIndex]['content'] = result['data']['content'];
-
-    ps.pPlanList.refresh();
-    print('p edit');
+    /// 현재 선택한 week와 같을때
+    if(ps.selectedWeekIdx.value == week){
+      final planIndex = ps.pPlanList[0]['dayList'][dayIndex]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
+      print('planIndex????${planIndex}');
+      ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['content'] = result['data']['content'];
+      ps.pPlanList.refresh();
+      print('p edit');
+    }
   }
   /// p형 체크박스 클릭 함수
   Future<void> checkPPlan(Map<String, dynamic> result) async{
     int targetPlanId = result['data']['planId'];
-    int dayAfterStart = result['data']['dayAfterStart'];
-    final planIndex = ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
-    ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'][planIndex]['checkbox'] = result['data']['checkbox'];
-    ps.pPlanList.refresh();
+    int week = ((result['data']['dayAfterStart'] - 1) ~/ 7) + 1;
+    int dayIndex = (result['data']['dayAfterStart'] - 1) % 7;
+    /// 현재 선택한 week와 같을때
+    if(ps.selectedWeekIdx.value == week){
+      final planIndex = ps.pPlanList[0]['dayList'][dayIndex]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
+      ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['checkbox'] = result['data']['checkbox'];
+      ps.pPlanList.refresh();
+    }
   }
   /// p형 삭제 할 때 함수
   Future<void> deletePPlan(Map<String, dynamic> result) async{
     int targetPlanId = result['data']['planId'];
-    int dayAfterStart = result['data']['dayAfterStart'];
-    final planIndex = ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
-    ps.pPlanList[0]['dayList'][dayAfterStart-1]['planList'].removeAt(planIndex);
-    ps.pPlanList.refresh();
+    int week = ((result['data']['dayAfterStart'] - 1) ~/ 7) + 1;
+    int dayIndex = (result['data']['dayAfterStart'] - 1) % 7;
+    /// 현재 선택한 week와 같을때
+    if(ps.selectedWeekIdx.value == week){
+      final planIndex = ps.pPlanList[0]['dayList'][dayIndex]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
+      ps.pPlanList[0]['dayList'][dayIndex]['planList'].removeAt(planIndex);
+      ps.pPlanList.refresh();
+    }
   }
 
   /// p형 순서 변경 요청

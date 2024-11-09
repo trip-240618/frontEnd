@@ -480,6 +480,7 @@ ButtonSelectDayBottomSheet(BuildContext context, String title,[String? buttonNam
                           }
                           if(ts.selectTripList[0]['type']=='P'){
                             ps.selectPlanBPList['dayAfterStart'] = selectedIdx+1;
+                            print('select??${ps.selectPlanBPList}');
                             await ps.lockerMovePPlanList(ps.selectPlanBPList.value);
                             await ps.getPlanBPList();
                           }

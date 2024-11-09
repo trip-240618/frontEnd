@@ -11,6 +11,7 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import '../../../../component/dialog/loading.dart';
+import '../../../../component/textForm/textform.dart';
 import '../../../../component/toast/toast.dart';
 import '../../../../controller/socketState.dart';
 
@@ -58,110 +59,7 @@ class _PPlanPageState extends State<PPlanPage> {
   }
   @override
   void dispose() {
-
     super.dispose();
-  }
-
-  /// 일정 추가 바텀 시트
-  void showAddBottomSheet(BuildContext context) {
-    _controller.clear();
-    Scaffold.of(context).showBottomSheet((BuildContext context) {
-        return Container(
-        width: Get.width,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Color(0x1AD4D4D4),
-              offset: Offset(0, -3),
-              blurRadius: 6,
-            ),
-            BoxShadow(
-              color: Color(0x17D4D4D4),
-              offset: Offset(0, -10),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: Color(0x0DD4D4D4),
-              offset: Offset(0, -23),
-              blurRadius: 14,
-            ),
-            BoxShadow(
-              color: Color(0x03D4D4D4),
-              offset: Offset(0, -40),
-              blurRadius: 16,
-            ),
-            BoxShadow(
-              color: Color(0x00D4D4D4),
-              offset: Offset(0, -63),
-              blurRadius: 18,
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-          child: Container(
-            width: Get.width,
-            decoration: BoxDecoration(
-              color: gray50,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: gray200),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      onChanged: (con){
-                        setState(() {});
-                      },
-                      cursorColor: Color(ts.selectTripList[0]['labelColor']),
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                        hintText: '여행 일정을 입력해주세요',
-                        hintStyle: f15gray400w500,
-                      ),
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      inputFormatters: <TextInputFormatter>[
-                        LengthLimitingTextInputFormatter(18),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 10,),
-                  Text('${_controller.text.length}', style: _controller.text.length>0?f11Gray800w600:f11Gray400w600,),
-                  Text('/18 ', style: f11Gray400w600,),
-                  const SizedBox(width: 8,),
-                  GestureDetector(
-                      onTap: () async {
-                        removeLastPlan();
-                        Map data = {
-                          "content":'${_controller.text}',
-                          "dayAfterStart": ps.pPlanList[0]['dayList'][selectDayIdx]['dayAfterStart'],
-                          "locker": false
-                        };
-
-                        await ps.addPPlanList(data);
-                        Get.back();
-                        isEdit = false;
-                      },
-                      child: SvgPicture.asset('assets/icon/roundArrowRight.svg'))
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-      },
-    );
   }
 
   /// 일정 수정 바텀 시트
@@ -571,8 +469,19 @@ class _PPlanPageState extends State<PPlanPage> {
                                           'content': '',
                                           'checkbox': false,
                                         });
-                                        showAddBottomSheet(context);
+                                        _controller.clear();
                                         isEdit = true;
+                                        TextFormSheet(context, '여행일정을 입력해주세요',_controller, _focusNode, () async {
+                                          removeLastPlan();
+                                          Map data = {
+                                            "content":'${_controller.text}',
+                                            "dayAfterStart": ps.pPlanList[0]['dayList'][selectDayIdx]['dayAfterStart'],
+                                            "locker": false
+                                          };
+                                          await ps.addPPlanList(data);
+                                          isEdit = false;
+
+                                        });
                                         _focusNode.requestFocus();
                                       }
                                       setState(() {
@@ -659,7 +568,15 @@ class _PPlanPageState extends State<PPlanPage> {
                                                   PopupMenuItem<int>(
                                                     onTap: (){
                                                       ps.selectPPlan.value = ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex];
-                                                      showEditBottomSheet(context);
+                                                      _controller.text =  ps.selectPPlan['content'];
+                                                      isEdit = true;
+                                                      TextFormSheet(context, '여행일정을 입력해주세요',_controller, _focusNode, () async {
+                                                        if(_controller.text != ''){
+                                                          ps.selectPPlan['content'] = _controller.text;
+                                                          await ps.editPPlanList(ps.selectPPlan.value);
+                                                        }
+                                                        isEdit = false;
+                                                      });
                                                       _focusNode.requestFocus();
                                                     },
                                                     padding: EdgeInsets.zero,
