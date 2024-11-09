@@ -6,6 +6,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:popover/popover.dart';
 import 'package:tripStory/app/api/userApi.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
+import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/main/tripAdd/tripRoomAdd.dart';
@@ -31,17 +32,20 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   MainState ms = Get.put(MainState());
   TripState ts = Get.put(TripState());
+  JPlanState js = Get.put(JPlanState());
   final dioClient = DioClient();
   final apiUserClient = ApiUserClient(DioClient());
   bool isLoading = true;
 
   void initState() {
     kakaoSchemeStream.listen((url) async{
+      showLoading(context);
       Uri uri = Uri.parse(url!);
-      print('url?? ${uri.queryParameters}');
       /// 쿼리 매개변수 추출
       String? tripId = uri.queryParameters['tripId'];
       String? inviteCode = uri.queryParameters['inviteCode'];
+      Get.back();
+      await js.resetState();
       await ms.tripJoin('${inviteCode}');
       await ts.getSelectTrip(int.parse(tripId!));
       Get.to(()=>BottomNavigator());

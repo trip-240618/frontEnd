@@ -225,7 +225,7 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
       });
 }
 
-CodeDialog(BuildContext context,String code) {
+CodeDialog(BuildContext context,int tripId,String code) {
   final ms = Get.find<MainState>();
   showDialog(
       context: context,
@@ -264,6 +264,7 @@ CodeDialog(BuildContext context,String code) {
               children: [
                 GestureDetector(
                   onTap: (){
+                    ms.kakaoShare(tripId,'${code}');
                     // ms.kakaoShare();
                   },
                   child: Container(

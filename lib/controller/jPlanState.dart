@@ -62,7 +62,32 @@ class JPlanState extends GetxController{
     isGoogleExpanded.value = true;
     super.dispose();
   }
-
+  /// 초기화 함수
+  Future<void> resetState() async{
+    latitude.value = 36.35475233611197;
+    longitude.value = 127.34170655688537;
+    isGoogleExpanded.value = false;
+    isSorting.value = false;
+    flightList.clear();
+    selectedDate.value = '';
+    selectedIdx.value = 0;
+    searchLocation.clear();
+    jPlanList.clear();
+    selectJplan.clear();
+    editPlanJList.clear();
+    firstSwapList.clear();
+    markers.clear();
+    polyline.clear();
+    addSelectedDateTime.value = DateTime.now();
+    addDate.value = '';
+    editDate.value = '';
+    planBSelectedIdx.value = 0;
+    planBSelectedDate.value = '';
+    planBJList.clear();
+    selectPlanBJList.clear();
+    planBAddSelectedDateTime.value = DateTime.now();
+    planBAddDate.value = '';
+  }
   /// 지도에 마커 표시
   Future<void> jplnaMarkerSet() async {
     markers.clear();

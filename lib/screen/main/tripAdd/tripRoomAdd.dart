@@ -455,7 +455,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
               if (createData.isNotEmpty) {
                 await ts.getSelectTrip(createData['tripId']);
                 Get.back();
-                CodeDialog(context, createData['invitationCode']);
+                CodeDialog(context,createData['tripId'],createData['invitationCode']);
               }
             }
           },
