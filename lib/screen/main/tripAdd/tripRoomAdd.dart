@@ -166,6 +166,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
     });
     super.initState();
   }
+
   @override
   void dispose() {
     tripName.dispose();
@@ -459,11 +460,10 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
             }
           },
           title: '저장',
-          isBlack: tripName.text.trim().isEmpty||
+          isBlack: ms.tripDate.isEmpty||tripName.text.trim().isEmpty||
               selectedColor==null||
               tripType==''||
-              ms.tripDate.isEmpty||
-              ms.tripDestination.value==''?false:true),)
+              ms.tripDestination.value==''?false:true))
       ),
     );
   }
