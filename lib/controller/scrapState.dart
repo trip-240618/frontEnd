@@ -85,9 +85,7 @@ class ScrapState extends GetxController{
 
   /// 선택한 스크랩 리스트 가져오기
   Future<void> getSelectScrapList(int scrapId)async{
-    selectScrapList.clear();
     selectScrapList.value = await apiScrapClient.getSelectScrap(scrapId);
-    print('selectScrapList?${selectScrapList.value}');
     scrapList.refresh();
   }
 
@@ -107,8 +105,6 @@ class ScrapState extends GetxController{
       }
     }
   }
-
-  /// hs.imgUrl[i].toString().split('?')[0]
 
   /// 사진 업로드
   Future<Map<String, dynamic>> scrapFileUpload(XFile xfile)async{

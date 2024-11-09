@@ -159,15 +159,25 @@ class _AddScrapPageState extends State<AddScrapPage> {
                               magnifierConfiguration: TextMagnifierConfiguration(
                                 shouldDisplayHandlesInMagnifier: true
                               ),
-                              embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(),
+                              embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(
+                                imageEmbedConfigurations: QuillEditorImageEmbedConfigurations(
+                                  onImageClicked: (node){
+                                      _controller.updateSelection(
+                                        TextSelection(baseOffset: node.length, extentOffset: node.length),
+                                        ChangeSource.local,
+                                      );
+                                  }
+                                )
+                              ),
                             ),
 
                           ),
                         ),
                         Row(
                           children: [
-                            GestureDetector(
-                              onTap: () async {
+                            InkWell(
+                              borderRadius: BorderRadius.circular(100),
+                              onTap: ()  async {
                                 if(isImageIncluded()){
                                   fToast.showToast(
                                     child: Container(
@@ -217,13 +227,18 @@ class _AddScrapPageState extends State<AddScrapPage> {
 
                                 }else{
                                   pickedImage = await ss.getSingleImage(ImageSource.gallery,context,pickedImage);
-                                  await ss.scrapFileUpload(pickedImage!);
-
+                                  if(pickedImage != null){
+                                    await ss.scrapFileUpload(pickedImage!);
+                                  }
                                   _onPressedHandler(context);
 
                                 }
                               },
-                              child: SvgPicture.asset('assets/icon/normalImage.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
+                              child: Container(
+                                width: 24,
+                                height: 24,
+                                child:  SvgPicture.asset('assets/icon/normalImage.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
+                              ),
                             ),
                             Spacer(),
                             Text('${_controller.document.length}', style: f11Gray800w600,),
@@ -285,6 +300,11 @@ class _AddScrapPageState extends State<AddScrapPage> {
                           );
                         },
                       ),
+                    ),
+                    SizedBox(height:
+                    MediaQuery.of(context).viewInsets.bottom > 100
+                        ? MediaQuery.of(context).viewInsets.bottom - 40
+                        : 0
                     ),
                   ],
                 ),

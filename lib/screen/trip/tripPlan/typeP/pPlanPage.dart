@@ -141,8 +141,6 @@ class _PPlanPageState extends State<PPlanPage> {
                   const SizedBox(width: 8,),
                   GestureDetector(
                       onTap: () async {
-                        print(_controller.text);
-                        print(ps.pPlanList[0]['dayList'][selectDayIdx]['dayAfterStart']);
                         removeLastPlan();
                         Map data = {
                           "content":'${_controller.text}',
@@ -306,31 +304,39 @@ class _PPlanPageState extends State<PPlanPage> {
                                 ? const SizedBox()
                                 : Row(
                                     children: [
-                                      ps.selectedWeekIdx.value > 1
-                                          ? GestureDetector(
-                                        onTap: () async {
-                                          if (ps.selectedWeekIdx.value > 1) {
-                                            ps.selectedWeekIdx.value--;
+                                      ps.selectedWeekIdx.value > 1 ?
+                                      InkWell(
+                                        borderRadius: BorderRadius.circular(100),
+                                        onTap: () async{
+                                          if(ps.selectedWeekIdx.value>1){
+                                            ps.selectedWeekIdx.value --;
                                             await ps.getPPlanList(false);
                                           }
                                         },
-                                        child: SvgPicture.asset('assets/icon/leftCaret.svg'),
-                                      )
-                                          : const SizedBox(width: 12),
+                                        child: Container(
+                                          width: 24,
+                                          height: 24,
+                                          child: SvgPicture.asset('assets/icon/leftCaret.svg', fit: BoxFit.none,),
+                                        ),
+                                      ) : const SizedBox(width: 12),
                                       const SizedBox(width: 4,),
                                       Text('WEEK ${ps.pPlanList[0]['week']}', style: f14mainw600(Color(ts.selectTripList[0]['labelColor']),)),
                                       const SizedBox(width: 4,),
-                                      ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0
-                                          ? GestureDetector(
-                                          onTap: () async {
-                                            if(ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0){
-                                              print('ps.selectedWeekIdx??${ps.selectedWeekIdx.value}');
-                                              ps.selectedWeekIdx.value ++;
-                                              await ps.getPPlanList(false);
-                                            }
-                                          },
-                                          child: SvgPicture.asset('assets/icon/rightCaret.svg'))
-                                          :const SizedBox(),
+                                      ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0 ?
+                                      InkWell(
+                                        borderRadius: BorderRadius.circular(100),
+                                        onTap: () async{
+                                          if(ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0){
+                                            ps.selectedWeekIdx.value ++;
+                                            await ps.getPPlanList(false);
+                                          }
+                                        },
+                                        child: Container(
+                                          width: 24,
+                                          height: 24,
+                                          child: SvgPicture.asset('assets/icon/rightCaret.svg', fit: BoxFit.none,),
+                                        ),
+                                      ):const SizedBox(),
                                     ],),
                             Spacer(),
                             InkWell(
@@ -470,14 +476,9 @@ class _PPlanPageState extends State<PPlanPage> {
                     }
                     final item = ps.ReorderPPlanList[0]['dayList'].removeAt(oldIndex);
                     ps.ReorderPPlanList[0]['dayList'].insert(newIndex, item);
-                    print(ps.ReorderPPlanList[0]['dayList'][newIndex]);
-
                     ps.ReorderPPlanList[0]['dayList'][newIndex]['data']['orderByDate'] = -1;
                     ps.ReorderPPlanList[0]['dayList'][newIndex]['data']['dayAfterStart'] =
                     ps.ReorderPPlanList[0]['dayList'][newIndex-1]['type'] == 'day'? ps.ReorderPPlanList[0]['dayList'][newIndex-1]['data']:ps.ReorderPPlanList[0]['dayList'][newIndex-1]['data']['dayAfterStart'];
-
-                    print('리오더블함');
-                    print(ps.ReorderPPlanList[0]['dayList']);
                   },
                   )
               )
@@ -555,7 +556,6 @@ class _PPlanPageState extends State<PPlanPage> {
                                   const SizedBox(width: 10,),
                                   GestureDetector(
                                     onTap: (){
-                                      print(dayIndex);
                                       if(isEdit == false){
                                         /// 선택한 day만 펼치고 나머지는 닫기
                                         for (int i = 0; i < ps.pPlanList[0]['dayList'].length; i++) {
@@ -640,7 +640,7 @@ class _PPlanPageState extends State<PPlanPage> {
                                             const SizedBox(width: 4),
                                             Container(
                                               width: 20,
-                                              height: 20,
+                                              height: 25,
                                               child: PopupMenuButton<int>(
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(4),
@@ -652,7 +652,7 @@ class _PPlanPageState extends State<PPlanPage> {
                                                 menuPadding: EdgeInsets.zero,
                                                 constraints: BoxConstraints(maxWidth: 125),
                                                 shadowColor: Colors.black.withOpacity(0.4),
-                                                icon: SvgPicture.asset('assets/icon/rowEllipsis.svg'),
+                                                icon: SvgPicture.asset('assets/icon/rowEllipsis.svg',fit: BoxFit.none,),
                                                 color: gray50,
                                                 itemBuilder: (context) => <PopupMenuEntry<int>>[
                                                   PopupMenuItem<int>(
@@ -724,7 +724,6 @@ class _PPlanPageState extends State<PPlanPage> {
                                                       ps.selectPPlan.value = ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex];
                                                       ps.selectPPlan['locker'] = true;
                                                       ps.selectPPlan['dayAfterStart'] = 0;
-                                                      print('???${ ps.selectPPlan.value}');
                                                       await ps.lockerMovePPlanList(ps.selectPPlan.value);
                                                     },
                                                     padding: EdgeInsets.zero,

@@ -10,6 +10,7 @@ import 'package:tripStory/component/button/plusFloating.dart';
 import 'package:tripStory/controller/scrapState.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/trip/locker/scrap/scrap_edit.dart';
+import 'package:tripStory/screen/trip/locker/scrap/scrap_view.dart';
 import '../../../../component/dialog/dialog.dart';
 import '../../../../component/dialog/loading.dart';
 import '../../../../util/color.dart';
@@ -51,26 +52,22 @@ class _ScrapPageState extends State<ScrapPage> {
     return stringText;
   }
 
-  void jsonD() {
-    String data = r'[{"insert":"Ddfsdfd\nㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ"},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":{"image":"https://trip-story.s3.ap-northeast-2.amazonaws.com/test/6bb5a043-fd6f-4f00-8803-35e7823c3287"}},{"insert":"\n"}]';
-     var myJson = jsonDecode(data);
-    QuillController _controller = QuillController.basic();
-    _controller = QuillController(
-      document: Document.fromJson(myJson),
-      selection: TextSelection.collapsed(offset: 0),
-    );
-    String plainText = _controller.document.toPlainText();
-    print(plainText);
-
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isLoading? SizedBox() : Scaffold(
       backgroundColor: gray50,
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-        child: Column(
+        child: ss.scrapList.isEmpty?
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(child: Text('여행에 필요한 정보를', style: f22gray400w700,)),
+            Center(child: Text('스크랩 해보세요 :)', style: f22gray400w700,))
+          ],
+        ) :
+        Column(
           children: [
             Row(
               children: [
@@ -114,7 +111,7 @@ class _ScrapPageState extends State<ScrapPage> {
               ],
             ),
             const SizedBox(height: 12,),
-            isLoading? Expanded(child: LoadingWidget()) : Obx(()=>Expanded(
+            Obx(()=>Expanded(
               child: MasonryGridView.count(
                 physics: const ClampingScrollPhysics(),
                 crossAxisCount: 2,
@@ -124,11 +121,10 @@ class _ScrapPageState extends State<ScrapPage> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () async {
-                      //print('선택한 스크랩은? ${ss.scrapList[index]}');
                       await ss.getSelectScrapList(ss.scrapList[index]['id']);
-                      // ss.selectScrapList.clear();
-                      // ss.selectScrapList.value = [ss.scrapList[index]];
-                      Get.to(()=>ScrapEdit());
+                      us.userList[0]['uuid']==ss.scrapList[0]['writerUuid'] ?
+                      Get.to(()=>ScrapEdit()):
+                      Get.to(()=>ScrapView());
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -214,6 +210,7 @@ class _ScrapPageState extends State<ScrapPage> {
                                         showConfirmCancelTapDialog(context, '스크랩을 삭제하시겠습니까?', '확인','스크랩 삭제 후 복구는 어렵습니다',() async {
                                           await ss.deleteScrap(int.parse('${ss.scrapList[index]['id']}'));
                                           await ss.getScrapList();
+                                          Get.back();
                                         } );
                                       },
                                       child: SvgPicture.asset('assets/icon/trashCan.svg'))
