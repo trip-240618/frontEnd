@@ -292,14 +292,15 @@ class SocketState extends GetxController{
       },
     );
   }
-
   /// p형 추가 할 때 함수
   Future<void> createPPlan(Map<String, dynamic> result) async {
-    print('생성하는 dayAfterStart? ${result['data']['dayAfterStart']}');
-    int insertDayIndex = result['data']['dayAfterStart']-1;
-    ps.pPlanList[0]['dayList'][insertDayIndex]['planList'].add(result['data']);
-    print('p create');
-    ps.pPlanList.refresh();
+    int week = ((result['data']['dayAfterStart'] - 1) ~/ 7) + 1;      // 주차 계산
+    int dayIndex = (result['data']['dayAfterStart'] - 1) % 7;
+    /// 현재 선택한 week와 같을때
+    if(ps.selectedWeekIdx.value == week){
+      ps.pPlanList[0]['dayList'][dayIndex]['planList'].add(result['data']);
+      ps.pPlanList.refresh();
+    }
   }
   /// p형 수정 할 때 함수
   Future<void> editPPlan(Map<String, dynamic> result) async{

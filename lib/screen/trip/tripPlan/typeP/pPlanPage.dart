@@ -40,6 +40,7 @@ class _PPlanPageState extends State<PPlanPage> {
     ps.totalDays.value = DateTime.parse(ts.selectTripList[0]['endDate']).difference(DateTime.parse(ts.selectTripList[0]['startDate'])).inDays+1;
     Future.delayed(Duration.zero,()async{
       await ps.getPPlanList(false);
+      print('ppp${ps.pPlanList}');
       isLoading = false;
       setState(() {
 
