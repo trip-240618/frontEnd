@@ -98,7 +98,6 @@ class _PPlanBState extends State<PPlanB> {
                                       onTap: (){
                                         ps.selectPlanBPList.value = ps.planBPList[0]['dayList'][0]['planList'][index];
                                         _controller.text =  ps.selectPlanBPList['content'];
-                                        //TextFormSheet()
                                         TextFormSheet(context, '여행일정을 입력해주세요',_controller, _focusNode, () async {
                                           if(_controller.text != ''){
                                             ps.selectPlanBPList['content'] = _controller.text;
@@ -138,7 +137,6 @@ class _PPlanBState extends State<PPlanB> {
                                     const PopupMenuDivider(height: 1),
                                     PopupMenuItem<int>(
                                       onTap: () async {
-                                        print('난 이걸 지울거야${ps.planBPList[0]['dayList'][0]['planList'][index]['planId']}');
                                         await ps.deletePPlan(ps.planBPList[0]['dayList'][0]['planList'][index]['planId'],-1);
                                         await ps.getPlanBPList();
                                       },
@@ -172,16 +170,8 @@ class _PPlanBState extends State<PPlanB> {
                                     PopupMenuItem<int>(
                                       onTap: () async {
                                         ps.selectPlanBPList.value = ps.planBPList[0]['dayList'][0]['planList'][index];
-                                        print('이거뭐야??${ps.selectPlanBPList.value}');
                                         ps.selectPlanBPList['locker'] = false;
-
                                         ButtonSelectDayBottomSheet(context,'일정이동시 날짜 지정이 필요해요','일정이동');
-
-                                        // js.selectJplan.value =js.planBJList[dayIndex]['planList'][planIndex];
-                                        // js.selectJplan['locker'] = false;
-                                        // js.selectJplan['dayAfterStart'] == -1?ButtonSelectDayBottomSheet(context,'일정이동시 날짜 지정이 필요해요','일정 이동')
-                                        //     :await js.editJPlanList(js.selectJplan.value);
-                                        // await js.getPlanBJList();
                                       },
                                       padding: EdgeInsets.zero,
                                       value: 3,
@@ -247,7 +237,6 @@ class _PPlanBState extends State<PPlanB> {
                 Get.back();
               });
               _focusNode.requestFocus();
-              //showAddBottomSheet(context);
             },)
 
 

@@ -32,7 +32,6 @@ class ApiPPlanClient {
           data: data);
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?${data}');
 
       } else {
         throw Exception('Failed to add PPlanList: ${response.statusCode}');
@@ -51,7 +50,6 @@ class ApiPPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -68,7 +66,6 @@ class ApiPPlanClient {
           '/trip/${tripId}/plan/p/check?planId=$planId');
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -84,7 +81,6 @@ class ApiPPlanClient {
       final response = await dioClient.dio.delete('/trip/${tripId}/plan/p/delete?planId=$planId&day=$day');
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -102,7 +98,6 @@ class ApiPPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -113,14 +108,12 @@ class ApiPPlanClient {
   }
 
   Future<void> reorderPPlan(int tripId, Map data) async{
-    print('내가 보낼 데이터??${data}');
     try {
       final response = await dioClient.dio.put(
           '/trip/${tripId}/plan/p/edit/move',data: data
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -138,7 +131,6 @@ class ApiPPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data??${data}');
         if(data.length==0){
           return [];
         }
@@ -160,7 +152,6 @@ class ApiPPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }

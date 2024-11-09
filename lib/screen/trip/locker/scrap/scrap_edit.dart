@@ -38,14 +38,12 @@ class _ScrapEditState extends State<ScrapEdit> {
 
   @override
   void initState() {
-    print('색상은?${Color(int.parse(ss.selectScrapList[0]['color']))}');
     selectedColor = colorList.indexOf(Color(int.parse(ss.selectScrapList[0]['color'])));
     fToast = FToast();
     fToast.init(context);
     Future.delayed(Duration.zero,()async{
      await ss.scrapImgUrlReset();
     });
-    print('기존 이미지가 있을 경우?${ss.selectScrapList[0]['imageDtos']}');
     jsonD();
     _controller.addListener((){
       setState(() {
