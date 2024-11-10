@@ -197,7 +197,16 @@ class _ScrapEditState extends State<ScrapEdit> {
                               magnifierConfiguration: TextMagnifierConfiguration(
                                   shouldDisplayHandlesInMagnifier: true
                               ),
-                              embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(),
+                              embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(
+                                  imageEmbedConfigurations: QuillEditorImageEmbedConfigurations(
+                                      onImageClicked: (node){
+                                        _controller.updateSelection(
+                                          TextSelection(baseOffset: node.length, extentOffset: node.length),
+                                          ChangeSource.local,
+                                        );
+                                      }
+                                  )
+                              ),
                             ),
 
                           ),

@@ -54,10 +54,12 @@ class _PPlanBState extends State<PPlanB> {
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
+        isEdit = false;
         setState(() {
         });
       },
       child: isLoading?SizedBox():Obx(()=>Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: gray50,
           body: Padding(
             padding: const EdgeInsets.only(top:32, left: 20, right: 20),
@@ -98,12 +100,13 @@ class _PPlanBState extends State<PPlanB> {
                                       onTap: (){
                                         ps.selectPlanBPList.value = ps.planBPList[0]['dayList'][0]['planList'][index];
                                         _controller.text =  ps.selectPlanBPList['content'];
+                                        isEdit = true;
                                         TextFormSheet(context, '여행일정을 입력해주세요',_controller, _focusNode, () async {
                                           if(_controller.text != ''){
                                             ps.selectPlanBPList['content'] = _controller.text;
                                             await ps.editPPlanList(ps.selectPlanBPList.value);
                                             await ps.getPlanBPList();
-                                            Get.back();
+                                            isEdit = false;
                                           }
                                         });
                                         _focusNode.requestFocus();
@@ -208,12 +211,11 @@ class _PPlanBState extends State<PPlanB> {
                       ],
                     );
                   },
-                ):SizedBox()
-
+                ):SizedBox(),
               ],
             ),
           ),
-          floatingActionButton: PlusFloatingButton(
+          floatingActionButton: isEdit?SizedBox():PlusFloatingButton(
             backgroundColor: gray900,
             onPressed: ()  {
               if (ps.planBPList[0]['dayList'].isEmpty) {
@@ -226,6 +228,7 @@ class _PPlanBState extends State<PPlanB> {
                 'checkbox': false,
               });
               _controller.clear();
+              isEdit = true;
               TextFormSheet(context, '여행일정을 입력해주세요',_controller, _focusNode, () async {
                 ps.planBPList[0]['dayList'][0]['planList'].removeLast();
                 Map data = {
@@ -234,9 +237,12 @@ class _PPlanBState extends State<PPlanB> {
                 };
                 await ps.addPPlanList(data);
                 await ps.getPlanBPList();
-                Get.back();
+                isEdit = false;
               });
               _focusNode.requestFocus();
+              setState(() {
+
+              });
             },)
 
 
