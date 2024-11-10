@@ -12,6 +12,7 @@ class ApiPPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
+        print('data???${data}');
         if(data.length==0){
           return [];
         }

@@ -108,7 +108,7 @@ class ApiTripClient {
   /// 주소 자동 완성
   Future<List<dynamic>> autoLocationGet(String place) async {
     try {
-      final response = await dioClient.dio.get(
+      final response = await dioClient.dio.post(
           '/trip/location/autocomplete',
         data: {
           "input": '${place}',
