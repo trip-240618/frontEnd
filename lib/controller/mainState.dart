@@ -145,7 +145,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
         color,
         type,
         '${tripDate[0]}',
-        tripDate.length==1?'':'${tripDate[1]}',
+        tripDate.length==1?'${tripDate[0]}':'${tripDate[1]}',
         tripDestination);
     return createData;
   }
