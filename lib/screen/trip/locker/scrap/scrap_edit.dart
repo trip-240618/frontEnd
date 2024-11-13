@@ -149,6 +149,7 @@ class _ScrapEditState extends State<ScrapEdit> {
           Get.back();},
           svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),
             trailingTap: () async {
+              print('ssssss');
               await editScrap().then((_) async {
                  await ss.getScrapList();
                  Get.back();

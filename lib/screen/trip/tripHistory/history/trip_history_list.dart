@@ -92,7 +92,7 @@ class _TripHistoryListState extends State<TripHistoryList> {
                                     borderRadius: BorderRadius.circular(4),
                                     image: DecorationImage(
                                         image: imageProvider,
-                                        fit: BoxFit.fill
+                                        fit: BoxFit.cover
                                     ),
                                   ),
                                 ),

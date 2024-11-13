@@ -249,7 +249,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                                                           borderRadius: BorderRadius.circular(4),
                                                                           image: DecorationImage(
                                                                               image: imageProvider,
-                                                                              fit: BoxFit.fill
+                                                                              fit: BoxFit.cover
                                                                           ),
                                                                         ),
                                                                       ),
