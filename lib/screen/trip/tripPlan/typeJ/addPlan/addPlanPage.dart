@@ -334,7 +334,7 @@ class _AddPlanPageState extends State<AddPlanPage> {
                       target: LatLng(js.searchLocation[0]['location']['latitude'], js.searchLocation[0]['location']['longitude']),
                       zoom: 12);
                   final GoogleMapController controller = await js.mapController.future;
-                  await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+                  await controller.moveCamera(CameraUpdate.newCameraPosition(cameraPosition));
                 }
                 js.addJPlanList(data);
                 Get.back();
