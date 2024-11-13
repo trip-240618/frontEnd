@@ -142,10 +142,9 @@ class SocketState extends GetxController{
             js.polyline.add(
               Polyline(
                 polylineId: PolylineId('polyline_1'),
-                patterns: [PatternItem.dash(80), PatternItem.gap(30)],
                 points: poly, // 전체 경로 좌표 리스트
                 color: Color(ts.selectTripList[0]['labelColor']), // 경로 색상
-                width: 3, // 경로 두께
+                width: 8, // 경로 두께
               ),
             );
           }
