@@ -84,7 +84,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                         imageUrl: '${hs.historyList[widget.dayIdx]['historyList'].length==0||hs.historyList[widget.dayIdx]['historyList'][pageIdx].length==0?'':hs.historyList[widget.dayIdx]['historyList'][pageIdx]['thumbnail']}',
                         width: Get.width,
                         height: Get.height*0.6,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         // placeholder: (context, url) =>
                         // const CircularProgressIndicator(),
                         errorWidget: (context, url, error) => DefaultProfileScreen(context),

@@ -156,7 +156,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
   ];
   TextEditingController tripName = TextEditingController(); /// 여행방 입력
   List colorList = [pastelBlue,mainRed,yellowColor,greenColor];
-  int? selectedColor;
+  int  selectedColor = 0;
   XFile? pickedImage;
   String tripType = '';
   @override
@@ -236,7 +236,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                                     ),
                                     borderRadius: BorderRadius.circular(4)
                                 ),
-                                child: Center(child: SvgPicture.asset('assets/icon/image.svg',width: 28)),
+                                child: Center(child: SvgPicture.asset('assets/icon/image.svg',width: 28, colorFilter: ColorFilter.mode(gray400,BlendMode.srcIn))),
                               ),
                             ),
                             Positioned(
@@ -264,7 +264,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                             child: Container(
                               child: TextFormFieldComponent(
                                 controller: tripName,
-                                hintText: '여행방 제목을 입력해주세요',
+                                hintText: '여행방 제목을 입력해주세요 :)',
                                 onChanged: (v){
                                   setState(() {});
                                 },
@@ -273,7 +273,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                             )
                           ),
                           const SizedBox(width: 10,),
-                          Text('${tripName.text.length}/15')
+                          Text('${tripName.text.length}/15', style: f11Gray400w600)
                         ],
                       ),
                     ),
@@ -364,17 +364,19 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                       const SizedBox(height: 8),
                       Obx(() => GestureDetector(
                         onTap: ()async{
-                          Get.to(()=>TripCalendar());
+                          Get.to(()=>TripCalendar(selectedColor: colorList[selectedColor],));
                         },
                         child: Container(
                           decoration: BoxDecoration(
+                              color: gray50,
+                              borderRadius: BorderRadius.circular(4),
                               border: Border.all(color: gray200)
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 16),
                             child: Row(
                               children: [
-                                SvgPicture.asset('assets/icon/date.svg',fit: BoxFit.none, colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
+                                SvgPicture.asset('assets/icon/date.svg',fit: BoxFit.none, colorFilter: ColorFilter.mode(colorList[selectedColor],BlendMode.srcIn)),
                                 const SizedBox(width: 4),
                                ms.tripDate.isEmpty
                                     ? Text(
@@ -402,13 +404,15 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
                         },
                         child: Container(
                           decoration: BoxDecoration(
+                              color: gray50,
+                              borderRadius: BorderRadius.circular(4),
                               border: Border.all(color: gray200)
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 16),
                             child: Row(
                               children: [
-                                SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
+                                SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(colorList[selectedColor],BlendMode.srcIn)),
                                 const SizedBox(width: 4),
                                 ms.tripDestination.value ==''?Text('여행지를 입력해 주세요',style: f15gray400w500):Text('${ms.tripDestination.value}',style: f15gray800w500,)
                               ],
@@ -430,7 +434,6 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
       child: Obx(()=>BottomContainer(
           onTap: ()async{
             if (tripName.text.trim().isEmpty ||
-                selectedColor == null ||
                 tripType == '' ||
                 ms.tripDate.isEmpty ||
                 ms.tripDestination == '') {
@@ -447,7 +450,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
               Map<String, dynamic> createData = await ms.createRoom(
                   thumbnailUrl,
                   tripName.text,
-                  '${colorList[selectedColor!]}',
+                  '${colorList[selectedColor]}',
                   tripType,
                   ms.tripDate,
                   ms.tripDestination.value
@@ -461,7 +464,6 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
           },
           title: '저장',
           isBlack: ms.tripDate.isEmpty||tripName.text.trim().isEmpty||
-              selectedColor==null||
               tripType==''||
               ms.tripDestination.value==''?false:true))
       ),

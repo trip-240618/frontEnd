@@ -291,7 +291,7 @@ CodeDialog(BuildContext context,int tripId,String code) {
                       width: Get.width,
                       height: 60,
                       decoration: BoxDecoration(
-                          color: gray500,
+                          color: gray900,
                           borderRadius: BorderRadius.circular(4)
                       ),
                       child: Center(

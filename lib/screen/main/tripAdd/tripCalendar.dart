@@ -10,7 +10,8 @@ import '../../../controller/tripState.dart';
 
 class TripCalendar extends StatefulWidget {
   final bool? edit;
-  const TripCalendar({super.key, this.edit});
+  final Color selectedColor;
+  const TripCalendar({super.key, this.edit, required this.selectedColor});
 
   @override
   State<TripCalendar> createState() => _TripCalendarState();
@@ -67,6 +68,7 @@ class _TripCalendarState extends State<TripCalendar> {
                       todayTextStyle: f14Whitew700,
                       selectedDayTextStyle: f14Whitew700,
                       controlsTextStyle: f16gray800w700,
+                      todayColor: widget.selectedColor,
                       hideScrollViewTopHeader: true,
                       weekdayLabels: ['일', '월', '화', '수', '목', '금', '토'],
                         weekdayLabelTextStyle: f12gray400w500,

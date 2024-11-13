@@ -377,7 +377,7 @@ class _MainPageState extends State<MainPage> {
                               ],
                             ),
                           ),
-                          index==4?SizedBox():SizedBox(height: 12)
+                          SizedBox(height: 12)
                         ],
                       );
                     }),

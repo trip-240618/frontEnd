@@ -17,9 +17,9 @@ class BottomContainer extends StatelessWidget {
         height: 58,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
-            color: isBlack==true?gray900: Color(0xffEEEEEE)
+            color: isBlack==true?gray900: gray300
         ),
-        child: Center(child: Text('${title}',style: isBlack==true?f16Whitew700:f16gray600w700)),
+        child: Center(child: Text('${title}',style: isBlack==true?f16Whitew700:f16gray400w700)),
       ),
     );
   }
