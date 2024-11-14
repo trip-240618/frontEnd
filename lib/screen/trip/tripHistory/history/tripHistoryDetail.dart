@@ -276,10 +276,11 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                     ],
                                   ),
                               const SizedBox(height: 4,),
-                              Wrap(
+                              const SizedBox(),
+                              hs.historyList[widget.dayIdx]['historyList'][pageIdx]['memo']==''?const SizedBox():Wrap(
                                 children: [
                                   Text(
-                                    '${hs.historyList[widget.dayIdx]['historyList'].length==0?'':hs.historyList[widget.dayIdx]['historyList'][pageIdx]['memo']}',
+                                    '${hs.historyList[widget.dayIdx]['historyList'][pageIdx]['memo']}',
                                     style: f15whitew500,
                                     maxLines: 10, // 최대 줄 수 설정
                                     overflow: TextOverflow.ellipsis, // 텍스트가 오버플로우될 경우 처리

@@ -118,11 +118,9 @@ class JPlanState extends GetxController{
           }
         }
         if (poly.isNotEmpty) {
-          mapController.future.then((value){print('val?? ${value.getZoomLevel()}');});
           polyline.add(
             Polyline(
               polylineId: PolylineId('polyline_1'),
-              // patterns: [PatternItem.dash(20), PatternItem.gap(80),],
               points: poly, // 전체 경로 좌표 리스트
               color: Color(ts.selectTripList[0]['labelColor']), // 경로 색상
               width: 8, // 경로 두께

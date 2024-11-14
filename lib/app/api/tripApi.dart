@@ -254,7 +254,7 @@ class ApiTripClient {
           data: {
             "name": "${name}",
             "thumbnail": "${thumbnail}",
-            "labelColor": '${labelColor}',
+            "labelColor": labelColor,
             "startDate": "${startDate}",
             "endDate": "${endDate}"
           }
