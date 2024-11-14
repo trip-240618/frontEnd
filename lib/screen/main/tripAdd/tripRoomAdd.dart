@@ -450,7 +450,7 @@ class _TripRoomAddScreenState extends State<TripRoomAddScreen>{
               Map<String, dynamic> createData = await ms.createRoom(
                   thumbnailUrl,
                   tripName.text,
-                  '${colorList[selectedColor]}',
+                  '0x${colorList[selectedColor].value.toRadixString(16).toUpperCase()}',
                   tripType,
                   ms.tripDate,
                   ms.tripDestination.value
