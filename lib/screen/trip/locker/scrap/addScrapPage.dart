@@ -85,12 +85,15 @@ class _AddScrapPageState extends State<AddScrapPage> {
 
   Future<void> scrapSave() async {
     var json = jsonEncode(_controller.document.toDelta().toJson());
-    print('json저장');
-    print(titleCon.text);
-    print('image?${[ss.addImgUrl.split('?')[0]]}');
+    List<dynamic> decodedJson = jsonDecode(json);
+    /// 맨뒤 링크만 있을 경우 포멧팅 에러가 있어서 \n 추가
+    if (decodedJson.isNotEmpty && decodedJson.last['insert'] == "\n") {
+      decodedJson.last['insert'] = "\n\n";
+    }
+    /// 수정된 리스트를 다시 JSON 문자열로 인코딩
+    var modifiedJson = jsonEncode(decodedJson);
     bool hasImage = isImageIncluded();
-    await ss.createScrap(titleCon.text, json, hasImage, '${colorList[selectedColor]}', hasImage?[ss.addImgUrl.split('?')[0]]:[]);
-    print(json);
+    await ss.createScrap(titleCon.text, modifiedJson, hasImage, '0x${colorList[selectedColor].value.toRadixString(16).toUpperCase()}', hasImage?[ss.addImgUrl.split('?')[0]]:[]);
   }
   @override
   Widget build(BuildContext context) {

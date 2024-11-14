@@ -41,7 +41,6 @@ class _PPlanPageState extends State<PPlanPage> {
     ps.totalDays.value = DateTime.parse(ts.selectTripList[0]['endDate']).difference(DateTime.parse(ts.selectTripList[0]['startDate'])).inDays+1;
     Future.delayed(Duration.zero,()async{
       await ps.getPPlanList(false);
-      print('ppp${ps.pPlanList}');
       isLoading = false;
       setState(() {
 
@@ -199,44 +198,39 @@ class _PPlanPageState extends State<PPlanPage> {
                       child: Padding(padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                         child: Row(
                           children: [
-                            ps.totalDays.value <=7
-                                ? const SizedBox()
-                                : Row(
-                                    children: [
-                                      ps.selectedWeekIdx.value > 1 ?
-                                      InkWell(
-                                        borderRadius: BorderRadius.circular(100),
-                                        onTap: () async{
-                                          if(ps.selectedWeekIdx.value>1){
-                                            ps.selectedWeekIdx.value --;
-                                            await ps.getPPlanList(false);
-                                          }
-                                        },
-                                        child: Container(
-                                          width: 24,
-                                          height: 24,
-                                          child: SvgPicture.asset('assets/icon/leftCaret.svg', fit: BoxFit.none,),
-                                        ),
-                                      ) : const SizedBox(width: 12),
-                                      const SizedBox(width: 4,),
-                                      Text('WEEK ${ps.pPlanList[0]['week']}', style: f14mainw600(Color(ts.selectTripList[0]['labelColor']),)),
-                                      const SizedBox(width: 4,),
-                                      ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0 ?
-                                      InkWell(
-                                        borderRadius: BorderRadius.circular(100),
-                                        onTap: () async{
-                                          if(ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0){
-                                            ps.selectedWeekIdx.value ++;
-                                            await ps.getPPlanList(false);
-                                          }
-                                        },
-                                        child: Container(
-                                          width: 24,
-                                          height: 24,
-                                          child: SvgPicture.asset('assets/icon/rightCaret.svg', fit: BoxFit.none,),
-                                        ),
-                                      ):const SizedBox(),
-                                    ],),
+                            ps.selectedWeekIdx.value > 1 ?
+                            InkWell(
+                              borderRadius: BorderRadius.circular(100),
+                              onTap: () async{
+                                if(ps.selectedWeekIdx.value>1){
+                                  ps.selectedWeekIdx.value --;
+                                  await ps.getPPlanList(false);
+                                }
+                              },
+                              child: Container(
+                                width: 12,
+                                height: 24,
+                                child: SvgPicture.asset('assets/icon/leftCaret.svg', fit: BoxFit.none,),
+                              ),
+                            ) : const SizedBox(width: 12),
+                            const SizedBox(width: 4,),
+                            Text('WEEK ${ps.pPlanList[0]['week']}', style: f14mainw600(Color(ts.selectTripList[0]['labelColor']),)),
+                            const SizedBox(width: 4,),
+                            ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0 ?
+                            InkWell(
+                              borderRadius: BorderRadius.circular(100),
+                              onTap: () async{
+                                if(ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0){
+                                  ps.selectedWeekIdx.value ++;
+                                  await ps.getPPlanList(false);
+                                }
+                              },
+                              child: Container(
+                                width: 12,
+                                height: 24,
+                                child: SvgPicture.asset('assets/icon/rightCaret.svg', fit: BoxFit.none,),
+                              ),
+                            ):const SizedBox(),
                             Spacer(),
                             InkWell(
                               borderRadius: BorderRadius.circular(100),
