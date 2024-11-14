@@ -37,8 +37,8 @@ class _SearchHistoryDetailState extends State<SearchHistoryDetail> {
   void initState() {
     selectedPageIdx = widget.pageIdx;
     pageController = PageController(initialPage: selectedPageIdx);
+    print('??? ${hs.searchList[selectedPageIdx]}');
     Future.delayed(Duration.zero,()async{
-
       hs.getDetailHistoryCommentList(ts.selectTripList[0]['id'], widget.historyId);
     });
     super.initState();
@@ -250,18 +250,72 @@ class _SearchHistoryDetailState extends State<SearchHistoryDetail> {
                           right: 0, // 화면의 왼쪽과 오른쪽에 닿도록 설정
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20,right: 20),
-                            child: Wrap(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text(
-                                  '${hs.searchList[pageIdx]['memo']}',
-                                  style: f15whitew500,
-                                  maxLines: 10, // 최대 줄 수 설정
-                                  overflow: TextOverflow.ellipsis, // 텍스트가 오버플로우될 경우 처리
+                                hs.searchList[pageIdx]['profileImage']==''
+                                    ?DefaultProfileScreen(context)
+                                    :Row(
+                                  children: [
+                                    CachedNetworkImage(
+                                      imageUrl: hs.searchList[pageIdx]['profileImage'],
+                                      width: 24,
+                                      height: 24,
+                                      imageBuilder: (context, imageProvider) => Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.fill
+                                          ),
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) => DefaultProfileScreen(context),
+                                    ),
+                                    const SizedBox(width: 8,),
+                                    Text('${hs.searchList[pageIdx]['nickname']}',style: f12whitew600,),
+                                    const SizedBox(width: 4,),
+                                    Text('${hs.searchList[pageIdx]['photoDate']}',style: f12whitew600,)
+                                  ],
+                                ),
+                                const SizedBox(height: 4,),
+                                const SizedBox(),
+                                hs.searchList[pageIdx]['memo']==''?const SizedBox():Wrap(
+                                  children: [
+                                    Text(
+                                      '${hs.searchList[pageIdx]['memo']}',
+                                      style: f15whitew500,
+                                      maxLines: 10, // 최대 줄 수 설정
+                                      overflow: TextOverflow.ellipsis, // 텍스트가 오버플로우될 경우 처리
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
                         ),
+                        // Positioned(
+                        //   bottom: 20,
+                        //   left: 0,
+                        //   right: 0, // 화면의 왼쪽과 오른쪽에 닿도록 설정
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.only(left: 20,right: 20),
+                        //     child: Column(
+                        //       children: [
+                        //         Wrap(
+                        //           children: [
+                        //             Text(
+                        //               '${hs.searchList[pageIdx]['memo']}',
+                        //               style: f15whitew500,
+                        //               maxLines: 10, // 최대 줄 수 설정
+                        //               overflow: TextOverflow.ellipsis, // 텍스트가 오버플로우될 경우 처리
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                     hs.searchList[pageIdx]['tags'][0]==null?Container(

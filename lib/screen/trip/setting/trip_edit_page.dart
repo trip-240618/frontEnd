@@ -187,7 +187,7 @@ class _TripEditPageState extends State<TripEditPage> {
             trailingTap: ()async{
               showConfirmCancelTapDialog(context, '여행방을 삭제하시겠습니까?\n삭제 후 복구는 어렵습니다', '확인',null, ()async{
                 showLoading(context);
-                ts.deleteTrip(ts.selectTripList[0]['id']);
+                await ts.deleteTrip(ts.selectTripList[0]['id']);
                 ms.selectIdx.value = 0;
                 ms.selectIdx.refresh();
                 Get.offAll(()=>MainPage());
@@ -458,16 +458,14 @@ class _TripEditPageState extends State<TripEditPage> {
             child: BottomContainer(
                 onTap: (){
                   showConfirmCancelTapDialog(context, '여행방 설정을 변경하시겠습니까?', '확인', null, ()async{
-
                     String thumbnail = pickedImage != null
                         ? (await ms.tripThumbnailUpload(pickedImage!))['preSignedUrls'][0].toString().split('?')[0]
                         : ts.selectTripList[0]['thumbnail'];
-                    print('dasd ${thumbnail}');
                     await ts.modifyTrip(
                     ts.selectTripList[0]['id'],
                     tripName.text,
                     thumbnail,
-                    '${colorList[selectedColor!]}',
+                    '0x${colorList[selectedColor!].value.toRadixString(16).toUpperCase()}',
                     ts.selectTripList[0]['startDate'],
                     ts.selectTripList[0]['endDate'],
                     );
