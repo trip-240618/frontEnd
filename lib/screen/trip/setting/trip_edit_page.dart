@@ -155,7 +155,7 @@ class _TripEditPageState extends State<TripEditPage> {
   ];
   TextEditingController tripName = TextEditingController(); /// 여행방 입력
   List colorList = [pastelBlue,mainRed,yellowColor,greenColor];
-  int? selectedColor;
+  int selectedColor = 0;
   XFile? pickedImage;
   String tripType = '';
 
@@ -406,7 +406,7 @@ class _TripEditPageState extends State<TripEditPage> {
                                 padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 16),
                                 child: Row(
                                   children: [
-                                    SvgPicture.asset('assets/icon/date.svg',fit: BoxFit.none, colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
+                                    SvgPicture.asset('assets/icon/date.svg',fit: BoxFit.none, colorFilter: ColorFilter.mode(colorList[selectedColor!],BlendMode.srcIn)),
                                     const SizedBox(width: 4),
                                     Text(
                                       '${ts.selectTripList[0]['startDate']} ~ ${ts.selectTripList[0]['endDate']}',
@@ -435,7 +435,7 @@ class _TripEditPageState extends State<TripEditPage> {
                                 padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 16),
                                 child: Row(
                                   children: [
-                                    SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(pastelBlue,BlendMode.srcIn)),
+                                    SvgPicture.asset('assets/icon/search.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(colorList[selectedColor!],BlendMode.srcIn)),
                                     const SizedBox(width: 4),
                                     Text('${ts.selectTripList[0]['country']}',style: f15gray800w500,)
                                   ],
@@ -462,15 +462,15 @@ class _TripEditPageState extends State<TripEditPage> {
                     String thumbnail = pickedImage != null
                         ? (await ms.tripThumbnailUpload(pickedImage!))['preSignedUrls'][0].toString().split('?')[0]
                         : ts.selectTripList[0]['thumbnail'];
-                    print('dasd ${thumbnail}');
                     await ts.modifyTrip(
                     ts.selectTripList[0]['id'],
                     tripName.text,
                     thumbnail,
-                    '${colorList[selectedColor!]}',
+                    '0x${colorList[selectedColor!].value.toRadixString(16).toUpperCase()}',
                     ts.selectTripList[0]['startDate'],
                     ts.selectTripList[0]['endDate'],
                     );
+                    Get.back();
                     Get.back();
                   });
                 },title: '수정 완료',isBlack: true,),

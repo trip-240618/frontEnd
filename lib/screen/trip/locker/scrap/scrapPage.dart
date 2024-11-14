@@ -29,6 +29,7 @@ class _ScrapPageState extends State<ScrapPage> {
   bool bookmarkChecked = false;
   bool isLoading = true;
 
+
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{

@@ -23,13 +23,12 @@ class ApiScrapClient{
             "title": '${title}',
             "content": '${content}',
             "hasImage": '${hasImage}',
-            "color": '${color.substring(6, color.length - 1)}',
+            "color": '${color}',
             "photoList": photoList,
           }
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data??${data}');
         if(data.length==0){
           return [];
         }
@@ -60,13 +59,12 @@ class ApiScrapClient{
             "title": '${title}',
             "content": '${content}',
             "hasImage": '${hasImage}',
-            "color": '${color.substring(6, color.length - 1)}',
+            "color": '${color}',
             "photoList": photoList,
           }
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data??${data}');
         if(data.length==0){
           return [];
         }
@@ -104,13 +102,11 @@ class ApiScrapClient{
   /// 선택한 스크랩 리스드 가져오기
   Future<List<dynamic>> getSelectScrap(int scrapId) async{
     final ts = Get.put(TripState());
-    print('scrapId??${scrapId}');
     try {
       final response = await dioClient.dio.get('/trip/${ts.selectTripList[0]['id']}/scrap/detail/${scrapId}');
       if (response.statusCode == 200) {
 
         final data = response.data;
-        print('data???${data}');
         if(data.length==0){
           return [];
         }
@@ -133,7 +129,6 @@ class ApiScrapClient{
         '/trip/${ts.selectTripList[0]['id']}/scrap/bookmark/toggle?scrapId=${scrapId}');
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('error ${response.statusCode}');
       }
@@ -146,7 +141,6 @@ class ApiScrapClient{
   /// 스크랩 북마크 목록
   Future<List<dynamic>> getScrapBookmark() async{
     final ts = Get.put(TripState());
-    print('id??${{ts.selectTripList[0]['id']}}');
     try {
       final response = await dioClient.dio.get('/trip/${ts.selectTripList[0]['id']}/scrap/bookmark/list');
       if (response.statusCode == 200) {
@@ -166,7 +160,6 @@ class ApiScrapClient{
 
   /// 스크랩 삭제
   Future<void> deleteScrap(int scrapId)async{
-    print(scrapId);
     final ts = Get.put(TripState());
     try {
       final response = await dioClient.dio.delete(
@@ -174,7 +167,6 @@ class ApiScrapClient{
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?${data}');
         if(data.length==0){
         }
       } else {

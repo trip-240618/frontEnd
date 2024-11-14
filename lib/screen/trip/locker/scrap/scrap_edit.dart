@@ -98,24 +98,23 @@ class _ScrapEditState extends State<ScrapEdit> {
 
   Future<void> editScrap() async{
     var json = jsonEncode(_controller.document.toDelta().toJson());
+    List<dynamic> decodedJson = jsonDecode(json);
+    /// 맨뒤 링크만 있을 경우 포멧팅 에러가 있어서 \n 추가
+    if (decodedJson.isNotEmpty && decodedJson.last['insert'] == "\n") {
+      decodedJson.last['insert'] = "\n\n";
+    }
+    /// 수정된 리스트를 다시 JSON 문자열로 인코딩
+    var modifiedJson = jsonEncode(decodedJson);
     bool hasImage = isImageIncluded();
-    print(ss.selectScrapList.value);
-    print('hasImage${hasImage}');
     /// 기존 이미지가 있는데 이미지를 지웠을경우에 별도 삭제처리 해줘야함
     /// has 이미지가 있을때 포토리스트 값은 여기서 addurl할지, 기존 select값 보낼때 처리
-    if(hasImage){
-
-    }
     await ss.modifyScrap(
         ss.selectScrapList[0]['id'],
         titleCon.text,
-        json,
+        modifiedJson,
         hasImage,
-        '${colorList[selectedColor]}',
-        hasImage?ss.addImgUrl.isEmpty?[ss.selectScrapList[0]['imageDtos'][0]['imageUrl']]:[ss.addImgUrl.split('?')[0]]:[]).then((_) async {
-        await ss.getScrapList();Get.back();
-    });
-
+        '0x${colorList[selectedColor].value.toRadixString(16).toUpperCase()}',
+        hasImage?ss.addImgUrl.isEmpty?ss.selectScrapList[0]['imageDtos']:[{'id':0,'imageUrl':ss.addImgUrl.split('?')[0]}]:[]);
   }
   bool isImageIncluded(){
     List<dynamic> jsonData = _controller.document.toDelta().toJson();
@@ -123,15 +122,6 @@ class _ScrapEditState extends State<ScrapEdit> {
     return hasImage;
   }
 
-  Future<void> scrapSave() async {
-    var json = jsonEncode(_controller.document.toDelta().toJson());
-    print('json저장');
-    print(titleCon.text);
-    print('image?${[ss.addImgUrl.split('?')[0]]}');
-    bool hasImage = isImageIncluded();
-    await ss.createScrap(titleCon.text, json, hasImage, '${colorList[selectedColor]}', hasImage?[ss.addImgUrl.split('?')[0]]:[]);
-    print(json);
-  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -149,7 +139,6 @@ class _ScrapEditState extends State<ScrapEdit> {
           Get.back();},
           svgPicture: SvgPicture.asset( 'assets/icon/save.svg',fit: BoxFit.none,),
             trailingTap: () async {
-              print('ssssss');
               await editScrap().then((_) async {
                  await ss.getScrapList();
                  Get.back();
@@ -212,7 +201,7 @@ class _ScrapEditState extends State<ScrapEdit> {
 
                           ),
                         ),
-                        us.userList[0]['uuid']==ss.scrapList[0]['writerUuid'] ?Row(
+                        Row(
                           children: [
                             GestureDetector(
                               onTap: () async {
@@ -271,9 +260,7 @@ class _ScrapEditState extends State<ScrapEdit> {
                                   }
                                   pickedImage = await ss.getSingleImage(ImageSource.gallery,context,pickedImage);
                                   await ss.scrapFileUpload(pickedImage!);
-
                                   _onPressedHandler(context);
-
                                 }
                               },
                               child: SvgPicture.asset('assets/icon/normalImage.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
@@ -282,13 +269,12 @@ class _ScrapEditState extends State<ScrapEdit> {
                             Text('${_controller.document.length}', style: f11Gray800w600,),
                             Text('/1000', style: f11Gray400w600,),
                           ],
-                        ):const SizedBox(),
+                        ),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 20,),
-                us.userList[0]['uuid']==ss.scrapList[0]['writerUuid'] ?
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -340,9 +326,13 @@ class _ScrapEditState extends State<ScrapEdit> {
                         },
                       ),
                     ),
+                    SizedBox(height:
+                    MediaQuery.of(context).viewInsets.bottom > 100
+                        ? MediaQuery.of(context).viewInsets.bottom - 40
+                        : 0
+                    ),
                   ],
-                ):const SizedBox(),
-
+                )
               ],
             ),
           ),

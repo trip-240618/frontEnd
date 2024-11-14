@@ -16,6 +16,8 @@ import '../../../../../component/dialog/daySelect.dart';
 import '../../../../../controller/jPlanState.dart';
 import '../../../../../util/color.dart';
 import '../../../../../util/font.dart';
+import '../../../../component/dialog/dialog.dart';
+import '../../../../component/textForm/textform.dart';
 class EditPlanPage extends StatefulWidget {
   const EditPlanPage({super.key});
 
@@ -28,15 +30,12 @@ class _EditPlanPageState extends State<EditPlanPage> {
   final ts = Get.put(TripState());
   final js = Get.put(JPlanState());
   Set<Marker> markers = {};
-  DateFormat dateFormatter = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR');
-  DateFormat timeFormatter = DateFormat('a hh:mm', 'ko_KR');
-  DateTime now = DateTime.now();
   TextEditingController planTitleCon = TextEditingController();
   TextEditingController memoCon = TextEditingController();
   bool isLoading = true;
+  FocusNode focusNode = FocusNode();
   @override
   void initState() {
-    print('선택된 일정 목록 ${js.selectJplan}');
     js.addSelectedDateTime.value = DateTime(
       DateTime.now().year,
       DateTime.now().month,
@@ -46,7 +45,6 @@ class _EditPlanPageState extends State<EditPlanPage> {
       int.parse(js.selectJplan['startTime'].split(':')[2]), // Second
     );
     js.editDate.value = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.parse('${js.selectedDate.value}'));
-    print('?? ${js.selectJplan['place']!=null}');
     if(js.selectJplan['place']!=null&&js.selectJplan['place']!=''){
       Map data = {
         "formattedAddress": "",
@@ -84,7 +82,6 @@ class _EditPlanPageState extends State<EditPlanPage> {
 
   @override
   void dispose() {
-    print('dasd');
     js.searchLocation.clear();
     super.dispose();
   }
@@ -234,7 +231,6 @@ class _EditPlanPageState extends State<EditPlanPage> {
                         markerId: MarkerId('${js.searchLocation[0]['displayName']['text']}'),
                         position: LatLng(double.parse('${js.searchLocation[0]['location']['latitude']}'), double.parse('${js.searchLocation[0]['location']['longitude']}')),
                         onTap: (){
-                          //navigateTo(latitude,longitude, '고기극장');
                         },
                         icon: customIcon!,
                       )
@@ -266,27 +262,16 @@ class _EditPlanPageState extends State<EditPlanPage> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: TextFormField(
-                            onChanged: (con){
+                          child: TextFormFieldComponent(
+                            controller: planTitleCon,
+                            hintText: '여행 일정을 작성해 주세요',
+                            inputFormatters: [LengthLimitingTextInputFormatter(20)],
+                            scrollPadding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).viewInsets.bottom + 40),
+                            onChanged: (v){
                               setState(() {});
                             },
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              hintText: '여행 일정을 작성해 주세요',
-                              hintStyle: f15gray400w500,
-                            ),
-                            controller: planTitleCon,
-                            inputFormatters: <TextInputFormatter>[
-                              LengthLimitingTextInputFormatter(20),
-                            ],
-                          ),
+                          )
                         ),
                         const SizedBox(width: 10,),
                         Text('${planTitleCon.text.length}', style: planTitleCon.text.length>0?f11Gray800w600:f11Gray400w600,),
@@ -312,29 +297,19 @@ class _EditPlanPageState extends State<EditPlanPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: TextFormField(
-                            onChanged: (con){
-                              setState(() {});
-                            },
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              hintText: '일정 간편 메모를 이용해 보세요',
-                              hintStyle: f15gray400w500,
-                            ),
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
+                          child: TextMemoFormFields(
                             controller: memoCon,
-                            inputFormatters: <TextInputFormatter>[
+                            focusNode: focusNode,
+                            hintText: '일정 간편 메모를 이용해 보세요',
+                            inputFormatters: [
                               LengthLimitingTextInputFormatter(100),
                             ],
-                          ),
+                            onChanged: (v){
+                              setState(() {});
+                            },
+                            scrollPadding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).viewInsets.bottom + 130),
+                          )
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -348,7 +323,11 @@ class _EditPlanPageState extends State<EditPlanPage> {
                   ),
                 ),
                 const SizedBox(height: 75,),
-                SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+                SizedBox(height:
+                MediaQuery.of(context).viewInsets.bottom > 130
+                    ? MediaQuery.of(context).viewInsets.bottom - 100
+                    : 0
+                ),
               ],
             ),
           ),
@@ -357,30 +336,29 @@ class _EditPlanPageState extends State<EditPlanPage> {
           color: Colors.white,
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
-            child: BlackBottomContainer(onTap: (){
-
-              DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']); /// 시작 날짜
-              DateTime selectedDate = DateTime.parse(js.editDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
-              int index = selectedDate.difference(startDate).inDays;
-              Map data = {
-                "planId": js.selectJplan['planId'],
-                "dayAfterStart": index+1,
-                "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
-                "title": planTitleCon.text,
-                "memo": memoCon.text,
-                "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
-                "latitude":js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['latitude']:'',
-                "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
-                "locker": false
-              };
-              js.editJPlanList(data);
-              // if(js.selectJplan['dayAfterStart']-1!=index){
-              //   js.jPlanList.forEach((dayData) {
-              //     dayData['planList'].removeWhere((plan) => plan['planId'] == js.selectJplan['planId']);
-              //   });
-              //   js.jPlanList.refresh();
-              // }
-              Get.back();
+            child: BlackBottomContainer(onTap: ()async{
+              if(planTitleCon.text.trim().isEmpty){
+                showOnlyConfirmTapDialog(context, '여행 일정을 작성해주세요', (){
+                  Get.back();
+                });
+              }else{
+                DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']); /// 시작 날짜
+                DateTime selectedDate = DateTime.parse(js.editDate.value.split(' ')[0].replaceAll('.', '-'));/// 선택된 날짜
+                int index = selectedDate.difference(startDate).inDays;
+                Map data = {
+                  "planId": js.selectJplan['planId'],
+                  "dayAfterStart": index+1,
+                  "startTime": "${DateFormat('HH:mm', 'ko_KR').format(DateTime.parse('${js.addSelectedDateTime}'))}",
+                  "title": planTitleCon.text,
+                  "memo": memoCon.text,
+                  "place": js.searchLocation.isNotEmpty?js.searchLocation[0]['displayName']['text']:'',
+                  "latitude":js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['latitude']:'',
+                  "longitude": js.searchLocation.isNotEmpty?js.searchLocation[0]['location']['longitude']:'',
+                  "locker": false
+                };
+                await js.editJPlanList(data);
+                Get.back();
+              }
             }, title: '수정'),
           ),
         ),
