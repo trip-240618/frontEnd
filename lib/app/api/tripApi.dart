@@ -90,7 +90,7 @@ class ApiTripClient {
             "endDate": '${endDate.toString().split(' ')[0]}',
             "country": '${country}',
             "thumbnail": '${thumnail}',
-            "labelColor": '${labelColor.substring(6, labelColor.length - 1)}',
+            "labelColor": labelColor,
           }
       );
       if (response.statusCode == 200) {

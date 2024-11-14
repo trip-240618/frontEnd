@@ -29,7 +29,7 @@ Future<BitmapDescriptor> getCustomIcon(int index, String imageUrl) async {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: blueColor,
+                  color: gray900,
                   shape: BoxShape.circle,
                 ),
                 child: Padding(

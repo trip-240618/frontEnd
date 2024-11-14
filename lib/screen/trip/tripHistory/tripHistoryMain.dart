@@ -11,7 +11,6 @@ import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripHistory/search/search_history_page.dart';
 import 'package:tripStory/util/color.dart';
-
 import '../../../component/empty/emptyScreen.dart';
 import '../../../util/bottomSheetHeader.dart';
 import '../../../util/font.dart';
@@ -41,9 +40,6 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   void initState() {
     Future.delayed(Duration.zero,()async{
       await hs.getHistoryList(ts.selectTripList[0]['id']);
-      // if(hs.albums.isEmpty){
-      //   hs.getAlbums();
-      // }
       maps.addMarkersFromHistory();
       setState(() {});
     });
