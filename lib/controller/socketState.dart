@@ -202,6 +202,7 @@ class SocketState extends GetxController{
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
         if(us.userList[0]['uuid']!=result['data']['editorUuid']){
           js.jPlanList[0]['waitList'] = result['data'];
+          js.jPlanList.refresh();
         }
     }
   }
@@ -209,6 +210,7 @@ class SocketState extends GetxController{
   Future<void> endStartEditorJplan(Map<String, dynamic> result) async {
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
       js.jPlanList[0]['waitList'] = [];
+      js.jPlanList.refresh();
     }
   }
   /// 누가 편집중 일 때
@@ -324,6 +326,7 @@ class SocketState extends GetxController{
     if (ps.pPlanList[0]['week'] == result['data']['week']) {
       if(us.userList[0]['uuid']!=result['data']['uuid']){
         ps.pPlanList[0]['waitList'] = result['data'];
+        ps.pPlanList.refresh();
       }
     }
   }
@@ -331,6 +334,7 @@ class SocketState extends GetxController{
   Future<void> endStartEditorPPlan(Map<String, dynamic> result) async {
     if (ps.pPlanList[0]['week'] == result['data']['week']) {
       ps.pPlanList[0]['waitList'] = [];
+      ps.pPlanList.refresh();
     }
   }
 

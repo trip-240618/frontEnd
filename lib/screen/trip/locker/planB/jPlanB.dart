@@ -316,7 +316,6 @@ class _JPlanBState extends State<JPlanB> {
                 },
               ),
             ),),
-
           ],
         ),
       ),

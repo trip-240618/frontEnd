@@ -36,10 +36,6 @@ class _LockerTapPageState extends State<LockerTapPage> with TickerProviderStateM
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TabBar(
               onTap: (int i) {
-                if(i==1){
-                }else if(i==0){
-
-                }
                 FocusScope.of(context).unfocus();
                 setState(() {});
               },
