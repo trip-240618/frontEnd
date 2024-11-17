@@ -123,8 +123,8 @@ class _ScrapPageState extends State<ScrapPage> {
                   return GestureDetector(
                     onTap: () async {
                       await ss.getSelectScrapList(ss.scrapList[index]['id']);
-                      us.userList[0]['uuid']==ss.scrapList[0]['writerUuid'] ?
-                      Get.to(()=>ScrapEdit()):
+                      // us.userList[0]['uuid']==ss.scrapList[0]['writerUuid'] ?
+                      // Get.to(()=>ScrapEdit()):
                       Get.to(()=>ScrapView());
                     },
                     child: Container(

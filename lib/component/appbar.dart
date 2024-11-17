@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:tripStory/util/color.dart';
 
 import '../util/font.dart';
@@ -86,6 +90,50 @@ class TrailingBackAppBar extends StatelessWidget implements PreferredSizeWidget 
                 height: 30,
                 child: svgPicture),
           ),
+        )
+      ],
+      backgroundColor: color,
+    );
+  }
+  @override
+  Size get preferredSize => Size.fromHeight(44);
+}
+
+
+/// 팝업메뉴 앱바
+class popupBackAppBar extends StatelessWidget implements PreferredSizeWidget{
+  final String text;
+  final PopupMenuButton popupMenuButton;
+  final Color? color;
+  popupBackAppBar({
+    required this.text,
+    required this.popupMenuButton, this.color=gray50,});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      /// 앱바 leading 기본 패딩 16, 20으로 맞추기 위해 왼쪽 패딩 추가
+      leading:  GestureDetector(
+        onTap: (){Get.back();},
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Container(
+            color: Colors.transparent,
+            child: SvgPicture.asset(
+              'assets/icon/leftArrow.svg',
+              fit: BoxFit.none,
+            ),
+          ),
+        ),
+      ),
+      title: Text(
+        text,
+        style: f18Gray900w600,
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: popupMenuButton
         )
       ],
       backgroundColor: color,

@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/controller/reportState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
+import 'package:tripStory/screen/trip/tripHistory/history/full_screen_image.dart';
 import '../../../../component/empty/emptyScreen.dart';
 import '../../../../controller/historyState.dart';
 import '../../../../util/color.dart';
@@ -27,6 +29,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
   final hs = Get.put(HistoryState());
   final ts = Get.put(TripState());
   final us = Get.put(UserState());
+  final rs = Get.put(ReportState());
   TextEditingController textCon = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool isEditing = false;
@@ -80,14 +83,19 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                 children: [
                   Stack(
                     children: [
-                      CachedNetworkImage(
-                        imageUrl: '${hs.historyList[widget.dayIdx]['historyList'].length==0||hs.historyList[widget.dayIdx]['historyList'][pageIdx].length==0?'':hs.historyList[widget.dayIdx]['historyList'][pageIdx]['thumbnail']}',
-                        width: Get.width,
-                        height: Get.height*0.6,
-                        fit: BoxFit.cover,
-                        // placeholder: (context, url) =>
-                        // const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => DefaultProfileScreen(context),
+                      GestureDetector(
+                        onTap: (){
+                          Get.to(()=>FullScreenImage(imageUrl: '${hs.historyList[widget.dayIdx]['historyList'].length==0||hs.historyList[widget.dayIdx]['historyList'][pageIdx].length==0?'':hs.historyList[widget.dayIdx]['historyList'][pageIdx]['thumbnail']}'));
+                        },
+                        child: CachedNetworkImage(
+                          imageUrl: '${hs.historyList[widget.dayIdx]['historyList'].length==0||hs.historyList[widget.dayIdx]['historyList'][pageIdx].length==0?'':hs.historyList[widget.dayIdx]['historyList'][pageIdx]['thumbnail']}',
+                          width: Get.width,
+                          height: Get.height*0.6,
+                          fit: BoxFit.cover,
+                          // placeholder: (context, url) =>
+                          // const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => DefaultProfileScreen(context),
+                        ),
                       ),
                       Positioned(
                           top: 30,
@@ -121,7 +129,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4),
                               ),
-                              offset: const Offset(-20, 40),
+                              offset: const Offset(-10, 40),
                               padding: EdgeInsets.zero,
                               menuPadding: EdgeInsets.zero,
                               shadowColor: Colors.black.withOpacity(0.4),
@@ -158,7 +166,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                             const SizedBox(width: 10),
                                             Text(
                                               '사진 공유',
-                                              style: f14Gray800w500,
+                                              style: f12Gray800w600,
                                             ),
                                           ],
                                         ),
@@ -183,20 +191,83 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         SvgPicture.asset(
-                                          'assets/icon/pencil.svg',
+                                          'assets/icon/normalTrashCan.svg',
                                           colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
                                         ),
                                         const SizedBox(width: 10),
                                         Text(
-                                          '삭제하기',
-                                          style: f14Gray800w500,
+                                          '사진 삭제',
+                                          style: f12Gray800w600,
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
+                              ],
+                            ),
+                          ))
+                          : Positioned(
+                          top: 30,
+                          right: 20,
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: (){
+                              print('dasd');
+                            },
+                            child: PopupMenuButton<int>(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              offset: const Offset(-10, 40),
+                              padding: EdgeInsets.zero,
+                              menuPadding: EdgeInsets.zero,
+                              shadowColor: Colors.black.withOpacity(0.4),
+                              icon: Container(
+                                height: 30,
+                                width: 30,
+                                alignment: Alignment.centerRight,
+                                child: SvgPicture.asset(
+                                  'assets/icon/dot.svg',
+                                  height: 30,
+                                  width: 20,
+                                  fit: BoxFit.cover,
+                                  colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                                ),
+                              ),
+                              color: gray50,
+                              itemBuilder: (context) => <PopupMenuEntry<int>>[
+                                PopupMenuItem<int>(
+                                  padding: EdgeInsets.zero,
+                                  value: 1,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 12, right: 12),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/icon/link.svg',
+                                              colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                              fit: BoxFit.none,
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Text(
+                                              '사진 공유',
+                                              style: f12Gray800w600,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 const PopupMenuDivider(height: 1),
                                 PopupMenuItem<int>(
+                                  onTap: () async {
+                                    await rs.addReport('history', null,hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['id']);
+                                  },
                                   padding: EdgeInsets.zero,
                                   value: 3,
                                   child: Padding(
@@ -211,8 +282,8 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                         ),
                                         const SizedBox(width: 10),
                                         Text(
-                                          '신고하기',
-                                          style: f14Gray800w500,
+                                          '사진 신고',
+                                          style: f12Gray800w600,
                                         ),
                                       ],
                                     ),
@@ -220,8 +291,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                 ),
                               ],
                             ),
-                          ))
-                          : const SizedBox(),
+                          )),
                       Positioned(
                         bottom: 0,
                         left: 0,
@@ -381,7 +451,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                         imageUrl: '${hs.historyComment[index]['profileImage']}',
                                         width: 24,
                                         height: 24,
-                                        fit: BoxFit.fill,
+                                        fit: BoxFit.cover,
                                         // placeholder: (context, url) =>
                                         // const CircularProgressIndicator(),
                                         errorWidget: (context, url, error) => DefaultProfileScreen(context),
@@ -389,7 +459,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                     ),
                                     const SizedBox(width: 8,),
                                     Text('${hs.historyComment[index]['nickname']}'),
-                                    const SizedBox(width: 6,),
+                                    const SizedBox(width: 4,),
                                     Text('${hs.timeFormat(hs.historyComment[index]['createDate'])}',style: f11gray400w500,),
                                     Spacer(),
                                     us.userList[0]['uuid']==hs.historyComment[index]['writerUuid']
@@ -397,16 +467,15 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(4),
                                         ),
+                                        padding: EdgeInsets.zero,
                                         offset: const Offset(-20, 40),
                                         shadowColor: Colors.black.withOpacity(0.4),
                                         icon: Container(
-                                          height: 15,
-                                          width: 20,
+                                          height: 24,
+                                          width: 24,
                                           alignment: Alignment.centerRight,
                                           child: SvgPicture.asset(
                                             'assets/icon/dot.svg',
-                                            height: 15,
-                                            width: 20,
                                           ),
                                         ),
                                         color: gray50,
@@ -426,8 +495,8 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                                         Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
                                                         const SizedBox(width: 10,),
                                                         Text(
-                                                          '수정하기',
-                                                          style: f14Gray800w500,
+                                                          '댓글 수정',
+                                                          style: f12Gray800w600,
                                                         ),
                                                       ],
                                                     ),
@@ -462,11 +531,11 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                                       mainAxisAlignment: MainAxisAlignment.start,
                                                       crossAxisAlignment: CrossAxisAlignment.center,
                                                       children: [
-                                                        Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+                                                        Center(child: SvgPicture.asset('assets/icon/normalTrashCan.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
                                                         const SizedBox(width: 10,),
                                                         Text(
-                                                          '삭제하기',
-                                                          style: f14Gray800w500,
+                                                          '댓글 삭제',
+                                                          style: f12Gray800w600,
                                                         ),
                                                       ],
                                                     ),
@@ -476,12 +545,57 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                             ),
                                           )
                                         ])
-                                        :const SizedBox(),
+                                        :PopupMenuButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        offset: const Offset(-20, 40),
+                                        shadowColor: Colors.black.withOpacity(0.4),
+                                        splashRadius: 10,
+                                        icon: Container(
+                                          height: 24,
+                                          width: 24,
+                                          alignment: Alignment.centerRight,
+                                          child: SvgPicture.asset(
+                                            'assets/icon/dot.svg',
+                                          ),
+                                        ),
+                                        color: gray50,
+                                        itemBuilder: (context) => [
+                                          PopupMenuItem(
+                                            onTap: () async {
+                                              await rs.addReport('reply',hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['id'], hs.historyComment[index]['id']);
+                                            },
+                                            padding: EdgeInsets.zero,
+                                            value: 1,
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                                                  child: Container(
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                      children: [
+                                                        Center(child: SvgPicture.asset('assets/icon/siren.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+                                                        const SizedBox(width: 10,),
+                                                        Text(
+                                                          '댓글 신고',
+                                                          style: f12Gray800w600,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ]),
                                   ],
                                 ),
-                                const SizedBox(height: 4),
+                                //const SizedBox(height: 4),
                                 Text('${hs.historyComment[index]['content']}'),
-                                const SizedBox(height: 22),
+                                //const SizedBox(height: 16),
                               ],
                             );
                           },
