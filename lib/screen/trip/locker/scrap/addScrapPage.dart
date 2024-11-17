@@ -24,6 +24,7 @@ class _AddScrapPageState extends State<AddScrapPage> {
   final ss = Get.put(ScrapState());
   TextEditingController titleCon = TextEditingController();
   QuillController _controller = QuillController.basic();
+  final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
   List colorList = [whiteColor,pastelBlue,mainRed,yellowColor,greenColor];
   int selectedColor = 0;
@@ -35,13 +36,24 @@ class _AddScrapPageState extends State<AddScrapPage> {
   void initState() {
     fToast = FToast();
     fToast.init(context);
+    _focusNode.addListener(() {
+      setState(() {});
+      if (_focusNode.hasFocus) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent * 2,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+          );
+        });
+      }
+    });
     _controller.addListener((){
       setState(() {
       });
     });
     super.initState();
   }
-
 
   Future<void> _onPressedHandler(BuildContext context) async {
     var options = const QuillToolbarImageButtonOptions();
@@ -119,6 +131,7 @@ class _AddScrapPageState extends State<AddScrapPage> {
             });
             },),
         body: SingleChildScrollView(
+          controller: _scrollController,
           child: Padding(
             padding: const EdgeInsets.only(top:15, left: 20, right: 20, bottom: 35),
             child: Column(
@@ -305,8 +318,10 @@ class _AddScrapPageState extends State<AddScrapPage> {
                       ),
                     ),
                     SizedBox(height:
-                    MediaQuery.of(context).viewInsets.bottom > 200
-                        ? MediaQuery.of(context).viewInsets.bottom - 100
+                    _focusNode.hasFocus
+                        ? isImageIncluded()
+                        ? MediaQuery.of(context).viewInsets.bottom + 100
+                        : MediaQuery.of(context).viewInsets.bottom + 25
                         : 0
                     ),
                   ],
