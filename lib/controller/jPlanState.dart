@@ -79,14 +79,9 @@ class JPlanState extends GetxController{
     addSelectedDateTime.value = DateTime.now();
     addDate.value = '';
     editDate.value = '';
-    planBSelectedIdx.value = 0;
-    planBSelectedDate.value = '';
-    planBJList.clear();
-    selectPlanBJList.clear();
-    planBAddSelectedDateTime.value = DateTime.now();
-    planBAddDate.value = '';
     mapController = Completer<GoogleMapController>();
   }
+
   /// 스크롤을 특정 인덱스로 이동시키는 함수
   void scrollToList(int index) {
     double itemHeight = 54;

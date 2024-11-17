@@ -295,7 +295,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                   js.jPlanList[0]['checked'] = false;
                                   js.jPlanList.refresh();
                                   js.editPlanJList.value = jsonDecode(jsonEncode(js.jPlanList));
-
                                 }
                                 /// 편집 권한 해제 했을 때
                                 else{

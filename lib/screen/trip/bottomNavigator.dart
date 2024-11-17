@@ -48,7 +48,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
         appBar: _currentIndex==2?null:AppBar(
           automaticallyImplyLeading: false,
           titleSpacing: 0,
-          toolbarHeight: 79,
+          toolbarHeight: 80,
           title: Obx(()=>Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -155,14 +155,24 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                         Get.to(()=>MemberList());
                       },
                       child: Container(
-                        decoration: BoxDecoration(
-                          color: gray200,
-                          borderRadius: BorderRadius.circular(100),
-                          border: js.jPlanList.isNotEmpty &&
-                              (js.jPlanList[0]['waitList'] ?? []).isEmpty &&
-                              js.jPlanList[0]['checked'] == false
-                              ? Border.all(color: gray900,width: 1.5)
-                              : null
+                        decoration: ts.selectTripList[0]['type']=='J'
+                            ?BoxDecoration(
+                            color: gray200,
+                            borderRadius: BorderRadius.circular(100),
+                            border: (js.jPlanList.isNotEmpty &&
+                                ((js.jPlanList[0]['waitList'] ?? []).isNotEmpty ||
+                                    js.jPlanList[0]['checked'] == false))
+                                ? Border.all(color: gray900, width: 1.5)
+                                : null
+                        )
+                            :BoxDecoration(
+                              color: gray200,
+                              borderRadius: BorderRadius.circular(100),
+                              border: (ps.pPlanList.isNotEmpty &&
+                                  ((ps.pPlanList[0]['waitList'] ?? []).isNotEmpty ||
+                                      ps.pPlanList[0]['checked'] == false))
+                                  ? Border.all(color: gray900, width: 1.5)
+                                  : null
                         ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),

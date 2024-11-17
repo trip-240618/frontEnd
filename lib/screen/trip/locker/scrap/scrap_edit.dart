@@ -46,9 +46,20 @@ class _ScrapEditState extends State<ScrapEdit> {
      await ss.scrapImgUrlReset();
     });
     jsonD();
+    _focusNode.addListener(() {
+      setState(() {});
+      if (_focusNode.hasFocus) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent * 2,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+          );
+        });
+      }
+    });
     _controller.addListener((){
-      setState(() {
-      });
+      setState(() {});
     });
     super.initState();
   }
@@ -61,7 +72,16 @@ class _ScrapEditState extends State<ScrapEdit> {
       selection: TextSelection.collapsed(offset: 0),
     );
   }
+  void das(){
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent*2, // 스크롤 가능한 최대 위치로 이동
+      duration: Duration.zero,   // 애니메이션 지속 시간
+      curve: Curves.easeInOut,                  // 애니메이션 커브
+    );
+    setState(() {
 
+    });
+  }
 
   Future<void> _onPressedHandler(BuildContext context) async {
     var options = const QuillToolbarImageButtonOptions();
@@ -84,11 +104,7 @@ class _ScrapEditState extends State<ScrapEdit> {
       }
       return;
     }
-
-
     final imageUrl = ss.addImgUrl.split('?')[0];
-
-
     if (imageUrl.isNotEmpty) {
       await options.imageButtonConfigurations
           .onImageInsertCallback(imageUrl, _controller);
@@ -146,6 +162,7 @@ class _ScrapEditState extends State<ScrapEdit> {
                });
             }),
         body: SingleChildScrollView(
+          controller: _scrollController,
           child: Padding(
             padding: const EdgeInsets.only(top:15, left: 20, right: 20, bottom: 35),
             child: Column(
@@ -184,7 +201,7 @@ class _ScrapEditState extends State<ScrapEdit> {
                             child: QuillEditor.basic(
                               focusNode: _focusNode,
                               controller: _controller,
-                              scrollController: _scrollController,
+                              // scrollController: _scrollController,
                               configurations: QuillEditorConfigurations(
                                 scrollable: true,
                                 showCursor: true,
@@ -333,8 +350,11 @@ class _ScrapEditState extends State<ScrapEdit> {
                       ),
                     ),
                     SizedBox(height:
-                    MediaQuery.of(context).viewInsets.bottom > 200
-                        ? MediaQuery.of(context).viewInsets.bottom - 100
+                      // _focusNode.hasFocus
+                      //   ? MediaQuery.of(context).viewInsets.bottom + 100
+                      //   : 0
+                      _focusNode.hasFocus
+                        ? MediaQuery.of(context).viewInsets.bottom + 50
                         : 0
                     ),
                   ],
