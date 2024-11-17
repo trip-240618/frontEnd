@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/locker/planB/add_planB_j.dart';
@@ -35,7 +36,7 @@ class _JPlanBState extends State<JPlanB> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isLoading?LoadingWidget():Scaffold(
       backgroundColor: gray50,
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),

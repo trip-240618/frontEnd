@@ -80,7 +80,7 @@ class _ScrapViewState extends State<ScrapView> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Center(child: SvgPicture.asset('assets/icon/siren.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+                      Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
                       const SizedBox(width: 10,),
                       Text(
                         '수정하기',
@@ -117,7 +117,7 @@ class _ScrapViewState extends State<ScrapView> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
+                      Center(child: SvgPicture.asset('assets/icon/siren.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
                       const SizedBox(width: 10,),
                       Text(
                         '신고하기',
