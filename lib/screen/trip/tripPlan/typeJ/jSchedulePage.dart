@@ -47,6 +47,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
     fToast = FToast();
     fToast?.init(context);
     Future.delayed(Duration.zero,()async{
+      await js.getCurrentLocation(context);
       js.selectedIdx.value = 0;
       js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: 0))}';
       await js.getJPlanList(1, false);

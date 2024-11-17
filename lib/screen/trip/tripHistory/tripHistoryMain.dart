@@ -12,6 +12,7 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripHistory/search/search_history_page.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../component/empty/emptyScreen.dart';
+import '../../../controller/mainState.dart';
 import '../../../util/bottomSheetHeader.dart';
 import '../../../util/font.dart';
 import 'package:intl/intl.dart' as intl;
@@ -26,6 +27,7 @@ class TripHistoryMainPage extends StatefulWidget {
 }
 
 class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
+  final ms = Get.put(MainState());
   final hs = Get.put(HistoryState());
   final ts = Get.put(TripState());
   final maps = Get.put(MapState());
@@ -39,6 +41,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
+      await maps.getCurrentLocation(context);
       await hs.getHistoryList(ts.selectTripList[0]['id']);
       maps.addMarkersFromHistory();
       setState(() {});
@@ -124,7 +127,22 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                   Row(
                                     children: [
                                       GestureDetector(
-                                          onTap: (){
+                                          behavior: HitTestBehavior.opaque,
+                                          onTap: ()async{
+                                            switch (ms.selectIdx.value) {
+                                              case 0:
+                                                await ms.getComingTrip();
+                                                break;
+                                              case 1:
+                                                await ms.getLastTrip();
+                                                break;
+                                              case 2:
+                                                await ms.getBookMarkTrip();
+                                                break;
+                                              default:
+                                                break;
+                                            }
+                                            Get.back();
                                           },
                                           child: SvgPicture.asset('assets/icon/home.svg', color: gray900,)),
                                       Spacer(),

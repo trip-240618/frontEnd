@@ -305,8 +305,8 @@ class _AddScrapPageState extends State<AddScrapPage> {
                       ),
                     ),
                     SizedBox(height:
-                    MediaQuery.of(context).viewInsets.bottom > 100
-                        ? MediaQuery.of(context).viewInsets.bottom - 40
+                    MediaQuery.of(context).viewInsets.bottom > 200
+                        ? MediaQuery.of(context).viewInsets.bottom - 100
                         : 0
                     ),
                   ],
