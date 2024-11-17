@@ -166,7 +166,12 @@ class _ScrapViewState extends State<ScrapView> {
                             magnifierConfiguration: TextMagnifierConfiguration(
                                 shouldDisplayHandlesInMagnifier: true
                             ),
-                            embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(),
+                            embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(
+                                imageEmbedConfigurations: QuillEditorImageEmbedConfigurations(
+                                    onImageClicked: (node){
+                                    }
+                                )
+                            ),
                           ),
                         ),
                       ),

@@ -72,16 +72,6 @@ class _ScrapEditState extends State<ScrapEdit> {
       selection: TextSelection.collapsed(offset: 0),
     );
   }
-  void das(){
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent*2, // 스크롤 가능한 최대 위치로 이동
-      duration: Duration.zero,   // 애니메이션 지속 시간
-      curve: Curves.easeInOut,                  // 애니메이션 커브
-    );
-    setState(() {
-
-    });
-  }
 
   Future<void> _onPressedHandler(BuildContext context) async {
     var options = const QuillToolbarImageButtonOptions();
@@ -350,12 +340,11 @@ class _ScrapEditState extends State<ScrapEdit> {
                       ),
                     ),
                     SizedBox(height:
-                      // _focusNode.hasFocus
-                      //   ? MediaQuery.of(context).viewInsets.bottom + 100
-                      //   : 0
                       _focusNode.hasFocus
-                        ? MediaQuery.of(context).viewInsets.bottom + 50
-                        : 0
+                        ? isImageIncluded()
+                          ? MediaQuery.of(context).viewInsets.bottom + 100
+                          : MediaQuery.of(context).viewInsets.bottom + 25
+                          : 0
                     ),
                   ],
                 )
