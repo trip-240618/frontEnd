@@ -88,13 +88,10 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                               setState(() {
                                 isLoading = false;
                               });
-                              print(placeList);
-                              setState(() {});
                             },
                         )
                       ),
                     ],
-
                   ),
                 ),
               ),
@@ -121,7 +118,6 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                           children: [
                             GestureDetector(
                               onTap: () async {
-                                print('${placeList[index]['placeId']}');
                                 await apiTripClient.detailLocationGet(placeList[index]['placeId']);
                                 Get.back();
                               },

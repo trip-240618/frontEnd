@@ -215,11 +215,6 @@ class _AddPlanPageState extends State<AddPlanPage> {
                     gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
                       Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
                     },
-                    onMapCreated: (GoogleMapController controller) {
-                      if (!js.mapController.isCompleted) {
-                        js.mapController.complete(controller);
-                      }
-                    },
                   ),
                 )),
                 const SizedBox(height: 20,),
@@ -336,10 +331,11 @@ class _AddPlanPageState extends State<AddPlanPage> {
                       target: LatLng(js.searchLocation[0]['location']['latitude'], js.searchLocation[0]['location']['longitude']),
                       zoom: 12);
                   final GoogleMapController controller = await js.mapController.future;
+                  js.latitude.value = js.searchLocation[0]['location']['latitude'];
+                  js.longitude.value = js.searchLocation[0]['location']['longitude'];
                   Timer(Duration(milliseconds: 500), () async {
                     await controller.moveCamera(CameraUpdate.newCameraPosition(cameraPosition));
                   });
-                  //await controller.moveCamera(CameraUpdate.newCameraPosition(cameraPosition));
                 }
                 js.addJPlanList(data);
                 Get.back();

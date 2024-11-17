@@ -100,7 +100,7 @@ class SocketState extends GetxController{
   }
   /// 순서 변경 클릭
   Future<void> addEditor(int day) async {
-    print('순서 변경 요청');
+
     try {
       stompClient!.send(
         destination: '/api/trip/${ts.selectTripList[0]['id']}/plan/j/${day}/edit/register',
@@ -122,56 +122,24 @@ class SocketState extends GetxController{
             break;
           }
         }
-        if (result['data']['latitude'] != null && result['data']['longitude'] != null) {
-          print('result${result}');
-          List<LatLng> poly = [];
-          final icon = await getCustomIcon2(insertIndex + 1);
-          final marker = Marker(
-            markerId: MarkerId(DateTime.now().toString()), // 고유 마커 ID
-            position: LatLng(result['data']['latitude'], result['data']['longitude']),
-            icon: icon,
-            onTap: () {},
-          );
-          js.markers.add(marker);
-          js.jPlanList[0]['planList'].forEach((plan) {
-            if(plan['latitude']!=null|| plan['longitude']!=null)
-            poly.add(LatLng(plan['latitude'], plan['longitude']));
-          });
-          poly.add(LatLng(result['data']['latitude'], result['data']['longitude']));
-          if (poly.isNotEmpty) {
-            js.polyline.add(
-              Polyline(
-                polylineId: PolylineId('polyline_1'),
-                points: poly, // 전체 경로 좌표 리스트
-                color: Color(ts.selectTripList[0]['labelColor']), // 경로 색상
-                width: 8, // 경로 두께
-              ),
-            );
-          }
-        };
         js.jPlanList[0]['planList'].insert(insertIndex, result['data']);
+        if (result['data']['latitude'] != null && result['data']['longitude'] != null) {
+          js.jplnaMarkerSet();
+        };
         js.jPlanList.refresh();
       } else {
         js.jPlanList.add({
           'dayAfterStart': result['data']['dayAfterStart'],
           'planList': [result['data']]
         });
-        final icon = await getCustomIcon2(1);
         if (result['data']['latitude'] != null && result['data']['longitude'] != null) {
-          final marker = Marker(
-            markerId: MarkerId(DateTime.now().toString()), // 고유 마커 ID
-            position: LatLng(result['data']['latitude'], result['data']['longitude']),
-            icon: icon,
-            onTap: () {},
-          );
-          js.markers.add(marker);
-        }
+          js.jplnaMarkerSet();
+        };
       }
     }
   }
   /// 삭제 할 때 함수
   Future<void> deleteJplan(Map<String, dynamic> result) async {
-    print('result?? ${result}');
     /// 현재 위치한 시간이랑 같을 때
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['dayAfterStart']) {
       js.jPlanList[0]['planList'].removeWhere((item) => item['planId'] == result['data']['planId']);
@@ -253,12 +221,11 @@ class SocketState extends GetxController{
   }
   /// p형 소켓
   void pOnConnect(StompFrame frame) {
-    print('Connected to P type WebSocket');
     stompClient!.subscribe(
       destination: '/topic/api/trip/p/${ts.selectTripList[0]['id']}',
       callback: (frame) {
         Map<String, dynamic> result = json.decode(frame.body!);
-        print('??P 소켓으로 받은 데이터  ${result}');
+
         switch (result['command']) {
           case 'create':
             createPPlan(result);
@@ -309,10 +276,10 @@ class SocketState extends GetxController{
     /// 현재 선택한 week와 같을때
     if(ps.selectedWeekIdx.value == week){
       final planIndex = ps.pPlanList[0]['dayList'][dayIndex]['planList'].indexWhere((plan) => plan['planId'] == targetPlanId);
-      print('planIndex????${planIndex}');
+
       ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['content'] = result['data']['content'];
       ps.pPlanList.refresh();
-      print('p edit');
+
     }
   }
   /// p형 체크박스 클릭 함수
@@ -342,7 +309,7 @@ class SocketState extends GetxController{
 
   /// p형 순서 변경 요청
  Future<void> pAddEditor(int week) async {
-    print('p형 순서 변경 요청');
+
     try {
       stompClient!.send(
         destination: '/api/trip/${ts.selectTripList[0]['id']}/plan/p/${week}/edit/register',
@@ -368,7 +335,7 @@ class SocketState extends GetxController{
   }
 
   Future<void> movePPlan(Map<String, dynamic> result) async {
-    print('move??${result}');
+
     if(ps.selectedWeekIdx.value == result['data']['week']){
       List allData = [result['data']];
       List filterData = [];
@@ -395,7 +362,7 @@ class SocketState extends GetxController{
         day['checked'] = true;
       });
       ps.pPlanList.value = allData;
-      print('완성된 pPlanList?${ps.pPlanList}');
+
       ps.pPlanList.refresh();
     }
   }

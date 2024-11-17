@@ -18,7 +18,7 @@ class ApiTripClient {
       final response = await dioClient.dio.get('/trip/list/incoming');
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
+
         if(data.length==0){
           return [];
         }
@@ -38,7 +38,7 @@ class ApiTripClient {
       if (response.statusCode == 200) {
         final data = response.data;
 
-        print('data?? ${data}');
+
         if(data.length==0){
           return [];
         }
@@ -95,7 +95,6 @@ class ApiTripClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data??? ${data}');
         return data;
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
@@ -124,8 +123,7 @@ class ApiTripClient {
         throw Exception('Failed to autoLocation: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error during autoLocation: $e');
-      rethrow;
+      return [];
     }
   }
 

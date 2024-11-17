@@ -15,9 +15,8 @@ class JPlanState extends GetxController{
   final apijplanClient = ApiJPlanClient(DioClient());
   final ts = Get.put(TripState());
 
-  final Completer<GoogleMapController> mapController = Completer<GoogleMapController>();
-
-
+  Completer<GoogleMapController> mapController = Completer<GoogleMapController>();
+  ScrollController listController = ScrollController();
   final latitude = 0.0.obs;
   final longitude = 0.0.obs;
   final isGoogleExpanded = false.obs;
@@ -54,20 +53,17 @@ class JPlanState extends GetxController{
 
   @override
   void onInit() {
-    // latitude.value = 36.35475233611197;
-    // longitude.value = 127.34170655688537;
+    listController = ScrollController();
     super.onInit();
   }
 
   @override
   void dispose() {
-    isGoogleExpanded.value = true;
-    super.dispose();
+    listController.dispose();
   }
+
   /// 초기화 함수
   Future<void> resetState() async{
-    latitude.value = 36.35475233611197;
-    longitude.value = 127.34170655688537;
     isGoogleExpanded.value = false;
     isSorting.value = false;
     flightList.clear();
@@ -89,34 +85,46 @@ class JPlanState extends GetxController{
     selectPlanBJList.clear();
     planBAddSelectedDateTime.value = DateTime.now();
     planBAddDate.value = '';
+    mapController = Completer<GoogleMapController>();
+  }
+  /// 스크롤을 특정 인덱스로 이동시키는 함수
+  void scrollToList(int index) {
+    double itemHeight = 54;
+    double scrollOffset = itemHeight * index;
+    listController.animateTo(
+      scrollOffset,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
   /// 지도에 마커 표시
   Future<void> jplnaMarkerSet() async {
     markers.clear();
     polyline.clear();
-    List<LatLng> poly = []; // 전체 경로를 담을 리스트
-
+    List<LatLng> poly = [];
+    int countNum = 1;
     if (jPlanList.isNotEmpty) {
       try {
         for (int i = 0; i < jPlanList[0]['planList'].length; i++) {
           if (jPlanList[0]['planList'][i]['latitude'] != null &&
               jPlanList[0]['planList'][i]['longitude'] != null) {
-            // Custom icon 생성
-            final icon = await getCustomIcon2(i + 1);
-
             // 마커 생성
             final marker = Marker(
               markerId: MarkerId(DateTime.now().toString()), // 고유 마커 ID
-              position: LatLng(jPlanList[0]['planList'][i]['latitude'],
-                  jPlanList[0]['planList'][i]['longitude']),
-              icon: icon,
-              onTap: () {
-                // 마커 클릭 시 실행할 코드
+              position: LatLng(jPlanList[0]['planList'][i]['latitude'], jPlanList[0]['planList'][i]['longitude']),
+              icon: await getCustomIcon2(countNum),
+              onTap: () async{
+                CameraPosition cameraPosition= CameraPosition(
+                    target: LatLng(jPlanList[0]['planList'][i]['latitude'], jPlanList[0]['planList'][i]['longitude']),
+                    zoom: 14);
+                final GoogleMapController controller = await mapController.future;
+                await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+                scrollToList(i);
               },
             );
+            countNum ++;
             markers.add(marker);
-            poly.add(LatLng(jPlanList[0]['planList'][i]['latitude'],
-                jPlanList[0]['planList'][i]['longitude']));
+            poly.add(LatLng(jPlanList[0]['planList'][i]['latitude'], jPlanList[0]['planList'][i]['longitude']));
           }
         }
         if (poly.isNotEmpty) {
@@ -125,12 +133,12 @@ class JPlanState extends GetxController{
               polylineId: PolylineId('polyline_1'),
               points: poly, // 전체 경로 좌표 리스트
               color: Color(ts.selectTripList[0]['labelColor']), // 경로 색상
-              width: 8, // 경로 두께
+              width: 5, // 경로 두께
             ),
           );
         }
       } catch (e) {
-        print('에러 발생: $e'); // 에러가 발생하면 출력
+        // print('에러 발생: $e'); // 에러가 발생하면 출력
       }
     }
   }
@@ -141,7 +149,6 @@ class JPlanState extends GetxController{
        day['waitList']=[];
        day['checked'] = true;
     });
-    print('?? ${jPlanList}');
     jPlanList.refresh();
   }
 
@@ -180,7 +187,6 @@ class JPlanState extends GetxController{
       if (b['dayAfterStart'] == -1) return -1; // b가 null이면 a가 앞에 옴
       return a['dayAfterStart'].compareTo(b['dayAfterStart']); // 오름차순 정렬
     });
-    print('planBJList?? ${planBJList}');
     planBJList.refresh();
   }
 
@@ -243,8 +249,6 @@ class JPlanState extends GetxController{
       );
       latitude.value = position.latitude;
       longitude.value = position.longitude;
-    } else {
-
     }
   }
 }

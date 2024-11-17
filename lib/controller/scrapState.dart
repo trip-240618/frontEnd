@@ -46,7 +46,6 @@ class ScrapState extends GetxController{
       if(hasImage){
         /// 기존 이미지를 그대로 유지 text만 변경할 경우, photoList 값은 screen 에서 조절
         /// 기존 이미지를 새로운 이미지 대체할 경우
-        print('photoList?${photoList}');
         if(selectScrapList[0]['hasImage']&&addImgUrl.isNotEmpty) await removeImage(selectScrapList[0]['imageDtos'][0]['imageUrl']);
       }else{
         if(addImgUrl.isNotEmpty)await removeImage(addImgUrl.value);
@@ -75,7 +74,6 @@ class ScrapState extends GetxController{
   Future<void> getScrapBookmark()async{
     scrapList.clear();
     scrapList.value = await apiScrapClient.getScrapBookmark();
-    print('bookmark scrapList?${scrapList.value}');
   }
 
   /// 스크랩 북마크 클릭 요청
@@ -110,7 +108,6 @@ class ScrapState extends GetxController{
   Future<Map<String, dynamic>> scrapFileUpload(XFile xfile)async{
     Map<String, dynamic> data = await apiFileClient.scrapUrlGet(1);
     addImgUrl.value = data['preSignedUrls'][0];
-    print('imgUrl???${addImgUrl.value}');
     for(int i=0;i<data['preSignedUrls'].length;i++){
       final fileBytes = await xfile.readAsBytes();
       final response = await http.put(Uri.parse(data['preSignedUrls'][i]),
@@ -120,7 +117,6 @@ class ScrapState extends GetxController{
         body: fileBytes,
       );
     }
-    print('data??${data}');
     return data;
   }
 

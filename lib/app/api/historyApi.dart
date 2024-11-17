@@ -78,7 +78,7 @@ class ApiHistoryClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
+
         if(data.length==0){
           return {};
         }
@@ -100,7 +100,7 @@ class ApiHistoryClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('댓글 목록 ${data}');
+
         if(data.length==0){
           return [];
         }
@@ -142,7 +142,7 @@ class ApiHistoryClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('댓글 쓸때 데이터?? ${data}');
+
         if(data.length==0){
           return [];
         }
@@ -167,7 +167,7 @@ class ApiHistoryClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('수정됨 ${data}');
+
         if(data.length==0){
           return [];
         }
@@ -189,7 +189,7 @@ class ApiHistoryClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('댓글 삭제됨${data}');
+
         if(data.length==0){
           return [];
         }
@@ -214,7 +214,7 @@ class ApiHistoryClient {
         if(data.length==0){
           return [];
         }
-        print('tag??? ${data}');
+
         return data;
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
@@ -233,7 +233,7 @@ class ApiHistoryClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
+
         if(data.length==0){
           return [];
         }
@@ -255,7 +255,7 @@ class ApiHistoryClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('검색한 리스트?  ${data}');
+
         if(data.length==0){
           return [];
         }

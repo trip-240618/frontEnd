@@ -74,12 +74,10 @@ Future<void> requestUserInfo() async {
   }
 
   if (scopes.length > 0) {
-    print('사용자에게 추가 동의 받아야 하는 항목이 있습니다');
 
     OAuthToken token;
     try {
       token = await UserApi.instance.loginWithNewScopes(scopes);
-      print('현재 사용자가 동의한 동의항목: ${token.scopes}');
     } catch (error) {
       print('추가 동의 요청 실패 $error');
       return;
@@ -101,7 +99,6 @@ Future<void> sendTokenToServer(String accessToken,String refreshToken) async {
   final us = Get.put(UserState());
   final dioClient = DioClient();
   String? tokens = await FirebaseMessaging.instance.getToken();
-  print('?? tokesn??${tokens}');
   /// 백엔드 서버로 토큰 전송
   var response = await http.get(
     Uri.parse('https://trip-story.site/user/oauth2/callback/kakao?kakaoToken=${accessToken}&fcmToken=$tokens')
@@ -136,12 +133,10 @@ Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
   String? tokens;
   if(Platform.isIOS){
     tokens = await FirebaseMessaging.instance.getAPNSToken();
-    print('tokens?? ${tokens}');
   }else{
     tokens = await FirebaseMessaging.instance.getToken();
   }
   final url = 'https://trip-story.site/user/oauth2/login/google';
-  print('tk?? ${tokens}');
   final userData = {
     "displayName": user.displayName,
     "email": user.email,
@@ -177,7 +172,6 @@ Future<void> appleLogin() async {
     AppleIDAuthorizationScopes.fullName,
     // 사용할 사용자 정보 범위
   ]).then((AuthorizationCredentialAppleID user)async{
-    print('user??? ${user}');
     final url = 'https://trip-story.site/user/oauth2/login/apple';
     final body = {
       "email":'${user.email}',

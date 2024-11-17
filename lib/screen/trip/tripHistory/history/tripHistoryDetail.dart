@@ -42,7 +42,6 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
     Future.delayed(Duration.zero,()async{
       hs.getDetailHistoryCommentList(ts.selectTripList[0]['id'], hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['id']);
     });
-    print('댓글 리스트?? ${hs.historyComment}');
     super.initState();
   }
   @override
@@ -115,7 +114,6 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: (){
-                              print('dasd');
                             },
                             child: PopupMenuButton<int>(
                               shape: RoundedRectangleBorder(
