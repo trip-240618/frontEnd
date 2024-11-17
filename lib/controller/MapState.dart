@@ -1,8 +1,13 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
+import '../component/dialog/dialog.dart';
 import '../util/custom_marker.dart';
 
 class MapState extends GetxController{
@@ -15,9 +20,9 @@ class MapState extends GetxController{
   RxSet<Marker> selectedMarkers = <Marker>{}.obs; /// 선택한 기록 마커
 
   @override
-  void onInit() {
-    latitude.value = 36.35475233611197;
-    longitude.value = 127.34170655688537;
+  void onInit() async{
+    // latitude.value = 36.35475233611197;
+    // longitude.value = 127.34170655688537;
     super.onInit();
   }
 
@@ -68,4 +73,16 @@ class MapState extends GetxController{
   /// 마커 지우기
   void removeMarker(MarkerId markerId) {}
 
+  /// 현재 내 위치로 카메라 lat,lng 초기화
+  Future<void> getCurrentLocation(BuildContext context) async{
+    bool requestCheck = await requestLocationPermission(context);
+    if(requestCheck){
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high
+      );
+      latitude.value = position.latitude;
+      longitude.value = position.longitude;
+    }else{
+    }
+  }
 }

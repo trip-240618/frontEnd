@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -334,7 +336,10 @@ class _AddPlanPageState extends State<AddPlanPage> {
                       target: LatLng(js.searchLocation[0]['location']['latitude'], js.searchLocation[0]['location']['longitude']),
                       zoom: 12);
                   final GoogleMapController controller = await js.mapController.future;
-                  await controller.moveCamera(CameraUpdate.newCameraPosition(cameraPosition));
+                  Timer(Duration(milliseconds: 500), () async {
+                    await controller.moveCamera(CameraUpdate.newCameraPosition(cameraPosition));
+                  });
+                  //await controller.moveCamera(CameraUpdate.newCameraPosition(cameraPosition));
                 }
                 js.addJPlanList(data);
                 Get.back();

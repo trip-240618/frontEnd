@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/app/api/jPlanApi.dart';
 import 'package:tripStory/controller/tripState.dart';
 import '../app/api/flightApi.dart';
 import '../app/config/dio_client.dart';
+import '../app/permission/permission.dart';
 import '../util/custom_marker.dart';
 import 'dart:math';
 class JPlanState extends GetxController{
@@ -52,8 +54,8 @@ class JPlanState extends GetxController{
 
   @override
   void onInit() {
-    latitude.value = 36.35475233611197;
-    longitude.value = 127.34170655688537;
+    // latitude.value = 36.35475233611197;
+    // longitude.value = 127.34170655688537;
     super.onInit();
   }
 
@@ -231,5 +233,18 @@ class JPlanState extends GetxController{
       flightList[0]['arrivalAirport'],
       flightList[0]['arrivalAirport_kr'],
     );
+  }
+  /// 현재 내 위치로 카메라 lat,lng 초기화
+  Future<void> getCurrentLocation(BuildContext context) async {
+    bool requestCheck = await requestLocationPermission(context);
+    if (requestCheck) {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high
+      );
+      latitude.value = position.latitude;
+      longitude.value = position.longitude;
+    } else {
+
+    }
   }
 }

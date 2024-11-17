@@ -29,6 +29,7 @@ class _ScrapEditState extends State<ScrapEdit> {
   final ss = Get.put(ScrapState());
   TextEditingController titleCon = TextEditingController();
   QuillController _controller = QuillController.basic();
+  final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
   List colorList = [whiteColor,pastelBlue,mainRed,yellowColor,greenColor];
   int selectedColor = 0;
@@ -178,27 +179,32 @@ class _ScrapEditState extends State<ScrapEdit> {
                       children: [
                         Container(
                           height: Get.height*0.6,
-                          child: QuillEditor.basic(
-                            focusNode: _focusNode,
-                            controller: _controller,
-                            configurations: QuillEditorConfigurations(
-                              showCursor: true,
-                              customStyles: DefaultStyles(),
-                              magnifierConfiguration: TextMagnifierConfiguration(
-                                  shouldDisplayHandlesInMagnifier: true
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: QuillEditor.basic(
+                              focusNode: _focusNode,
+                              controller: _controller,
+                              scrollController: _scrollController,
+                              configurations: QuillEditorConfigurations(
+                                scrollable: true,
+                                showCursor: true,
+                                customStyles: DefaultStyles(),
+                                magnifierConfiguration: TextMagnifierConfiguration(
+                                    shouldDisplayHandlesInMagnifier: true
+                                ),
+                                embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(
+                                    imageEmbedConfigurations: QuillEditorImageEmbedConfigurations(
+                                        onImageClicked: (node){
+                                          _controller.updateSelection(
+                                            TextSelection(baseOffset: node.length, extentOffset: node.length),
+                                            ChangeSource.local,
+                                          );
+                                        }
+                                    )
+                                ),
                               ),
-                              embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(
-                                  imageEmbedConfigurations: QuillEditorImageEmbedConfigurations(
-                                      onImageClicked: (node){
-                                        _controller.updateSelection(
-                                          TextSelection(baseOffset: node.length, extentOffset: node.length),
-                                          ChangeSource.local,
-                                        );
-                                      }
-                                  )
-                              ),
+          
                             ),
-
                           ),
                         ),
                         Row(
@@ -251,7 +257,7 @@ class _ScrapEditState extends State<ScrapEdit> {
                                     gravity: ToastGravity.TOP,
                                     toastDuration: Duration(seconds: 2),
                                   );
-
+          
                                 }else{
                                   /// content에는 삭제했지만 추가한 이미지url가 있는 경우 기존 url 삭제
                                   if(ss.addImgUrl.isNotEmpty){
@@ -327,8 +333,8 @@ class _ScrapEditState extends State<ScrapEdit> {
                       ),
                     ),
                     SizedBox(height:
-                    MediaQuery.of(context).viewInsets.bottom > 100
-                        ? MediaQuery.of(context).viewInsets.bottom - 40
+                    MediaQuery.of(context).viewInsets.bottom > 200
+                        ? MediaQuery.of(context).viewInsets.bottom - 100
                         : 0
                     ),
                   ],
