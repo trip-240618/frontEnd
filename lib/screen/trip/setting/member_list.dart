@@ -39,7 +39,6 @@ class _MemberListState extends State<MemberList> {
           memberList.add(tripMember);
         }
       }
-      print('?? ${memberList}');
       setState(() {});
     });
 

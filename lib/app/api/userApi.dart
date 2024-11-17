@@ -20,7 +20,7 @@ class ApiUserClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('타입? ${data['type']}');
+
         if(data['type']!='register'){
           us.userList.value = [data];
         }else{

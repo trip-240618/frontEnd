@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/component/dialog/loading.dart';
-import 'package:tripStory/component/textForm/termsForm.dart';
 import 'package:tripStory/component/toast/toast.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
@@ -35,24 +34,20 @@ class _JSchedulePageState extends State<JSchedulePage> {
   final ts = Get.put(TripState());
   final us = Get.put(UserState());
   final socket = Get.put(SocketState());
-
   ScrollController scrollController = ScrollController();
-  bool isSorting = false;
-  bool testCheck = false;
-  bool testCheck2 = true;
   FToast? fToast;
-  Future _mapFuture = Future.delayed(Duration(milliseconds: 700), () => true);
+  Future _mapFuture = Future.delayed(Duration(milliseconds: 100), () => true);
   @override
   void initState() {
     fToast = FToast();
     fToast?.init(context);
     Future.delayed(Duration.zero,()async{
       await js.getCurrentLocation(context);
-      js.selectedIdx.value = 0;
       js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: 0))}';
       await js.getJPlanList(1, false);
-      js.jplnaMarkerSet();
       await js.getFlightList();
+      js.jplnaMarkerSet();
+      setState(() {});
     });
     super.initState();
   }
@@ -70,6 +65,9 @@ class _JSchedulePageState extends State<JSchedulePage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      js.resetState();
+    });
     scrollController.dispose();
     super.dispose();
   }
@@ -128,6 +126,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                         ],
                       )
                           :  GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                             onTap:()async{
                               if(js.jPlanList.isNotEmpty &&
                                   (js.jPlanList[0]['waitList'] ?? []).isEmpty &&
@@ -184,34 +183,16 @@ class _JSchedulePageState extends State<JSchedulePage> {
             ),
           ),
           const SizedBox(height: 15),
-        Container(
+          js.latitude.value==0.0?const SizedBox():Container(
           width: Get.width,
           height: js.isGoogleExpanded.value ? 300 : 154,
-          child: us.mapFirstLoading.value
-              ? GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: LatLng(js.latitude.value, js.longitude.value),
-              zoom: 14.4746,
-            ),
-            polylines: js.polyline,
-            markers: js.markers.toSet(),
-            myLocationButtonEnabled: false,
-            onMapCreated: (GoogleMapController controller) {
-              if (!js.mapController.isCompleted) {
-                js.mapController.complete(controller);
-              }
-            },
-          )
-              : FutureBuilder(
+          child: FutureBuilder(
                 future: _mapFuture,
                 builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               }
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                us.mapFirstLoading.value = true;
-              });
-              return GoogleMap(
+              return Obx(()=>GoogleMap(
                 initialCameraPosition: CameraPosition(
                   target: LatLng(js.latitude.value, js.longitude.value),
                   zoom: 14.4746,
@@ -219,12 +200,13 @@ class _JSchedulePageState extends State<JSchedulePage> {
                 polylines: Set<Polyline>.of(js.polyline),
                 markers: js.markers.toSet(),
                 myLocationButtonEnabled: false,
+                myLocationEnabled: true,
                 onMapCreated: (GoogleMapController controller) {
                   if (!js.mapController.isCompleted) {
                     js.mapController.complete(controller);
                   }
                 },
-              );
+              ));
             },
           ),
         ),
@@ -291,7 +273,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
                             : GestureDetector(
                             onTap: () async {
                               FlightDialog(context, (){});
-                              //Get.to(()=>FlightView());
                             },
                             child: SvgPicture.asset('assets/icon/plane.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),)),
                         const SizedBox(width: 8,),
@@ -312,12 +293,15 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                   js.isSorting.value = true;
                                   showCustomToast(context, fToast!, '변경하고 싶은 일정을 선택해 주세요',true);
                                   js.jPlanList[0]['checked'] = false;
+                                  js.jPlanList.refresh();
                                   js.editPlanJList.value = jsonDecode(jsonEncode(js.jPlanList));
+
                                 }
                                 /// 편집 권한 해제 했을 때
                                 else{
                                   showLoading(context);
                                   js.jPlanList[0]['checked'] = true;
+                                  js.jPlanList.refresh();
                                   Map<String,dynamic> transMap = {
                                     "dayAfterStart": js.editPlanJList[0]['dayAfterStart'],
                                     'orderDtos': (js.editPlanJList[0]['planList'] as List).map((item){
@@ -341,7 +325,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                             width: 30,
                             height: 30,
                             child: SvgPicture.asset('assets/icon/swap.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(
-                              js.isSorting.value?gray600:gray400, // 원하는 색상으로 변경
+                              js.isSorting.value?gray600:gray400,
                               BlendMode.srcIn, // 색상을 적용하는 블렌드 모드
                             ),),
                           ),
@@ -596,6 +580,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
                             },
                          )
                           : ListView.builder(
+                            controller: js.listController,
                             physics: const ClampingScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: js.jPlanList[0]['planList'].length,
@@ -776,7 +761,6 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                                             ),
                                                           ],
                                                         )
-                                                        // SvgPicture.asset('assets/icon/columnEllipsis.svg')
                                                       ],
                                                     ),
                                                   ),

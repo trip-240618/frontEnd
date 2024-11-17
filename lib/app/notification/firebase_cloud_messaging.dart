@@ -75,7 +75,6 @@ class FCM {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       if(!us.notiDuplicationList.contains(message.messageId)){
         us.notiDuplicationList.add(message.messageId);
-        print('프론트 데이터?? ${message.data}');
         flutterLocalNotificationsPlugin.show(
             message.hashCode,
             message.notification?.title,
@@ -98,7 +97,6 @@ class FCM {
     FirebaseMessaging.onMessageOpenedApp.listen(
           (message) async {
           Uri uri = Uri.parse(message.data['destination']);
-          print('uri?? ${uri}');
           String? tripId = uri.queryParameters['tripId'];
           String? historyId = uri.queryParameters['historyId'];
           if(historyId!=null){

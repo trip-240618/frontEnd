@@ -53,35 +53,29 @@ Future<bool> requestPhotoMangerPermission(BuildContext context) async {
 
 Future<bool> requestLocationPermission(BuildContext context) async{
   PermissionStatus status = await Permission.location.status;
-
   if (status.isPermanentlyDenied) {
-    // 사용자가 권한을 '영구적으로 거부'한 경우
+    /// 사용자가 권한을 '영구적으로 거부'한 경우
     showOnlyConfirmTapDialog(context, '위치 권한을 설정해주시기 바랍니다', () {
       openAppSettings();
       Get.back();
     });
     return false;
   } else if (status.isLimited) {
-    // 권한이 제한된 경우
+    /// 권한이 제한된 경우
     showOnlyConfirmTapDialog(context, '위치 권한을 설정해주시기 바랍니다', () {
       openAppSettings();
       Get.back();
     });
     return false;
   }
-
-  // 권한이 부여되지 않은 경우 요청
   if (!status.isGranted) {
     status = await Permission.location.request();
     if (status.isGranted) {
-      // 권한이 부여된 경우
       return true;
     } else {
-      // 권한이 거부된 경우
       return false;
     }
   } else {
-    // 권한이 이미 부여된 경우
     return true;
   }
 

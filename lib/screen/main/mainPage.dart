@@ -60,7 +60,6 @@ class _MainPageState extends State<MainPage> {
         await FCM().setNotifications();
       }
       setState(() {});
-      print('처음 가져오기 ${ms.tripList.length}');
     });
     super.initState();
   }
@@ -439,7 +438,6 @@ Future<int> getLongestNicknameLength(List<dynamic> tripMemberDtoList) async{
     }
   }
   return longestLength;
-  print('가장 긴 닉네임의 길이: $longestLength');
 }
 
 // double calculateTextWidth(String text, TextStyle style) {

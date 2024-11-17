@@ -187,10 +187,10 @@ class HistoryState extends GetxController{
         body: fileBytes,
       );
       await precacheImage(CachedNetworkImageProvider('${Uri.parse(data['preSignedUrls'][i].toString().split('?')[0])}'), context);
-      print('업로드 완료 ${i}');
+
     }
     uploadingLoading.value = true;
-    print('업로드 완전히 완료');
+
     return data;
   }
 
@@ -293,7 +293,7 @@ class HistoryState extends GetxController{
     historyTotalLen.value = historyList.fold(0, (sum, item) {
       return sum + (item['historyList'] as List).length;
     });
-    print('완료');
+
     selectAlbumList.clear();
     addTagList.clear();
     selectAlbumIndex.value = 0;

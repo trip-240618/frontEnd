@@ -33,7 +33,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   @override
   void onInit() {
     tabController = TabController(length: 2, vsync: this);
-    print('처음시작');
+
     super.onInit();
   }
 
@@ -104,7 +104,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   Future<void> saveDestination ()async{
     if(tabController.index==0){
       if(selectedCity==''){
-        print('나라를 선택안했습니다');
+
       }else{
         tripDestination.value = selectedCity.value;
         Get.back();
@@ -159,7 +159,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
       minHeight: 400,
     );
     Map<String, dynamic> data = await apiFileClient.fileUrlGet(1);
-    print('넣을데이터?? ${data['preSignedUrls'][0]}');
+
     for (int i = 0; i < 1; i++) {
       final response = await http.put(
         Uri.parse(data['preSignedUrls'][i]),
@@ -187,7 +187,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
               'value2':inviteCode
             });
         await ShareClient.instance.launchKakaoTalk(uri);
-        print('카카오톡 공유 완료');
+
       } catch (error) {
         print('카카오톡 공유 실패 $error');
       }

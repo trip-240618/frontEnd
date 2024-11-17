@@ -21,6 +21,7 @@ class UserState extends GetxController{
   final apiFileClient = ApiFileClient(DioClient());
   final apiNotificationClient = ApiNotificationClient(DioClient());
   final apiCountryClient = ApiCountryClient(DioClient());
+
   /// 로그아웃
   Future<void> logOut()async{
     apiUserClient.logOut();
@@ -40,7 +41,6 @@ class UserState extends GetxController{
   /// 다녀온 여행지 가져오기
   Future<void> getCountrySetting()async{
     countryList.value = await apiCountryClient.getCountry();
-    print('?? ${countryList.value}');
   }
   /// 알림 셋팅 가져오기
   Future<void> getNotificationSetting()async{

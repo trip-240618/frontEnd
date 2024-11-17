@@ -91,7 +91,6 @@ class _TripCalendarState extends State<TripCalendar> {
         child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
           child: BlackBottomContainer(onTap: (){
-            print('?? ${_rangeDatePickerValueWithDefaultValue}');
             if(widget.edit==true){
               if(_rangeDatePickerValueWithDefaultValue.length>1){
                 ts.selectTripList[0]['startDate'] = _rangeDatePickerValueWithDefaultValue[0].toString().split(' ')[0];

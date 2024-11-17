@@ -33,7 +33,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     Future.delayed(Duration.zero,(){
-      print('us?? ${us.userList[0]}');
       _nickCon.text = us.userList[0]['name'];
       _memoCon.text = us.userList[0]['memo'];
       setState(() {});

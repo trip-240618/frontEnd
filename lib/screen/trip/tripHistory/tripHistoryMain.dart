@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/component/dialog/daySelect.dart';
+import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/controller/MapState.dart';
 import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
@@ -34,16 +35,16 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   DraggableScrollableController scrollableController = DraggableScrollableController();
   ScrollController listScrollCon = ScrollController();
   final GlobalKey<ScaffoldState> modelScaffoldKey = GlobalKey<ScaffoldState>();
-  double currentHeight = 0.4;
   bool isInitialCameraMove = true;
   bool isListScroller = false;
-
+  bool isLoading = true;
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
       await maps.getCurrentLocation(context);
       await hs.getHistoryList(ts.selectTripList[0]['id']);
       maps.addMarkersFromHistory();
+      isLoading = false;
       setState(() {});
     });
     super.initState();
@@ -53,7 +54,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: modelScaffoldKey,
-      body: Obx(()=>Stack(
+      body: isLoading?Center(child: LoadingWidget()):Obx(()=>Stack(
         children: [
           GoogleMap(
             initialCameraPosition: CameraPosition(
@@ -90,7 +91,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                 ),
               ),
               child: DraggableScrollableSheet(
-                initialChildSize: currentHeight,
+                initialChildSize: 0.4,
                 minChildSize: 0.1,
                 maxChildSize: 0.75,
                 expand: false,
