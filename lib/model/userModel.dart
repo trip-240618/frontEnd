@@ -5,23 +5,23 @@ part 'userModel.g.dart';
 @JsonSerializable()
 class UserModel {
   final String uuid;
-  final String name;
-  final String nickName;
-  final String memo;
-  final String thumbnail;
-  final String profileImg;
-  final String type;
-  final String createDate;
+  final String? name;
+  final String? nickName;
+  final String? memo;
+  final String? thumbnail;
+  final String? profileImg;
+  final String? type;
+  final String? createDate;
 
   UserModel({
     required this.uuid,
-    required this.name,
-    required this.nickName,
-    required this.memo,
-    required this.thumbnail,
-    required this.profileImg,
-    required this.type,
-    required this.createDate,
+     this.name,
+     this.nickName,
+     this.memo,
+     this.thumbnail,
+     this.profileImg,
+     this.type,
+     this.createDate,
   });
 
   /// Connect the generated `fromJson` method to the `UserModel` class.

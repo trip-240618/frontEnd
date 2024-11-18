@@ -181,7 +181,7 @@ class _MyPageState extends State<MyPage> {
                                   child: Obx(()=>ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
                                     child: us.userList.isEmpty||us.userList[0].profileImg == ''?SettingDefaultProfileScreen(context):CachedNetworkImage(
-                                      imageUrl: us.userList[0].profileImg,
+                                      imageUrl: us.userList[0].profileImg!,
                                       width: 80,
                                       height: 80,
                                       fit: BoxFit.fill,
