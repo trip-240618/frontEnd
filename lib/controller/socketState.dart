@@ -200,7 +200,7 @@ class SocketState extends GetxController{
   /// 편집 권한 체크 시작
   Future<void> checkStartEditorJplan(Map<String, dynamic> result) async {
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
-        if(us.userList[0]['uuid']!=result['data']['editorUuid']){
+        if(us.userList[0].uuid!=result['data']['editorUuid']){
           js.jPlanList[0]['waitList'] = result['data'];
           js.jPlanList.refresh();
         }
@@ -216,7 +216,7 @@ class SocketState extends GetxController{
   /// 누가 편집중 일 때
   Future<void> waitEditorJplan(Map<String, dynamic> result) async {
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['day']) {
-      if(us.userList[0]['uuid']!=result['data']['editorUuid']){
+      if(us.userList[0].uuid!=result['data']['editorUuid']){
         js.jPlanList[0]['waitList'] = result['data'];
       }
     }
@@ -324,7 +324,7 @@ class SocketState extends GetxController{
   /// p형 편집 권한 체크 시작
   Future<void> checkStartEditorPPlan(Map<String, dynamic> result) async {
     if (ps.pPlanList[0]['week'] == result['data']['week']) {
-      if(us.userList[0]['uuid']!=result['data']['uuid']){
+      if(us.userList[0].uuid!=result['data']['uuid']){
         ps.pPlanList[0]['waitList'] = result['data'];
         ps.pPlanList.refresh();
       }
@@ -373,7 +373,7 @@ class SocketState extends GetxController{
   /// 누가 편집중 일 때
   Future<void> waitEditorPPlan(Map<String, dynamic> result) async {
     if (ps.pPlanList[0]['week'] == result['data']['week']) {
-      if(us.userList[0]['uuid']!=result['data']['uuid']){
+      if(us.userList[0].uuid!=result['data']['uuid']){
         ps.pPlanList[0]['waitList'] = result['data'];
       }
     }

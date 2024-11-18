@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tripStory/app/config/dio_client.dart';
 import 'package:tripStory/controller/userState.dart';
+import 'package:tripStory/model/userModel.dart';
 import '../api/userApi.dart';
 
 /// 카카오로그인
@@ -105,9 +106,10 @@ Future<void> sendTokenToServer(String accessToken,String refreshToken) async {
   );
   if (response.statusCode == 200) {
     await dioClient.loginCookies('${response.headers['set-cookie']}');
-    var decodedBody = utf8.decode(response.bodyBytes);
-    var jsonResponse = jsonDecode(decodedBody);
-    us.userList.value = [jsonResponse];
+    var decodedBody = utf8.decode(response.bodyBytes); // 응답 데이터 디코딩
+    var jsonResponse = jsonDecode(decodedBody); // JSON 디코딩
+    us.userList.value = [UserModel.fromJson(jsonResponse)];
+    // us.userList.value = [jsonResponse];
   } else {
     print('서버에 토큰 전송 실패: ${response.statusCode}');
   }
@@ -154,7 +156,7 @@ Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
     await dioClient.loginCookies('${response.headers['set-cookie']}');
     var decodedBody = utf8.decode(response.bodyBytes);
     var jsonResponse = jsonDecode(decodedBody);
-    us.userList.value = [jsonResponse];
+    us.userList.value = [UserModel.fromJson(jsonResponse)];
     print('구글 로그인했을 때 정보 ${us.userList}');
   } else {
     print('서버에 토큰 전송 실패: ${response}');
@@ -192,31 +194,10 @@ Future<void> appleLogin() async {
       await dioClient.loginCookies('${response.headers['set-cookie']}');
       var decodedBody = utf8.decode(response.bodyBytes);
       var jsonResponse = jsonDecode(decodedBody);
-      us.userList.value = [jsonResponse];
+      us.userList.value = [UserModel.fromJson(jsonResponse)];
     }
   }).onError((error, stackTrace) {
     if (error is PlatformException) return;
     print('error ? ${error}');
   });
 }
-// /// 애플 로그인 서버로 데이터
-// Future<void> appleSendData(AuthorizationCredentialAppleID user) async {
-//   final url = 'https://trip-story.site/user/oauth2/login/apple';
-//   final body = {
-//     "email":'${user.email}',
-//     "displayName": "${user.authorizationCode}",
-//     "familyName": "${user.familyName}",
-//     "givenName": "${user.givenName}",
-//     "identityToken": "${user.identityToken}",
-//     "state":"${user.state}",
-//     "userIdentifier": "${user.userIdentifier}"
-//   };
-//   final response = await httpClient.post(
-//     Uri.parse(url),
-//     headers: {'Content-Type': 'application/json'},
-//     body: jsonEncode(body),
-//   );
-//   await saveCookies('${response.headers['set-cookie']}');
-//   print('apple data ? ${response.body}');
-//   print('apple login data sent successfully');
-// }

@@ -115,7 +115,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                             ),
                           )
                       ),
-                      us.userList[0]['uuid']==hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['writerUuid']
+                      us.userList[0].uuid==hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['writerUuid']
                           ? Positioned(
                           top: 30,
                           right: 20,
@@ -460,7 +460,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                     const SizedBox(width: 4,),
                                     Text('${hs.timeFormat(hs.historyComment[index]['createDate'])}',style: f11gray400w500,),
                                     Spacer(),
-                                    us.userList[0]['uuid']==hs.historyComment[index]['writerUuid']
+                                    us.userList[0].uuid==hs.historyComment[index]['writerUuid']
                                         ?PopupMenuButton(
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(4),

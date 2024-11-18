@@ -111,7 +111,7 @@ class _SearchHistoryDetailState extends State<SearchHistoryDetail> {
                               ),
                             )
                         ),
-                        us.userList[0]['uuid']==hs.searchList[pageIdx]['writerUuid']
+                        us.userList[0].uuid==hs.searchList[pageIdx]['writerUuid']
                             ?Positioned(
                             top: 30,
                             right: 20,
@@ -417,7 +417,7 @@ class _SearchHistoryDetailState extends State<SearchHistoryDetail> {
                                       const SizedBox(width: 6,),
                                       Text('지금'),
                                       Spacer(),
-                                      us.userList[0]['uuid']==hs.historyComment[index]['writerUuid']
+                                      us.userList[0].uuid==hs.historyComment[index]['writerUuid']
                                           ?PopupMenuButton(
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(4),

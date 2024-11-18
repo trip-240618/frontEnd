@@ -33,8 +33,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     Future.delayed(Duration.zero,(){
-      _nickCon.text = us.userList[0]['name'];
-      _memoCon.text = us.userList[0]['memo'];
+      _nickCon.text = us.userList[0].nickName;
+      _memoCon.text = us.userList[0].memo;
       setState(() {});
     });
     super.initState();
@@ -68,7 +68,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     pickedImage = await ms.getSingleImage(ImageSource.gallery,context,pickedImage);
                     setState(() {});
                   },
-                  child: pickedImage==null&&(us.userList[0]['thumbnail']!=''&&us.userList[0]['thumbnail']!=null)?
+                  child: pickedImage==null&&(us.userList[0].thumbnail!=''&&us.userList[0].thumbnail!=null)?
                   Center(
                     child: Container(
                       width: 98,
@@ -77,8 +77,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(4),
-                            child: us.userList[0]['thumbnail']==''?DefaultProfileScreen(context):CachedNetworkImage(
-                              imageUrl: us.userList[0]['thumbnail'],
+                            child: us.userList[0].thumbnail==''?DefaultProfileScreen(context):CachedNetworkImage(
+                              imageUrl: us.userList[0].thumbnail,
                               width: 80,
                               height: 80,
                               imageBuilder: (context, imageProvider) => Container(
@@ -240,33 +240,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   LengthLimitingTextInputFormatter(16),
                                 ],
                             )),
-                        //   TextFormField(
-                        //     onChanged: (con){
-                        //       setState(() {});
-                        //     },
-                        //     scrollPadding: EdgeInsets.only(
-                        //         bottom: MediaQuery.of(context).viewInsets.bottom + 40),
-                        //     decoration: InputDecoration(
-                        //       isDense: true,
-                        //       contentPadding: EdgeInsets.zero,
-                        //       enabledBorder: OutlineInputBorder(
-                        //         borderSide: BorderSide.none,
-                        //       ),
-                        //       focusedBorder: OutlineInputBorder(
-                        //         borderSide: BorderSide.none,
-                        //       ),
-                        //       hintText: '자기소개를 작성해 주세요',
-                        //       hintStyle: f15gray400w500,
-                        //     ),
-                        //     keyboardType: TextInputType.multiline,
-                        //     maxLines: null,
-                        //     controller: _memoCon,
-                        //     style: f16gray800w600,
-                        //     inputFormatters: <TextInputFormatter>[
-                        //       LengthLimitingTextInputFormatter(16),
-                        //     ],
-                        //   ),
-                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -300,8 +273,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     await us.userModify(
                         _nickCon.text,
                         _memoCon.text,
-                        '${us.userList[0]['thumbnail']}',
-                        '${us.userList[0]['profileImg']}');
+                        '${us.userList[0].thumbnail}',
+                        '${us.userList[0].profileImg}');
                   }
                   Get.back();
                 });

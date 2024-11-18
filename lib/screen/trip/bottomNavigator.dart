@@ -95,7 +95,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                         ],
                       ),
                     ),
-                    ts.selectTripList[0]['tripMemberDtoList'].firstWhere((member) => member['uuid'] == us.userList[0]['uuid'])['leader']
+                    ts.selectTripList[0]['tripMemberDtoList'].firstWhere((member) => member['uuid'] == us.userList[0].uuid)['leader']
                         ?PopupMenuButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),

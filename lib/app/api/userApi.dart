@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:tripStory/app/config/dio_client.dart';
 import 'package:tripStory/controller/userState.dart';
 
+import '../../model/userModel.dart';
+
 class ApiUserClient {
   final DioClient dioClient;
 
@@ -20,9 +22,8 @@ class ApiUserClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-
         if(data['type']!='register'){
-          us.userList.value = [data];
+          us.userList.value = [UserModel.fromJson(data)];
         }else{
           us.userList.clear();
         }
@@ -99,10 +100,6 @@ class ApiUserClient {
   Future<Map<String, dynamic>> userModify(String nickName,String memo,String thumbnailImg,String profileImg) async {
     final us = Get.put(UserState());
     try {
-      print('??? ${nickName}');
-      print('??? ${memo}');
-      print('??? ${thumbnailImg}');
-      print('??? ${profileImg}');
       final response = await dioClient.dio.put(
           '/user/modify',
           data:{
@@ -114,7 +111,7 @@ class ApiUserClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        us.userList.value = [data];
+        us.userList.value = [UserModel.fromJson(data)];
         us.userList.refresh();
         print('data??? ${data}');
         return data;
@@ -124,24 +121,6 @@ class ApiUserClient {
     } catch (e) {
       print('Error during auto-login: $e');
       rethrow;
-    }
-  }
-
-  /// 자동 로그인
-  Future<void> alimTest() async {
-    final us = Get.put(UserState());
-    try {
-      String token ='emwtUZuJG0FrtbysU0sMxv:APA91bGyoUGtmG_DQXiDG0RQmchnvuSKUvgGH3VLophlpVa3RHbiH7XtMG67cuquhADmqdysCZ2zbllZtyTcWySkFBMesGzW258fQJddGoQqOFY1bLnjX6R9Ki6wboAVO3Y2hMeUfGIR';
-      final response = await dioClient.dio.post(
-        '/fcm/test/send?fcmToken=$token'
-      );
-      if (response.statusCode == 200) {
-        final data = response.data;
-        print('타입? ${data}');
-      }
-    } catch (e) {
-      print('Error during auto-login: $e');
-      us.userList.clear();
     }
   }
 }
