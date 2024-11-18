@@ -30,7 +30,7 @@ class _MemberListState extends State<MemberList> {
     Future.delayed(Duration.zero,(){
       for (int i = 0; i < ts.selectTripList[0]['tripMemberDtoList'].length; i++) {
         var tripMember = ts.selectTripList[0]['tripMemberDtoList'][i];
-        if (tripMember['uuid'] == us.userList[0]['uuid']) {
+        if (tripMember['uuid'] == us.userList[0].uuid) {
           if (tripMember['leader']) {
             leaderCheck = true;
           }
@@ -137,7 +137,7 @@ class _MemberListState extends State<MemberList> {
                             ),
                           ),
                           const SizedBox(width: 16,),
-                          us.userList[0]['uuid']==memberList[index]['uuid']?Row(
+                          us.userList[0].uuid==memberList[index]['uuid']?Row(
                             children: [
                               Container(
                                 width: 16,
@@ -153,8 +153,8 @@ class _MemberListState extends State<MemberList> {
                           ):const SizedBox(),
                           Text('${memberList[index]['nickname']}',style: f15gray800w500,),
                           Spacer(),
-                          !leaderCheck && us.userList[0]['uuid']!=memberList[index]['uuid'] ?const SizedBox():
-                          us.userList[0]['uuid']==memberList[index]['uuid']
+                          !leaderCheck && us.userList[0].uuid!=memberList[index]['uuid'] ?const SizedBox():
+                          us.userList[0].uuid==memberList[index]['uuid']
                               ? GestureDetector(
                                   behavior: HitTestBehavior.opaque,
                                   onTap: ()async{

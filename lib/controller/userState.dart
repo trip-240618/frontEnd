@@ -5,13 +5,15 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/app/api/countryApi.dart';
+import 'package:tripStory/model/userModel.dart';
 import '../app/api/fileApi.dart';
 import '../app/api/notificationApi.dart';
 import '../app/api/userApi.dart';
 import '../app/config/dio_client.dart';
 class UserState extends GetxController{
 
-  final userList =[].obs; /// 유저 정보 리스트
+  final userList = <UserModel>[].obs; /// 유저 정보 리스트
+  // final userList2 = <UserModel>[].obs;
   final mapFirstLoading = false.obs; /// 처음 맵 로딩
   final notiDuplicationList = [].obs; /// 로컬 노티 두번울리는거 방지 (ios 18 이상 에러)
   final userAlimSetting = {}.obs; /// 유저 알림 셋팅
@@ -85,10 +87,10 @@ class UserState extends GetxController{
     }
     return data;
   }
-  /// 프로필 상세 등록
+  /// 프로필 상세 등록 11-19 테스트해봐야함
   Future<void> userRegister(String name,String memo,String profileImg,String thumbnailImg,bool marketing)async{
     String? tokens = await FirebaseMessaging.instance.getToken();
-    userList.value=[await apiUserClient.userRegister(name, memo,profileImg,thumbnailImg,marketing)];
+    userList.value=[UserModel.fromJson(await apiUserClient.userRegister(name, memo,profileImg,thumbnailImg,marketing))];
     if(tokens!=null){
       apiUserClient.updateToken(tokens);
     }

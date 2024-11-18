@@ -231,7 +231,7 @@ class _NotiHistoryDetailState extends State<NotiHistoryDetail>{
                                 const SizedBox(width: 6,),
                                 Text('지금'),
                                 Spacer(),
-                                us.userList[0]['uuid']==notis.notificationComment[index]['writerUuid']
+                                us.userList[0].uuid==notis.notificationComment[index]['writerUuid']
                                     ?PopupMenuButton(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(4),

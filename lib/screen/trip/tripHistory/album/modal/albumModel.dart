@@ -1,5 +1,6 @@
+import 'package:json_annotation/json_annotation.dart';
 part 'albumModel.g.dart';
-
+@JsonSerializable()
 class AlbumModel {
   final String id;
   final String name;

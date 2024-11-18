@@ -180,8 +180,8 @@ class _MyPageState extends State<MyPage> {
                                 Positioned(
                                   child: Obx(()=>ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: us.userList.isEmpty||us.userList[0]['profileImg'] == ''?SettingDefaultProfileScreen(context):CachedNetworkImage(
-                                      imageUrl: us.userList[0]['profileImg'],
+                                    child: us.userList.isEmpty||us.userList[0].profileImg == ''?SettingDefaultProfileScreen(context):CachedNetworkImage(
+                                      imageUrl: us.userList[0].profileImg,
                                       width: 80,
                                       height: 80,
                                       fit: BoxFit.fill,
@@ -217,9 +217,9 @@ class _MyPageState extends State<MyPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${us.userList.isEmpty?'':us.userList[0]['nickName']}', style: f20gray800w700),
+                              Text('${us.userList.isEmpty?'':us.userList[0].nickName}', style: f20gray800w700),
                               const SizedBox(height: 12),
-                              Text('${us.userList.isEmpty?'':us.userList[0]['memo']}')
+                              Text('${us.userList.isEmpty?'':us.userList[0].memo}')
                             ],
                           ),
                         ))

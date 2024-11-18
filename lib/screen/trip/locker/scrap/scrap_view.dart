@@ -66,7 +66,7 @@ class _ScrapViewState extends State<ScrapView> {
             padding: EdgeInsets.zero,
             menuPadding: EdgeInsets.zero,
             itemBuilder: (context) => <PopupMenuEntry<int>>[
-              us.userList[0]['uuid']==ss.selectScrapList[0]['writerUuid']?
+              us.userList[0].uuid==ss.selectScrapList[0]['writerUuid']?
               PopupMenuItem<int>(
                 padding: EdgeInsets.zero,
                 value: 1,
@@ -175,7 +175,7 @@ class _ScrapViewState extends State<ScrapView> {
                           ),
                         ),
                       ),
-                      us.userList[0]['uuid']==ss.scrapList[0]['writerUuid'] ?Row(
+                      us.userList[0].uuid==ss.scrapList[0]['writerUuid'] ?Row(
                         children: [
                           Spacer(),
                           Text('${_controller.document.length}', style: f11Gray800w600,),

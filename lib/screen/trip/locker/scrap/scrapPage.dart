@@ -123,7 +123,7 @@ class _ScrapPageState extends State<ScrapPage> {
                   return GestureDetector(
                     onTap: () async {
                       await ss.getSelectScrapList(ss.scrapList[index]['id']);
-                      us.userList[0]['uuid']==ss.scrapList[index]['writerUuid'] ?
+                      us.userList[0].uuid==ss.scrapList[index]['writerUuid'] ?
                       Get.to(()=>ScrapEdit()):
                       Get.to(()=>ScrapView());
                     },
@@ -205,7 +205,7 @@ class _ScrapPageState extends State<ScrapPage> {
                                 children: [
                                   Text('${ss.scrapList[index]['nickname']}', style: f11Gray600w400,),
                                   Spacer(),
-                                  us.userList[0]['uuid']==ss.scrapList[index]['writerUuid'] ?
+                                  us.userList[0].uuid==ss.scrapList[index]['writerUuid'] ?
                                   GestureDetector(
                                       onTap: () async {
                                         showConfirmCancelTapDialog(context, '스크랩을 삭제하시겠습니까?', '확인','스크랩 삭제 후 복구는 어렵습니다',() async {
