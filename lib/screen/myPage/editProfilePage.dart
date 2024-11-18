@@ -33,8 +33,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     Future.delayed(Duration.zero,(){
-      _nickCon.text = us.userList[0].nickName;
-      _memoCon.text = us.userList[0].memo;
+      _nickCon.text = us.userList[0].nickName??'';
+      _memoCon.text = us.userList[0].memo??'';
       setState(() {});
     });
     super.initState();
@@ -78,7 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: us.userList[0].thumbnail==''?DefaultProfileScreen(context):CachedNetworkImage(
-                              imageUrl: us.userList[0].thumbnail,
+                              imageUrl: us.userList[0].thumbnail!,
                               width: 80,
                               height: 80,
                               imageBuilder: (context, imageProvider) => Container(
