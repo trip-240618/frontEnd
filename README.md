@@ -1,4 +1,4 @@
-## 🎨 주요 기능
+## 🎨 기능
 
 ### 🛠 Development Environment
 
