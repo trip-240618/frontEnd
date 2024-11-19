@@ -41,6 +41,7 @@ lib
 │   └── Toast
 ├── Controller
 │   └── State
+├── Model
 ├── Screen
 │   ├── Login
 │   ├── Main
