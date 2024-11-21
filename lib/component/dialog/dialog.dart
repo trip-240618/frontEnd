@@ -5,8 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:store_redirect/store_redirect.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/flight_edit.dart';
@@ -609,3 +612,129 @@ FlightDialog(BuildContext context, VoidCallback onTap) {
   );
 }
 
+
+Future<void> updateVersionDialog(BuildContext context) {
+  final us = Get.put(UserState());
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return PopScope(
+        canPop: false,
+        child: AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          contentPadding: const EdgeInsets.only(top: 35, bottom: 35),
+          content: Container(
+            width: Get.width,
+            height: 100,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Center(child: Text('새로운 버전이 출시되었습니다!\n여러분의 소중한 의견을 반영해 더 편리하게\n개선했어요.',style: f14gray900w500,)),
+          ),
+          actions: [
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: ()async{
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.setString('lastIgnoredVersion', us.versionList['iosVersion']);
+                      Get.back();
+                    },
+                    child: Container(
+                      width: Get.width,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: gray200,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '나중에',
+                          style: f16gray600w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10,),
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      StoreRedirect.redirect(androidAppId: "com.Ssolutions.sSolution", iOSAppId: "585027354");
+                    },
+                    child: Container(
+                      width: Get.width,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: gray900,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '업데이트',
+                          style: f16whitew400,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      );
+    },
+  );
+}
+
+Future<void> forceUpdateVersionDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return PopScope(
+        canPop: false,
+        child: AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          contentPadding: const EdgeInsets.only(top: 35, bottom: 35),
+          content: Container(
+            width: Get.width,
+            height: 100,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Center(child: Text('새로운 버전이 출시되었습니다!\n여러분의 소중한 의견을 반영해 더 편리하게\n개선했어요.',style: f14gray900w500,)),
+          ),
+          actions: [
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                StoreRedirect.redirect(androidAppId: "com.Ssolutions.sSolution", iOSAppId: "585027354");
+              },
+              child: Container(
+                width: Get.width,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: gray900,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Center(
+                  child: Text(
+                    '업데이트',
+                    style: f16whitew400,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    },
+  );
+}
