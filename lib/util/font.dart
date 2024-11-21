@@ -245,6 +245,14 @@ const TextStyle f12gray900w500 = TextStyle(
   letterSpacing: 0.0252,
   color: gray900,
 );
+const TextStyle f14gray900w500 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontSize: 14.0,
+  fontWeight: FontWeight.w500,
+  height: 16.01 / 12,
+  letterSpacing: 0.0252,
+  color: gray900,
+);
 const TextStyle f14whitew500 = TextStyle(
   fontSize: 14,
   color: Colors.white,

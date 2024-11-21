@@ -4,14 +4,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/app/config/dio_client.dart';
 import 'package:tripStory/controller/userState.dart';
-
+import 'package:http/http.dart' as http;
 import '../../model/userModel.dart';
 
 class ApiUserClient {
   final DioClient dioClient;
 
   ApiUserClient(this.dioClient);
-
 
   /// 자동 로그인
   Future<void> autoLogin() async {
@@ -120,6 +119,21 @@ class ApiUserClient {
       }
     } catch (e) {
       print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
+  /// 최신 버전 가져오기
+  Future<void> getVersionList() async {
+    final us = Get.put(UserState());
+    try {
+       final response = await http.get(
+          Uri.parse('https://trip-story.site/version/last')
+      );
+      us.versionList.value = jsonDecode(response.body);
+      print('가져온 버전리스트?? ${us.versionList}');
+    } catch (e) {
+      print('Error version: $e');
       rethrow;
     }
   }

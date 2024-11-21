@@ -1,28 +1,53 @@
 import 'dart:typed_data';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart' as imgCom;
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tripStory/app/api/countryApi.dart';
 import 'package:tripStory/model/userModel.dart';
+import 'package:version/version.dart';
 import '../app/api/fileApi.dart';
 import '../app/api/notificationApi.dart';
 import '../app/api/userApi.dart';
 import '../app/config/dio_client.dart';
+import '../component/dialog/dialog.dart';
 class UserState extends GetxController{
 
   final userList = <UserModel>[].obs; /// 유저 정보 리스트
-  // final userList2 = <UserModel>[].obs;
   final mapFirstLoading = false.obs; /// 처음 맵 로딩
   final notiDuplicationList = [].obs; /// 로컬 노티 두번울리는거 방지 (ios 18 이상 에러)
   final userAlimSetting = {}.obs; /// 유저 알림 셋팅
   final countryList = [].obs; /// 다녀온 여행지 리스트
+  final versionList = {}.obs; /// 버전 리스
   final dioClient = DioClient();
   final apiUserClient = ApiUserClient(DioClient());
   final apiFileClient = ApiFileClient(DioClient());
   final apiNotificationClient = ApiNotificationClient(DioClient());
   final apiCountryClient = ApiCountryClient(DioClient());
+
+  /// 버전관리
+  Future<void> versionCheck(BuildContext context)async{
+    await apiUserClient.getVersionList();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final prefs = await SharedPreferences.getInstance();
+    final lastIgnoredVersion = prefs.getString('lastIgnoredVersion') ?? '';
+    String fullVersion = "${packageInfo.version}+${packageInfo.buildNumber}";
+
+    if(Version.parse(fullVersion) < Version.parse('${versionList['iosVersion']}')){
+      if(versionList['forceUpdate']==true){
+        FlutterNativeSplash.remove();
+        await forceUpdateVersionDialog(context);
+      }else if (lastIgnoredVersion != '${versionList['iosVersion']}') {
+        FlutterNativeSplash.remove();
+        await updateVersionDialog(context);
+      }
+    }
+  }
 
   /// 로그아웃
   Future<void> logOut()async{
@@ -99,4 +124,5 @@ class UserState extends GetxController{
   Future<void> userModify(String nickName,String memo,String thumbnailImg,String profileImg)async{
     apiUserClient.userModify(nickName, memo,thumbnailImg,profileImg);
   }
+
 }
