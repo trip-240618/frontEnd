@@ -13,4 +13,5 @@ class ReportState extends GetxController {
   Future<void> addReport(String type, int? historyId, int typeId)async{
     await apiReportClient.createReport(type, ts.selectTripList[0]['id'],historyId == null?0:historyId,typeId);
   }
+
 }

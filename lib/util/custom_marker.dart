@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -9,11 +10,23 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import '../component/history/customMarker.dart';
 import 'color.dart';
 import 'font.dart';
+
+
+Future<Uint8List> compressHEIC(Uint8List imageBytes) async {
+  return await FlutterImageCompress.compressWithList(
+    imageBytes,
+    format: CompressFormat.png,
+    quality: 100,
+  );
+}
+
 Future<BitmapDescriptor> getCustomIcon(int index, String imageUrl) async {
   final double iconSize = 300.0;
-
+  /// 이미지 파일 읽기
   final File imageFile = await DefaultCacheManager().getSingleFile(imageUrl);
   final Uint8List imageBytes = await imageFile.readAsBytes();
+  Uint8List compressBytes = await compressHEIC(imageBytes);
+
 
   final widget = SizedBox(
     width: iconSize,
@@ -62,7 +75,7 @@ Future<BitmapDescriptor> getCustomIcon(int index, String imageUrl) async {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Image.memory(
-                  imageBytes,
+                  compressBytes,
                   fit: BoxFit.cover,
                 ),
               ),

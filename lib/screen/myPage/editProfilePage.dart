@@ -277,6 +277,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         '${us.userList[0].profileImg}');
                   }
                   Get.back();
+                  Get.back();
                 });
               },title: '저장하기',isBlack: true),
         ),

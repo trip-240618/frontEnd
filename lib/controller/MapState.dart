@@ -21,8 +21,6 @@ class MapState extends GetxController{
 
   @override
   void onInit() async{
-    // latitude.value = 36.35475233611197;
-    // longitude.value = 127.34170655688537;
     super.onInit();
   }
 
