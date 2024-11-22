@@ -127,7 +127,6 @@ class _ScrapViewState extends State<ScrapView> {
                   ),
                 ),
               ),
-              const PopupMenuDivider(height: 3),
             ]),
 
           ),

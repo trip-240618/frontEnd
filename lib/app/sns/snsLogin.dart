@@ -168,23 +168,21 @@ Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
 Future<void> appleLogin() async {
   final dioClient = DioClient();
   final us = Get.put(UserState());
-  String? tokens = await FirebaseMessaging.instance.getToken();
+  String? tokens = await FirebaseMessaging.instance.getAPNSToken();
   await SignInWithApple.getAppleIDCredential(scopes: [
     AppleIDAuthorizationScopes.email,
     AppleIDAuthorizationScopes.fullName,
     // 사용할 사용자 정보 범위
   ]).then((AuthorizationCredentialAppleID user)async{
+    print('user???${user}');
     final url = 'https://trip-story.site/user/oauth2/login/apple';
     final body = {
-      "email":'${user.email}',
-      "displayName": "${user.authorizationCode}",
-      "familyName": "${user.familyName}",
-      "givenName": "${user.givenName}",
       "identityToken": "${user.identityToken}",
       "state":"${user.state}",
       "userIdentifier": "${user.userIdentifier}",
       'fcmToken':tokens
     };
+    print('--${body}');
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -195,6 +193,11 @@ Future<void> appleLogin() async {
       var decodedBody = utf8.decode(response.bodyBytes);
       var jsonResponse = jsonDecode(decodedBody);
       us.userList.value = [UserModel.fromJson(jsonResponse)];
+      print('애플 로그인 했을 때 정보 ${us.userList[0].name}');
+    }else {
+      print('서버 응답 상태 코드: ${response.statusCode}');
+      print('서버 응답 헤더: ${response.headers}');
+      print('서버 응답 본문: ${response.body}');
     }
   }).onError((error, stackTrace) {
     if (error is PlatformException) return;

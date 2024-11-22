@@ -12,8 +12,8 @@ class ApiReportClient {
     try {
       final response =
       type == 'reply'&& historyId != 0?
-      await dioClient.dio.post('/report/create?type=$type&tripId=$tripId&typeId=$typeId'):
-      await dioClient.dio.post('/report/create?type=$type&tripId=$tripId&historyId=$historyId&typeId=$typeId');
+      await dioClient.dio.post('/report/create?type=$type&tripId=$tripId&historyId=$historyId&typeId=$typeId'):
+      await dioClient.dio.post('/report/create?type=$type&tripId=$tripId&typeId=$typeId');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -28,6 +28,5 @@ class ApiReportClient {
       rethrow;
     }
   }
-
 
 }
