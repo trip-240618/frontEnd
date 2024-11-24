@@ -160,7 +160,7 @@ class _JPlanBState extends State<JPlanB> {
                                                             crossAxisAlignment: CrossAxisAlignment.center,
                                                             children: [
                                                               js.planBJList[dayIndex]['planList'][planIndex]['memo']!=''?PopupMenuButton(
-                                                                offset: Offset(-34, 25),
+                                                                offset: Offset(-34, 35),
                                                                 shape: TooltipShape(borderColor:Color(ts.selectTripList[0]['labelColor']),borderWidth: 1),
                                                                 child: SvgPicture.asset('assets/icon/memo.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
                                                                 color: Colors.white,
