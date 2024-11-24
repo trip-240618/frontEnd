@@ -24,7 +24,12 @@ class _FlightEditState extends State<FlightEdit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TrailingBackAppBar(text: '항공편 수정',backTap: (){Get.back();},svgPicture: SvgPicture.asset( 'assets/icon/trashCan.svg',width: 17,),trailingTap: (){
+      appBar: TrailingBackAppBar(
+          text: '항공편 수정',
+          backTap: (){Get.back();},
+          color: Colors.white,
+          svgPicture: SvgPicture.asset('assets/icon/trashCan.svg',fit: BoxFit.none,),
+          trailingTap: (){
         js.deleteFlight();
         Get.back();
       }),
