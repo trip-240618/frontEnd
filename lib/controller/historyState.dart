@@ -15,7 +15,6 @@ import '../screen/trip/tripHistory/album/modal/albumModel.dart';
 import '../screen/trip/tripHistory/history/model/detailItem.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
 import '../screen/trip/tripHistory/history/tripHistoryAdd.dart';
 
 class HistoryState extends GetxController{
@@ -55,36 +54,69 @@ class HistoryState extends GetxController{
     super.onClose();
   }
 
+  // Future<void> getHistoryList(int tripId) async {
+  //   final ts = Get.put(TripState());
+  //   historyList.clear();
+  //   List allData = await apiHistoryClient.getHistoryList(tripId);
+  //   List filterDate = [];
+  //
+  //   DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
+  //   DateTime endDate = DateTime.parse(ts.selectTripList[0]['endDate']);
+  //
+  //   for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
+  //     String currentDate = DateFormat('yyyy-MM-dd').format(startDate.add(Duration(days: i)));
+  //     Map<String, dynamic>? matchedData;
+  //     for (var data in allData) {
+  //       if (data['photoDate'] == currentDate) {
+  //         matchedData = data;
+  //         break;
+  //       }
+  //     }
+  //     filterDate.add({
+  //       'photoDate': currentDate,
+  //       'historyList': matchedData != null ? matchedData['historyList'] : [],
+  //     });
+  //   }
+  //   historyList.value = filterDate;
+  //   /// 전체 길이
+  //   historyTotalLen.value = historyList.fold(0, (sum, item) {
+  //     return sum + (item['historyList'] as List).length;
+  //   });
+  // }
   /// 기록 리스트 가져오기
   Future<void> getHistoryList(int tripId) async {
     final ts = Get.put(TripState());
     historyList.clear();
     List allData = await apiHistoryClient.getHistoryList(tripId);
-    List filterDate = [];
+    List<Future<Map<String, dynamic>>> futures = [];
 
     DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
     DateTime endDate = DateTime.parse(ts.selectTripList[0]['endDate']);
 
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
       String currentDate = DateFormat('yyyy-MM-dd').format(startDate.add(Duration(days: i)));
-      Map<String, dynamic>? matchedData;
-      for (var data in allData) {
-        if (data['photoDate'] == currentDate) {
-          matchedData = data;
-          break;
+      futures.add(Future(() {
+        Map<String, dynamic>? matchedData;
+        for (var data in allData) {
+          if (data['photoDate'] == currentDate) {
+            matchedData = data;
+            break;
+          }
         }
-      }
-      filterDate.add({
-        'photoDate': currentDate,
-        'historyList': matchedData != null ? matchedData['historyList'] : [],
-      });
+        return {
+          'photoDate': currentDate,
+          'historyList': matchedData != null ? matchedData['historyList'] : [],
+        };
+      }));
     }
+    List<Map<String, dynamic>> filterDate = await Future.wait(futures);
     historyList.value = filterDate;
     /// 전체 길이
     historyTotalLen.value = historyList.fold(0, (sum, item) {
       return sum + (item['historyList'] as List).length;
     });
   }
+
 
   /// 댓글 목록 가져오기
   Future<void> getDetailHistoryCommentList(int tripId,int historyId) async {

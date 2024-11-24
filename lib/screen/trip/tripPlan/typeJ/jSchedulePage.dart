@@ -441,19 +441,21 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                                       child: Row(
                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                         children: [
-                                                          js.editPlanJList[0]['planList'][index]['memo']!=''?PopupMenuButton(
-                                                            offset: Offset(-34, 35),
-                                                            shape: TooltipShape(borderColor:Color(ts.selectTripList[0]['labelColor']),borderWidth: 1),
-                                                            child: SvgPicture.asset('assets/icon/memo.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
-                                                            color: Colors.white,
-                                                            itemBuilder: (_) => <PopupMenuEntry>[
-                                                              PopupMenuItem(
-                                                                  enabled: false,
-                                                                  padding:EdgeInsets.only(left: 10),
-                                                                  child: Text('${js.editPlanJList[0]['planList'][index]['memo']}',style: f12mainw600(Color(ts.selectTripList[0]['labelColor'])))
-                                                              ),
-                                                            ],
-                                                          ):const SizedBox(),
+                                                          js.editPlanJList[0]['planList'][index]['memo']!=''
+                                                              ?PopupMenuButton(
+                                                                offset: Offset(-34, 35),
+                                                                shape: TooltipShape(borderColor:Color(ts.selectTripList[0]['labelColor']),borderWidth: 1),
+                                                                child: SvgPicture.asset('assets/icon/memo.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
+                                                                color: Colors.white,
+                                                                itemBuilder: (_) => <PopupMenuEntry>[
+                                                                  PopupMenuItem(
+                                                                      enabled: false,
+                                                                      padding:EdgeInsets.only(left: 10),
+                                                                      child: Text('${js.editPlanJList[0]['planList'][index]['memo']}',style: f12mainw600(Color(ts.selectTripList[0]['labelColor'])))
+                                                                  ),
+                                                                ],
+                                                              )
+                                                              :const SizedBox(),
                                                           const SizedBox(width: 4,),
                                                           Expanded(child: Text('${js.editPlanJList[0]['planList'][index]['title']}',style: f12Gray800w500,overflow: TextOverflow.ellipsis,)),
                                                           PopupMenuButton<int>(
@@ -627,8 +629,12 @@ class _JSchedulePageState extends State<JSchedulePage> {
                                                       children: [
                                                         js.jPlanList[0]['planList'][index]['memo']!=''?PopupMenuButton(
                                                           offset: Offset(-34, 35),
+                                                          shadowColor: Colors.black.withOpacity(0.4),
                                                           shape: TooltipShape(borderColor:Color(ts.selectTripList[0]['labelColor']),borderWidth: 1),
-                                                          child: SvgPicture.asset('assets/icon/memo.svg', colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),),
+                                                          child: SvgPicture.asset('assets/icon/memo.svg',
+                                                            colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
+                                                            fit: BoxFit.contain,
+                                                          ),
                                                           color: Colors.white,
                                                           itemBuilder: (_) => <PopupMenuEntry>[
                                                             PopupMenuItem(
