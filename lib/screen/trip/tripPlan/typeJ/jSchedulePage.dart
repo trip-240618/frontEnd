@@ -30,9 +30,9 @@ class JSchedulePage extends StatefulWidget {
 
 class _JSchedulePageState extends State<JSchedulePage> {
   final apiFlightClient = ApiFlightClient(DioClient());
-  final js = Get.put(JPlanState());
-  final ts = Get.put(TripState());
-  final us = Get.put(UserState());
+  final js = Get.find<JPlanState>();
+  final ts = Get.find<TripState>();
+  final us = Get.find<UserState>();
   final socket = Get.put(SocketState());
   ScrollController scrollController = ScrollController();
   FToast? fToast;
