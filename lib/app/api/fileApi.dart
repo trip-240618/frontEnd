@@ -53,7 +53,6 @@ class ApiFileClient {
         );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data??ss ${data}');
         return data;
       }else {
         throw Exception('failed');

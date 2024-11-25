@@ -101,7 +101,6 @@ class _ScrapViewState extends State<ScrapView> {
                       "tripId" : '${ts.selectTripList[0]['id']}',
                       "typeId":'${ss.selectScrapList[0]['id']}'
                     };
-                    print('data??${data}');
                     await rs.addReport('scrap', null,ss.selectScrapList[0]['id']);
                     Get.back();
                     showOnlyConfirmTapDialog(context, '신고가 접수가 완료되었습니다.',(){

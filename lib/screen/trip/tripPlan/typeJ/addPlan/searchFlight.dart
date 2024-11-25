@@ -235,7 +235,6 @@ class _SearchFlightState extends State<SearchFlight> {
                                       _carrierCon.text = '${airlines[index]['name']} (${airlines[index]['code']})';
                                       setState(() {
                                         selectedAirline = airlines[index]['code']; // 새로운 값으로 업데이트
-                                        print('???${selectedAirline}');
                                       });
                                     },
                                     child: Container(
@@ -258,7 +257,6 @@ class _SearchFlightState extends State<SearchFlight> {
                                               _carrierCon.text = '${airlines[index]['name']} (${airlines[index]['code']})';
                                               setState(() {
                                                 selectedAirline = airlines[index]['code']; // 새로운 값으로 업데이트
-                                                print('???${selectedAirline}');
                                               });
                                             },
                                             fillColor: MaterialStateProperty.resolveWith<Color>(

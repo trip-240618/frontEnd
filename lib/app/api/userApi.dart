@@ -112,7 +112,6 @@ class ApiUserClient {
         final data = response.data;
         us.userList.value = [UserModel.fromJson(data)];
         us.userList.refresh();
-        print('data??? ${data}');
         return data;
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
@@ -131,7 +130,6 @@ class ApiUserClient {
           Uri.parse('https://trip-story.site/version/last')
       );
       us.versionList.value = jsonDecode(response.body);
-      print('가져온 버전리스트?? ${us.versionList}');
     } catch (e) {
       print('Error version: $e');
       rethrow;
