@@ -506,168 +506,175 @@ class _PPlanPageState extends State<PPlanPage> {
                                     itemBuilder: (context, planIndex) {
                                       return ps.pPlanList[0]['dayList'][dayIndex]['planList'].length==0?const SizedBox(height: 16,):Padding(
                                         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(height: 16,),
-                                            GestureDetector(
-                                              onTap: () async {
-                                                await ps.checkPPlan(ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['planId']);
-                                              },
-                                              child: ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['checkbox']?
-                                              Container(
-                                                width: 20,
-                                                height: 20,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(2),
-                                                  color: Color(ts.selectTripList[0]['labelColor']),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 5, right: 5, top: 7, bottom: 6),
-                                                  child: SvgPicture.asset(
-                                                    'assets/icon/check2.svg',
+                                        child: GestureDetector(
+                                          behavior: HitTestBehavior.opaque,
+                                          onTap: () async {
+                                            await ps.checkPPlan(ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['planId']);
+                                          },
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 16,),
+                                              // GestureDetector(
+                                              //   onTap: () async {
+                                              //     await ps.checkPPlan(ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['planId']);
+                                              //   },
+                                                //child:
+                                              ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['checkbox']?
+                                                Container(
+                                                  width: 20,
+                                                  height: 20,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(2),
+                                                    color: Color(ts.selectTripList[0]['labelColor']),
                                                   ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(left: 5, right: 5, top: 7, bottom: 6),
+                                                    child: SvgPicture.asset(
+                                                      'assets/icon/check2.svg',
+                                                    ),
+                                                  ),
+                                                )
+                                                    :SvgPicture.asset('assets/icon/unchecked.svg',
+                                                ),
+                                              //),
+                                              const SizedBox(width: 12),
+                                              Expanded(
+                                                child: Text(
+                                                  '${ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['content']}',
+                                                  style: f14Gray800w500,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Container(
+                                                width: 25,
+                                                height: 25,
+                                                child: PopupMenuButton<int>(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(4),
+                                                    side: BorderSide(color: gray200),
+                                                  ),
+                                                  iconSize: 1,
+                                                  offset: const Offset(-4, 20),
+                                                  padding: EdgeInsets.zero,
+                                                  menuPadding: EdgeInsets.zero,
+                                                  constraints: BoxConstraints(maxWidth: 125),
+                                                  shadowColor: Colors.black.withOpacity(0.4),
+                                                  icon: SvgPicture.asset('assets/icon/rowEllipsis.svg',fit: BoxFit.none,),
+                                                  color: gray50,
+                                                  itemBuilder: (context) => <PopupMenuEntry<int>>[
+                                                    PopupMenuItem<int>(
+                                                      onTap: (){
+                                                        ps.selectPPlan.value = ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex];
+                                                        _controller.text =  ps.selectPPlan['content'];
+                                                        isEdit = true;
+                                                        TextFormSheet(context, '여행일정을 입력해주세요',_controller, _focusNode, () async {
+                                                          if(_controller.text != ''){
+                                                            ps.selectPPlan['content'] = _controller.text;
+                                                            await ps.editPPlanList(ps.selectPPlan.value);
+                                                          }
+                                                          isEdit = false;
+                                                        });
+                                                        _focusNode.requestFocus();
+                                                      },
+                                                      padding: EdgeInsets.zero,
+                                                      value: 1,
+                                                      child: Column(
+                                                        children: [
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(left: 12, right: 12),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              children: [
+                                                                SvgPicture.asset(
+                                                                  'assets/icon/pencil.svg',
+                                                                  colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                                                  fit: BoxFit.none,
+                                                                ),
+                                                                const SizedBox(width: 10),
+                                                                Text(
+                                                                  '일정 수정',
+                                                                  style: f14Gray800w500,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const PopupMenuDivider(height: 1),
+                                                    PopupMenuItem<int>(
+                                                      onTap: () async {
+                                                        await ps.deletePPlan(ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['planId'], ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['dayAfterStart']);
+                                                      },
+                                                      padding: EdgeInsets.zero,
+                                                      value: 2,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            Container(
+                                                              width:24,
+                                                              height:24,
+                                                              child: SvgPicture.asset(
+                                                                'assets/icon/trashCan.svg',
+                                                                fit: BoxFit.none,
+                                                                colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(width: 10),
+                                                            Text(
+                                                              '일정 삭제',
+                                                              style: f14Gray800w500,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const PopupMenuDivider(height: 1),
+                                                    PopupMenuItem<int>(
+                                                      onTap: () async {
+                                                        ps.selectPPlan.value = ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex];
+                                                        ps.selectPPlan['locker'] = true;
+                                                        ps.selectPPlan['dayAfterStart'] = 0;
+                                                        await ps.lockerMovePPlanList(ps.selectPPlan.value);
+                                                      },
+                                                      padding: EdgeInsets.zero,
+                                                      value: 3,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            Container(
+                                                              width:24,
+                                                              height:24,
+                                                              child: SvgPicture.asset(
+                                                                'assets/bottomNavi/locker.svg',
+                                                                fit: BoxFit.none,
+                                                                colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(width: 10),
+                                                            Text(
+                                                              '보관함 이동',
+                                                              style: f14Gray800w500,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               )
-                                                  :SvgPicture.asset('assets/icon/unchecked.svg',
-                                              ),
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Expanded(
-                                              child: Text(
-                                                '${ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['content']}',
-                                                style: f14Gray800w500,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Container(
-                                              width: 20,
-                                              height: 25,
-                                              child: PopupMenuButton<int>(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(4),
-                                                  side: BorderSide(color: gray200),
-                                                ),
-                                                iconSize: 1,
-                                                offset: const Offset(-4, 20),
-                                                padding: EdgeInsets.zero,
-                                                menuPadding: EdgeInsets.zero,
-                                                constraints: BoxConstraints(maxWidth: 125),
-                                                shadowColor: Colors.black.withOpacity(0.4),
-                                                icon: SvgPicture.asset('assets/icon/rowEllipsis.svg',fit: BoxFit.none,),
-                                                color: gray50,
-                                                itemBuilder: (context) => <PopupMenuEntry<int>>[
-                                                  PopupMenuItem<int>(
-                                                    onTap: (){
-                                                      ps.selectPPlan.value = ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex];
-                                                      _controller.text =  ps.selectPPlan['content'];
-                                                      isEdit = true;
-                                                      TextFormSheet(context, '여행일정을 입력해주세요',_controller, _focusNode, () async {
-                                                        if(_controller.text != ''){
-                                                          ps.selectPPlan['content'] = _controller.text;
-                                                          await ps.editPPlanList(ps.selectPPlan.value);
-                                                        }
-                                                        isEdit = false;
-                                                      });
-                                                      _focusNode.requestFocus();
-                                                    },
-                                                    padding: EdgeInsets.zero,
-                                                    value: 1,
-                                                    child: Column(
-                                                      children: [
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(left: 12, right: 12),
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.start,
-                                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                                            children: [
-                                                              SvgPicture.asset(
-                                                                'assets/icon/pencil.svg',
-                                                                colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
-                                                                fit: BoxFit.none,
-                                                              ),
-                                                              const SizedBox(width: 10),
-                                                              Text(
-                                                                '일정 수정',
-                                                                style: f14Gray800w500,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  const PopupMenuDivider(height: 1),
-                                                  PopupMenuItem<int>(
-                                                    onTap: () async {
-                                                      await ps.deletePPlan(ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['planId'], ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex]['dayAfterStart']);
-                                                    },
-                                                    padding: EdgeInsets.zero,
-                                                    value: 2,
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Container(
-                                                            width:24,
-                                                            height:24,
-                                                            child: SvgPicture.asset(
-                                                              'assets/icon/trashCan.svg',
-                                                              fit: BoxFit.none,
-                                                              colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(width: 10),
-                                                          Text(
-                                                            '일정 삭제',
-                                                            style: f14Gray800w500,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const PopupMenuDivider(height: 1),
-                                                  PopupMenuItem<int>(
-                                                    onTap: () async {
-                                                      ps.selectPPlan.value = ps.pPlanList[0]['dayList'][dayIndex]['planList'][planIndex];
-                                                      ps.selectPPlan['locker'] = true;
-                                                      ps.selectPPlan['dayAfterStart'] = 0;
-                                                      await ps.lockerMovePPlanList(ps.selectPPlan.value);
-                                                    },
-                                                    padding: EdgeInsets.zero,
-                                                    value: 3,
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Container(
-                                                            width:24,
-                                                            height:24,
-                                                            child: SvgPicture.asset(
-                                                              'assets/bottomNavi/locker.svg',
-                                                              fit: BoxFit.none,
-                                                              colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(width: 10),
-                                                          Text(
-                                                            '보관함 이동',
-                                                            style: f14Gray800w500,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       );
                                     },
