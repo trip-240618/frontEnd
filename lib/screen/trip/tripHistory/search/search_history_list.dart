@@ -20,8 +20,8 @@ class SearchHistoryList extends StatefulWidget {
 }
 
 class _SearchHistoryListState extends State<SearchHistoryList> {
-  final hs = Get.put(HistoryState());
-  final ts = Get.put(TripState());
+  final hs = Get.find<HistoryState>();
+  final ts = Get.find<TripState>();
 
   @override
   void initState() {
@@ -101,7 +101,6 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
                               ),
                             ),
                           ),
-                          // placeholder: (context, url) => const CircularProgressIndicator(),
                           errorWidget: (context, url, error) => DefaultProfileScreen(context),
                         ),
                       ),
@@ -141,7 +140,7 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
                                     borderRadius: BorderRadius.circular(4),
                                     image: DecorationImage(
                                         image: imageProvider,
-                                        fit: BoxFit.fill
+                                        fit: BoxFit.contain
                                     ),
                                   ),
                                 ),
