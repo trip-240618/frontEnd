@@ -153,7 +153,6 @@ class ApiTripClient {
           '/trip/bookmark/toggle?tripId=${tripId}');
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('error ${response.statusCode}');
       }
@@ -188,7 +187,6 @@ class ApiTripClient {
           '/trip/enter?tripId=${tripId}');
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
         if(data.length==0){
           return [];
         }
@@ -208,11 +206,6 @@ class ApiTripClient {
           '/trip/kick?tripId=$tripId&tripType=$tripType&uuid=$uuid');
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
-        // if(data.length==0){
-        //   return [];
-        // }
-        // return [data];
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -229,11 +222,6 @@ class ApiTripClient {
           '/trip/delete?tripId=$tripId');
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
-        // if(data.length==0){
-        //   return [];
-        // }
-        // return [data];
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -262,7 +250,6 @@ class ApiTripClient {
         ts.selectTripList.value = [response.data];
         ts.selectTripList[0]['labelColor'] = int.parse(ts.selectTripList[0]['labelColor']);
         ts.selectTripList.refresh();
-        print('data?? ${data}');
       } else {
         throw Exception('error ${response.statusCode}');
       }
@@ -280,7 +267,6 @@ class ApiTripClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('error ${response.statusCode}');
       }

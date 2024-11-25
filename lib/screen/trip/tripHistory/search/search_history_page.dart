@@ -260,7 +260,7 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                                             isColorFilter = true;
                                             selectedColor = index;
                                             List filteredTags = hs.tagAllList.where((tag) {
-                                              return tag['tagColor'] == '${colorList[index].toString().substring(8, '${colorList[index]}'.length - 1)}'.toUpperCase();
+                                              return tag['tagColor'] == '${colorList[index].value.toRadixString(16).toUpperCase()}';
                                             }).toList();
                                             hs.tagFilterColor.value = filteredTags;
                                             hs.tagFilterColor.refresh();

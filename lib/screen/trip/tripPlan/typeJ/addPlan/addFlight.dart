@@ -34,7 +34,7 @@ class _AddFlightState extends State<AddFlight> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BackAppBar(text: '항공편 등록', onTap: (){Get.back();}, color: Colors.white,),
+      appBar: BackAppBar(text: '항공편 등록', onTap: (){js.flightList.clear(); Get.back();}, color: Colors.white,),
       body: Padding(
         padding: const EdgeInsets.only(top: 24, left: 20, right: 20),
         child: Column(

@@ -56,7 +56,6 @@ class ApiJPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -73,7 +72,6 @@ class ApiJPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -90,7 +88,6 @@ class ApiJPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -108,7 +105,6 @@ class ApiJPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -125,7 +121,6 @@ class ApiJPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -143,7 +138,6 @@ class ApiJPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -163,7 +157,6 @@ class ApiJPlanClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }

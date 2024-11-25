@@ -35,7 +35,6 @@ class ApiNotificationClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
       } else {
         throw Exception('Failed to auto-login: ${response.statusCode}');
       }
@@ -53,7 +52,6 @@ class ApiNotificationClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
         if(data.length==0){
           return {};
         }
@@ -74,7 +72,6 @@ class ApiNotificationClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        print('data?? ${data}');
         if(data.length==0){
           return {};
         }

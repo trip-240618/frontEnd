@@ -38,7 +38,6 @@ class SocketState extends GetxController{
           beforeConnect: () async {
             // print('waiting to connect...');
             // await Future.delayed(const Duration(milliseconds: 200));
-            print('connecting...');
           },
           onWebSocketError: (dynamic error) {
             print('WebSocket Error: $error');
@@ -63,12 +62,10 @@ class SocketState extends GetxController{
   }
   /// j형 소켓 정보
   void onConnect(StompFrame frame) {
-    print('Connected to WebSocket');
     stompClient!.subscribe(
       destination: '/topic/api/trip/j/${ts.selectTripList[0]['id']}',
       callback: (frame) {
         Map<String, dynamic> result = json.decode(frame.body!);
-        print('??소켓으로 받은 데이터  ${result}');
         switch (result['command']) {
           case 'create':
             createJplan(result);
@@ -100,7 +97,6 @@ class SocketState extends GetxController{
   }
   /// 순서 변경 클릭
   Future<void> addEditor(int day) async {
-
     try {
       stompClient!.send(
         destination: '/api/trip/${ts.selectTripList[0]['id']}/plan/j/${day}/edit/register',
