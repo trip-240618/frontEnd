@@ -87,13 +87,31 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                           Get.to(()=>FullScreenImage(imageUrl: '${hs.historyList[widget.dayIdx]['historyList'].length==0||hs.historyList[widget.dayIdx]['historyList'][pageIdx].length==0?'':hs.historyList[widget.dayIdx]['historyList'][pageIdx]['thumbnail']}'));
                         },
                         child: CachedNetworkImage(
-                          imageUrl: '${hs.historyList[widget.dayIdx]['historyList'].length==0||hs.historyList[widget.dayIdx]['historyList'][pageIdx].length==0?'':hs.historyList[widget.dayIdx]['historyList'][pageIdx]['thumbnail']}',
+                          imageUrl: '${hs.historyList[widget.dayIdx]['historyList'][pageIdx]['thumbnail']}',
                           width: Get.width,
                           height: Get.height*0.6,
-                          fit: BoxFit.cover,
-                          // placeholder: (context, url) =>
-                          // const CircularProgressIndicator(),
+                          fit: BoxFit.fitWidth,
                           errorWidget: (context, url, error) => DefaultProfileScreen(context),
+                        ),
+                      ),
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 120, // 상단 딤의 높이
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.black.withOpacity(0.3),
+                                Colors.black.withOpacity(0.2),
+                                Colors.black.withOpacity(0.1),
+                                Colors.transparent,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                          ),
                         ),
                       ),
                       Positioned(
@@ -295,16 +313,17 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                         left: 0,
                         right: 0,
                         child: Container(
-                          height: 150,
+                          height: 120, // 상단 딤의 높이
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
                               colors: [
                                 Colors.transparent,
-                                Color(0xff212121).withOpacity(0.5),
+                                Colors.black.withOpacity(0.1),
+                                Colors.black.withOpacity(0.2),
+                                Colors.black.withOpacity(0.3),
                               ],
-                              stops: [0.3, 1],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
                             ),
                           ),
                         ),
@@ -319,24 +338,17 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['profileImage']==''
-                                  ?DefaultProfileScreen(context)
-                                  :Row(
+                                  Row(
                                     children: [
-                                      CachedNetworkImage(
-                                        imageUrl: hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['profileImage'],
-                                        width: 24,
-                                        height: 24,
-                                        imageBuilder: (context, imageProvider) => Container(
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.fill
-                                            ),
-                                          ),
-                                        ),
-                                         errorWidget: (context, url, error) => DefaultProfileScreen(context),
-                                       ),
+                                      hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['profileImage']==''
+                                          ? Container(width: 24,height: 24,child: DefaultProfileScreen(context))
+                                          : CachedNetworkImage(
+                                            imageUrl: hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['profileImage'],
+                                            width: 24,
+                                            height: 24,
+                                            fit: BoxFit.cover,
+                                             errorWidget: (context, url, error) => DefaultProfileScreen(context),
+                                      ),
                                       const SizedBox(width: 8,),
                                       Text('${hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['nickname']}',style: f12whitew600,),
                                       const SizedBox(width: 4,),
@@ -443,20 +455,20 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                               children: [
                                 Row(
                                   children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: CachedNetworkImage(
-                                        imageUrl: '${hs.historyComment[index]['profileImage']}',
-                                        width: 24,
-                                        height: 24,
-                                        fit: BoxFit.cover,
-                                        // placeholder: (context, url) =>
-                                        // const CircularProgressIndicator(),
-                                        errorWidget: (context, url, error) => DefaultProfileScreen(context),
+                                    hs.historyComment[index]['profileImage']==''
+                                        ? Container(width: 24,height: 24,child: DefaultProfileScreen(context))
+                                        :ClipRRect(
+                                         borderRadius: BorderRadius.circular(4),
+                                          child: CachedNetworkImage(
+                                            imageUrl: '${hs.historyComment[index]['profileImage']}',
+                                            width: 24,
+                                            height: 24,
+                                            fit: BoxFit.cover,
+                                            errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                       ),
                                     ),
                                     const SizedBox(width: 8,),
-                                    Text('${hs.historyComment[index]['nickname']}'),
+                                    Text('${hs.historyComment[index]['nickname']}',style: f12Gray800w600),
                                     const SizedBox(width: 4,),
                                     Text('${hs.timeFormat(hs.historyComment[index]['createDate'])}',style: f11gray400w500,),
                                     Spacer(),
@@ -591,8 +603,7 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                         ]),
                                   ],
                                 ),
-                                //const SizedBox(height: 4),
-                                Text('${hs.historyComment[index]['content']}'),
+                                Text('${hs.historyComment[index]['content']}',style: f14gray800w600,),
                                 //const SizedBox(height: 16),
                               ],
                             );
@@ -606,254 +617,6 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
               ),
             ));
           },
-          // child: Column(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: [
-          //     Stack(
-          //       children: [
-          //         CachedNetworkImage(
-          //           imageUrl: '${hs.historyDetailList['imageUrl']}',
-          //           width: Get.width,
-          //           height: Get.height*0.6,
-          //           fit: BoxFit.fill,
-          //           // placeholder: (context, url) =>
-          //           // const CircularProgressIndicator(),
-          //           errorWidget: (context, url, error) => const CircularProgressIndicator(),
-          //         ),
-          //         Positioned(
-          //           bottom: 0,
-          //           left: 0,
-          //           right: 0,
-          //           child: Container(
-          //             height: 150,
-          //             decoration: BoxDecoration(
-          //               gradient: LinearGradient(
-          //                 begin: Alignment.topCenter,
-          //                 end: Alignment.bottomCenter,
-          //                 colors: [
-          //                   Colors.transparent,
-          //                   Color(0xff212121).withOpacity(0.5),
-          //                 ],
-          //                 stops: [0.3, 1],
-          //               ),
-          //             ),
-          //           ),
-          //         ),
-          //         Positioned(
-          //           bottom: 20,
-          //           left: 0,
-          //           right: 0, // 화면의 왼쪽과 오른쪽에 닿도록 설정
-          //           child: Padding(
-          //             padding: const EdgeInsets.only(left: 20,right: 20),
-          //             child: Wrap(
-          //               children: [
-          //                 Text(
-          //                   '${hs.historyDetailList['memo']}',
-          //                   style: f15whitew500,
-          //                   maxLines: 10, // 최대 줄 수 설정
-          //                   overflow: TextOverflow.ellipsis, // 텍스트가 오버플로우될 경우 처리
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //     Container(
-          //       width: Get.width,
-          //       color:gray50,
-          //       child: Padding(
-          //         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
-          //         child: Wrap(
-          //           direction: Axis.horizontal,
-          //           alignment: WrapAlignment.start,
-          //           spacing: 12,
-          //           children: (hs.historyDetailList['tags'] != null ? hs.historyDetailList['tags'] : []).map<Widget>((tag) {
-          //             return Container(
-          //               decoration: BoxDecoration(
-          //                 color: Colors.white,
-          //                 borderRadius: BorderRadius.circular(4),
-          //                 border: Border.all(color: gray200),
-          //               ),
-          //               child: Padding(
-          //                 padding: const EdgeInsets.all(10),
-          //                 child: Row(
-          //                   mainAxisSize: MainAxisSize.min,
-          //                   crossAxisAlignment: CrossAxisAlignment.center,
-          //                   children: [
-          //                     Container(
-          //                       width: 16,
-          //                       height: 16,
-          //                       decoration: BoxDecoration(
-          //                           color: Color(int.parse('0xff${tag['tagColor']}')), // 태그 색깔
-          //                           shape: BoxShape.circle),
-          //                       child: Center(
-          //                         child: Text('#', style: f12whitew500),
-          //                       ),
-          //                     ),
-          //                     const SizedBox(width: 4),
-          //                     Text('${tag['tagName']}', style: f12gray900w500), // 태그 이름
-          //                   ],
-          //                 ),
-          //               ),
-          //             );
-          //           }).toList(),
-          //         ),
-          //       ),
-          //     ),
-          //     const SizedBox(height:8),
-          //     Padding(
-          //       padding: const EdgeInsets.symmetric(horizontal: 20),
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.start,
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.end,
-          //             children: [
-          //               GestureDetector(
-          //                   onTap:()async{
-          //                     await hs.historyListToggle(ts.selectTripList[0]['id'], widget.selectedIdx);
-          //                   },
-          //                   child: SvgPicture.asset('assets/icon/heart.svg',colorFilter: ColorFilter.mode(hs.historyDetailList['like']??false?gray900:gray300,BlendMode.srcIn))),
-          //               const SizedBox(width: 4),
-          //               Text('${hs.historyDetailList['likeCnt']}',style: f14Gray800w500,),
-          //               const SizedBox(width: 8),
-          //               SvgPicture.asset('assets/icon/chat.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
-          //               const SizedBox(width: 4),
-          //               Text('${hs.historyDetailList['replyCnt']}',style: f14Gray800w500,),
-          //             ],
-          //           ),
-          //           const SizedBox(height: 24,),
-          //           Obx(()=>ListView.builder(
-          //             physics: NeverScrollableScrollPhysics(),
-          //             itemCount: hs.historyComment.length,
-          //             shrinkWrap: true,
-          //             padding: EdgeInsets.zero,
-          //             itemBuilder: (context, index) {
-          //               return Column(
-          //                 crossAxisAlignment: CrossAxisAlignment.start,
-          //                 children: [
-          //                   Row(
-          //                     children: [
-          //                       ClipRRect(
-          //                         borderRadius: BorderRadius.circular(4),
-          //                         child: CachedNetworkImage(
-          //                           imageUrl: '${hs.historyComment[index]['profileImage']}',
-          //                           width: 24,
-          //                           height: 24,
-          //                           fit: BoxFit.fill,
-          //                           // placeholder: (context, url) =>
-          //                           // const CircularProgressIndicator(),
-          //                           errorWidget: (context, url, error) => const Icon(Icons.error),
-          //                         ),
-          //                       ),
-          //                       const SizedBox(width: 8,),
-          //                       Text('${hs.historyComment[index]['nickname']}'),
-          //                       const SizedBox(width: 6,),
-          //                       Text('지금'),
-          //                       Spacer(),
-          //                       us.userList[0]['uuid']==hs.historyComment[index]['writerUuid']
-          //                           ?PopupMenuButton(
-          //                           shape: RoundedRectangleBorder(
-          //                             borderRadius: BorderRadius.circular(4),
-          //                           ),
-          //                           offset: const Offset(-20, 40),
-          //                           shadowColor: Colors.black.withOpacity(0.4),
-          //                           icon: Container(
-          //                             height: 15,
-          //                             width: 20,
-          //                             alignment: Alignment.centerRight,
-          //                             child: SvgPicture.asset(
-          //                               'assets/icon/dot.svg',
-          //                               height: 15,
-          //                               width: 20,
-          //                             ),
-          //                           ),
-          //                           color: gray50,
-          //                           itemBuilder: (context) => [
-          //                             PopupMenuItem(
-          //                               padding: EdgeInsets.zero,
-          //                               value: 1,
-          //                               child: Column(
-          //                                 children: [
-          //                                   Padding(
-          //                                     padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
-          //                                     child: Container(
-          //                                       child: Row(
-          //                                         mainAxisAlignment: MainAxisAlignment.start,
-          //                                         crossAxisAlignment: CrossAxisAlignment.center,
-          //                                         children: [
-          //                                           Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
-          //                                           const SizedBox(width: 10,),
-          //                                           Text(
-          //                                             '수정하기',
-          //                                             style: f14Gray800w500,
-          //                                           ),
-          //                                         ],
-          //                                       ),
-          //                                     ),
-          //                                   ),
-          //                                   const Divider(color: gray200,), // Divider를 Column 내의 다른 자식으로 이동
-          //                                 ],
-          //                               ),
-          //                               onTap: () {
-          //                                 setState(() {
-          //                                   editingIdx = index;
-          //                                   isEditing = true;
-          //                                 });
-          //                                 FocusScope.of(context).requestFocus(_focusNode);
-          //                                 textCon.text = hs.historyComment[index]['content'];
-          //                                 // hs.editHistoryComment(ts.selectTripList[0]['id'], widget.selectedIdx, hs.historyComment[index]['id'], 'dadasdasdasda');
-          //                               },
-          //                             ),
-          //                             PopupMenuItem(
-          //                               onTap: (){
-          //                                 FocusScope.of(context).unfocus();
-          //                                 hs.deleteHistoryComment(ts.selectTripList[0]['id'], widget.selectedIdx, hs.historyComment[index]['id']);
-          //                               },
-          //                               height: 0,
-          //                               padding: EdgeInsets.zero,
-          //                               child: Column(
-          //                                 children: [
-          //                                   Padding(
-          //                                     padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
-          //                                     child: Container(
-          //                                       child: Row(
-          //                                         mainAxisAlignment: MainAxisAlignment.start,
-          //                                         crossAxisAlignment: CrossAxisAlignment.center,
-          //                                         children: [
-          //                                           Center(child: SvgPicture.asset('assets/icon/pencil.svg',colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn))),
-          //                                           const SizedBox(width: 10,),
-          //                                           Text(
-          //                                             '삭제하기',
-          //                                             style: f14Gray800w500,
-          //                                           ),
-          //                                         ],
-          //                                       ),
-          //                                     ),
-          //                                   ),
-          //                                 ],
-          //                               ),
-          //                             )
-          //                           ])
-          //                           :const SizedBox(),
-          //                     ],
-          //                   ),
-          //                   const SizedBox(height: 4),
-          //                   Text('${hs.historyComment[index]['content']}'),
-          //                   const SizedBox(height: 22),
-          //                 ],
-          //               );
-          //             },
-          //           )),
-          //           SizedBox(height: 80),
-          //         ],
-          //       ),
-          //     )
-          //   ],
-          // ),
         ),
         bottomSheet: Container(
           width: Get.width,

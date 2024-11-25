@@ -11,7 +11,7 @@ class SearchFullMap extends StatefulWidget {
 }
 
 class _SearchFullMapState extends State<SearchFullMap> {
-  final maps = Get.put(MapState());
+  final maps = Get.find<MapState>();
 
   @override
   void initState() {

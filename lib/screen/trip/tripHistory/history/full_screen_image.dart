@@ -1,12 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
 import '../../../../component/empty/emptyScreen.dart';
-import '../../../../util/color.dart';
 
 class FullScreenImage extends StatefulWidget {
   final String imageUrl;
@@ -17,6 +13,7 @@ class FullScreenImage extends StatefulWidget {
 }
 
 class _FullScreenImageState extends State<FullScreenImage> {
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,9 +30,9 @@ class _FullScreenImageState extends State<FullScreenImage> {
               child: Center(
                 child: CachedNetworkImage(
                   imageUrl: widget.imageUrl,
+                  width: Get.width,
                   fit: BoxFit.contain,
-                  errorWidget: (context, url, error) =>
-                      DefaultProfileScreen(context),
+                  errorWidget: (context, url, error) => const CircularProgressIndicator(),
                 ),
               ),
             ),
@@ -81,7 +78,6 @@ class _FullScreenImageState extends State<FullScreenImage> {
                 ),
               ),
             ),
-            // X 버튼 (뒤로가기)
             Positioned(
               top: 60,
               left: 20,
