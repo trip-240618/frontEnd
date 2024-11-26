@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,23 +19,21 @@ class MapState extends GetxController{
   final longitude = 0.0.obs;
   RxSet<Marker> markers = <Marker>{}.obs; /// 커스텀 마커
   RxSet<Marker> selectedMarkers = <Marker>{}.obs; /// 선택한 기록 마커
-
+  final RxMap<String, Uint8List> imageCache = <String, Uint8List>{}.obs;
   /// 전체 지도에 마커 표시
   Future<void> addMarkersFromHistory() async {
     markers.clear();
-    List<Future<void>> futures = [];
     for (int i = 0; i < hs.historyList.length; i++) {
       for(int j=0;j<hs.historyList[i]['historyList'].length;j++){
         if(hs.historyList[i]['historyList'][j]['latitude']!= 0.0 && hs.historyList[i]['historyList'][j]['longitude']!=0.0){
-          futures.add(createMarker(
-            index: i + 1,
-            history: hs.historyList[i]['historyList'][j],
-            targetMarkers: markers
-          ));
+          createMarker(
+              index: i + 1,
+              history: hs.historyList[i]['historyList'][j],
+              targetMarkers: markers
+          );
         }
       }
     }
-    await Future.wait(futures);
   }
 
   /// 개별 마커 생성 및 추가 함수
