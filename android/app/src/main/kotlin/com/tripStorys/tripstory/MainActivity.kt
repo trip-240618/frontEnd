@@ -1,4 +1,4 @@
-package com.tripStorys.tripStory
+package com.tripStorys.tripstorys
 
 import io.flutter.embedding.android.FlutterActivity
 

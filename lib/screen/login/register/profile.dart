@@ -98,7 +98,7 @@ class _ProfileScreenState extends State<ProfilePage> {
                     ),
                   ),
                 )
-                    :Center(
+                    : Center(
                   child: Container(
                     width: 92,
                     height: 92,
