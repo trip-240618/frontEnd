@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/app/sns/snsLogin.dart';
 import 'package:tripStory/component/container/snsContainer.dart';
 import 'package:tripStory/controller/userState.dart';
@@ -42,11 +43,11 @@ class _LoginPageState extends State<LoginPage> {
               else{
                 print('로그인실패');
               }
-              // Get.to(()=>MainPage());
             }),
             const SizedBox(height: 18),
             GoogleContainer(onTap: ()async{
               await googleLogin();
+              print('??? ${us.userList[0].type}');
               if(us.userList.isNotEmpty&&us.userList[0].type=='register'){
                 Get.to(()=>TermPage());
               }else if(us.userList.isNotEmpty&&us.userList[0].type=='login'){

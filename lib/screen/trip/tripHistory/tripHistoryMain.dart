@@ -149,7 +149,6 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                             bool isRequest = await requestPhotoMangerPermission(context);
                                             if(isRequest){
                                               SelectDayDialog(context, '', (){});
-                                              // Get.to(()=>AlbumPage());
                                             }
                                           },
                                           child: SvgPicture.asset('assets/icon/enabledRoundPlus.svg')),

@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return GetMaterialApp(
-      title: 'Flutter Demo',
+      title: 'tripStory',
         supportedLocales: [
           Locale('ko', 'KR'),
         ],
@@ -47,7 +47,6 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(color: Colors.white,surfaceTintColor: Colors.white)
       ),
       home: SplashPage(),
-      // home: TermPage(),
     );
   }
 }
