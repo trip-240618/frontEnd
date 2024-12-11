@@ -1,29 +1,47 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../../component/dialog/dialog.dart';
-
-/// 권한 요청
 Future<bool> requestCameraPermission(BuildContext context) async {
-  /// 권한 상태 확인
-  PermissionStatus status = await Permission.photos.status;
+  PermissionStatus status;
+
+  /// Android의 경우
+  if (Platform.isAndroid) {
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    final int androidVersion = int.parse(androidInfo.version.release);
+    if (androidVersion < 13) {
+      status = await Permission.storage.status;
+    } else {
+      status = await Permission.photos.status;
+    }
+  } else {
+    // iOS의 경우 Photos 권한 확인
+    status = await Permission.photos.status;
+  }
+  /// 권한이 영구적으로 거부된 경우
   if (status.isPermanentlyDenied) {
-    /// 사용자가 권한을 '영구적으로 거부'한 경우
     showOnlyConfirmTapDialog(context, '권한을 설정해주시기 바랍니다', () {
       openAppSettings();
       Get.back();
     });
+    return false;
   }
   /// 권한이 부여되지 않은 경우 요청
   if (!status.isGranted && !status.isLimited) {
-    status = await Permission.photos.request();
-    return false;
-  } else {
-    /// 권한이 부여된 경우
-    return true;
+    status = Platform.isAndroid && (await DeviceInfoPlugin().androidInfo).version.sdkInt < 33
+        ? await Permission.storage.request()
+        : await Permission.photos.request();
+
+    return status.isGranted || status.isLimited;
   }
+  /// 권한이 부여된 경우
+  return true;
 }
+
 
 
 Future<bool> requestPhotoMangerPermission(BuildContext context) async {
