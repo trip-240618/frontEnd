@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -47,15 +49,14 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 18),
             GoogleContainer(onTap: ()async{
               await googleLogin();
-              print('??? ${us.userList[0].type}');
               if(us.userList.isNotEmpty&&us.userList[0].type=='register'){
                 Get.to(()=>TermPage());
               }else if(us.userList.isNotEmpty&&us.userList[0].type=='login'){
                 Get.offAll(()=>MainPage());
               }
             }),
-            const SizedBox(height: 18),
-            AppleContainer(onTap: ()async{
+            Platform.isAndroid?const SizedBox():const SizedBox(height: 18),
+            Platform.isAndroid?const SizedBox():AppleContainer(onTap: ()async{
               await appleLogin();
               if(us.userList[0].type=='register'){
                 Get.to(()=>TermPage());
