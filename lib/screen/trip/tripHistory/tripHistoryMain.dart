@@ -63,12 +63,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
             ),
             markers: maps.markers.toSet(),
             onCameraMove: (CameraPosition position){
-              if(!isInitialCameraMove){
-                // scrollableController.animateTo(
-                //     0.05,
-                //     duration: const Duration(milliseconds: 1),
-                //     curve: Curves.linear);
-              }
+              if(!isInitialCameraMove){}
               isInitialCameraMove = false;
               setState(() {});
             },
@@ -154,7 +149,6 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
                                             bool isRequest = await requestPhotoMangerPermission(context);
                                             if(isRequest){
                                               SelectDayDialog(context, '', (){});
-                                              // Get.to(()=>AlbumPage());
                                             }
                                           },
                                           child: SvgPicture.asset('assets/icon/enabledRoundPlus.svg')),

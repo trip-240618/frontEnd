@@ -211,7 +211,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
           ),
         ),
           GestureDetector(
-              behavior: HitTestBehavior.opaque,
+              // behavior: HitTestBehavior.opaque,
               onVerticalDragUpdate: (details) {
                 if (details.delta.dy < 0) {
                   js.isGoogleExpanded.value = false;

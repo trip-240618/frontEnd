@@ -11,7 +11,7 @@ import 'package:tripStory/util/color.dart';
 void main() async{
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await Firebase.initializeApp(); // Firebase 초기화
+  await Firebase.initializeApp();
   KakaoSdk.init(
     nativeAppKey: '39c88180cf07b71dc3e44c8b41822afa',
     javaScriptAppKey: '401159aa34400f2b53f252d9f4448744',
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return GetMaterialApp(
-      title: 'Flutter Demo',
+      title: 'tripStory',
         supportedLocales: [
           Locale('ko', 'KR'),
         ],
@@ -47,7 +47,6 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(color: Colors.white,surfaceTintColor: Colors.white)
       ),
       home: SplashPage(),
-      // home: TermPage(),
     );
   }
 }

@@ -124,7 +124,7 @@ Future<void> googleLogin() async {
       }
     });
   } catch (error) {
-    print(error);
+    print('error ? ${error}');
   }
 }
 
@@ -157,7 +157,6 @@ Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
     var decodedBody = utf8.decode(response.bodyBytes);
     var jsonResponse = jsonDecode(decodedBody);
     us.userList.value = [UserModel.fromJson(jsonResponse)];
-    print('구글 로그인했을 때 정보 ${us.userList[0].name}');
   } else {
     print('서버에 토큰 전송 실패: ${response}');
   }

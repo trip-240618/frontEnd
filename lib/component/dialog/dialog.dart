@@ -234,80 +234,83 @@ CodeDialog(BuildContext context,int tripId,String code) {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 24,horizontal:20 ),
-          content: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 20),
-              Center(
-                child: Text(
-                  '초대코드 생성',
-                  textAlign: TextAlign.center,
-                  style: f20gray600w700,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Center(child: Text('${code}',style: f28gray600w700,)),
-              const SizedBox(height: 18),
-              Text('초대코드로 친구를 초대해보세요.',style: f14Gray400w500,),
-              Text('방 생성 이후에도 초대코드를',style: f14Gray400w500,),
-              Text('공유할 수 있습니다.',style: f14Gray400w500,),
-              const SizedBox(height: 50)
-            ],
-          ),
-          actions: [
-            Row(
+        return WillPopScope(
+          onWillPop: () async =>false,
+          child: AlertDialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            contentPadding: const EdgeInsets.symmetric(vertical: 24,horizontal:20 ),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                GestureDetector(
-                  onTap: (){
-                    ms.kakaoShare(tripId,'${code}');
-                    // ms.kakaoShare();
-                  },
-                  child: Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                        color: gray200,
-                        borderRadius: BorderRadius.circular(4)
-                    ),
-                    child: SvgPicture.asset('assets/icon/send.svg',fit: BoxFit.none,),
+                const SizedBox(height: 20),
+                Center(
+                  child: Text(
+                    '초대코드 생성',
+                    textAlign: TextAlign.center,
+                    style: f20gray600w700,
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: GestureDetector(
+                const SizedBox(height: 8),
+                Center(child: Text('${code}',style: f28gray600w700,)),
+                const SizedBox(height: 18),
+                Text('초대코드로 친구를 초대해보세요.',style: f14Gray400w500,),
+                Text('방 생성 이후에도 초대코드를',style: f14Gray400w500,),
+                Text('공유할 수 있습니다.',style: f14Gray400w500,),
+                const SizedBox(height: 50)
+              ],
+            ),
+            actions: [
+              Row(
+                children: [
+                  GestureDetector(
                     onTap: (){
-                      ms.roomReset();
-                      Get.back();
-                      Get.back();
-                      Get.to(()=>BottomNavigator());
+                      ms.kakaoShare(tripId,'${code}');
+                      // ms.kakaoShare();
                     },
-                    behavior: HitTestBehavior.opaque,
                     child: Container(
-                      width: Get.width,
+                      width: 60,
                       height: 60,
                       decoration: BoxDecoration(
-                          color: gray900,
+                          color: gray200,
                           borderRadius: BorderRadius.circular(4)
                       ),
-                      child: Center(
-                          child: Text(
-                            '여행방 이동',
-                            style: f16Whitew600,
-                          )),
+                      child: SvgPicture.asset('assets/icon/send.svg',fit: BoxFit.none,),
                     ),
                   ),
-                )
-              ],
-            )
-          ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: (){
+                        ms.roomReset();
+                        Get.back();
+                        Get.back();
+                        Get.to(()=>BottomNavigator());
+                      },
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(
+                        width: Get.width,
+                        height: 60,
+                        decoration: BoxDecoration(
+                            color: gray900,
+                            borderRadius: BorderRadius.circular(4)
+                        ),
+                        child: Center(
+                            child: Text(
+                              '여행방 이동',
+                              style: f16Whitew600,
+                            )),
+                      ),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         );
       });
 }
@@ -738,3 +741,5 @@ Future<void> forceUpdateVersionDialog(BuildContext context) {
     },
   );
 }
+
+

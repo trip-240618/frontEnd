@@ -4,8 +4,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:tripStory/controller/MapState.dart';
 
 import '../component/history/customMarker.dart';
 import 'color.dart';
@@ -16,17 +18,32 @@ Future<Uint8List> compressHEIC(Uint8List imageBytes) async {
   return await FlutterImageCompress.compressWithList(
     imageBytes,
     format: CompressFormat.png,
-    quality: 100,
+    quality: 30,
   );
+}
+
+Future<Uint8List> getCompressedImage(String imageUrl) async {
+  final maps = Get.find<MapState>();
+  // 캐시에 이미지가 있는지 확인
+  if (maps.imageCache.containsKey(imageUrl)) {
+    return maps.imageCache[imageUrl]!;
+  }
+
+  final File imageFile = await DefaultCacheManager().getSingleFile(imageUrl);
+  final Uint8List imageBytes = await imageFile.readAsBytes();
+  final Uint8List compressedBytes = await compressHEIC(imageBytes);
+
+  /// 캐시에 저장
+  maps.imageCache[imageUrl] = compressedBytes;
+
+  return compressedBytes;
 }
 
 Future<BitmapDescriptor> getCustomIcon(int index, String imageUrl) async {
   final double iconSize = 300.0;
-  /// 이미지 파일 읽기
-  final File imageFile = await DefaultCacheManager().getSingleFile(imageUrl);
-  final Uint8List imageBytes = await imageFile.readAsBytes();
-  Uint8List compressBytes = await compressHEIC(imageBytes);
 
+  /// 캐시된 이미지 사용
+  final Uint8List compressBytes = await getCompressedImage(imageUrl);
 
   final widget = SizedBox(
     width: iconSize,
