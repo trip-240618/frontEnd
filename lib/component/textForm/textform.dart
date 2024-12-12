@@ -338,15 +338,16 @@ TextFormSheet(BuildContext context, String hintText,TextEditingController contro
                   border: Border.all(color: gray200),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(4),
                   child: Row(
                     children: [
+                      const SizedBox(width: 12),
                       Expanded(
                         child: TextFormField(
-                          onChanged: (con){
+                          onChanged: (con) {
                             setState(() {});
                           },
-                          onFieldSubmitted: (value){
+                          onFieldSubmitted: (value) {
                             onTap();
                           },
                           cursorColor: Color(ts.selectTripList[0]['labelColor']),
@@ -369,21 +370,41 @@ TextFormSheet(BuildContext context, String hintText,TextEditingController contro
                           ],
                         ),
                       ),
-                      const SizedBox(width: 10,),
-                      Text('${controller.text.length}', style: controller.text.length>0?f11Gray800w600:f11Gray400w600,),
-                      Text('/18 ', style: f11Gray400w600,),
-                      const SizedBox(width: 8,),
-                      GestureDetector(
-                          onTap: (){
+                      const SizedBox(width: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12,bottom: 12),
+                        child: Text(
+                          '${controller.text.length}',
+                          style: controller.text.length > 0
+                              ? f11Gray800w600
+                              : f11Gray400w600,
+                        ),
+                      ),
+                      Text('/18 ', style: f11Gray400w600),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(100),
+                          onTap: () {
                             onTap();
-                            Get.back();
+                            if(focusNode.hasFocus){
+                              FocusScope.of(context).unfocus();
+                            }
                           },
-                          child: SvgPicture.asset('assets/icon/roundArrowRight.svg'))
+                          child: Container(
+                            padding: EdgeInsets.all(12),
+                            child: SvgPicture.asset(
+                              'assets/icon/roundArrowRight.svg',
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-            ),
+            )
+
           );
         }
     );
