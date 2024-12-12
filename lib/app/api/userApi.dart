@@ -40,6 +40,7 @@ class ApiUserClient {
           '/user/update/fcmToken'
       );
       us.userList.clear();
+      print('????dasdasdas ${us.userList}');
       dioClient.deleteCookies();
     } catch (e) {
       print('Error during auto-login: $e');

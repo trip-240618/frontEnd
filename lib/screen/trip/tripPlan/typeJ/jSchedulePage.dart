@@ -47,7 +47,7 @@ class _JSchedulePageState extends State<JSchedulePage> {
       await js.getJPlanList(1, false);
       await js.getFlightList();
       js.jplnaMarkerSet();
-      setState(() {});
+
     });
     super.initState();
   }
