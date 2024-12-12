@@ -3,9 +3,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart' as imgCom;
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tripStory/app/api/countryApi.dart';
@@ -51,6 +53,13 @@ class UserState extends GetxController{
 
   /// 로그아웃
   Future<void> logOut()async{
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
+    final token = await TokenManagerProvider.instance.manager.getToken();
+    if (await _googleSignIn.isSignedIn()) {
+      await _googleSignIn.signOut();
+    }else if(token != null){
+      await UserApi.instance.logout();
+    }
     apiUserClient.logOut();
   }
   /// 자동로그인

@@ -109,7 +109,6 @@ Future<void> sendTokenToServer(String accessToken,String refreshToken) async {
     var decodedBody = utf8.decode(response.bodyBytes); // 응답 데이터 디코딩
     var jsonResponse = jsonDecode(decodedBody); // JSON 디코딩
     us.userList.value = [UserModel.fromJson(jsonResponse)];
-    // us.userList.value = [jsonResponse];
   } else {
     print('서버에 토큰 전송 실패: ${response.statusCode}');
   }

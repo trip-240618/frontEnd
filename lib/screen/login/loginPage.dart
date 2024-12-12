@@ -35,7 +35,6 @@ class _LoginPageState extends State<LoginPage> {
             Center(child: Text('트립스토리는 간편 로그인을 지원해요',style: f14gray600w500,)),
             const SizedBox(height: 18),
             KakaoContainer(onTap: ()async{
-              // await UserApi.instance.unlink();
               await kakaoLogin();
               if(us.userList[0].type=='register'){
                   Get.to(()=>TermPage());
