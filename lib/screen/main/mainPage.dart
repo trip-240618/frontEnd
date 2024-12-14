@@ -40,20 +40,6 @@ class _MainPageState extends State<MainPage> {
   bool isLoading = true;
   DateTime? currentBackPressTime;
   void initState() {
-    kakaoSchemeStream.listen((url) async{
-      showLoading(context);
-      Uri uri = Uri.parse(url!);
-      /// 쿼리 매개변수 추출
-      String? tripId = uri.queryParameters['tripId'];
-      String? inviteCode = uri.queryParameters['inviteCode'];
-      Get.back();
-      await js.resetState();
-      await ms.tripJoin('${inviteCode}');
-      await ts.getSelectTrip(int.parse(tripId!));
-      Get.to(()=>BottomNavigator());
-    }, onError: (e) {
-      /// 에러 상황의 예외 처리 코드를 작성합니다.
-    });
     Future.delayed(Duration.zero,()async{
       isLoading = false;
       await ms.getComingTrip();

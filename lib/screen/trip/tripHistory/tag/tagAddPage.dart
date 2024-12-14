@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/bottomContainer.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/util/font.dart';
@@ -221,50 +222,51 @@ class _TagAddPageState extends State<TagAddPage> {
                 children: [
                   Text('태그 컬러 검색', style: f12gray600w600,),
                   const SizedBox(height: 2,),
-                  Container(
-                    width: Get.width,
-                    height: 44,
-                    child: ListView.builder(
-                      itemCount: 5,
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder:(context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap:(){
-                                  selectedColor = index;
-                                  setState(() {});
-                                },
-                                child: selectedColor==index
-                                    ? Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(color: gray900,width: 2),
-                                      color: colorList[index]
-                                  ),
-                                  child: SvgPicture.asset('assets/icon/checkIcon.svg',fit: BoxFit.none,),
-                                )
-                                    :  Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: colorList[index],
-                                      border: colorList[index] == whiteColor?Border.all(color: gray200):null
+                  Expanded(
+                    child: Container(
+                      width: Get.width,
+                      child: ListView.builder(
+                        itemCount: 5,
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder:(context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap:(){
+                                    selectedColor = index;
+                                    setState(() {});
+                                  },
+                                  child: selectedColor==index
+                                      ? Container(
+                                    width: 24,
+                                    height: 24,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(color: gray900,width: 2),
+                                        color: colorList[index]
+                                    ),
+                                    child: SvgPicture.asset('assets/icon/checkIcon.svg',fit: BoxFit.none,),
+                                  )
+                                      :  Container(
+                                    width: 24,
+                                    height: 24,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: colorList[index],
+                                        border: colorList[index] == whiteColor?Border.all(color: gray200):null
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12)
-                            ],
-                          ),
-                        );
-                      },
+                                const SizedBox(width: 12)
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -276,8 +278,15 @@ class _TagAddPageState extends State<TagAddPage> {
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
             child: BlackBottomContainer(onTap: (){
-              hs.addTagList[widget.index] = tagList;
-              Get.back();
+              if(tagList.length==2&&(tagList[0]['name']==tagList[1]['name'])){
+                showOnlyConfirmTapDialog(context, '중복된 태그입니다',(){
+                  Get.back();
+                });
+              }else{
+                print('tata?? ${tagList}');
+                hs.addTagList[widget.index] = tagList;
+                Get.back();
+              }
             }, title: '저장'),
           ),
         ),

@@ -5,12 +5,20 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/screen/main/mainPage.dart';
 import '../app/api/fileApi.dart';
 import '../app/api/tripApi.dart';
 import '../app/config/dio_client.dart';
 import '../app/permission/permission.dart';
 import 'package:http/http.dart' as http;
+import '../component/dialog/loading.dart';
+import '../screen/trip/bottomNavigator.dart';
+import 'jPlanState.dart';
+
 class MainState extends GetxController with GetSingleTickerProviderStateMixin {
+  TripState ts = Get.put(TripState());
+  JPlanState js = Get.put(JPlanState());
   final selectIdx = 0.obs; /// (탭바 클릭)
   final apiTripClient = ApiTripClient(DioClient());
   final apiFileClient = ApiFileClient(DioClient());
@@ -32,8 +40,19 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
 
   @override
   void onInit() {
+    Future.delayed(Duration.zero,()async{
+      ///앱을 종료 했을 떄 카카오톡으로 들어왔을 때
+      String? url = await receiveKakaoScheme();
+      if(url!=null){
+        enterKakaoTrip(url);
+      }
+    });
+    kakaoSchemeStream.listen((url) async{
+      enterKakaoTrip(url!);
+    }, onError: (e) {
+      /// 에러 상황의 예외 처리 코드를 작성합니다.
+    });
     tabController = TabController(length: 2, vsync: this);
-
     super.onInit();
   }
 
@@ -45,6 +64,19 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     super.onClose();
   }
 
+  /// 카카오톡 공유하기로 앱 참여 했을 때
+  Future<void> enterKakaoTrip(String url)async{
+    getShowLoading();
+    Uri uri = Uri.parse(url);
+    /// 쿼리 매개변수 추출
+    String? tripId = uri.queryParameters['tripId'];
+    String? inviteCode = uri.queryParameters['inviteCode'];
+    await js.resetState();
+    await tripJoin('${inviteCode}');
+    await ts.getSelectTrip(int.parse(tripId!));
+    Get.offAll(()=>MainPage());
+    Get.to(()=>BottomNavigator());
+  }
   /// 다가오는 여행 가져오기
   Future<void> getComingTrip()async{
     tripList.clear();

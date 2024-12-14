@@ -167,7 +167,7 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                                                   color: tag['color'], // 태그 색깔
                                                   shape: BoxShape.circle),
                                               child: Center(
-                                                child: Text('#', style: f12whitew500),
+                                                child: Text('#', style: tag['color']==Color(0xffffffff)?f12gray900w500:f12whitew500),
                                               ),
                                             ),
                                             const SizedBox(width: 4),

@@ -15,7 +15,6 @@ class TripState extends GetxController{
   }
   /// 여행방 정보 가져오기
   Future<void> getSelectTrip(int tripId)async{
-    selectTripList.clear();
     selectTripList.value = await apiTripClient.tripEnter(tripId);
     selectTripList[0]['labelColor'] = int.parse(selectTripList[0]['labelColor']);
     selectTripList.refresh();
