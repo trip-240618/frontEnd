@@ -27,11 +27,62 @@ class ApiNotificationClient {
       rethrow;
     }
   }
+  /// 홈 화면 용 카운트 체크
+  Future<int> getNotificationCount() async {
+    try {
+      final response = await dioClient.dio.get(
+         '/notification/count'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('data?? ${data}');
+        return data;
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+
+  /// 알림 삭제
+  Future<void> deleteNotification(int notificationId) async {
+    try {
+      final response = await dioClient.dio.delete(
+          '/notification/delete?notificationId=$notificationId'
+      );
+      if (response.statusCode == 200) {
+
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
   /// 단일 알림 체크
   Future<void> readNotification(int notificationId) async {
     try {
       final response = await dioClient.dio.put(
           '/notification/read?notificationId=$notificationId'
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+      } else {
+        throw Exception('Failed to auto-login: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during auto-login: $e');
+      rethrow;
+    }
+  }
+  /// 전체 알림 체크
+  Future<void> readAllNotification() async {
+    try {
+      final response = await dioClient.dio.put(
+          '/notification/read/all'
       );
       if (response.statusCode == 200) {
         final data = response.data;

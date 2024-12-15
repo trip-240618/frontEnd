@@ -6,6 +6,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/app/sns/snsLogin.dart';
 import 'package:tripStory/component/container/snsContainer.dart';
 import 'package:tripStory/controller/userState.dart';
+import '../../component/dialog/loading.dart';
 import '../../util/font.dart';
 import '../main/mainPage.dart';
 import 'register/term.dart';

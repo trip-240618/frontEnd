@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/controller/tripState.dart';
@@ -18,14 +19,22 @@ class NotificationMain extends StatefulWidget {
   State<NotificationMain> createState() => _NotificationMainState();
 }
 
-class _NotificationMainState extends State<NotificationMain> {
-  NotiState notis = Get.put(NotiState());
+class _NotificationMainState extends State<NotificationMain> with SingleTickerProviderStateMixin {
+  late final controller = SlidableController(this);
   DateTime now = DateTime.now();
-  final ts = Get.put(TripState());
-  final us = Get.put(UserState());
+  NotiState notis = Get.find<NotiState>();
+  final ts = Get.find<TripState>();
+  final us = Get.find<UserState>();
+
   @override
   void initState() {
-    notis.getNotificationList('');
+    Future.delayed(Duration.zero,()async{
+      await notis.getNotificationList('');
+      if(notis.notificationCount.value!=0){
+        notis.readAllNotification();
+      }
+    });
+
     super.initState();
   }
   @override
@@ -51,6 +60,7 @@ class _NotificationMainState extends State<NotificationMain> {
       return '방금 전';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,22 +129,44 @@ class _NotificationMainState extends State<NotificationMain> {
               child: SingleChildScrollView(
                 physics: const ClampingScrollPhysics(),
                 child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: notis.notificationList.length,
-                    itemBuilder: (contexts, index) {
-                      return Column(
-                        children: [
-                          GestureDetector(
-                            onTap: ()async{
-                              /// 여행일정 쪽 코드는 -> 바텀으로 보내버리고
-                              /// 여행 기록 쪽 코드는 기록 디테일만 보내기로
-                              if(notis.notificationList[index]['title']=='여행 일정'){
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: notis.notificationList.length,
+                  itemBuilder: (contexts, index) {
+                    return Column(
+                      children: [
+                        Slidable(
+                          key: ValueKey(notis.notificationList[index]['id']),
+                          endActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            extentRatio: 0.3,
+                            children: [
+                              CustomSlidableAction(
+                                onPressed: (context) {
+                                  notis.deleteNotification(index, notis.notificationList[index]['id']);
+                                },
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                                child: SvgPicture.asset(
+                                  'assets/icon/trashCan.svg',
+                                  fit: BoxFit.none,
+                                  colorFilter: ColorFilter.mode(gray900, BlendMode.srcIn),
+                                ),
+                              ),
+                            ],
+                          ),
+                          child: GestureDetector(
+                            onTap: () async {
+                              /// 여행일정과 기록 디테일 처리 로직
+                              if (notis.notificationList[index]['title'] == '여행 일정') {
+                                notis.notificationList[index]['read'] = true;
+                                notis.notificationList.refresh();
+                                notis.readNotification(notis.notificationList[index]['id']);
                                 Uri uri = Uri.parse(notis.notificationList[index]['destination']);
                                 String? tripId = uri.queryParameters['tripId'];
                                 await ts.getSelectTrip(int.parse(tripId!));
-                                Get.off(()=>BottomNavigator());
-                              }else{
+                                Get.off(() => BottomNavigator());
+                              } else {
                                 notis.notificationList[index]['read'] = true;
                                 notis.notificationList.refresh();
                                 notis.readNotification(notis.notificationList[index]['id']);
@@ -142,68 +174,84 @@ class _NotificationMainState extends State<NotificationMain> {
                                 String? tripId = uri.queryParameters['tripId'];
                                 String? historyId = uri.queryParameters['historyId'];
                                 await notis.getNotificationDetail(int.parse(tripId!), int.parse(historyId!));
-                                Get.to(()=>NotiHistoryDetail(tripId: int.parse(tripId),historyId: int.parse(historyId),));
+                                Get.to(() => NotiHistoryDetail(
+                                  tripId: int.parse(tripId),
+                                  historyId: int.parse(historyId),
+                                ));
                               }
                             },
                             child: Container(
-                                width: Get.width,
-                                decoration: BoxDecoration(
-                                    color:Colors.white,
-                                    borderRadius:BorderRadius.circular(4),
-                                    border: Border.all(color: gray200)
+                              width: Get.width,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: gray200),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Color(int.parse(notis.notificationList[index]['labelColor'])),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        'assets/icon/smallalert.svg',
+                                        fit: BoxFit.none,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            '${notis.notificationList[index]['title']}',
+                                            style: f12Gray800w700,
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            '${notis.notificationList[index]['content']}',
+                                            style: f14Gray800w500,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            '${timeAgo(DateTime.parse('${notis.notificationList[index]['createDate']}'))}',
+                                            style: f11gray400w500,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    notis.notificationList[index]['read']
+                                        ? const SizedBox()
+                                        : Container(
+                                      width: 6,
+                                      height: 6,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 12,horizontal: 16),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: 20,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                            color: Color(int.parse(notis.notificationList[index]['labelColor'])),
-                                            shape: BoxShape.circle
-                                        ),
-                                        child: SvgPicture.asset('assets/icon/smallalert.svg',fit: BoxFit.none,),
-                                      ),
-                                      const SizedBox(width: 8,),
-                                      Expanded(  // 이 부분 추가
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(height: 2),
-                                            Text('${notis.notificationList[index]['title']}', style: f12Gray800w700),
-                                            const SizedBox(height: 2),
-                                            Text(
-                                              '${notis.notificationList[index]['content']}',
-                                              style: f14Gray800w500,
-                                              maxLines: 2,  // 최대 2줄
-                                              overflow: TextOverflow.ellipsis,  // 넘치면 ellipsis로 처리
-                                            ),
-                                            const SizedBox(height: 4,),
-                                            Text('${timeAgo(DateTime.parse('${notis.notificationList[index]['createDate']}'))}',style: f11gray400w500,)
-                                          ],
-                                        ),
-                                      ),
-                                      notis.notificationList[index]['read']?const SizedBox():Container(
-                                        width: 6,
-                                        height: 6,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.black
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
+                              ),
                             ),
                           ),
-                          SizedBox(height: 12)
-                        ],
-                      );
-                    }),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    );
+                  },
+                ),
               ),
             ))
           ],

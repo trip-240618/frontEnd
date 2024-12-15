@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../util/color.dart';
+import '../../util/font.dart';
 
 class LoadingWidget extends StatefulWidget {
   const LoadingWidget({super.key});
@@ -52,3 +53,4 @@ void getShowLoading() {
     barrierDismissible: false, // 다이얼로그 외부 터치 방지
   );
 }
+

@@ -9,6 +9,8 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tripStory/app/config/dio_client.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
+import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/model/userModel.dart';
 import '../api/userApi.dart';

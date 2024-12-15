@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:popover/popover.dart';
 import 'package:tripStory/app/api/userApi.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
@@ -19,6 +18,7 @@ import '../../component/bottomModals.dart';
 import '../../component/button/popup_list.dart';
 import '../../component/dialog/loading.dart';
 import '../../component/empty/emptyScreen.dart';
+import '../../controller/notificationState.dart';
 import '../../util/color.dart';
 import '../../util/font.dart';
 import '../trip/bottomNavigator.dart';
@@ -33,15 +33,18 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   MainState ms = Get.put(MainState());
+  NotiState notis = Get.put(NotiState());
   TripState ts = Get.put(TripState());
   JPlanState js = Get.put(JPlanState());
   final dioClient = DioClient();
   final apiUserClient = ApiUserClient(DioClient());
   bool isLoading = true;
   DateTime? currentBackPressTime;
+
   void initState() {
     Future.delayed(Duration.zero,()async{
       isLoading = false;
+      await notis.getNotificationCount();
       await ms.getComingTrip();
       if(!ms.firstInit.value){
         ms.firstInit.value = true;
@@ -78,12 +81,29 @@ class _MainPageState extends State<MainPage> {
              padding: const EdgeInsets.only(right: 20),
              child: Row(
                children: [
-                 GestureDetector(
+                 Obx(()=>GestureDetector(
                      onTap: (){
                        Get.to(()=>NotificationMain());
                      },
-                     child: SvgPicture.asset('assets/icon/alert.svg')),
-                 const SizedBox(width: 16,),
+                     child: Container(
+                       width: 28,
+                       child: Stack(
+                           children: [
+                             SvgPicture.asset('assets/icon/alert.svg'),
+                             notis.notificationCount.value==0?const SizedBox():Positioned(
+                               right: 0,
+                               child: Container(
+                                 width: 6,
+                                 height: 6,
+                                 decoration: BoxDecoration(
+                                     shape: BoxShape.circle,
+                                     color: redColor
+                                 ),
+                               ),
+                             )
+                           ]),
+                     ))),
+                 const SizedBox(width: 8,),
                  GestureDetector(
                      onTap: (){
                        Get.to(()=>MyPage());
@@ -187,7 +207,9 @@ class _MainPageState extends State<MainPage> {
                                   behavior:HitTestBehavior.opaque,
                                   onTap:()async{
                                     await ts.getSelectTrip(ms.tripList[index]['id']);
-                                    Get.to(()=>BottomNavigator());
+                                    Get.to(()=>BottomNavigator())?.then((v)async{
+                                      await notis.getNotificationCount();
+                                    });
                                   },
                                   child: Container(
                                     width: Get.width,
