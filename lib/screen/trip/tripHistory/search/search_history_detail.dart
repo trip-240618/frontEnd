@@ -7,6 +7,7 @@ import '../../../../controller/historyState.dart';
 import '../../../../controller/tripState.dart';
 import '../../../../controller/userState.dart';
 import '../../../../util/color.dart';
+import '../../../../util/file_utils.dart';
 import '../../../../util/font.dart';
 import '../history/full_screen_image.dart';
 
@@ -162,6 +163,9 @@ class _SearchHistoryDetailState extends State<SearchHistoryDetail> {
                               color: gray50,
                               itemBuilder: (context) => <PopupMenuEntry<int>>[
                                 PopupMenuItem<int>(
+                                  onTap: () async {
+                                    await shareImage('${hs.searchList[pageIdx]['imageUrl']}');
+                                  },
                                   padding: EdgeInsets.zero,
                                   value: 1,
                                   child: Column(
