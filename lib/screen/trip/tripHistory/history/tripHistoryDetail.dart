@@ -1,7 +1,11 @@
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tripStory/controller/reportState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
@@ -9,6 +13,7 @@ import 'package:tripStory/screen/trip/tripHistory/history/full_screen_image.dart
 import '../../../../component/empty/emptyScreen.dart';
 import '../../../../controller/historyState.dart';
 import '../../../../util/color.dart';
+import '../../../../util/file_utils.dart';
 import '../../../../util/font.dart';
 
 
@@ -164,6 +169,9 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                               color: gray50,
                               itemBuilder: (context) => <PopupMenuEntry<int>>[
                                 PopupMenuItem<int>(
+                                  onTap: () async {
+                                    await shareImage('${hs.historyList[widget.dayIdx]['historyList'][pageIdx]['thumbnail']}');
+                                  },
                                   padding: EdgeInsets.zero,
                                   value: 1,
                                   child: Column(
@@ -253,6 +261,9 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                               color: gray50,
                               itemBuilder: (context) => <PopupMenuEntry<int>>[
                                 PopupMenuItem<int>(
+                                  onTap: () async {
+                                    await shareImage('${hs.historyList[widget.dayIdx]['historyList'][pageIdx]['thumbnail']}');
+                                  },
                                   padding: EdgeInsets.zero,
                                   value: 1,
                                   child: Column(
