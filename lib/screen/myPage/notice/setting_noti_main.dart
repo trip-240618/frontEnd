@@ -120,7 +120,8 @@ class _SettingNotiMainState extends State<SettingNotiMain> {
                       return GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: ()async{
-                          notiS.getDetailNoti(notiS.notiList[index]['id'], notiS.notiList[index]['type']);
+                          notiS.notiDetailList.clear();
+                          await notiS.getDetailNoti(notiS.notiList[index]['id'], notiS.notiList[index]['type']);
                           Get.to(()=>SettingNotiDetail());
                         },
                         child: Column(

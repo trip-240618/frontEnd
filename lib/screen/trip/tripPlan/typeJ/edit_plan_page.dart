@@ -358,6 +358,13 @@ class _EditPlanPageState extends State<EditPlanPage> {
                 };
                 await js.editJPlanList(data);
                 Get.back();
+                if(js.searchLocation.isNotEmpty){
+                  CameraPosition cameraPosition = CameraPosition(
+                      target: LatLng(js.searchLocation[0]['location']['latitude'],js.searchLocation[0]['location']['longitude']),
+                      zoom: 12);
+                  final GoogleMapController controller = await js.mapController.future;
+                  await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+                }
               }
             }, title: '수정'),
           ),
