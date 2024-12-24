@@ -246,4 +246,37 @@ class JPlanState extends GetxController{
       longitude.value = position.longitude;
     }
   }
+  // /// 지도에 일정이 있으면 내 일정 첫번째로, 아니면 현재 내 위치로
+  // Future<CameraPosition> getInitialCameraPosition(BuildContext context) async {
+  //   /// 초기 데이터 가져오기
+  //   await getJPlanList(1, false);
+  //   bool requestCheck = await requestLocationPermission(context);
+  //   if (requestCheck) {
+  //     /// 위치 정보가 있는 첫 번째 계획 찾기
+  //     var targetPlan = jPlanList[0]['planList']?.firstWhere(
+  //           (plan) => plan['latitude'] != null && plan['longitude'] != null,
+  //       orElse: () => null,
+  //     );
+  //     if (targetPlan != null) {
+  //       return CameraPosition(
+  //         target: LatLng(targetPlan['latitude'], targetPlan['longitude']),
+  //         zoom: 14.4746,
+  //       );
+  //     } else {
+  //       Position position = await Geolocator.getCurrentPosition(
+  //         desiredAccuracy: LocationAccuracy.high,
+  //       );
+  //       return CameraPosition(
+  //         target: LatLng(position.latitude, position.longitude),
+  //         zoom: 14.4746,
+  //       );
+  //     }
+  //   }else{
+  //     return CameraPosition(
+  //       target: LatLng(latitude.value, longitude.value),
+  //       zoom: 14.4746,
+  //     );
+  //   }
+  // }
+
 }
