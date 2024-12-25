@@ -51,7 +51,6 @@ class _PPlanPageState extends State<PPlanPage> {
         if(isAdding == true){
           isAdding = false;
           setState(() {
-
           });
         }
         Navigator.of(context).pop();
@@ -110,14 +109,12 @@ class _PPlanPageState extends State<PPlanPage> {
                               }
                             },
                             child: Container(
-                              padding: EdgeInsets.only(left: 12, right: 4, top: 12, bottom: 12),
+                              padding: EdgeInsets.only(left: 16, right: 4, top: 12, bottom: 12),
                               child: SvgPicture.asset('assets/icon/leftCaret.svg', fit: BoxFit.none,),
                             ),
                           ),
-                        ) : const SizedBox(width: 28),
-                        const SizedBox(width: 4,),
+                        ) : const SizedBox(width: 32),
                         Text('WEEK ${ps.pPlanList[0]['week']}', style: f14mainw600(Color(ts.selectTripList[0]['labelColor']),)),
-                        const SizedBox(width: 4,),
                         ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0 ?
                         InkWell(
                           borderRadius: BorderRadius.circular(100),
@@ -150,6 +147,7 @@ class _PPlanPageState extends State<PPlanPage> {
                                   ps.pPlanList[0]['checked'] = false;
                                   await ps.makeReorderableList();
                                   ps.isSorting.refresh();
+                                  ps.pPlanList.refresh();
                                 }
                                 /// 편집 종료
                                 else{
@@ -165,13 +163,32 @@ class _PPlanPageState extends State<PPlanPage> {
                               }
                             },
                             child: Container(
-                              padding: EdgeInsets.all(12),
+                              width: 30,
+                              height: 30,
                               child: SvgPicture.asset('assets/icon/swap.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn,
                               ),),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 4,),
+                        ps.pPlanList.isNotEmpty &&
+                            (ps.pPlanList[0]['waitList'] ?? []).isEmpty && ps.pPlanList[0]['checked'] == false
+                        ?GestureDetector(
+                          onTap: ()async{
+                            showLoading(context);
+                            ps.pPlanList[0]['checked'] = true;
+                            Map<String,dynamic> moveData = await ps.revertList();
+                            await ps.reorderPPlan(moveData);
+                            await ps.deleteReorderPPlan(ps.ReorderPPlanList[0]['week']);
+                            ps.isSorting.value = false;
+                            ps.isSorting.refresh();
+                            Get.back();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: Text('완료',style: f12gray600w600,),
+                          )
+                        )
+                        :SizedBox(width: 12,),
                       ],
                     ),
                   ),
@@ -248,12 +265,6 @@ class _PPlanPageState extends State<PPlanPage> {
                               Expanded(
                                 child: Text('${ps.ReorderPPlanList[0]['dayList'][index]['data']['content']}', style: f14Gray800w500,),
                               ),
-                              const SizedBox(width: 4),
-                              Container(
-                                width: 20,
-                                height: 20,
-                                child: SvgPicture.asset('assets/icon/rowEllipsis.svg'),
-                              )
                             ],
                           ),
                         )
@@ -393,7 +404,6 @@ class _PPlanPageState extends State<PPlanPage> {
                                                 )
                                                     :SvgPicture.asset('assets/icon/unchecked.svg',
                                                 ),
-                                                //),
                                                 const SizedBox(width: 12),
                                                 Expanded(
                                                   child: Text(

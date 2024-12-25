@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tripStory/screen/myPage/setting/cancel/setting_delete_page.dart';
 import 'package:tripStory/screen/myPage/setting/setting_alim_page.dart';
+import '../../../app/permission/permission.dart';
 import '../../../component/appbar.dart';
 import '../../../component/dialog/dialog.dart';
 import '../../../component/container/settingArrowRow.dart';
@@ -10,7 +12,6 @@ import '../../../controller/userState.dart';
 import '../../../util/color.dart';
 import '../../../util/font.dart';
 import '../../login/loginPage.dart';
-import '../notice/setting_noti_main.dart';
 
 class SettingMainPage extends StatefulWidget {
   const SettingMainPage({super.key});
@@ -21,6 +22,33 @@ class SettingMainPage extends StatefulWidget {
 
 class _SettingMainPageState extends State<SettingMainPage> {
   final us = Get.put(UserState());
+  String locationStatusText = '확인 중...';
+  String versionText = '0.0.0';
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeSettings();
+  }
+
+  Future<void> _initializeSettings() async {
+    try {
+      /// 앱 버전 정보 가져오기
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String fetchedVersion = packageInfo.version;
+
+      /// 위치 권한 상태 가져오기
+      String fetchedLocationStatus = await getLocationPermissionStatus();
+
+      setState(() {
+        versionText = fetchedVersion;
+        locationStatusText = fetchedLocationStatus;
+      });
+    } catch (e) {
+      print('초기화 중 에러 발생: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,7 +131,7 @@ class _SettingMainPageState extends State<SettingMainPage> {
                       children: [
                         Text('위치 서비스',style: f14Gray700w500,),
                         Spacer(),
-                        Text('앱을 사용하는 동안',style: f14bluew500,)
+                        Text(locationStatusText, style: f14bluew500,)
                       ],
                     )
                   ],
@@ -129,7 +157,7 @@ class _SettingMainPageState extends State<SettingMainPage> {
                     children: [
                       Text('앱 버전',style: f14Gray700w500,),
                       Spacer(),
-                      Text('v 0.0.0')
+                      Text('v ${versionText}', style: f12Gray800w600),
                     ],
                   ),
                   const SizedBox(height: 16,),

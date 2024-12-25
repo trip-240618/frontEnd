@@ -92,3 +92,21 @@ Future<bool> requestLocationPermission(BuildContext context) async{
   }
 
 }
+
+/// 위치 권한 상태를 확인하고 문자열로 반환
+Future<String> getLocationPermissionStatus() async {
+  PermissionStatus status = await Permission.location.status;
+
+  if (status.isGranted) {
+    return '앱을 사용하는 동안';
+  } else if (status.isDenied) {
+    return '권한이 거부됨';
+  } else if (status.isPermanentlyDenied) {
+    return '권한이 영구적으로 거부됨';
+  } else if (status.isRestricted) {
+    return '권한이 제한됨';
+  } else if (status.isLimited) {
+    return '제한적 접근';
+  }
+  return '상태 확인 불가';
+}
