@@ -37,7 +37,7 @@ class PPlanState extends GetxController{
       }
       filterData.add({
         'dayAfterStart':startIdx,
-        'isExpanded':true,
+        'isExpanded':true, /// p형 일정 열고 닫기
         'planList':matchedData!=null?matchedData['planList']:[],
       });
 

@@ -127,10 +127,18 @@ class _MyPageState extends State<MyPage> {
   void initState() {
     Future.delayed(Duration.zero,()async{
       await us.getCountrySetting();
-      for(int i=0;i<us.countryList.length;i++){
-        var matchingCountry = countries.where((country) => country['name'] == us.countryList[i]['country']);
-        myCountries.add(matchingCountry.first);
-      }
+      us.countryList.retainWhere((countryItem) {
+        var matchingCountry = countries.firstWhere(
+              (country) => country['name'] == countryItem['country'],
+          orElse: () => null,
+        );
+        /// country에 존재하는 나라일 경우
+        if (matchingCountry != null) {
+          myCountries.add(matchingCountry);
+          return true; /// 유지
+        }
+        return false; /// 제거
+      });
       isLoading = false;
       setState(() {});
     });
