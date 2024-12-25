@@ -32,7 +32,10 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
   bool isLoading = false;
 
   /// 주소와 세컨드 주소의 중복값을 제거해서 장소 이름을 추출
-  String getPlaceName(String address, String secondaryAddress) {
+  String getPlaceName(String address, String? secondaryAddress) {
+    if (secondaryAddress == null) {
+      return address ?? "";
+    }
     // 중복된 부분을 제거한 주소 생성
     String reducedAddress = address.replaceAll(secondaryAddress, "").trim();
     if (reducedAddress.startsWith(', ')) {
@@ -85,6 +88,7 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                                 isLoading = true;
                               });
                               placeList = await apiTripClient.autoLocationGet(_placeCon.text);
+                              print('placeList??${placeList}');
                               setState(() {
                                 isLoading = false;
                               });
@@ -95,7 +99,7 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                   ),
                 ),
               ),
-             isLoading?LoadingList(context):placeList.isEmpty ? const SizedBox():
+             isLoading?SizedBox():placeList.isEmpty ? const SizedBox():
               Expanded(
                 child: ListView.builder(
                     shrinkWrap: true,
@@ -146,7 +150,7 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${getPlaceName(placeList[index]['address'],placeList[index]['secondaryAddress'])}",  style: f12gray600W700,),
+                                          Text("${getPlaceName(placeList[index]['address'],placeList[index]['secondaryAddress'])??""}",  style: f12gray600W700,),
                                           const SizedBox(height: 4,),
                                           Text("${placeList[index]['address'] ?? ""}", overflow: TextOverflow.ellipsis, style: f12Gray600w500,maxLines: 1,),
                                           const SizedBox(height: 2,),
