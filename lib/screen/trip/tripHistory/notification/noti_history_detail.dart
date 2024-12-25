@@ -70,8 +70,6 @@ class _NotiHistoryDetailState extends State<NotiHistoryDetail>{
                     width: Get.width,
                     height: Get.height*0.6,
                     fit: BoxFit.fill,
-                    // placeholder: (context, url) =>
-                    // const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => DefaultProfileScreen(context),
                   ),
                   Positioned(

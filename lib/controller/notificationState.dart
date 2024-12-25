@@ -10,12 +10,12 @@ class NotiState extends GetxController{
   final notificationList = [].obs;
   final notificationHistory = {}.obs; /// 알림에서 들어가는 여행 기록 리스트
   final notificationComment = [].obs; /// 알림에서 들어가는 여행 댓글
-  final notificationCount = 0.obs;
-
+  final notificationCount = 0.obs; /// 홈 화면에서 알림이 있냐 없냐
+  final notificationIndex = 0.obs; /// 알림에서 노티 인덱스
   /// 알림 기록 가져오기
-  Future<void> getNotificationList(String title)async{
-    notificationList.value = await apiNotificationClient.getNotificationList(title);
-    notificationList.refresh();
+  Future<List<Map<String, dynamic>>> getNotificationList(String title,int id)async{
+    // notificationList.value = await apiNotificationClient.getNotificationList(title,id);
+    return await apiNotificationClient.getNotificationList(title,id);
   }
   /// 홈 화면 용 알림 확인
   Future<void> getNotificationCount()async{
