@@ -65,7 +65,7 @@ class _SearchHistoryListState extends State<SearchHistoryList> {
                           color: Color(int.parse('0xff${hs.selectedTagList[0]['tagColor']}')), // 태그 색깔
                           shape: BoxShape.circle),
                       child: Center(
-                        child: Text('#', style: f12whitew500),
+                        child: Text('#', style: hs.selectedTagList[0]['tagColor']=='FFFFFFFF'?f12gray900w500:f12whitew500),
                       ),
                     ),
                     const SizedBox(width: 4),

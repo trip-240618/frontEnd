@@ -135,7 +135,7 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                                   color: Color(int.parse('0xff${info['tagColor']}')), // 태그 색깔
                                   shape: BoxShape.circle),
                               child: Center(
-                                child: Text('#', style: f12whitew500),
+                                child: Text('#', style: info['tagColor']=='FFFFFFFF'?f12gray900w500:f12whitew500),
                               ),
                             ),
                             const SizedBox(width: 4),
@@ -330,7 +330,7 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                                           color: Color(int.parse('0xff${tag['tagColor']}')), // 태그 색깔
                                           shape: BoxShape.circle),
                                       child: Center(
-                                        child: Text('#', style: f12whitew500),
+                                        child: Text('#', style: tag['tagColor']=='FFFFFFFF'?f12gray900w500:f12whitew500),
                                       ),
                                     ),
                                     const SizedBox(width: 4),
@@ -427,7 +427,7 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
                                           color: Color(int.parse('0xff${tag['tagColor']}')), // 태그 색깔
                                           shape: BoxShape.circle),
                                       child: Center(
-                                        child: Text('#', style: f12whitew500),
+                                        child: Text('#', style: tag['tagColor']=='FFFFFFFF'?f12gray900w500:f12whitew500),
                                       ),
                                     ),
                                     const SizedBox(width: 4),
