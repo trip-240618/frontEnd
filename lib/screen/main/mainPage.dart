@@ -83,7 +83,9 @@ class _MainPageState extends State<MainPage> {
                children: [
                  Obx(()=>GestureDetector(
                      onTap: (){
-                       Get.to(()=>NotificationMain());
+                       Get.to(()=>NotificationMain())?.then((v)async{
+                         await notis.getNotificationCount();
+                       });
                      },
                      child: Container(
                        width: 28,

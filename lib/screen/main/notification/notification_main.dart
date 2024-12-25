@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
 import '../../../component/appbar.dart';
@@ -20,7 +21,7 @@ class NotificationMain extends StatefulWidget {
 }
 
 class _NotificationMainState extends State<NotificationMain> with SingleTickerProviderStateMixin {
-  late final controller = SlidableController(this);
+  final PagingController<int, Map<String, dynamic>> _pagingController = PagingController(firstPageKey: 0);
   DateTime now = DateTime.now();
   NotiState notis = Get.find<NotiState>();
   final ts = Get.find<TripState>();
@@ -29,18 +30,37 @@ class _NotificationMainState extends State<NotificationMain> with SingleTickerPr
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
-      await notis.getNotificationList('');
-      if(notis.notificationCount.value!=0){
-        notis.readAllNotification();
-      }
+       notis.readAllNotification();
     });
-
+    _pagingController.addPageRequestListener((pageKey) async{
+      /// 마지막 id
+      final lastId = pageKey!=0
+          ? notis.notificationList.last['id'] as int
+          : 0;
+      final newItems = await notis.getNotificationList(
+          notis.selectTabIndex==0?'':notis.selectTabIndex==1?'여행 일정':'여행 기록',
+          lastId);
+      final isLastPage = newItems.length < 20;
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + newItems.length;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+      notis.notificationList.addAll(newItems);
+      notis.notificationList.refresh();
+    });
     super.initState();
   }
+
   @override
   void dispose() {
+    notis.notificationList.clear();
+    _pagingController.dispose();
     super.dispose();
   }
+
+  /// 타임
   String timeAgo(DateTime createDate) {
     final now = DateTime.now();
     final difference = now.difference(createDate);
@@ -73,9 +93,12 @@ class _NotificationMainState extends State<NotificationMain> with SingleTickerPr
             Obx(()=> Row(
               children: [
                 GestureDetector(
-                  onTap: (){
+                  onTap: ()async{
                     notis.selectTabIndex.value = 0;
-                    notis.getNotificationList('');
+                    notis.notificationList.clear();
+                    _pagingController.itemList?.clear();
+                    _pagingController.refresh();
+                    setState(() {});
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -90,9 +113,11 @@ class _NotificationMainState extends State<NotificationMain> with SingleTickerPr
                 ),
                 const SizedBox(width: 8),
                 GestureDetector(
-                  onTap: (){
+                  onTap: ()async{
                     notis.selectTabIndex.value = 1;
-                    notis.getNotificationList('여행 일정');
+                    notis.notificationList.clear();
+                    _pagingController.itemList?.clear();
+                    _pagingController.refresh();
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -107,9 +132,11 @@ class _NotificationMainState extends State<NotificationMain> with SingleTickerPr
                 ),
                 const SizedBox(width: 8),
                 GestureDetector(
-                  onTap: (){
+                  onTap: ()async{
                     notis.selectTabIndex.value = 2;
-                    notis.getNotificationList('여행 기록');
+                    notis.notificationList.clear();
+                    _pagingController.itemList?.clear();
+                    _pagingController.refresh();
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -125,135 +152,139 @@ class _NotificationMainState extends State<NotificationMain> with SingleTickerPr
               ],
             )),
             const SizedBox(height: 20,),
-            Obx(()=>notis.notificationList.isEmpty?const SizedBox():Expanded(
-              child: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: notis.notificationList.length,
-                  itemBuilder: (contexts, index) {
-                    return Column(
-                      children: [
-                        Slidable(
-                          key: ValueKey(notis.notificationList[index]['id']),
-                          endActionPane: ActionPane(
-                            motion: const ScrollMotion(),
-                            extentRatio: 0.3,
-                            children: [
-                              CustomSlidableAction(
-                                onPressed: (context) {
-                                  notis.deleteNotification(index, notis.notificationList[index]['id']);
-                                },
-                                backgroundColor: Colors.red,
-                                foregroundColor: Colors.white,
-                                child: SvgPicture.asset(
-                                  'assets/icon/trashCan.svg',
-                                  fit: BoxFit.none,
-                                  colorFilter: ColorFilter.mode(gray900, BlendMode.srcIn),
+            Expanded(
+                child: PagedListView<int, Map<String, dynamic>>(
+                  pagingController: _pagingController,
+                  builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
+                    itemBuilder: (context, item, index){
+                      return Column(
+                        children: [
+                          Slidable(
+                            key: ValueKey(item['id']),
+                            endActionPane: ActionPane(
+                              motion: const ScrollMotion(),
+                              extentRatio: 0.3,
+                              children: [
+                                CustomSlidableAction(
+                                  onPressed: (context) {
+                                    notis.deleteNotification(index, item['id']);
+                                    _pagingController.itemList!.removeAt(index);
+                                    setState(() {});
+                                  },
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  child: SvgPicture.asset(
+                                    'assets/icon/trashCan.svg',
+                                    fit: BoxFit.none,
+                                    colorFilter: ColorFilter.mode(gray900, BlendMode.srcIn),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          child: GestureDetector(
-                            onTap: () async {
-                              /// 여행일정과 기록 디테일 처리 로직
-                              if (notis.notificationList[index]['title'] == '여행 일정') {
-                                notis.notificationList[index]['read'] = true;
-                                notis.notificationList.refresh();
-                                notis.readNotification(notis.notificationList[index]['id']);
-                                Uri uri = Uri.parse(notis.notificationList[index]['destination']);
-                                String? tripId = uri.queryParameters['tripId'];
-                                await ts.getSelectTrip(int.parse(tripId!));
-                                Get.off(() => BottomNavigator());
-                              } else {
-                                notis.notificationList[index]['read'] = true;
-                                notis.notificationList.refresh();
-                                notis.readNotification(notis.notificationList[index]['id']);
-                                Uri uri = Uri.parse(notis.notificationList[index]['destination']);
-                                String? tripId = uri.queryParameters['tripId'];
-                                String? historyId = uri.queryParameters['historyId'];
-                                await notis.getNotificationDetail(int.parse(tripId!), int.parse(historyId!));
-                                Get.to(() => NotiHistoryDetail(
-                                  tripId: int.parse(tripId),
-                                  historyId: int.parse(historyId),
-                                ));
-                              }
-                            },
-                            child: Container(
-                              width: Get.width,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(color: gray200),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: Color(int.parse(notis.notificationList[index]['labelColor'])),
-                                        shape: BoxShape.circle,
+                              ],
+                            ),
+                            child: GestureDetector(
+                              onTap: () async {
+                                /// 여행일정과 기록 디테일 처리 로직
+                                if (item['title'] == '여행 일정') {
+                                  notis.readNotification(item['id']);
+                                  Uri uri = Uri.parse(item['destination']);
+                                  String? tripId = uri.queryParameters['tripId'];
+                                  await ts.getSelectTrip(int.parse(tripId!));
+                                  Get.off(() => BottomNavigator());
+                                  _pagingController.itemList![index]['read'] = true;
+                                  setState(() {});
+                                } else {
+                                  notis.readNotification(item['id']);
+                                  Uri uri = Uri.parse(item['destination']);
+                                  String? tripId = uri.queryParameters['tripId'];
+                                  String? historyId = uri.queryParameters['historyId'];
+                                  await notis.getNotificationDetail(int.parse(tripId!), int.parse(historyId!));
+                                  Get.to(() => NotiHistoryDetail(
+                                    tripId: int.parse(tripId),
+                                    historyId: int.parse(historyId),
+                                  ));
+                                  _pagingController.itemList![index]['read'] = true;
+                                  setState(() {});
+                                }
+                              },
+                              child: Container(
+                                width: Get.width,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: gray200),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 20,
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: Color(int.parse(item['labelColor'])),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: SvgPicture.asset(
+                                          'assets/icon/smallalert.svg',
+                                          fit: BoxFit.none,
+                                        ),
                                       ),
-                                      child: SvgPicture.asset(
-                                        'assets/icon/smallalert.svg',
-                                        fit: BoxFit.none,
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              '${item['title']}',
+                                              style: f12Gray800w700,
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              '${item['content']}',
+                                              style: f14Gray800w500,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              '${timeAgo(DateTime.parse('${item['createDate']}'))}',
+                                              style: f11gray400w500,
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            '${notis.notificationList[index]['title']}',
-                                            style: f12Gray800w700,
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            '${notis.notificationList[index]['content']}',
-                                            style: f14Gray800w500,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            '${timeAgo(DateTime.parse('${notis.notificationList[index]['createDate']}'))}',
-                                            style: f11gray400w500,
-                                          )
-                                        ],
+                                      item['read']
+                                          ? const SizedBox()
+                                          : Container(
+                                        width: 6,
+                                        height: 6,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.black,
+                                        ),
                                       ),
-                                    ),
-                                    notis.notificationList[index]['read']
-                                        ? const SizedBox()
-                                        : Container(
-                                      width: 6,
-                                      height: 6,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ))
+                          const SizedBox(height: 12),
+                        ],
+                      );
+                    },
+                    noItemsFoundIndicatorBuilder: (context)=>const SizedBox(),
+                    firstPageProgressIndicatorBuilder: (context) =>
+                        Center(child: CircularProgressIndicator()),
+                    newPageProgressIndicatorBuilder: (context) =>
+                        Center(child: CircularProgressIndicator()),
+                  ),
+                )
+            )
           ],
         ),
       ),
