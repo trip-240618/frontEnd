@@ -62,7 +62,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
         appBar: _currentIndex==2?null:AppBar(
           automaticallyImplyLeading: false,
           titleSpacing: 0,
-          toolbarHeight: 80,
+          toolbarHeight: _currentIndex == 0&&ts.selectTripList[0]['type']=='P'?96:80,
           title: Obx(()=>Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -203,6 +203,14 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                     ),
                   ],
                 ),
+                if(_currentIndex == 0&&ts.selectTripList[0]['type']=='P')
+                  Container(
+                    height: 16,
+                    width: Get.width,
+                    decoration: BoxDecoration(
+                        color: Colors.white
+                    ),
+                  ),
               ],
             ),
           )),
