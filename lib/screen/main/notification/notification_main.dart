@@ -202,8 +202,6 @@ class _NotificationMainState extends State<NotificationMain> with SingleTickerPr
                                     tripId: int.parse(tripId),
                                     historyId: int.parse(historyId),
                                   ));
-                                  _pagingController.itemList![index]['read'] = true;
-                                  setState(() {});
                                 }
                               },
                               child: Container(
