@@ -17,6 +17,9 @@ import 'package:tripStory/screen/trip/tripPlan/typeP/pPlanPage.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
+import '../../controller/MapState.dart';
+import '../../controller/historyState.dart';
+
 class BottomNavigator extends StatefulWidget {
   const BottomNavigator({super.key});
 
@@ -33,6 +36,8 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
   final us = Get.put(UserState());
   final js = Get.put(JPlanState());
   final ps = Get.put(PPlanState());
+  final hs = Get.put(HistoryState());
+  final maps = Get.put(MapState());
   @override
   void initState() {
     _widgetOptions = [ts.selectTripList[0]['type']=='J'? JSchedulePage():PPlanPage(), LockerTapPage(), TripHistoryMainPage()];
@@ -223,7 +228,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
         bottomNavigationBar: Container(
           height: 70,
           child: TabBar(
-            onTap: (index){
+            onTap: (index)async{
               /// J형 편집 종료
               if(ts.selectTripList[0]['type']=='J'){
                 if(js.jPlanList.isNotEmpty && (js.jPlanList[0]['waitList'] ?? []).isEmpty && js.jPlanList[0]['checked'] == false){
@@ -259,6 +264,10 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                   _currentIndex = index;
                   setState(() {});
                 }
+              }
+              if(index==2){
+                await hs.getHistoryList(ts.selectTripList[0]['id']);
+                maps.addMarkersFromHistory();
               }
             },
             controller: _bottomTabController,

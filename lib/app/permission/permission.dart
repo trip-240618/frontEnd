@@ -72,7 +72,8 @@ Future<bool> requestLocationPermission(BuildContext context) async{
       Get.back();
     });
     return false;
-  } else if (status.isLimited) {
+  }
+  else if (status.isLimited) {
     /// 권한이 제한된 경우
     showOnlyConfirmTapDialog(context, '위치 권한을 설정해주시기 바랍니다', () {
       openAppSettings();
