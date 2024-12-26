@@ -134,7 +134,18 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                             padding: EdgeInsets.zero,
                             value: 1,
                             onTap: (){
-                              Get.to(()=>TripEditPage());
+                              if(ts.selectTripList[0]['type']=='P'&&ps.pPlanList[0]['waitList'].length==0 && ps.pPlanList[0]['checked']==false){
+                                showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
+                                  ps.pPlanList[0]['checked'] = true;
+                                  ps.isSorting.value = false;
+                                  ps.deleteReorderPPlan(ps.ReorderPPlanList[0]['week']);
+                                  setState(() {});
+                                  Get.back();
+                                  Get.to(()=>TripEditPage());
+                                });
+                              }else{
+                                Get.to(()=>TripEditPage());
+                              }
                             },
                             child: Padding(
                               padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
