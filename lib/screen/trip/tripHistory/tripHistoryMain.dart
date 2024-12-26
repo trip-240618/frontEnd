@@ -27,23 +27,26 @@ class TripHistoryMainPage extends StatefulWidget {
   State<TripHistoryMainPage> createState() => _TripHistoryMainPageState();
 }
 
-class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
-  final ms = Get.put(MainState());
-  final hs = Get.put(HistoryState());
-  final ts = Get.put(TripState());
-  final maps = Get.put(MapState());
+class _TripHistoryMainPageState extends State<TripHistoryMainPage> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  final ms = Get.find<MainState>();
+  final hs = Get.find<HistoryState>();
+  final ts = Get.find<TripState>();
+  final maps = Get.find<MapState>();
   DraggableScrollableController scrollableController = DraggableScrollableController();
   ScrollController listScrollCon = ScrollController();
   final GlobalKey<ScaffoldState> modelScaffoldKey = GlobalKey<ScaffoldState>();
   bool isInitialCameraMove = true;
   bool isListScroller = false;
   bool isLoading = true;
+
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
       await maps.getCurrentLocation(context);
-      await hs.getHistoryList(ts.selectTripList[0]['id']);
-      maps.addMarkersFromHistory();
+      // await hs.getHistoryList(ts.selectTripList[0]['id']);
+      // maps.addMarkersFromHistory();
       isLoading = false;
       setState(() {});
     });
@@ -52,6 +55,7 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       key: modelScaffoldKey,
       body: isLoading?Center(child: LoadingWidget()):Obx(()=>Stack(

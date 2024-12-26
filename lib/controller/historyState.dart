@@ -86,7 +86,6 @@ class HistoryState extends GetxController{
   /// 기록 리스트 가져오기
   Future<void> getHistoryList(int tripId) async {
     final ts = Get.put(TripState());
-    historyList.clear();
     List allData = await apiHistoryClient.getHistoryList(tripId);
     List<Future<Map<String, dynamic>>> futures = [];
 

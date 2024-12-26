@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +16,7 @@ import '../../../../component/dialog/loading.dart';
 import '../../../../component/textForm/textform.dart';
 import '../../../../component/toast/toast.dart';
 import '../../../../controller/socketState.dart';
+
 
 class PPlanPage extends StatefulWidget {
   const PPlanPage({super.key});
@@ -698,7 +701,7 @@ class _PPlanPageState extends State<PPlanPage> {
                                                           padding: EdgeInsets.zero,
                                                           value: 3,
                                                           child: Padding(
-                                                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                            padding: EdgeInsets.symmetric(horizontal: Platform.isAndroid?8:12),
                                                             child: Row(
                                                               mainAxisAlignment: MainAxisAlignment.start,
                                                               crossAxisAlignment: CrossAxisAlignment.center,

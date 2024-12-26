@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,16 +52,18 @@ class _JSchedulePageState extends State<JSchedulePage> with AutomaticKeepAliveCl
       await js.getJPlanList(1, false);
       await js.getFlightList();
       js.jplnaMarkerSet();
-      var targetPlan = js.jPlanList[0]['planList']?.firstWhere(
-            (plan) => plan['latitude'] != null && plan['longitude'] != null,
-        orElse: () => null,
-      );
-      if(targetPlan !=null){
-        CameraPosition cameraPosition = CameraPosition(
-            target: LatLng(targetPlan['latitude'],targetPlan['longitude']),
-            zoom: 12);
-        final GoogleMapController controller = await js.mapController.future;
-        await controller.moveCamera(CameraUpdate.newCameraPosition(cameraPosition));
+      if(js.jPlanList.isNotEmpty){
+        var targetPlan = js.jPlanList[0]['planList']?.firstWhere(
+              (plan) => plan['latitude'] != null && plan['longitude'] != null,
+          orElse: () => null,
+        );
+        if(targetPlan !=null){
+          CameraPosition cameraPosition = CameraPosition(
+              target: LatLng(targetPlan['latitude'],targetPlan['longitude']),
+              zoom: 12);
+          final GoogleMapController controller = await js.mapController.future;
+          await controller.moveCamera(CameraUpdate.newCameraPosition(cameraPosition));
+        }
       }
     });
     super.initState();
@@ -165,29 +168,25 @@ class _JSchedulePageState extends State<JSchedulePage> with AutomaticKeepAliveCl
                           :  GestureDetector(
                         behavior: HitTestBehavior.opaque,
                             onTap:()async{
-                              if(js.jPlanList.isNotEmpty &&
-                                  (js.jPlanList[0]['waitList'] ?? []).isEmpty &&
-                                  js.jPlanList[0]['checked'] == false){
-                                showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
-                                  js.jPlanList[0]['checked'] = true;
-                                  js.isSorting.value = false;
-                                  js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
-                                  js.selectedIdx.value = index;
-                                  scrollToIndex(index);
-                                  js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index))}';
-                                  await js.getJPlanList(index+1, false);
-                                  js.jplnaMarkerSet();
-                                  setState(() {});
-                                  Get.back();
-                                });
-                              }else{
                                 js.selectedIdx.value = index;
                                 scrollToIndex(index);
                                 js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index))}';
                                 await js.getJPlanList(index+1, false);
                                 js.jplnaMarkerSet();
+                                if(js.jPlanList.isNotEmpty){
+                                  var targetPlan = js.jPlanList[0]['planList']?.firstWhere(
+                                        (plan) => plan['latitude'] != null && plan['longitude'] != null,
+                                    orElse: () => null,
+                                  );
+                                  if(targetPlan !=null){
+                                    CameraPosition cameraPosition = CameraPosition(
+                                        target: LatLng(targetPlan['latitude'],targetPlan['longitude']),
+                                        zoom: 12);
+                                    final GoogleMapController controller = await js.mapController.future;
+                                    await controller.moveCamera(CameraUpdate.newCameraPosition(cameraPosition));
+                                  }
+                                }
                                 setState(() {});
-                              }
                             },
                             child: Container(
                               width:36,
@@ -528,7 +527,7 @@ class _JSchedulePageState extends State<JSchedulePage> with AutomaticKeepAliveCl
                                                               padding: EdgeInsets.zero,
                                                               value: 3,
                                                               child: Padding(
-                                                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                                padding: EdgeInsets.symmetric(horizontal: Platform.isAndroid?8:12),
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
