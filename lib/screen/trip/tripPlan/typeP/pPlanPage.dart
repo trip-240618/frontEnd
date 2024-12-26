@@ -12,6 +12,7 @@ import 'package:tripStory/controller/pPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
+import '../../../../component/dialog/dialog.dart';
 import '../../../../component/dialog/loading.dart';
 import '../../../../component/textForm/textform.dart';
 import '../../../../component/toast/toast.dart';
@@ -106,9 +107,19 @@ class _PPlanPageState extends State<PPlanPage> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(100),
                             onTap: () async{
-                              if(ps.selectedWeekIdx.value>1){
-                                ps.selectedWeekIdx.value --;
-                                await ps.getPPlanList(false);
+                              if(ps.isSorting.value){
+                                showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
+                                  ps.pPlanList[0]['checked'] = true;
+                                  ps.isSorting.value = false;
+                                  ps.deleteReorderPPlan(ps.ReorderPPlanList[0]['week']);
+                                  Get.back();
+                                  setState(() {});
+                                });
+                              }else{
+                                if(ps.selectedWeekIdx.value>1){
+                                  ps.selectedWeekIdx.value --;
+                                  await ps.getPPlanList(false);
+                                }
                               }
                             },
                             child: Container(
@@ -122,9 +133,19 @@ class _PPlanPageState extends State<PPlanPage> {
                         InkWell(
                           borderRadius: BorderRadius.circular(100),
                           onTap: () async{
-                            if(ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0){
-                              ps.selectedWeekIdx.value ++;
-                              await ps.getPPlanList(false);
+                            if(ps.isSorting.value){
+                              showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
+                                ps.pPlanList[0]['checked'] = true;
+                                ps.isSorting.value = false;
+                                ps.deleteReorderPPlan(ps.ReorderPPlanList[0]['week']);
+                                Get.back();
+                                setState(() {});
+                              });
+                            }else{
+                              if(ps.totalDays.value-(ps.selectedWeekIdx.value*7)>0){
+                                ps.selectedWeekIdx.value ++;
+                                await ps.getPPlanList(false);
+                              }
                             }
                           },
                           child: Container(
@@ -165,11 +186,14 @@ class _PPlanPageState extends State<PPlanPage> {
                                 }
                               }
                             },
-                            child: Container(
-                              width: 30,
-                              height: 30,
-                              child: SvgPicture.asset('assets/icon/swap.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn,
-                              ),),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                child: SvgPicture.asset('assets/icon/swap.svg',fit: BoxFit.none,colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn,
+                                ),),
+                              ),
                             ),
                           ),
                         ),
