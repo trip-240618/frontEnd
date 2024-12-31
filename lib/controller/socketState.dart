@@ -120,7 +120,7 @@ class SocketState extends GetxController{
         }
         js.jPlanList[0]['planList'].insert(insertIndex, result['data']);
         if (result['data']['latitude'] != null && result['data']['longitude'] != null) {
-          js.jplnaMarkerSet();
+          js.jPlanMarkerSet();
         };
         js.jPlanList.refresh();
       } else {
@@ -129,7 +129,7 @@ class SocketState extends GetxController{
           'planList': [result['data']]
         });
         if (result['data']['latitude'] != null && result['data']['longitude'] != null) {
-          js.jplnaMarkerSet();
+          js.jPlanMarkerSet();
         };
       }
     }
@@ -139,7 +139,7 @@ class SocketState extends GetxController{
     /// 현재 위치한 시간이랑 같을 때
     if (js.jPlanList[0]['dayAfterStart'] == result['data']['dayAfterStart']) {
       js.jPlanList[0]['planList'].removeWhere((item) => item['planId'] == result['data']['planId']);
-      js.jplnaMarkerSet();
+      js.jPlanMarkerSet();
     }
   }
   /// 수정 할 때 함수
@@ -160,7 +160,7 @@ class SocketState extends GetxController{
           duplicateCheck = true;
           js.jPlanList[0]['planList'][i] = result['data'];
           if(result['data']['latitude'] != null && result['data']['longitude'] != null){
-            js.jplnaMarkerSet();
+            js.jPlanMarkerSet();
           }
           break;
         }
@@ -176,7 +176,7 @@ class SocketState extends GetxController{
         }
         js.jPlanList[0]['planList'].insert(insertIndex, result['data']);
         if(result['data']['latitude'] != null && result['data']['longitude'] != null){
-          js.jplnaMarkerSet();
+          js.jPlanMarkerSet();
         }
         js.jPlanList.refresh();
       }
@@ -190,7 +190,7 @@ class SocketState extends GetxController{
         day['waitList']=[];
         day['checked'] = true;
       });
-      js.jplnaMarkerSet();
+      js.jPlanMarkerSet();
     }
   }
   /// 편집 권한 체크 시작

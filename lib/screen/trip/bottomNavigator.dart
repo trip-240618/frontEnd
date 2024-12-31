@@ -240,24 +240,26 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
           height: 70,
           child: TabBar(
             onTap: (index)async{
-              /// J형 편집 종료
-              if(ts.selectTripList[0]['type']=='J'){
-                if(js.jPlanList.isNotEmpty && (js.jPlanList[0]['waitList'] ?? []).isEmpty && js.jPlanList[0]['checked'] == false){
-                  _bottomTabController.index = 0;
-                  showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
-                    js.jPlanList[0]['checked'] = true;
-                    js.isSorting.value = false;
-                    _currentIndex = index;
-                    _bottomTabController.index = index;
-                    js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
-                    setState(() {});
-                    Get.back();
-                  });
-                }else{
-                  _currentIndex = index;
-                  setState(() {});
-                }
-              }
+              _currentIndex= index;
+              setState(() {});
+              // /// J형 편집 종료
+              // if(ts.selectTripList[0]['type']=='J'){
+              //   if(js.jPlanList.isNotEmpty && (js.jPlanList[0]['waitList'] ?? []).isEmpty && js.jPlanList[0]['checked'] == false){
+              //     _bottomTabController.index = 0;
+              //     showConfirmCancelTapDialog(context, '편집을 종료하시겠습니까?', '확인', null, ()async{
+              //       js.jPlanList[0]['checked'] = true;
+              //       js.isSorting.value = false;
+              //       _currentIndex = index;
+              //       _bottomTabController.index = index;
+              //       js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
+              //       setState(() {});
+              //       Get.back();
+              //     });
+              //   }else{
+              //     _currentIndex = index;
+              //     setState(() {});
+              //   }
+              // }
               /// P형 편집 종료
               if(ts.selectTripList[0]['type']=='P'){
                 if(ps.pPlanList[0]['waitList'].length==0 && ps.pPlanList[0]['checked']==false){
@@ -271,15 +273,13 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
                     setState(() {});
                     Get.back();
                   });
-                }else{
-                  _currentIndex = index;
-                  setState(() {});
                 }
               }
               if(index==2){
                 await hs.getHistoryList(ts.selectTripList[0]['id']);
                 maps.addMarkersFromHistory();
               }
+
             },
             controller: _bottomTabController,
             indicator: BoxDecoration(

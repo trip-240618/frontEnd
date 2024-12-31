@@ -25,7 +25,10 @@ class MapState extends GetxController{
     markers.clear();
     for (int i = 0; i < hs.historyList.length; i++) {
       for(int j=0;j<hs.historyList[i]['historyList'].length;j++){
-        if(hs.historyList[i]['historyList'][j]['latitude']!= 0.0 && hs.historyList[i]['historyList'][j]['longitude']!=0.0){
+        if(hs.historyList[i]['historyList'][j]['latitude']!=null&&
+            hs.historyList[i]['historyList'][j]['longitude']!=null&&
+            hs.historyList[i]['historyList'][j]['latitude']!= 0.0 &&
+            hs.historyList[i]['historyList'][j]['longitude']!=0.0){
           createMarker(
               index: i + 1,
               history: hs.historyList[i]['historyList'][j],
