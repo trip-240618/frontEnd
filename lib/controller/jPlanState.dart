@@ -20,6 +20,7 @@ class JPlanState extends GetxController{
   final latitude = 0.0.obs;
   final longitude = 0.0.obs;
   final isGoogleExpanded = false.obs;
+  final googleMapHeight = 154.0.obs;
   final isSorting = false.obs; /// 수정 권한 버튼
   final RxList flightList = [].obs; /// 항공권 저장하는 리스트
 
@@ -65,6 +66,7 @@ class JPlanState extends GetxController{
   /// 초기화 함수
   Future<void> resetState() async{
     isGoogleExpanded.value = false;
+    googleMapHeight.value = 154.0;
     isSorting.value = false;
     flightList.clear();
     selectedDate.value = '';
@@ -92,51 +94,79 @@ class JPlanState extends GetxController{
       curve: Curves.easeInOut,
     );
   }
-  /// 지도에 마커 표시
-  Future<void> jplnaMarkerSet() async {
+
+  /// j형 일정 마커 찍는 함수
+  Future<void> jPlanMarkerSet() async {
     markers.clear();
     polyline.clear();
     List<LatLng> poly = [];
     int countNum = 1;
     if (jPlanList.isNotEmpty) {
       try {
+        List<Future<Marker?>> markerFutures = [];
         for (int i = 0; i < jPlanList[0]['planList'].length; i++) {
-          if (jPlanList[0]['planList'][i]['latitude'] != null &&
-              jPlanList[0]['planList'][i]['longitude'] != null) {
-            // 마커 생성
-            final marker = Marker(
-              markerId: MarkerId(DateTime.now().toString()), // 고유 마커 ID
-              position: LatLng(jPlanList[0]['planList'][i]['latitude'], jPlanList[0]['planList'][i]['longitude']),
-              icon: await getCustomIcon2(countNum),
-              onTap: () async{
-                CameraPosition cameraPosition= CameraPosition(
-                    target: LatLng(jPlanList[0]['planList'][i]['latitude'], jPlanList[0]['planList'][i]['longitude']),
-                    zoom: 14);
-                final GoogleMapController controller = await mapController.future;
-                await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-                scrollToList(i);
-              },
-            );
-            countNum ++;
-            markers.add(marker);
-            poly.add(LatLng(jPlanList[0]['planList'][i]['latitude'], jPlanList[0]['planList'][i]['longitude']));
+          final plan = jPlanList[0]['planList'][i];
+          if (plan['latitude'] != null && plan['longitude'] != null) {
+            /// 비동기로 마커 생성
+            markerFutures.add(_createMarker(
+              latitude: plan['latitude'],
+              longitude: plan['longitude'],
+              count: countNum++,
+              index: i,
+            ));
+            /// 폴리라인 좌표 추가
+            poly.add(LatLng(plan['latitude'], plan['longitude']));
           }
         }
+        /// 모든 마커를 병렬로 생성
+        final markerResults = await Future.wait(markerFutures);
+        /// 마커 추가 (null 제외)
+        markers.addAll(markerResults.whereType<Marker>());
+        /// 폴리라인 추가
         if (poly.isNotEmpty) {
           polyline.add(
             Polyline(
               polylineId: PolylineId('polyline_1'),
-              points: poly, // 전체 경로 좌표 리스트
+              points: poly, /// 전체 경로 좌표 리스트
               color: Color(ts.selectTripList[0]['labelColor']), // 경로 색상
               width: 5, // 경로 두께
             ),
           );
         }
       } catch (e) {
-        // print('에러 발생: $e'); // 에러가 발생하면 출력
+        print('에러 발생: $e'); /// 에러가 발생하면 출력
       }
     }
   }
+
+  /// 마커 생성 함수 (비동기 작업)
+  Future<Marker?> _createMarker({
+    required double latitude,
+    required double longitude,
+    required int count,
+    required int index,
+  }) async {
+    try {
+      final icon = await getCustomIcon2(count);
+      return Marker(
+        markerId: MarkerId(DateTime.now().toString()), // 고유 마커 ID
+        position: LatLng(latitude, longitude),
+        icon: icon,
+        onTap: () async {
+          final controller = await mapController.future;
+          final cameraPosition = CameraPosition(
+            target: LatLng(latitude, longitude),
+            zoom: 14,
+          );
+          await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+          scrollToList(index);
+        },
+      );
+    } catch (e) {
+      return null; // 실패한 경우 null 반환
+    }
+  }
+
   /// jplanList 가져오기
   Future<void> getJPlanList(int day ,bool locker)async{
     jPlanList.value = await apijplanClient.getJPlanList(ts.selectTripList[0]['id'], day, locker);

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -51,7 +50,7 @@ class _JSchedulePageState extends State<JSchedulePage> with AutomaticKeepAliveCl
       js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: 0))}';
       await js.getJPlanList(1, false);
       await js.getFlightList();
-      js.jplnaMarkerSet();
+      js.jPlanMarkerSet();
       if(js.jPlanList.isNotEmpty){
         var targetPlan = js.jPlanList[0]['planList']?.firstWhere(
               (plan) => plan['latitude'] != null && plan['longitude'] != null,
@@ -88,29 +87,7 @@ class _JSchedulePageState extends State<JSchedulePage> with AutomaticKeepAliveCl
     scrollController.dispose();
     super.dispose();
   }
-  Future<CameraPosition> getInitialCameraPosition() async {
-    if (js.jPlanList.isNotEmpty && js.jPlanList[0]['planList'] != null) {
-      var targetPlan = js.jPlanList[0]['planList']?.firstWhere(
-            (plan) => plan['latitude'] != null && plan['longitude'] != null,
-        orElse: () => null,
-      );
 
-      if (targetPlan != null) {
-        return CameraPosition(
-          target: LatLng(targetPlan['latitude'], targetPlan['longitude']),
-          zoom: 14.0,
-        );
-      }
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    return CameraPosition(
-      target: LatLng(position.latitude, position.longitude),
-      zoom: 14.0,
-    );
-  }
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -172,7 +149,7 @@ class _JSchedulePageState extends State<JSchedulePage> with AutomaticKeepAliveCl
                                 scrollToIndex(index);
                                 js.selectedDate.value = '${DateFormat('yyyy-MM-dd').parse(ts.selectTripList[0]['startDate']).add(Duration(days: index))}';
                                 await js.getJPlanList(index+1, false);
-                                js.jplnaMarkerSet();
+                                js.jPlanMarkerSet();
                                 if(js.jPlanList.isNotEmpty){
                                   var targetPlan = js.jPlanList[0]['planList']?.firstWhere(
                                         (plan) => plan['latitude'] != null && plan['longitude'] != null,
@@ -221,7 +198,7 @@ class _JSchedulePageState extends State<JSchedulePage> with AutomaticKeepAliveCl
           const SizedBox(height: 15),
           js.latitude.value==0.0?const SizedBox():Container(
           width: Get.width,
-          height: js.isGoogleExpanded.value ? 300 : 154,
+          height: js.googleMapHeight.value,
           child: Obx(()=>GoogleMap(
             initialCameraPosition: CameraPosition(
               target: LatLng(js.latitude.value, js.longitude.value),
@@ -239,12 +216,16 @@ class _JSchedulePageState extends State<JSchedulePage> with AutomaticKeepAliveCl
           )),
         ),
           GestureDetector(
-              onVerticalDragUpdate: (details) {
-                if (details.delta.dy < 0) {
-                  js.isGoogleExpanded.value = false;
-                } else if (details.delta.dy > 0) {
-                  js.isGoogleExpanded.value = true;
+              onPanUpdate: (details) {
+                // 높이를 드래그한 만큼 변경
+                double newHeight = js.googleMapHeight.value + details.delta.dy;
+                // 높이 제한
+                if (newHeight < 154) {
+                  newHeight = 154; // 최소 높이
+                } else if (newHeight > 300) {
+                  newHeight = 300; // 최대 높이
                 }
+                js.googleMapHeight.value = newHeight;
               },
               child: Container(
                 decoration: BoxDecoration(

@@ -112,6 +112,7 @@ Future<BitmapDescriptor> getCustomIcon(int index, String imageUrl) async {
   return BitmapDescriptor.fromBytes(pngBytes);
 }
 
+/// j형 일정
 Future<BitmapDescriptor> getCustomIcon2(int index) async {
   final double iconSize = 200.0;
 
