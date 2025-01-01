@@ -260,6 +260,8 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> with Automati
                                                                         ?DefaultProfileScreen(context)
                                                                         :KeepAliveView(
                                                                           child: CachedNetworkImage(
+                                                                            memCacheHeight: 250,
+                                                                            memCacheWidth: 250,
                                                                             imageUrl: '${hs.historyList[index]['historyList'][idx]['thumbnail']}',
                                                                             imageBuilder: (context, imageProvider) => Container(
                                                                           decoration: BoxDecoration(

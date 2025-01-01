@@ -12,7 +12,7 @@ pubspec.yaml
 android
 ios
 migrate_working_dir/
-
+ios/Runner.xcodeproj/project.pbxproj
 # IntelliJ related
 *.iml
 *.ipr

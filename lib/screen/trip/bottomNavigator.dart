@@ -277,7 +277,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
               }
               if(index==2){
                 await hs.getHistoryList(ts.selectTripList[0]['id']);
-                maps.addMarkersFromHistory();
+                maps.addMarkersFromHistory(context);
               }
 
             },

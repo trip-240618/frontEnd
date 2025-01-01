@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -20,25 +21,37 @@ class MapState extends GetxController{
   RxSet<Marker> markers = <Marker>{}.obs; /// 커스텀 마커
   RxSet<Marker> selectedMarkers = <Marker>{}.obs; /// 선택한 기록 마커
   final RxMap<String, Uint8List> imageCache = <String, Uint8List>{}.obs;
-  /// 전체 지도에 마커 표시
-  Future<void> addMarkersFromHistory() async {
+  Future<void> addMarkersFromHistory(BuildContext context) async {
     markers.clear();
-    List<Future<void>> futures = [];
+
+    /// Step 1: 이미지 캐싱 작업
+    List<Future<void>> cacheFutures = [];
     for (int i = 0; i < hs.historyList.length; i++) {
-      for(int j=0;j<hs.historyList[i]['historyList'].length;j++){
-        if(hs.historyList[i]['historyList'][j]['latitude']!=null&&
-            hs.historyList[i]['historyList'][j]['longitude']!=null&&
-            hs.historyList[i]['historyList'][j]['latitude']!= 0.0 &&
-            hs.historyList[i]['historyList'][j]['longitude']!=0.0){
-          futures.add(createMarker(
-              index: i + 1,
-              history: hs.historyList[i]['historyList'][j],
-              targetMarkers: markers
+      for (int j = 0; j < hs.historyList[i]['historyList'].length; j++) {
+        String thumbnailUrl = hs.historyList[i]['historyList'][j]['thumbnail'];
+        cacheFutures.add(precacheImage(CachedNetworkImageProvider(thumbnailUrl), context));
+        print('Caching image: $thumbnailUrl');
+      }
+    }
+    await Future.wait(cacheFutures); // 모든 이미지 캐싱 완료 대기
+
+    /// Step 2: 마커 생성 작업
+    List<Future<void>> markerFutures = [];
+    for (int i = 0; i < hs.historyList.length; i++) {
+      for (int j = 0; j < hs.historyList[i]['historyList'].length; j++) {
+        if (hs.historyList[i]['historyList'][j]['latitude'] != null &&
+            hs.historyList[i]['historyList'][j]['longitude'] != null &&
+            hs.historyList[i]['historyList'][j]['latitude'] != 0.0 &&
+            hs.historyList[i]['historyList'][j]['longitude'] != 0.0) {
+          markerFutures.add(createMarker(
+            index: i + 1,
+            history: hs.historyList[i]['historyList'][j],
+            targetMarkers: markers,
           ));
         }
       }
     }
-    await Future.wait(futures);
+    await Future.wait(markerFutures); // 모든 마커 생성 완료 대기
   }
 
   /// 개별 마커 생성 및 추가 함수
