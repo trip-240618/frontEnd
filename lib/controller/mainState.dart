@@ -31,6 +31,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   RxList<DateTime> tripDate = <DateTime>[].obs;
   TextEditingController tripCitySearchCon = TextEditingController(); /// 여행지 검색
   TextEditingController tripDirectSearchCon = TextEditingController(); /// 여행지 직접 검색
+  final directSelectedCity = ''.obs;  /// 여행지 직접 검색에서 선택한 해외 여행지
   final selectedCity = ''.obs; /// 선택한 여행지
   final tripLeaveType = ''.obs; /// 여행타입 선택
   final firstInit = false.obs; /// 처음 실행 됬을 때
@@ -119,7 +120,8 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   /// 여행방 만들기 변수 초기화
   Future<void> roomReset()async{
     selectedCity.value = '';
-    tripLeaveType.value = '';
+    tripLeaveType.value = '해외';
+    directSelectedCity.value = '';
     pickedImage.value =null;
     tripDestination.value ='';
     tripDate.value = [];
@@ -128,12 +130,17 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   /// 여행지 바텀 리셋
   Future<void> bottomModalReset()async{
     selectedCity.value = '';
-    tripLeaveType.value = '';
+    tripLeaveType.value = '해외';
+    directSelectedCity.value = '';
     tabController.index =0;
+    tripCitySearchCon.text = '';
+    tripDirectSearchCon.text = '';
+
   }
 
   /// 여행지 선택 저장
   Future<void> saveDestination ()async{
+    ///여행지 검색
     if(tabController.index==0){
       if(selectedCity==''){
 
@@ -141,12 +148,17 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
         tripDestination.value = selectedCity.value;
         Get.back();
       }
+      ///직접 입력
     }else{
       if(tripLeaveType=='' || tripDirectSearchCon.text==''){
-        print('빈칸을 선택해주세요');
       }else{
-        tripDestination.value = tripDirectSearchCon.text;
-        Get.back();
+        if (tripLeaveType == '해외' && directSelectedCity.value != '') {
+          tripDestination.value = directSelectedCity.value!;
+          Get.back();
+        } else if (tripLeaveType == '국내') {
+          tripDestination.value = tripDirectSearchCon.text;
+          Get.back();
+        }
       }
     }
   }

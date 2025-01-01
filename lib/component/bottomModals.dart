@@ -56,7 +56,8 @@ void bottomModel(BuildContext context) {
                             ms.tripCitySearchCon.text = '';
                             ms.selectedCity.value = '';
                           }else if(i==0){
-
+                            ms.tripDirectSearchCon.text = '';
+                            ms.directSelectedCity.value = '';
                           }
                           FocusScope.of(context).unfocus();
                           setState(() {});
@@ -114,7 +115,12 @@ void bottomModel(BuildContext context) {
                       const SizedBox(height: 10),
                       Obx(()=>BottomContainer(onTap: ()async{
                         await ms.saveDestination();
-                      },title: '입력 완료',isBlack: ms.selectedCity.value == ''?false:true,))
+                      },title: '입력 완료',
+                        isBlack:ms.tabController.index == 0
+                          ? (ms.selectedCity.value == '' ? false : true)
+                          : (ms.tripLeaveType == '해외'
+                          ? (ms.directSelectedCity.value == '' ? false : true)
+                          : (ms.tripDirectSearchCon.text.isEmpty ? false : true)),))
                     ],
                   ),
                 ),

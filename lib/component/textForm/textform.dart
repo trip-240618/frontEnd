@@ -130,7 +130,7 @@ class TextIconFormFields extends StatelessWidget {
               borderSide: BorderSide(color: gray200), // 포커스된 상태에서 보더 색상 변경
             ),
             hintText: '${hintText}',
-            hintStyle: hintStyle==null?f15gray800w500:hintStyle,
+            hintStyle: hintStyle==null?f15gray400w500:hintStyle,
             prefixIcon: Padding(
               padding:  EdgeInsets.only(left: 8),
               child: SvgPicture.asset('${icon}',fit: BoxFit.none,colorFilter: colorFilter),

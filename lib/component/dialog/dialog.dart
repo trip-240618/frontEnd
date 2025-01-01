@@ -118,6 +118,7 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
   TextEditingController con = TextEditingController();
   final ms = Get.put(MainState());
   final ts = Get.put(TripState());
+  final regex = RegExp(r'^[a-zA-Z0-9]+$');
   bool isRegCheck = false;
   bool isFirstCheck = false;
   bool isValue =false; /// 값이 있나없나
@@ -162,7 +163,12 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
                        controller: con,
                        hintText: '영문+숫자 8자리를 입력해 주세요',
                        icon: 'assets/icon/invitation.svg',
-                       onChanged: (values){},
+                       onChanged: (values){
+                         if (con.text.length == 8 && regex.hasMatch(con.text)) {
+                           isRegCheck = true;
+                         }
+                         setState(() {});
+                       },
                        inputFormatters: [
                          LengthLimitingTextInputFormatter(8),
                          UpperCaseTextFormatter(),
@@ -172,7 +178,7 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
                        padding: const EdgeInsets.only(left: 16,top: 4),
                        child: Text('초대 코드는 영문+숫자 8자리입니다',style: f12redw500,),
                      ),
-                     isRegCheck && !isValue?Padding(
+                     isFirstCheck&&isRegCheck && !isValue?Padding(
                        padding: const EdgeInsets.only(left: 16,top: 4),
                        child: Text('존재하지 않는 초대 코드입니다',style: f12redw500,),
                      ):const SizedBox(),
@@ -187,7 +193,6 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
                    onTap: ()async{
                      ts.selectTripList.clear();
                      isFirstCheck = true;
-                     final regex = RegExp(r'^[a-zA-Z0-9]+$');
                      if (con.text.length == 8 && regex.hasMatch(con.text)) {
                        isRegCheck = true;
                        Map<String,dynamic> data = await ms.tripJoin('${con.text}');
@@ -209,13 +214,13 @@ InviteDialog(BuildContext context, VoidCallback onTap) {
                        width: Get.width,
                        height: 60,
                        decoration: BoxDecoration(
-                           color: gray500,
+                           color: isRegCheck?gray900:gray300,
                            borderRadius: BorderRadius.circular(4)
                        ),
                        child: Center(
                            child: Text(
                              '연결하기',
-                             style: f16Whitew600,
+                             style: isRegCheck?f16Whitew600:f16gray400w700,
                            )),
                      ),
                    ),

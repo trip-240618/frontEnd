@@ -105,14 +105,19 @@ class ApiTripClient {
     }
   }
   /// 주소 자동 완성
-  Future<List<dynamic>> autoLocationGet(String place) async {
+  Future<List<dynamic>> autoLocationGet(String place, String domain) async {
     try {
+      final Map<String, dynamic> requestData = {
+        "input": place,
+        "languageCode": "ko",
+      };
+      if (domain != null && domain != '') {
+        requestData["includedRegionCodes"] = [domain];
+      }
       final response = await dioClient.dio.post(
-          '/trip/location/autocomplete',
-        data: {
-          "input": '${place}',
-          "languageCode": "ko",
-        });
+        '/trip/location/autocomplete',
+        data: requestData,
+      );
       if (response.statusCode == 200) {
         final data = response.data;
         if(data.length==0){
@@ -273,6 +278,25 @@ class ApiTripClient {
     } catch (e) {
       print('Error during auto-login: $e');
       rethrow;
+    }
+  }
+
+  /// 해외 여행지 자동 완성
+  Future<List<dynamic>> autoCountryGet(String country) async {
+    try {
+      final response = await dioClient.dio.get(
+          '/country/search/autocomplete?keyword=$country');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if(data.length==0){
+          return [];
+        }
+        return data;
+      } else {
+        throw Exception('Failed to autoLocation: ${response.statusCode}');
+      }
+    } catch (e) {
+      return [];
     }
   }
 }
