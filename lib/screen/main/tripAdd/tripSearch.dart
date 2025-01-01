@@ -177,7 +177,8 @@ class _TripSearchPageState extends State<TripSearchPage> {
       children: [
         TextIconFormFields(
             controller: ms.tripCitySearchCon,
-            hintText: '여행지를 검색해주세요',
+            hintText: '여행지를 검색해보세요',
+            colorFilter: ColorFilter.mode(gray800,BlendMode.srcIn),
             onChanged: (value){
               filterCountries = getFilteredCountries();
               setState(() {});

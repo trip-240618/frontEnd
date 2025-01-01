@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:google_places_flutter/google_places_flutter.dart';
-import 'package:google_places_flutter/model/prediction.dart';
 import 'package:tripStory/component/appbar.dart';
-import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import '../../../../../app/api/tripApi.dart';
 import '../../../../../app/config/dio_client.dart';
-import '../../../../../component/loading/loading.dart';
 import '../../../../../util/font.dart';
 
 
@@ -87,8 +83,7 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                               setState(() {
                                 isLoading = true;
                               });
-                              placeList = await apiTripClient.autoLocationGet(_placeCon.text);
-                              print('placeList??${placeList}');
+                              placeList = await apiTripClient.autoLocationGet(_placeCon.text, ts.selectTripList[0]['domain'] ?? '',);
                               setState(() {
                                 isLoading = false;
                               });
