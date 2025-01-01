@@ -36,6 +36,7 @@ class DioClient {
       },
     ));
   }
+
   /// 로그인 할 때 엑세스토큰,리프리쉬 토큰 저장
   Future<void> loginCookies(String cookies) async {
     final prefs = await SharedPreferences.getInstance();

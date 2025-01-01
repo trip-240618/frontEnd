@@ -23,20 +23,22 @@ class MapState extends GetxController{
   /// 전체 지도에 마커 표시
   Future<void> addMarkersFromHistory() async {
     markers.clear();
+    List<Future<void>> futures = [];
     for (int i = 0; i < hs.historyList.length; i++) {
       for(int j=0;j<hs.historyList[i]['historyList'].length;j++){
         if(hs.historyList[i]['historyList'][j]['latitude']!=null&&
             hs.historyList[i]['historyList'][j]['longitude']!=null&&
             hs.historyList[i]['historyList'][j]['latitude']!= 0.0 &&
             hs.historyList[i]['historyList'][j]['longitude']!=0.0){
-          createMarker(
+          futures.add(createMarker(
               index: i + 1,
               history: hs.historyList[i]['historyList'][j],
               targetMarkers: markers
-          );
+          ));
         }
       }
     }
+    await Future.wait(futures);
   }
 
   /// 개별 마커 생성 및 추가 함수

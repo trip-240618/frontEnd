@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:typed_data';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart' as imgCom;
@@ -32,6 +34,21 @@ class UserState extends GetxController{
   final apiNotificationClient = ApiNotificationClient(DioClient());
   final apiCountryClient = ApiCountryClient(DioClient());
 
+  Future<void> checkNetworkAndProceed() async {
+    /// 초기 네트워크 상태 확인
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult[0] == ConnectivityResult.none) {
+      FlutterNativeSplash.remove();
+      await netWorkingDialog();
+    }
+    /// 네트워크 상태 변화 감지
+    StreamSubscription<List<ConnectivityResult>> subscription =
+    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) {
+      if (result[0] == ConnectivityResult.none) {
+        netWorkingDialog();
+      }
+    });
+  }
   /// 버전관리
   Future<void> versionCheck(BuildContext context)async{
     await apiUserClient.getVersionList();
