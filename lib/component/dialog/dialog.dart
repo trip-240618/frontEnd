@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -742,4 +743,65 @@ Future<void> forceUpdateVersionDialog(BuildContext context) {
   );
 }
 
+/// 네트워크 다이얼로그
+Future<void> netWorkingDialog() async{
+  if (!(Get.isDialogOpen ?? false)) {
+    return await Get.dialog(
+      WillPopScope(
+        onWillPop: () async => false,
+        child: AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          contentPadding: EdgeInsets.zero,
+          insetPadding: EdgeInsets.symmetric(horizontal: 20),
+          content: Container(
+            width: Get.width,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 32,top: 36),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '네트워크 연결 후 다시 시도해주세요',
+                    style: f18Gray800w600,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: ()async{
+                      final connectivityResult = await Connectivity().checkConnectivity();
+                      if (connectivityResult[0] != ConnectivityResult.none) {
+                        Get.back();
+                      }
+                    },
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      height: 58,
+                      decoration: BoxDecoration( borderRadius: BorderRadius.circular(10),color: Colors.black,),
+                      child: Center(
+                          child: Text(
+                            '재시도',
+                            style: f16whitew400,
+                          )),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+}
 

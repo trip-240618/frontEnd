@@ -127,11 +127,14 @@ class ApiUserClient {
     final us = Get.put(UserState());
     try {
        final response = await http.get(
-          Uri.parse('https://trip-story.site/version/last')
+          Uri.parse('https://trip-story.site/version/last'),
+          headers: {
+           'Content-Type': 'application/json',
+         },
       );
       us.versionList.value = jsonDecode(response.body);
-    } catch (e) {
-      print('Error version: $e');
+    }
+    catch (e) {
       rethrow;
     }
   }

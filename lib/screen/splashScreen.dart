@@ -30,6 +30,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
+      await us.checkNetworkAndProceed();
       await us.versionCheck(context);
       requestNotificationPermissions();
       await LocalNotifyCation().initializeNotification();

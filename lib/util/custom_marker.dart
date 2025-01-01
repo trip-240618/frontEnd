@@ -38,7 +38,7 @@ Future<Uint8List> getCompressedImage(String imageUrl) async {
 
   return compressedBytes;
 }
-
+/// 여행 기록 마커
 Future<BitmapDescriptor> getCustomIcon(int index, String imageUrl) async {
   final double iconSize = 300.0;
 
@@ -112,7 +112,7 @@ Future<BitmapDescriptor> getCustomIcon(int index, String imageUrl) async {
   return BitmapDescriptor.fromBytes(pngBytes);
 }
 
-/// j형 일정
+/// j형 일정 마커
 Future<BitmapDescriptor> getCustomIcon2(int index) async {
   final double iconSize = 200.0;
 

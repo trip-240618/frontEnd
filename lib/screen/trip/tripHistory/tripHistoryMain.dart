@@ -12,6 +12,7 @@ import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripHistory/search/search_history_page.dart';
 import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/keep_view.dart';
 import '../../../component/empty/emptyScreen.dart';
 import '../../../controller/mainState.dart';
 import '../../../util/bottomSheetHeader.dart';
@@ -255,18 +256,22 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> with Automati
                                                               child: Stack(
                                                                 children: [
                                                                   Positioned(
-                                                                    child: hs.historyList[index]['historyList'][idx]['thumbnail']==''?DefaultProfileScreen(context):CachedNetworkImage(
-                                                                      imageUrl: '${hs.historyList[index]['historyList'][idx]['thumbnail']}',
-                                                                      imageBuilder: (context, imageProvider) => Container(
-                                                                        decoration: BoxDecoration(
-                                                                          borderRadius: BorderRadius.circular(4),
-                                                                          image: DecorationImage(
-                                                                              image: imageProvider,
-                                                                              fit: BoxFit.cover
+                                                                    child: hs.historyList[index]['historyList'][idx]['thumbnail']==''
+                                                                        ?DefaultProfileScreen(context)
+                                                                        :KeepAliveView(
+                                                                          child: CachedNetworkImage(
+                                                                            imageUrl: '${hs.historyList[index]['historyList'][idx]['thumbnail']}',
+                                                                            imageBuilder: (context, imageProvider) => Container(
+                                                                          decoration: BoxDecoration(
+                                                                            borderRadius: BorderRadius.circular(4),
+                                                                            image: DecorationImage(
+                                                                                image: imageProvider,
+                                                                                fit: BoxFit.cover
+                                                                            ),
                                                                           ),
-                                                                        ),
+                                                                          ),
+                                                                        errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                                                       ),
-                                                                      errorWidget: (context, url, error) => DefaultProfileScreen(context),
                                                                     ),
                                                                   ),
                                                                   Positioned(
