@@ -24,7 +24,6 @@ Future<Uint8List> compressHEIC(Uint8List imageBytes) async {
 
 Future<Uint8List> getCompressedImage(String imageUrl) async {
   final maps = Get.find<MapState>();
-  // 캐시에 이미지가 있는지 확인
   if (maps.imageCache.containsKey(imageUrl)) {
     return maps.imageCache[imageUrl]!;
   }
@@ -33,9 +32,12 @@ Future<Uint8List> getCompressedImage(String imageUrl) async {
   final Uint8List imageBytes = await imageFile.readAsBytes();
   final Uint8List compressedBytes = await compressHEIC(imageBytes);
 
+  if (maps.imageCache.length >= 50) {
+    final firstKey = maps.imageCache.keys.first;
+    maps.imageCache.remove(firstKey); // 오래된 항목 제거
+  }
   /// 캐시에 저장
   maps.imageCache[imageUrl] = compressedBytes;
-
   return compressedBytes;
 }
 /// 여행 기록 마커

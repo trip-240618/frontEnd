@@ -1,16 +1,16 @@
 import 'dart:async';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart' as cluster;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import '../util/custom_marker.dart';
+import '../util/history_cluster_item.dart';
 
 class MapState extends GetxController{
   final ts = Get.put(TripState());
@@ -21,38 +21,62 @@ class MapState extends GetxController{
   RxSet<Marker> markers = <Marker>{}.obs; /// 커스텀 마커
   RxSet<Marker> selectedMarkers = <Marker>{}.obs; /// 선택한 기록 마커
   final RxMap<String, Uint8List> imageCache = <String, Uint8List>{}.obs;
-  Future<void> addMarkersFromHistory(BuildContext context) async {
-    markers.clear();
 
-    /// Step 1: 이미지 캐싱 작업
-    List<Future<void>> cacheFutures = [];
-    for (int i = 0; i < hs.historyList.length; i++) {
-      for (int j = 0; j < hs.historyList[i]['historyList'].length; j++) {
-        String thumbnailUrl = hs.historyList[i]['historyList'][j]['thumbnail'];
-        cacheFutures.add(precacheImage(CachedNetworkImageProvider(thumbnailUrl), context));
-        print('Caching image: $thumbnailUrl');
-      }
-    }
-    await Future.wait(cacheFutures); // 모든 이미지 캐싱 완료 대기
+  /// 2025-01-03
+  late cluster.ClusterManager manager;
+  final items = <HistoryClusterItem>[].obs;
 
-    /// Step 2: 마커 생성 작업
-    List<Future<void>> markerFutures = [];
-    for (int i = 0; i < hs.historyList.length; i++) {
-      for (int j = 0; j < hs.historyList[i]['historyList'].length; j++) {
-        if (hs.historyList[i]['historyList'][j]['latitude'] != null &&
-            hs.historyList[i]['historyList'][j]['longitude'] != null &&
-            hs.historyList[i]['historyList'][j]['latitude'] != 0.0 &&
-            hs.historyList[i]['historyList'][j]['longitude'] != 0.0) {
-          markerFutures.add(createMarker(
-            index: i + 1,
-            history: hs.historyList[i]['historyList'][j],
-            targetMarkers: markers,
-          ));
+  @override
+  void onInit() {
+    manager = initClusterManager();
+    super.onInit();
+  }
+  /// 클러스터 init
+  void initToClusterItems(List<dynamic> historyList) {
+    items.clear();
+    for (int i = 0; i < historyList.length; i++) {
+      for (int j = 0; j < historyList[i]['historyList'].length; j++) {
+        final history = historyList[i]['historyList'][j];
+        if (history['latitude'] != null &&
+            history['longitude'] != null &&
+            history['latitude'] != 0.0 &&
+            history['longitude'] != 0.0) {
+          final clusterItem = HistoryClusterItem(
+            latLng: LatLng(history['latitude'], history['longitude']),
+            index: i+1,
+            thumbnailUrl: history['thumbnail'] ?? '',
+          );
+          items.add(clusterItem);
         }
       }
     }
-    await Future.wait(markerFutures); // 모든 마커 생성 완료 대기
+    manager.setItems(items);
   }
+
+  cluster.ClusterManager<HistoryClusterItem> initClusterManager() {
+    return cluster.ClusterManager(
+      items,
+      _updateMarkers,
+      markerBuilder: _markerBuilder,
+
+    );
+  }
+
+  void _updateMarkers(Set<Marker> updatedMarkers) {
+    markers.value = updatedMarkers;
+  }
+
+  Future<Marker> Function(cluster.Cluster<HistoryClusterItem>) get _markerBuilder => (cluster) async {
+    final HistoryClusterItem singleItem = cluster.items.first;
+    return Marker(
+      markerId: MarkerId(cluster.getId()),
+      position: singleItem.latLng,
+      onTap: () {
+        cluster.items.forEach((p) => print(p));
+      },
+      icon: await getCustomIcon(cluster.count, singleItem.thumbnailUrl),
+    );
+  };
 
   /// 개별 마커 생성 및 추가 함수
   Future<void> createMarker({

@@ -277,9 +277,8 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
               }
               if(index==2){
                 await hs.getHistoryList(ts.selectTripList[0]['id']);
-                maps.addMarkersFromHistory(context);
+                maps.initToClusterItems(hs.historyList);
               }
-
             },
             controller: _bottomTabController,
             indicator: BoxDecoration(
