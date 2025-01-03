@@ -12,7 +12,6 @@ import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/tripHistory/search/search_history_page.dart';
 import 'package:tripStory/util/color.dart';
-import 'package:tripStory/util/keep_view.dart';
 import '../../../component/empty/emptyScreen.dart';
 import '../../../controller/mainState.dart';
 import '../../../util/bottomSheetHeader.dart';
@@ -67,14 +66,12 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> with Automati
               zoom: 14.4746,
             ),
             markers: maps.markers.toSet(),
-            onCameraMove: (CameraPosition position){
-              if(!isInitialCameraMove){}
-              isInitialCameraMove = false;
-              setState(() {});
-            },
+            onCameraMove: maps.manager.onCameraMove,
+            onCameraIdle: maps.manager.updateMap,
             onMapCreated: (GoogleMapController controller) {
               if (!maps.mapController.isCompleted) {
                 maps.mapController.complete(controller);
+                maps.manager.setMapId(controller.mapId);
               }
             },
           ),
@@ -238,6 +235,8 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> with Automati
                                                 child: ListView.builder(
                                                     itemCount: hs.historyList[index]['historyList'].length,
                                                     scrollDirection: Axis.horizontal,
+                                                    addRepaintBoundaries: false,
+                                                    addAutomaticKeepAlives: false,
                                                     itemBuilder: (context, idx) {
                                                       return Row(
                                                         mainAxisAlignment: MainAxisAlignment.start,
@@ -258,23 +257,21 @@ class _TripHistoryMainPageState extends State<TripHistoryMainPage> with Automati
                                                                   Positioned(
                                                                     child: hs.historyList[index]['historyList'][idx]['thumbnail']==''
                                                                         ?DefaultProfileScreen(context)
-                                                                        :KeepAliveView(
-                                                                          child: CachedNetworkImage(
-                                                                            memCacheHeight: 250,
-                                                                            memCacheWidth: 250,
-                                                                            imageUrl: '${hs.historyList[index]['historyList'][idx]['thumbnail']}',
-                                                                            imageBuilder: (context, imageProvider) => Container(
-                                                                          decoration: BoxDecoration(
-                                                                            borderRadius: BorderRadius.circular(4),
-                                                                            image: DecorationImage(
-                                                                                image: imageProvider,
-                                                                                fit: BoxFit.cover
-                                                                            ),
+                                                                        :CachedNetworkImage(
+                                                                          maxHeightDiskCache: 350,
+                                                                          maxWidthDiskCache: 350,
+                                                                          imageUrl: '${hs.historyList[index]['historyList'][idx]['thumbnail']}',
+                                                                          imageBuilder: (context, imageProvider) => Container(
+                                                                        decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(4),
+                                                                          image: DecorationImage(
+                                                                              image: imageProvider,
+                                                                              fit: BoxFit.cover
                                                                           ),
-                                                                          ),
+                                                                        ),
+                                                                        ),
                                                                         errorWidget: (context, url, error) => DefaultProfileScreen(context),
-                                                                      ),
-                                                                    ),
+                                                                                                                                             ),
                                                                   ),
                                                                   Positioned(
                                                                     bottom: 0,

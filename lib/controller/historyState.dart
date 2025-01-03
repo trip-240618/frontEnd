@@ -54,35 +54,6 @@ class HistoryState extends GetxController{
     super.onClose();
   }
 
-  // Future<void> getHistoryList(int tripId) async {
-  //   final ts = Get.put(TripState());
-  //   historyList.clear();
-  //   List allData = await apiHistoryClient.getHistoryList(tripId);
-  //   List filterDate = [];
-  //
-  //   DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
-  //   DateTime endDate = DateTime.parse(ts.selectTripList[0]['endDate']);
-  //
-  //   for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
-  //     String currentDate = DateFormat('yyyy-MM-dd').format(startDate.add(Duration(days: i)));
-  //     Map<String, dynamic>? matchedData;
-  //     for (var data in allData) {
-  //       if (data['photoDate'] == currentDate) {
-  //         matchedData = data;
-  //         break;
-  //       }
-  //     }
-  //     filterDate.add({
-  //       'photoDate': currentDate,
-  //       'historyList': matchedData != null ? matchedData['historyList'] : [],
-  //     });
-  //   }
-  //   historyList.value = filterDate;
-  //   /// 전체 길이
-  //   historyTotalLen.value = historyList.fold(0, (sum, item) {
-  //     return sum + (item['historyList'] as List).length;
-  //   });
-  // }
   /// 기록 리스트 가져오기
   Future<void> getHistoryList(int tripId) async {
     final ts = Get.put(TripState());
@@ -218,10 +189,8 @@ class HistoryState extends GetxController{
         body: fileBytes,
       );
       await precacheImage(CachedNetworkImageProvider('${Uri.parse(data['preSignedUrls'][i].toString().split('?')[0])}'), context);
-
     }
     uploadingLoading.value = true;
-
     return data;
   }
 
