@@ -37,19 +37,17 @@ class UserState extends GetxController{
   Future<void> checkNetworkAndProceed() async {
     /// 초기 네트워크 상태 확인
     final connectivityResult = await Connectivity().checkConnectivity();
-    print('??? ${connectivityResult[0]}');
     if (connectivityResult[0] == ConnectivityResult.none) {
       FlutterNativeSplash.remove();
       await netWorkingDialog();
     }
-    // /// 네트워크 상태 변화 감지
-    // StreamSubscription<List<ConnectivityResult>> subscription =
-    // Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) {
-    //   print('resutl?? ${result[0]}');
-    //   if (result[0] == ConnectivityResult.none) {
-    //     netWorkingDialog();
-    //   }
-    // });
+    /// 네트워크 상태 변화 감지
+    StreamSubscription<List<ConnectivityResult>> subscription =
+    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) {
+      if (result[0] == ConnectivityResult.none) {
+        netWorkingDialog();
+      }
+    });
   }
   /// 버전관리
   Future<void> versionCheck(BuildContext context)async{
