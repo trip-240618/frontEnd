@@ -674,7 +674,7 @@ Future<void> updateVersionDialog(BuildContext context) {
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () {
-                      StoreRedirect.redirect(androidAppId: "com.Ssolutions.sSolution", iOSAppId: "585027354");
+                      StoreRedirect.redirect(androidAppId: "com.tripStorys.tripstorys", iOSAppId: "6529530493");
                     },
                     child: Container(
                       width: Get.width,
@@ -724,7 +724,7 @@ Future<void> forceUpdateVersionDialog(BuildContext context) {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                StoreRedirect.redirect(androidAppId: "com.Ssolutions.sSolution", iOSAppId: "585027354");
+                StoreRedirect.redirect(androidAppId: "com.tripStorys.tripstorys", iOSAppId: "6529530493");
               },
               child: Container(
                 width: Get.width,

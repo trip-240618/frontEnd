@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tripStory/component/appbar.dart';
-import 'package:tripStory/component/bottomModals.dart';
 import 'package:tripStory/component/container/settingArrowRow.dart';
+import 'package:tripStory/component/toast/toast.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/screen/myPage/editProfilePage.dart';
 import 'package:tripStory/screen/myPage/faq/setting_faq_main.dart';
@@ -123,8 +124,11 @@ class _MyPageState extends State<MyPage> {
   List type = ['낭만주의 즉흥러', '문화 탐방형', '핫플 정복자', '마운틴 러버', '맛집 수집가'];
   final us = Get.put(UserState());
   bool isLoading = true;
+  FToast? fToast;
   @override
   void initState() {
+    fToast = FToast();
+    fToast?.init(context);
     Future.delayed(Duration.zero,()async{
       await us.getCountrySetting();
       us.countryList.retainWhere((countryItem) {
@@ -323,7 +327,7 @@ class _MyPageState extends State<MyPage> {
                   SettingArrowRow(
                       title: '초대 링크 보내기',
                       onTap: (){
-                        appSendBottomModal(context, 'dada');
+                        showCustomToast(context, fToast!, '현재 준비 중인 기능입니다.', false);
                   }),
                 ],
               ),

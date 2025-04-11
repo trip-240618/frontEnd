@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as QuillSharedExtensionsConfigurations;
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/controller/scrapState.dart';
@@ -73,35 +71,35 @@ class _ScrapEditState extends State<ScrapEdit> {
     );
   }
 
-  Future<void> _onPressedHandler(BuildContext context) async {
-    var options = const QuillToolbarImageButtonOptions();
-    final imagePickerService =
-        QuillSharedExtensionsConfigurations.get(context: context)
-            .imagePickerService;
-
-    final onRequestPickImage =
-        options.imageButtonConfigurations.onRequestPickImage;
-    if (onRequestPickImage != null) {
-      final imageUrl = await onRequestPickImage(
-        context,
-        imagePickerService,
-      );
-      if (imageUrl != null) {
-        await options.imageButtonConfigurations
-            .onImageInsertCallback(imageUrl, _controller);
-        await options.imageButtonConfigurations.onImageInsertedCallback
-            ?.call(imageUrl);
-      }
-      return;
-    }
-    final imageUrl = ss.addImgUrl.split('?')[0];
-    if (imageUrl.isNotEmpty) {
-      await options.imageButtonConfigurations
-          .onImageInsertCallback(imageUrl, _controller);
-      await options.imageButtonConfigurations.onImageInsertedCallback
-          ?.call(imageUrl);
-    }
-  }
+  // Future<void> _onPressedHandler(BuildContext context) async {
+  //   var options = const QuillToolbarImageButtonOptions();
+  //   final imagePickerService =
+  //       QuillSharedExtensionsConfigurations.get(context: context)
+  //           .imagePickerService;
+  //
+  //   final onRequestPickImage =
+  //       options.imageButtonConfigurations.onRequestPickImage;
+  //   if (onRequestPickImage != null) {
+  //     final imageUrl = await onRequestPickImage(
+  //       context,
+  //       imagePickerService,
+  //     );
+  //     if (imageUrl != null) {
+  //       await options.imageButtonConfigurations
+  //           .onImageInsertCallback(imageUrl, _controller);
+  //       await options.imageButtonConfigurations.onImageInsertedCallback
+  //           ?.call(imageUrl);
+  //     }
+  //     return;
+  //   }
+  //   final imageUrl = ss.addImgUrl.split('?')[0];
+  //   if (imageUrl.isNotEmpty) {
+  //     await options.imageButtonConfigurations
+  //         .onImageInsertCallback(imageUrl, _controller);
+  //     await options.imageButtonConfigurations.onImageInsertedCallback
+  //         ?.call(imageUrl);
+  //   }
+  // }
 
   Future<void> editScrap() async{
     var json = jsonEncode(_controller.document.toDelta().toJson());
@@ -184,36 +182,36 @@ class _ScrapEditState extends State<ScrapEdit> {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     child: Column(
                       children: [
-                        Container(
-                          height: Get.height*0.6,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
-                            child: QuillEditor.basic(
-                              focusNode: _focusNode,
-                              controller: _controller,
-                              // scrollController: _scrollController,
-                              configurations: QuillEditorConfigurations(
-                                scrollable: true,
-                                showCursor: true,
-                                customStyles: DefaultStyles(),
-                                magnifierConfiguration: TextMagnifierConfiguration(
-                                    shouldDisplayHandlesInMagnifier: true
-                                ),
-                                embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(
-                                    imageEmbedConfigurations: QuillEditorImageEmbedConfigurations(
-                                        onImageClicked: (node){
-                                          _controller.updateSelection(
-                                            TextSelection(baseOffset: node.length, extentOffset: node.length),
-                                            ChangeSource.local,
-                                          );
-                                        }
-                                    )
-                                ),
-                              ),
-          
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   height: Get.height*0.6,
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.only(bottom: 20),
+                        //     child: QuillEditor.basic(
+                        //       focusNode: _focusNode,
+                        //       controller: _controller,
+                        //       // scrollController: _scrollController,
+                        //       configurations: QuillEditorConfigurations(
+                        //         scrollable: true,
+                        //         showCursor: true,
+                        //         customStyles: DefaultStyles(),
+                        //         magnifierConfiguration: TextMagnifierConfiguration(
+                        //             shouldDisplayHandlesInMagnifier: true
+                        //         ),
+                        //         embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(
+                        //             imageEmbedConfigurations: QuillEditorImageEmbedConfigurations(
+                        //                 onImageClicked: (node){
+                        //                   _controller.updateSelection(
+                        //                     TextSelection(baseOffset: node.length, extentOffset: node.length),
+                        //                     ChangeSource.local,
+                        //                   );
+                        //                 }
+                        //             )
+                        //         ),
+                        //       ),
+                        //
+                        //     ),
+                        //   ),
+                        // ),
                         Row(
                           children: [
                             GestureDetector(
@@ -273,7 +271,7 @@ class _ScrapEditState extends State<ScrapEdit> {
                                   }
                                   pickedImage = await ss.getSingleImage(ImageSource.gallery,context,pickedImage);
                                   await ss.scrapFileUpload(pickedImage!);
-                                  _onPressedHandler(context);
+                                  // _onPressedHandler(context);
                                 }
                               },
                               child: SvgPicture.asset('assets/icon/normalImage.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),

@@ -11,6 +11,7 @@ import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/screen/trip/tripHistory/history/trip_history_list.dart';
+import 'package:tripStory/util/history_cluster_item.dart';
 import '../../../../component/bottomContainer.dart';
 import '../../../../controller/historyState.dart';
 import '../../../../util/color.dart';
@@ -384,6 +385,7 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                          ],
                        });
                      }
+
                      DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
                      DateTime endDate = DateTime.parse(ts.selectTripList[0]['endDate']);
                      /// 날짜 목록 생성

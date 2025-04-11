@@ -217,7 +217,11 @@ class _SearchHistoryDetailState extends State<SearchHistoryDetail> {
                                   PopupMenuItem<int>(
                                     onTap: (){
                                       Get.back();
-                                      hs.deleteHistory(ts.selectTripList[0]['id'], hs.searchList[pageIdx]['id']);
+                                      hs.deleteHistory(
+                                          ts.selectTripList[0]['id'],
+                                          hs.searchList[pageIdx]['id'],
+                                          hs.searchList[pageIdx]['imageUrl']
+                                      );
                                       hs.searchList.removeWhere((item) => item['id'] == hs.searchList[pageIdx]['id']);
                                       hs.getHistoryList(ts.selectTripList[0]['id']);
                                       hs.searchList.refresh();

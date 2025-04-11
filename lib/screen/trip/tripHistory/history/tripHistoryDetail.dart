@@ -217,7 +217,11 @@ class _TripHistoryDetailPageState extends State<TripHistoryDetailPage>{
                                   PopupMenuItem<int>(
                                     onTap: (){
                                       Get.back();
-                                      hs.deleteHistory(ts.selectTripList[0]['id'], hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['id']);
+                                      hs.deleteHistory(
+                                          ts.selectTripList[0]['id'],
+                                          hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['id'],
+                                          hs.historyList[widget.dayIdx]['historyList'][pageIdx]['thumbnail']
+                                      );
                                       hs.historyList[widget.dayIdx]['historyList'].removeWhere((item) => item['id'] == hs.historyList[widget.dayIdx]['historyList'][selectedPageIdx]['id']);
                                       hs.historyList.refresh();
                                     },

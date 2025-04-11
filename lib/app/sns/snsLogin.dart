@@ -63,9 +63,6 @@ Future<void> requestUserInfo() async {
   if (user.kakaoAccount?.birthyearNeedsAgreement == true) {
     scopes.add("birthyear");
   }
-  if (user.kakaoAccount?.ciNeedsAgreement == true) {
-    scopes.add("account_ci");
-  }
   if (user.kakaoAccount?.phoneNumberNeedsAgreement == true) {
     scopes.add("phone_number");
   }

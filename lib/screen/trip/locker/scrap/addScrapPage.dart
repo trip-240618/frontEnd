@@ -55,39 +55,39 @@ class _AddScrapPageState extends State<AddScrapPage> {
     super.initState();
   }
 
-  Future<void> _onPressedHandler(BuildContext context) async {
-    var options = const QuillToolbarImageButtonOptions();
-    final imagePickerService =
-        QuillSharedExtensionsConfigurations.get(context: context)
-            .imagePickerService;
-
-    final onRequestPickImage =
-        options.imageButtonConfigurations.onRequestPickImage;
-    if (onRequestPickImage != null) {
-      final imageUrl = await onRequestPickImage(
-        context,
-        imagePickerService,
-      );
-      if (imageUrl != null) {
-        await options.imageButtonConfigurations
-            .onImageInsertCallback(imageUrl, _controller);
-        await options.imageButtonConfigurations.onImageInsertedCallback
-            ?.call(imageUrl);
-      }
-      return;
-    }
-
-
-    final imageUrl = ss.addImgUrl.split('?')[0];
-
-
-    if (imageUrl.isNotEmpty) {
-      await options.imageButtonConfigurations
-          .onImageInsertCallback(imageUrl, _controller);
-      await options.imageButtonConfigurations.onImageInsertedCallback
-          ?.call(imageUrl);
-    }
-  }
+  // Future<void> _onPressedHandler(BuildContext context) async {
+  //   var options = const QuillToolbarImageButtonOptions();
+  //   final imagePickerService =
+  //       QuillSharedExtensionsConfigurations.get(context: context)
+  //           .imagePickerService;
+  //
+  //   final onRequestPickImage =
+  //       options.imageButtonConfigurations.onRequestPickImage;
+  //   if (onRequestPickImage != null) {
+  //     final imageUrl = await onRequestPickImage(
+  //       context,
+  //       imagePickerService,
+  //     );
+  //     if (imageUrl != null) {
+  //       await options.imageButtonConfigurations
+  //           .onImageInsertCallback(imageUrl, _controller);
+  //       await options.imageButtonConfigurations.onImageInsertedCallback
+  //           ?.call(imageUrl);
+  //     }
+  //     return;
+  //   }
+  //
+  //
+  //   final imageUrl = ss.addImgUrl.split('?')[0];
+  //
+  //
+  //   if (imageUrl.isNotEmpty) {
+  //     await options.imageButtonConfigurations
+  //         .onImageInsertCallback(imageUrl, _controller);
+  //     await options.imageButtonConfigurations.onImageInsertedCallback
+  //         ?.call(imageUrl);
+  //   }
+  // }
 
   bool isImageIncluded(){
     List<dynamic> jsonData = _controller.document.toDelta().toJson();
@@ -165,28 +165,39 @@ class _AddScrapPageState extends State<AddScrapPage> {
                     child: Column(
                       children: [
                         Container(
-                          height: Get.height*0.6,
-                          child: QuillEditor.basic(
-                            focusNode: _focusNode,
+                          height: Get.height * 0.6,
+                          child: QuillEditor(
                             controller: _controller,
-                            configurations: QuillEditorConfigurations(
+                            focusNode: _focusNode,
+                            scrollController: ScrollController(),
+                            config: QuillEditorConfig(
+                              scrollable: true,
+                              padding: const EdgeInsets.all(8),
+                              autoFocus: false,
+                              // readOnly: false,
+                              expands: false,
                               showCursor: true,
+                              enableInteractiveSelection: true,
+                              // magnifierConfiguration: const TextMagnifierConfiguration(
+                              //   shouldDisplayHandlesInMagnifier: true,
+                              // ),
                               customStyles: DefaultStyles(),
-                              magnifierConfiguration: TextMagnifierConfiguration(
-                                shouldDisplayHandlesInMagnifier: true
-                              ),
-                              embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(
-                                imageEmbedConfigurations: QuillEditorImageEmbedConfigurations(
-                                  onImageClicked: (node){
-                                      _controller.updateSelection(
-                                        TextSelection(baseOffset: node.length, extentOffset: node.length),
-                                        ChangeSource.local,
-                                      );
-                                  }
-                                )
+                              embedBuilders: kIsWeb
+                                  ? FlutterQuillEmbeds.editorWebBuilders()
+                                  : FlutterQuillEmbeds.editorBuilders(
+                                imageEmbedConfig: QuillEditorImageEmbedConfig(
+                                  onImageClicked: (node) {
+                                    _controller.updateSelection(
+                                      TextSelection(
+                                        baseOffset: node.length,
+                                        extentOffset: node.length,
+                                      ),
+                                      ChangeSource.local,
+                                    );
+                                  },
+                                ),
                               ),
                             ),
-
                           ),
                         ),
                         Row(
@@ -246,7 +257,7 @@ class _AddScrapPageState extends State<AddScrapPage> {
                                   if(pickedImage != null){
                                     await ss.scrapFileUpload(pickedImage!);
                                   }
-                                  _onPressedHandler(context);
+                                  // _onPressedHandler(context);
 
                                 }
                               },

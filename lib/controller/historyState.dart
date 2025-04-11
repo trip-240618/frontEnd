@@ -16,7 +16,7 @@ import '../screen/trip/tripHistory/history/model/detailItem.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../screen/trip/tripHistory/history/tripHistoryAdd.dart';
-
+import 'MapState.dart';
 class HistoryState extends GetxController{
   final ts = Get.put(TripState());
   final apiHistoryClient = ApiHistoryClient(DioClient());
@@ -269,6 +269,7 @@ class HistoryState extends GetxController{
   /// 히스토리 업로드
   Future<void> addHistory(int tripId,List uploadList) async {
     final ts = Get.put(TripState());
+    final maps = Get.find<MapState>();
     historyList.clear();
     List allData = await apiHistoryClient.addHistory(tripId, uploadList);
     List filterDate = [];
@@ -293,7 +294,7 @@ class HistoryState extends GetxController{
     historyTotalLen.value = historyList.fold(0, (sum, item) {
       return sum + (item['historyList'] as List).length;
     });
-
+    await maps.addMarker(uploadList);
     selectAlbumList.clear();
     addTagList.clear();
     selectAlbumIndex.value = 0;
@@ -302,8 +303,10 @@ class HistoryState extends GetxController{
   }
 
   /// 히스토리 삭제
-  Future<void> deleteHistory(int tripId,int historyId) async {
+  Future<void> deleteHistory(int tripId,int historyId,String url) async {
+    final maps = Get.find<MapState>();
      await apiHistoryClient.deleteHistory(tripId,historyId);
+     await maps.removeMarker(url);
   }
 
   /// 태그 전체 가져오기

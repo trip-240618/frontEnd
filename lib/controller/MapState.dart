@@ -58,13 +58,14 @@ class MapState extends GetxController{
       items,
       _updateMarkers,
       markerBuilder: _markerBuilder,
-
+      levels: [1, 4.25, 6.75, 10.0, 11.5, 13.0, 14.5, 16.0, 16.5, 18.0],
     );
   }
 
   void _updateMarkers(Set<Marker> updatedMarkers) {
     markers.value = updatedMarkers;
   }
+
 
   Future<Marker> Function(cluster.Cluster<HistoryClusterItem>) get _markerBuilder => (cluster) async {
     final HistoryClusterItem singleItem = cluster.items.first;
@@ -112,8 +113,30 @@ class MapState extends GetxController{
       }
     await Future.wait(futures);
   }
+
+
+  /// 마커 추가
+  Future<void> addMarker(List uploadList)async{
+    for(int i=0;i<uploadList.length;i++){
+      if(uploadList[i]['latitude']!=''&&uploadList[i]['latitude']!=''){
+        final clusterItem = HistoryClusterItem(
+          latLng: LatLng(uploadList[i]['latitude'], uploadList[i]['longitude']),
+          index: i+1,
+          thumbnailUrl: '${uploadList[i]['thumbnail']}',
+        );
+        items.add(clusterItem);
+      }
+    }
+    manager.setItems(items);
+    manager.updateMap();
+  }
+
   /// 마커 지우기
-  void removeMarker(MarkerId markerId) {}
+  Future<void> removeMarker(String url) async{
+    items.removeWhere((item) => item.thumbnailUrl == url);
+    manager.setItems(items);
+    manager.updateMap(); // 명시적으로 지도 업데이트 호출
+  }
 
   /// 현재 내 위치로 카메라 lat,lng 초기화
   Future<void> getCurrentLocation(BuildContext context) async{

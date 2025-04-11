@@ -30,7 +30,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     Future.delayed(Duration.zero,()async{
-      await us.checkNetworkAndProceed();
+      // await us.checkNetworkAndProceed();
       await us.versionCheck(context);
       requestNotificationPermissions();
       await LocalNotifyCation().initializeNotification();
@@ -48,10 +48,10 @@ class _SplashPageState extends State<SplashPage> {
     }
     final cookies = await us.apiUserClient.dioClient.getRefreshToken();
     if (cookies != null) {
-      String? tokens = await FirebaseMessaging.instance.getToken();
+      // String? tokens = await FirebaseMessaging.instance.getToken();
       await us.autoLogin();
       if(us.userList.isNotEmpty){
-        await us.tokenUpdate(tokens!);
+        await us.tokenUpdate('');
       }
     }
     Future.delayed(Duration(seconds: 1), () {

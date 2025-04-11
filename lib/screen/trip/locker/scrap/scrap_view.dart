@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -10,7 +9,6 @@ import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/controller/reportState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/screen/trip/locker/scrap/scrap_edit.dart';
-
 import '../../../../component/dialog/dialog.dart';
 import '../../../../controller/scrapState.dart';
 import '../../../../controller/userState.dart';
@@ -153,26 +151,26 @@ class _ScrapViewState extends State<ScrapView> {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Column(
                     children: [
-                      Container(
-                        height: Get.height*0.6,
-                        child: QuillEditor.basic(
-                          controller: _controller,
-                          configurations: QuillEditorConfigurations(
-                            showCursor: false,
-                            customStyles: DefaultStyles(),
-                            checkBoxReadOnly: true,
-                            magnifierConfiguration: TextMagnifierConfiguration(
-                                shouldDisplayHandlesInMagnifier: true
-                            ),
-                            embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(
-                                imageEmbedConfigurations: QuillEditorImageEmbedConfigurations(
-                                    onImageClicked: (node){
-                                    }
-                                )
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   height: Get.height*0.6,
+                      //   child: QuillEditor.basic(
+                      //     controller: _controller,
+                      //     config: QuillEditorConfigurations(
+                      //       showCursor: false,
+                      //       customStyles: DefaultStyles(),
+                      //       checkBoxReadOnly: true,
+                      //       magnifierConfiguration: TextMagnifierConfiguration(
+                      //           shouldDisplayHandlesInMagnifier: true
+                      //       ),
+                      //       embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(
+                      //           imageEmbedConfigurations: QuillEditorImageEmbedConfigurations(
+                      //               onImageClicked: (node){
+                      //               }
+                      //           )
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       us.userList[0].uuid==ss.scrapList[0]['writerUuid'] ?Row(
                         children: [
                           Spacer(),
