@@ -2,12 +2,11 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/component/dialog/loading.dart';
+import 'package:tripStory/controller/notificationState.dart';
+import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
-import '../../controller/notificationState.dart';
-import '../../controller/tripState.dart';
-import '../../screen/trip/bottomNavigator.dart';
-import '../../screen/trip/tripHistory/notification/noti_history_detail.dart';
+import 'package:tripStory/view/trip/bottomNavigator.dart';
+import 'package:tripStory/view/trip/tripHistory/notification/noti_history_detail.dart';
 
 
 class FCM {

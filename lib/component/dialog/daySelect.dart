@@ -5,11 +5,11 @@ import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/bottomContainer.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/pPlanState.dart';
-import '../../controller/tripState.dart';
 import 'package:tripStory/controller/historyState.dart';
-import '../../screen/trip/tripHistory/album/albumPage.dart';
-import '../../util/color.dart';
-import '../../util/font.dart';
+import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/font.dart';
+import 'package:tripStory/view/trip/tripHistory/album/albumPage.dart';
 
 SelectDayDialog(BuildContext context, String title, VoidCallback onTap) {
   final ts = Get.put(TripState());

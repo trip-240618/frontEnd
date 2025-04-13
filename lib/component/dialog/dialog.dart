@@ -8,16 +8,17 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_redirect/store_redirect.dart';
+import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
-import 'package:tripStory/screen/trip/bottomNavigator.dart';
 import 'package:tripStory/controller/mainState.dart';
-import 'package:tripStory/screen/trip/tripPlan/typeJ/addPlan/flight_edit.dart';
-import '../../util/color.dart';
-import '../../util/font.dart';
-import '../../util/upper_case.dart';
-import '../textForm/textform.dart';
+import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/font.dart';
+import 'package:tripStory/util/upper_case.dart';
+import 'package:tripStory/view/trip/bottomNavigator.dart';
+import 'package:tripStory/view/trip/tripPlan/typeJ/addPlan/flight_edit.dart';
+
 
 /// 메세지만 있는 확인용 다이얼로그
 showConfirmTapDialog(
