@@ -5,16 +5,16 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:tripStory/app/api/fileApi.dart';
+import 'package:tripStory/app/api/tripApi.dart';
+import 'package:tripStory/app/config/dio_client.dart';
+import 'package:tripStory/app/permission/permission.dart';
+import 'package:tripStory/component/dialog/loading.dart';
+import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
-import 'package:tripStory/screen/main/mainPage.dart';
-import '../app/api/fileApi.dart';
-import '../app/api/tripApi.dart';
-import '../app/config/dio_client.dart';
-import '../app/permission/permission.dart';
+import 'package:tripStory/view/main/main_page/views/main_page.dart';
+import 'package:tripStory/view/trip/bottomNavigator.dart';
 import 'package:http/http.dart' as http;
-import '../component/dialog/loading.dart';
-import '../screen/trip/bottomNavigator.dart';
-import 'jPlanState.dart';
 
 class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   TripState ts = Get.put(TripState());

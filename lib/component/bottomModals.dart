@@ -4,13 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/component/bottomContainer.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/mainState.dart';
-import 'package:tripStory/screen/main/tripAdd/tirpDirectSearch.dart';
-import '../screen/main/tripAdd/tripSearch.dart';
-import '../util/color.dart';
-import '../util/font.dart';
-import 'bottomContainer.dart';
+import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/font.dart';
+import 'package:tripStory/view/main/tripAdd/tirpDirectSearch.dart';
+import 'package:tripStory/view/main/tripAdd/tripSearch.dart';
+
 
 void bottomModel(BuildContext context) {
   final ms = Get.put(MainState());
