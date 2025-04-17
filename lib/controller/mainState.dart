@@ -12,7 +12,7 @@ import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
-import 'package:tripStory/view/main/main_page/views/main_page.dart';
+import 'package:tripStory/view/main/main_page/views/trip_room_list_view.dart';
 import 'package:tripStory/view/trip/bottomNavigator.dart';
 import 'package:http/http.dart' as http;
 
@@ -75,7 +75,7 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     await js.resetState();
     await tripJoin('${inviteCode}');
     await ts.getSelectTrip(int.parse(tripId!));
-    Get.offAll(()=>MainPage());
+    Get.offAll(()=>TripRoomListView());
     Get.to(()=>BottomNavigator());
   }
   /// 다가오는 여행 가져오기

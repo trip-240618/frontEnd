@@ -10,7 +10,7 @@ import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
-import 'package:tripStory/view/main/main_page/views/main_page.dart';
+import 'package:tripStory/view/main/main_page/views/trip_room_list_view.dart';
 
 
 class MemberList extends StatefulWidget {
@@ -163,7 +163,7 @@ class _MemberListState extends State<MemberList> {
                                       await ts.leaveTrip(ts.selectTripList[0]['id'], ts.selectTripList[0]['type']);
                                       ms.selectIdx.value = 0;
                                       ms.selectIdx.refresh();
-                                      Get.offAll(()=>MainPage());
+                                      Get.offAll(()=>TripRoomListView());
                                     });
                                   },
                                   child: Container(

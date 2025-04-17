@@ -9,7 +9,7 @@ import 'package:tripStory/app/notification/local_notification_setting.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/view/login/loginPage.dart';
-import 'package:tripStory/view/main/main_page/views/main_page.dart';
+import 'package:tripStory/view/main/main_page/views/trip_room_list_view.dart';
 
 
 
@@ -71,7 +71,7 @@ class _SplashPageState extends State<SplashPage> {
         return DialogExample();
       } else {
         FlutterNativeSplash.remove();
-        return us.userList.isNotEmpty?MainPage():LoginPage();
+        return us.userList.isNotEmpty?TripRoomListView():LoginPage();
       }
     }
   }

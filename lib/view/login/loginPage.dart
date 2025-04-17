@@ -8,7 +8,7 @@ import 'package:tripStory/component/container/snsContainer.dart';
 import 'package:tripStory/controller/userState.dart';
 import '../../component/dialog/loading.dart';
 import '../../util/font.dart';
-import '../main/main_page/views/main_page.dart';
+import '../main/main_page/views/trip_room_list_view.dart';
 import 'register/term.dart';
 
 class LoginPage extends StatefulWidget {
@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
               if(us.userList[0].type=='register'){
                   Get.to(()=>TermPage());
               } else if(us.userList[0].type=='login'){
-                Get.offAll(()=>MainPage());
+                Get.offAll(()=>TripRoomListView());
               }
               else{
                 print('로그인실패');
@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
               if(us.userList.isNotEmpty&&us.userList[0].type=='register'){
                 Get.to(()=>TermPage());
               }else if(us.userList.isNotEmpty&&us.userList[0].type=='login'){
-                Get.offAll(()=>MainPage());
+                Get.offAll(()=>TripRoomListView());
               }
             }),
             Platform.isAndroid?const SizedBox():const SizedBox(height: 18),
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
               if(us.userList[0].type=='register'){
                 Get.to(()=>TermPage());
               }else if(us.userList[0].type=='login'){
-                Get.offAll(()=>MainPage());
+                Get.offAll(()=>TripRoomListView());
               }
             })
           ],

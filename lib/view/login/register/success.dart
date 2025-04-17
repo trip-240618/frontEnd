@@ -5,7 +5,7 @@ import 'package:tripStory/util/color.dart';
 
 import '../../../component/bottomContainer.dart';
 import '../../../util/font.dart';
-import '../../main/main_page/views/main_page.dart';
+import '../../main/main_page/views/trip_room_list_view.dart';
 
 class SuccessPage extends StatefulWidget {
   const SuccessPage({super.key});
@@ -40,7 +40,7 @@ class _SuccessPageState extends State<SuccessPage> {
               Spacer(),
               BottomContainer(
                   onTap: ()async{
-                    Get.offAll(()=>MainPage());
+                    Get.offAll(()=>TripRoomListView());
                   },title: '다음',isBlack: true),
             ],
           ),

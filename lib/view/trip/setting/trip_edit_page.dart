@@ -15,7 +15,7 @@ import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
-import 'package:tripStory/view/main/main_page/views/main_page.dart';
+import 'package:tripStory/view/main/main_page/views/trip_room_list_view.dart';
 
 
 class TripEditPage extends StatefulWidget {
@@ -190,7 +190,7 @@ class _TripEditPageState extends State<TripEditPage> {
                 await ts.deleteTrip(ts.selectTripList[0]['id']);
                 ms.selectIdx.value = 0;
                 ms.selectIdx.refresh();
-                Get.offAll(()=>MainPage());
+                Get.offAll(()=>TripRoomListView());
               });
             },),
           body: Column(
