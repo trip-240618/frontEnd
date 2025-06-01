@@ -11,8 +11,10 @@ import 'package:tripStory/app/api/tripApi.dart';
 import 'package:tripStory/app/config/dio_client.dart';
 import 'package:tripStory/app/data/models/trip_room_model.dart';
 import 'package:tripStory/app/data/repositories/trip_repository.dart';
+import 'package:tripStory/common/model/popup_item_model.dart';
 import 'package:tripStory/view/main/notification/notification_main.dart';
 import 'package:tripStory/view/myPage/myPage.dart';
+import 'package:tripStory/view/trip/bottomNavigator.dart';
 
 class RoomsController extends GetxController with GetSingleTickerProviderStateMixin {
   RoomsController(this._tripRepository);
@@ -24,32 +26,62 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
 
   late TabController tabController;
 
-  final List<TripRoomModel> tripList = [];
+  final List<TripRoomModel> tripRooms = [];
+  DateTime? _lastBackPressTime;
   int selectIdx = 0;
   int notificationCount = 0;
 
+  int tripListLength() => tripRooms.length;
+
+  List<PopupItemModel> getPopupMembers(TripRoomModel tripRoom) => tripRoom.tripMemberDtoList
+      .map(
+        (member) => PopupItemModel(
+          nickname: member.nickname,
+          profileImg: member.thumbnail,
+        ),
+      )
+      .toList();
+
   Future<void> getComingTrip() async {
     selectIdx = 0;
-    tripList.clear();
-    tripList.addAll(await _tripRepository.fetchComingTrips());
+    tripRooms.clear();
+    tripRooms.addAll(await _tripRepository.fetchComingTrips());
     update();
   }
 
   Future<void> getLastTrip() async {
     selectIdx = 1;
-    tripList.clear();
-    tripList.addAll(await _tripRepository.fetchLastTrips());
+    tripRooms.clear();
+    tripRooms.addAll(await _tripRepository.fetchLastTrips());
     update();
   }
 
   Future<void> getBookMarkTrip() async {
     selectIdx = 2;
-    tripList.clear();
-    tripList.addAll(await _tripRepository.fetchBookmarkedTrips());
+    tripRooms.clear();
+    tripRooms.addAll(await _tripRepository.fetchBookmarkedTrips());
     update();
   }
 
+  bool shouldExitOnBackPressed() {
+    final now = DateTime.now();
+    final isFirstTap = _lastBackPressTime == null || now.difference(_lastBackPressTime!) > const Duration(seconds: 2);
+
+    if (isFirstTap) {
+      _lastBackPressTime = now;
+      return false;
+    }
+
+    return true;
+  }
+
   /// route
+  void onRoomPressed() {
+    Get.to(() => BottomNavigator())?.then((v) async {
+      // await notis.getNotificationCount();
+    });
+  }
+
   void onNotificationPressed() {
     Get.to(() => NotificationMain())?.then((v) async {
       // await notis.getNotificationCount();

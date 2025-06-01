@@ -1,23 +1,23 @@
 import 'package:dio/dio.dart';
 import 'package:tripStory/app/config/dio_client.dart';
 
-class ApiTripClient {
+class TripClient {
   final Dio _dio;
 
-  ApiTripClient(DioClient dioClient) : _dio = dioClient.dio;
+  TripClient(DioClient dioClient) : _dio = dioClient.dio;
 
   Future<List<dynamic>> inComingTripGet() async {
-    final response = await _dio.get('/trip/incoming');
+    final response = await _dio.get('/trip/list/incoming');
     return response.data;
   }
 
   Future<List<dynamic>> lastTripGet() async {
-    final response = await _dio.get('/trip/last');
+    final response = await _dio.get('/trip/list/last');
     return response.data;
   }
 
   Future<List<dynamic>> bookMarkTripGet() async {
-    final response = await _dio.get('/trip/bookmarked');
+    final response = await _dio.get('/trip/list/bookmark');
     return response.data;
   }
 }
