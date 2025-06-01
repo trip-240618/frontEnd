@@ -5,7 +5,7 @@ import 'package:tripStory/util/color.dart';
 
 import '../../../component/bottomContainer.dart';
 import '../../../util/font.dart';
-import '../../main/main_page/views/trip_room_list_view.dart';
+import '../../main/main_page/views/rooms_view.dart';
 
 class SuccessPage extends StatefulWidget {
   const SuccessPage({super.key});
@@ -19,7 +19,7 @@ class _SuccessPageState extends State<SuccessPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(left: 20,right: 20,bottom: 44),
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 44),
         child: Container(
           width: Get.width,
           child: Column(
@@ -30,18 +30,23 @@ class _SuccessPageState extends State<SuccessPage> {
               Container(
                   width: 68,
                   height: 68,
-                  decoration: BoxDecoration(
-                    color: gray900,
-                    shape: BoxShape.circle
-                  ),
-                  child: SvgPicture.asset('assets/icon/successCheck.svg',fit: BoxFit.none,)),
+                  decoration: BoxDecoration(color: gray900, shape: BoxShape.circle),
+                  child: SvgPicture.asset(
+                    'assets/icon/successCheck.svg',
+                    fit: BoxFit.none,
+                  )),
               const SizedBox(height: 18),
-              Text('회원가입을 완료했어요',style: f24gray900w700,),
+              Text(
+                '회원가입을 완료했어요',
+                style: f24gray900w700,
+              ),
               Spacer(),
               BottomContainer(
-                  onTap: ()async{
-                    Get.offAll(()=>TripRoomListView());
-                  },title: '다음',isBlack: true),
+                  onTap: () async {
+                    Get.offAll(() => TripRoomListView());
+                  },
+                  title: '다음',
+                  isBlack: true),
             ],
           ),
         ),

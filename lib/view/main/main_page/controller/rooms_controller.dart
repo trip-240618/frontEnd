@@ -5,32 +5,62 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/app/api/fileApi.dart';
 import 'package:tripStory/app/api/tripApi.dart';
 import 'package:tripStory/app/config/dio_client.dart';
-import 'package:tripStory/app/permission/permission.dart';
-import 'package:tripStory/component/dialog/loading.dart';
-import 'package:tripStory/controller/jPlanState.dart';
-import 'package:tripStory/controller/tripState.dart';
-import 'package:tripStory/view/main/main_page/views/rooms_view.dart';
-import 'package:tripStory/view/trip/bottomNavigator.dart';
+import 'package:tripStory/app/data/models/trip_room_model.dart';
+import 'package:tripStory/app/data/repositories/trip_repository.dart';
+import 'package:tripStory/view/main/notification/notification_main.dart';
+import 'package:tripStory/view/myPage/myPage.dart';
 
-class MainState extends GetxController with GetSingleTickerProviderStateMixin {
-  TripState ts = Get.put(TripState());
-  JPlanState js = Get.put(JPlanState());
-  final selectIdx = 0.obs;
+class RoomsController extends GetxController with GetSingleTickerProviderStateMixin {
+  RoomsController(this._tripRepository);
 
-  /// (탭바 클릭)
+  final TripRepository _tripRepository;
+
   final apiTripClient = ApiTripClient(DioClient());
   final apiFileClient = ApiFileClient(DioClient());
 
-  /// tripRoomAdd
   late TabController tabController;
 
+  final List<TripRoomModel> tripList = [];
+  int selectIdx = 0;
+  int notificationCount = 0;
+
+  Future<void> getComingTrip() async {
+    selectIdx = 0;
+    tripList.clear();
+    tripList.addAll(await _tripRepository.fetchComingTrips());
+    update();
+  }
+
+  Future<void> getLastTrip() async {
+    selectIdx = 1;
+    tripList.clear();
+    tripList.addAll(await _tripRepository.fetchLastTrips());
+    update();
+  }
+
+  Future<void> getBookMarkTrip() async {
+    selectIdx = 2;
+    tripList.clear();
+    tripList.addAll(await _tripRepository.fetchBookmarkedTrips());
+    update();
+  }
+
+  /// route
+  void onNotificationPressed() {
+    Get.to(() => NotificationMain())?.then((v) async {
+      // await notis.getNotificationCount();
+    });
+  }
+
+  void onMyPagePressed() {
+    Get.to(() => MyPage());
+  }
+
   /// 탭
-  final ImagePicker _picker = ImagePicker();
   Rx<XFile?> pickedImage = Rx<XFile?>(null);
 
   final tripDestination = ''.obs;
@@ -55,28 +85,8 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   final firstInit = false.obs;
 
   /// 처음 실행 됬을 때
-  /// trip main
-  final RxList tripList = <dynamic>[].obs;
 
   /// 여행지 목록 리스트
-
-  @override
-  void onInit() {
-    Future.delayed(Duration.zero, () async {
-      ///앱을 종료 했을 떄 카카오톡으로 들어왔을 때
-      String? url = await receiveKakaoScheme();
-      if (url != null) {
-        enterKakaoTrip(url);
-      }
-    });
-    kakaoSchemeStream.listen((url) async {
-      enterKakaoTrip(url!);
-    }, onError: (e) {
-      /// 에러 상황의 예외 처리 코드를 작성합니다.
-    });
-    tabController = TabController(length: 2, vsync: this);
-    super.onInit();
-  }
 
   @override
   void onClose() {
@@ -84,45 +94,6 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
     tripCitySearchCon.dispose();
     tripDirectSearchCon.dispose();
     super.onClose();
-  }
-
-  /// 카카오톡 공유하기로 앱 참여 했을 때
-  Future<void> enterKakaoTrip(String url) async {
-    getShowLoading();
-    Uri uri = Uri.parse(url);
-
-    /// 쿼리 매개변수 추출
-    String? tripId = uri.queryParameters['tripId'];
-    String? inviteCode = uri.queryParameters['inviteCode'];
-    await js.resetState();
-    await tripJoin('${inviteCode}');
-    await ts.getSelectTrip(int.parse(tripId!));
-    Get.offAll(() => TripRoomListView());
-    Get.to(() => BottomNavigator());
-  }
-
-  /// 다가오는 여행 가져오기
-  Future<void> getComingTrip() async {
-    tripList.clear();
-    tripList.value = await apiTripClient.inComingTripGet();
-  }
-
-  /// 지난 여행 가져오기
-  Future<void> getLastTrip() async {
-    tripList.clear();
-    tripList.value = await apiTripClient.lastTripGet();
-  }
-
-  /// 북마크 가져오기
-  Future<void> getBookMarkTrip() async {
-    tripList.clear();
-    tripList.value = await apiTripClient.bookMarkTripGet();
-  }
-
-  /// 북마크 여행 가져오기
-  Future<void> getBookmarkTrip() async {
-    tripList.clear();
-    tripList.value = await apiTripClient.inComingTripGet();
   }
 
   /// 여행 북마크 요청
@@ -187,18 +158,6 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
           tripDestination.value = tripDirectSearchCon.text;
           Get.back();
         }
-      }
-    }
-  }
-
-  /// 사진 넣기
-  Future<XFile?> getSingleImage(ImageSource imageSource, BuildContext context, XFile? file) async {
-    bool requestCheck = await requestCameraPermission(context);
-    if (requestCheck) {
-      final XFile? pickedFile = await _picker.pickImage(source: imageSource);
-      if (pickedFile != null) {
-        file = XFile(pickedFile.path);
-        return file;
       }
     }
   }

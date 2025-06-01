@@ -9,9 +9,8 @@ import 'package:tripStory/app/notification/local_notification_setting.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/view/login/loginPage.dart';
-import 'package:tripStory/view/main/main_page/views/trip_room_list_view.dart';
-
-
+import 'package:tripStory/view/main/main_page/bindings/rooms_binding.dart';
+import 'package:tripStory/view/main/main_page/views/rooms_view.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -29,7 +28,7 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   void initState() {
-    Future.delayed(Duration.zero,()async{
+    Future.delayed(Duration.zero, () async {
       // await us.checkNetworkAndProceed();
       await us.versionCheck(context);
       requestNotificationPermissions();
@@ -50,7 +49,7 @@ class _SplashPageState extends State<SplashPage> {
     if (cookies != null) {
       // String? tokens = await FirebaseMessaging.instance.getToken();
       await us.autoLogin();
-      if(us.userList.isNotEmpty){
+      if (us.userList.isNotEmpty) {
         await us.tokenUpdate('');
       }
     }
@@ -64,15 +63,26 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    if(isLoading){
-      return Container(color: Colors.white);
-    }else{
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (isLoading) return;
+
       if (jailbroken) {
-        return DialogExample();
+        Get.offAll(() => DialogExample());
       } else {
         FlutterNativeSplash.remove();
-        return us.userList.isNotEmpty?TripRoomListView():LoginPage();
+
+        if (us.userList.isNotEmpty) {
+          Get.offAll(() => TripRoomListView(), binding: RoomsBinding());
+        } else {
+          Get.offAll(() => LoginPage());
+        }
       }
-    }
+    });
+
+    // 최초 build 시에는 빈 화면
+    return const Scaffold(
+      backgroundColor: Colors.white,
+      body: SizedBox(),
+    );
   }
 }
