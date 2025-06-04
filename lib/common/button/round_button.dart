@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:tripStory/util/color.dart';
 
 class RoundedBoxButton extends StatelessWidget {
-  final Widget child;
+  final String text;
+  final TextStyle textStyle;
+  final Widget? icon;
   final Color backgroundColor;
   final VoidCallback? onTap;
 
   const RoundedBoxButton({
     super.key,
-    required this.child,
+    required this.text,
+    required this.textStyle,
+    this.icon,
     this.backgroundColor = gray200,
     this.onTap,
   });
@@ -27,7 +31,16 @@ class RoundedBoxButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
         ),
         child: Center(
-          child: child,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                icon!,
+                const SizedBox(width: 5),
+              ],
+              Text(text, style: textStyle),
+            ],
+          ),
         ),
       ),
     );

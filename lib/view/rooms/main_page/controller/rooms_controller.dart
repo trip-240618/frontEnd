@@ -12,8 +12,8 @@ import 'package:tripStory/app/config/dio_client.dart';
 import 'package:tripStory/app/data/models/trip_room_model.dart';
 import 'package:tripStory/app/data/repositories/trip_repository.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
-import 'package:tripStory/view/main/notification/notification_main.dart';
 import 'package:tripStory/view/myPage/myPage.dart';
+import 'package:tripStory/view/rooms/notification/notification_main.dart';
 import 'package:tripStory/view/trip/bottomNavigator.dart';
 
 class RoomsController extends GetxController with GetSingleTickerProviderStateMixin {

@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:tripStory/view/main/main_page/enum/trip_option.dart';
+import 'package:tripStory/view/rooms/main_page/enum/trip_option.dart';
 
 part 'trip_room_model.freezed.dart';
 part 'trip_room_model.g.dart';
@@ -13,5 +13,3 @@ abstract class TripRoomModel with _$TripRoomModel {
 
   factory TripRoomModel.fromJson(Map<String, dynamic> json) => _$TripRoomModelFromJson(json);
 }
-
-

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tripStory/view/main/main_page/views/trip_bookmark_view.dart';
-import 'package:tripStory/view/main/main_page/views/trip_past_view.dart';
-import 'package:tripStory/view/main/main_page/views/trip_upcoming_view.dart';
+import 'package:tripStory/view/rooms/main_page/views/trip_bookmark_view.dart';
+import 'package:tripStory/view/rooms/main_page/views/trip_past_view.dart';
+import 'package:tripStory/view/rooms/main_page/views/trip_upcoming_view.dart';
 
 enum TripOption {
   tripUpcoming,

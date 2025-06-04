@@ -9,8 +9,8 @@ import 'package:tripStory/app/notification/local_notification_setting.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/view/login/loginPage.dart';
-import 'package:tripStory/view/main/main_page/bindings/rooms_binding.dart';
-import 'package:tripStory/view/main/main_page/views/rooms_view.dart';
+import 'package:tripStory/view/rooms/main_page/bindings/rooms_binding.dart';
+import 'package:tripStory/view/rooms/main_page/views/rooms_view.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);

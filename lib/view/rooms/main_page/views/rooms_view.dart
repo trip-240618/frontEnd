@@ -14,8 +14,8 @@ import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/empty/emptyScreen.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
-import 'package:tripStory/view/main/main_page/controller/rooms_controller.dart';
-import 'package:tripStory/view/main/tripAdd/tripRoomAdd.dart';
+import 'package:tripStory/view/rooms/main_page/controller/rooms_controller.dart';
+import 'package:tripStory/view/rooms/tripAdd/tripRoomAdd.dart';
 
 class TripRoomListView extends StatelessWidget {
   const TripRoomListView({super.key});
@@ -101,10 +101,8 @@ class TripRoomListView extends StatelessWidget {
                       RoundedBoxButton(
                         backgroundColor: controller.selectIdx == 0 ? gray900 : gray200,
                         onTap: () => controller.getComingTrip(),
-                        child: Text(
-                          "다가오는 여행",
-                          style: controller.selectIdx == 0 ? f14Whitew700 : f14gray400w700,
-                        ),
+                        text: "다가오는 여행",
+                        textStyle: controller.selectIdx == 0 ? f14Whitew700 : f14gray400w700,
                       ),
                       const SizedBox(
                         width: 8,
@@ -112,10 +110,8 @@ class TripRoomListView extends StatelessWidget {
                       RoundedBoxButton(
                         backgroundColor: controller.selectIdx == 1 ? gray900 : gray200,
                         onTap: () => controller.getLastTrip(),
-                        child: Text(
-                          "지난 여행",
-                          style: controller.selectIdx == 1 ? f14Whitew700 : f14gray400w700,
-                        ),
+                        text: "지난 여행",
+                        textStyle: controller.selectIdx == 1 ? f14Whitew700 : f14gray400w700,
                       ),
                       const SizedBox(
                         width: 8,
@@ -123,10 +119,8 @@ class TripRoomListView extends StatelessWidget {
                       RoundedBoxButton(
                         backgroundColor: controller.selectIdx == 2 ? gray900 : gray200,
                         onTap: () => controller.getBookMarkTrip(),
-                        child: Text(
-                          "북마크",
-                          style: controller.selectIdx == 2 ? f14Whitew700 : f14gray400w700,
-                        ),
+                        text: "북마크",
+                        textStyle: controller.selectIdx == 2 ? f14Whitew700 : f14gray400w700,
                       ),
                     ],
                   ),
