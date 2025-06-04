@@ -55,6 +55,7 @@ dependencies:
   google_maps_cluster_manager_2: ^3.2.0
   freezed_annotation: ^3.0.0
   flutter_lints: ^5.0.0
+  logger: ^2.5.0
 
 
 dev_dependencies:
@@ -111,7 +112,7 @@ flutter_native_splash:
     # 768 pixels in diameter.
     color: "#ffffff"
     background_image: "assets/icon/splash1.png"
-#    image: assets/icon/splash1.png
+  #    image: assets/icon/splash1.png
 
   # App icon background color.
   #icon_background_color: "#111111"

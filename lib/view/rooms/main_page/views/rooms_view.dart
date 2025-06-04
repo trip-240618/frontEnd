@@ -101,7 +101,7 @@ class TripRoomListView extends StatelessWidget {
                     children: [
                       RoundedBoxButton(
                         backgroundColor: controller.selectIdx == 0 ? gray900 : gray200,
-                        onTap: () => controller.getComingTrip(),
+                        onTap: () => controller.onComingTripPressed(),
                         text: "다가오는 여행",
                         textStyle: controller.selectIdx == 0 ? f14Whitew700 : f14gray400w700,
                       ),
@@ -110,7 +110,7 @@ class TripRoomListView extends StatelessWidget {
                       ),
                       RoundedBoxButton(
                         backgroundColor: controller.selectIdx == 1 ? gray900 : gray200,
-                        onTap: () => controller.getLastTrip(),
+                        onTap: () => controller.onLastTripPressed(),
                         text: "지난 여행",
                         textStyle: controller.selectIdx == 1 ? f14Whitew700 : f14gray400w700,
                       ),
@@ -119,7 +119,7 @@ class TripRoomListView extends StatelessWidget {
                       ),
                       RoundedBoxButton(
                         backgroundColor: controller.selectIdx == 2 ? gray900 : gray200,
-                        onTap: () => controller.getBookMarkTrip(),
+                        onTap: () => controller.onBookMarkTripPressed(),
                         text: "북마크",
                         textStyle: controller.selectIdx == 2 ? f14Whitew700 : f14gray400w700,
                       ),
@@ -127,41 +127,44 @@ class TripRoomListView extends StatelessWidget {
                   ),
                   const SizedBox(height: 32),
                   Expanded(
-                    child: controller.tripRooms.isEmpty
+                    child: controller.tripRoomsState.isTripRoomEmpty
                         ? EmptyScreen(
                             content: "새 여행 일정을\n 트립스토리에 등록해 보세요",
                           )
                         : SingleChildScrollView(
                             physics: const ClampingScrollPhysics(),
                             child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const ClampingScrollPhysics(),
-                                itemCount: controller.tripListLength(),
-                                itemBuilder: (contexts, index) {
-                                  final tripRoom = controller.tripRooms[index];
-                                  return Column(
-                                    children: [
-                                      _TripRoomTile(
-                                        data: tripRoom,
-                                        selectedIndex: controller.selectIdx,
-                                        onTap: () => controller.onRoomPressed(),
-                                        onBookmarkTap: () => controller.bookmarkClick(tripRoom.id),
-                                        onSendTap: () => sendBottomModal(
-                                          context,
-                                          tripRoom.invitationCode,
-                                          tripRoom.id,
-                                        ),
-                                        onMemberTap: (context) => _showMemberPopover(
-                                          context: context,
-                                          members: controller.getPopupMembers(tripRoom),
-                                          width: 14 * controller.tripRooms[index].longestNicknameLength + 100,
-                                          height: 50 * tripRoom.memberLength.toDouble(),
-                                        ),
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              itemCount: controller.tripRoomsState.tripListLength,
+                              itemBuilder: (contexts, index) {
+                                final tripRoom = controller.tripRoomsState.tripRooms[index];
+                                return Column(
+                                  children: [
+                                    _TripRoomTile(
+                                      data: tripRoom,
+                                      selectedIndex: controller.selectIdx,
+                                      onTap: () => controller.onRoomPressed(),
+                                      onBookmarkTap: () => controller.onBookmarkPressed(tripRoom.id),
+                                      onSendTap: () => sendBottomModal(
+                                        context,
+                                        tripRoom.invitationCode,
+                                        tripRoom.id,
                                       ),
-                                      SizedBox(height: 12),
-                                    ],
-                                  );
-                                }),
+                                      onMemberTap: (context) => _showMemberPopover(
+                                        context: context,
+                                        members: controller.getPopupMembers(tripRoom),
+                                        width: 14 * controller.getLongestNicknameLength(tripRoom) + 100,
+                                        height: 50 * tripRoom.memberLength.toDouble(),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                   ),
                   const SizedBox(

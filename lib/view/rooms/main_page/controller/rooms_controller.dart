@@ -13,6 +13,7 @@ import 'package:tripStory/app/data/models/trip_room_model.dart';
 import 'package:tripStory/app/data/repositories/trip_repository.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
 import 'package:tripStory/view/myPage/myPage.dart';
+import 'package:tripStory/view/rooms/main_page/model/trip_rooms_state.dart';
 import 'package:tripStory/view/rooms/notification/notification_main.dart';
 import 'package:tripStory/view/trip/bottomNavigator.dart';
 
@@ -26,12 +27,11 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
 
   late TabController tabController;
 
-  final List<TripRoomModel> tripRooms = [];
+  TripRoomsState tripRoomsState = TripRoomsState();
+
   DateTime? _lastBackPressTime;
   int selectIdx = 0;
   int notificationCount = 0;
-
-  int tripListLength() => tripRooms.length;
 
   List<PopupItemModel> getPopupMembers(TripRoomModel tripRoom) => tripRoom.tripMemberDtoList
       .map(
@@ -42,25 +42,8 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
       )
       .toList();
 
-  Future<void> getComingTrip() async {
-    selectIdx = 0;
-    tripRooms.clear();
-    tripRooms.addAll(await _tripRepository.fetchComingTrips());
-    update();
-  }
-
-  Future<void> getLastTrip() async {
-    selectIdx = 1;
-    tripRooms.clear();
-    tripRooms.addAll(await _tripRepository.fetchLastTrips());
-    update();
-  }
-
-  Future<void> getBookMarkTrip() async {
-    selectIdx = 2;
-    tripRooms.clear();
-    tripRooms.addAll(await _tripRepository.fetchBookmarkedTrips());
-    update();
+  int getLongestNicknameLength(TripRoomModel room) {
+    return room.tripMemberDtoList.map((e) => e.nickname.length).fold(0, (a, b) => a > b ? a : b);
   }
 
   bool shouldExitOnBackPressed() {
@@ -75,7 +58,43 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     return true;
   }
 
-  /// route
+  /// side Effect
+
+  Future<void> onComingTripPressed() async {
+    selectIdx = 0;
+    final result = await _tripRepository.fetchComingTrips();
+    tripRoomsState = tripRoomsState.copyWith(tripRooms: result);
+    update();
+  }
+
+  Future<void> onLastTripPressed() async {
+    selectIdx = 1;
+    final result = await _tripRepository.fetchLastTrips();
+    tripRoomsState = tripRoomsState.copyWith(tripRooms: result);
+    update();
+  }
+
+  Future<void> onBookMarkTripPressed() async {
+    selectIdx = 2;
+    final result = await _tripRepository.fetchBookmarkedTrips();
+    tripRoomsState = tripRoomsState.copyWith(tripRooms: result);
+    update();
+  }
+
+  Future<void> onBookmarkPressed(int tripId) async {
+    final result = await _tripRepository.updateBookmark(tripId);
+
+    final room = tripRoomsState.findTripRoom(tripId);
+    if (room == null) return;
+
+    final updatedRoom = room.copyWith(bookmark: result);
+
+    tripRoomsState = tripRoomsState.copyWith(
+      tripRooms: tripRoomsState.tripRooms.map((room) => room.id == tripId ? updatedRoom : room).toList(),
+    );
+    update();
+  }
+
   void onRoomPressed() {
     Get.to(() => BottomNavigator())?.then((v) async {
       // await notis.getNotificationCount();
@@ -126,11 +145,6 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     tripCitySearchCon.dispose();
     tripDirectSearchCon.dispose();
     super.onClose();
-  }
-
-  /// 여행 북마크 요청
-  Future<void> bookmarkClick(int tripId) async {
-    await apiTripClient.bookmarkClick(tripId);
   }
 
   /// 여행방 참가

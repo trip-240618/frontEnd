@@ -27,23 +27,6 @@ abstract class TripRoomModel with _$TripRoomModel {
   factory TripRoomModel.fromJson(Map<String, dynamic> json) => _$TripRoomModelFromJson(json);
 }
 
-extension TripRoomModelExtension on TripRoomModel {
-  bool get isOnTrip {
-    final start = DateTime.parse(startDate);
-    final end = DateTime.parse(endDate);
-    final now = DateTime.now();
-    return now.isAfter(start) && now.isBefore(end);
-  }
-
-  String get dDayText {
-    final start = DateTime.parse(startDate);
-    final days = start.difference(DateTime.now()).inDays + 1;
-    return days < 1 ? '여행중' : 'D-$days';
-  }
-
-  int get longestNicknameLength => tripMemberDtoList.map((e) => e.nickname.length).fold(0, (a, b) => a > b ? a : b);
-}
-
 @freezed
 abstract class TripMember with _$TripMember {
   const factory TripMember({

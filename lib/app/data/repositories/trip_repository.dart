@@ -6,4 +6,8 @@ abstract class TripRepository {
   Future<List<TripRoomModel>> fetchLastTrips();
 
   Future<List<TripRoomModel>> fetchBookmarkedTrips();
+
+  Future<bool> updateBookmark(
+    int tripId,
+  );
 }
