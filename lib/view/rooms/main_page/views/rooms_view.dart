@@ -8,6 +8,7 @@ import 'package:popover/popover.dart';
 import 'package:tripStory/app/data/models/trip_room_model.dart';
 import 'package:tripStory/common/button/popup_list.dart';
 import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/model/popup_item_model.dart';
 import 'package:tripStory/common/snack_bar.dart';
 import 'package:tripStory/component/bottomModals.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
@@ -127,7 +128,9 @@ class TripRoomListView extends StatelessWidget {
                   const SizedBox(height: 32),
                   Expanded(
                     child: controller.tripRooms.isEmpty
-                        ? EmptyScreen(context)
+                        ? EmptyScreen(
+                            content: "새 여행 일정을\n 트립스토리에 등록해 보세요",
+                          )
                         : SingleChildScrollView(
                             physics: const ClampingScrollPhysics(),
                             child: ListView.builder(
@@ -143,251 +146,19 @@ class TripRoomListView extends StatelessWidget {
                                         selectedIndex: controller.selectIdx,
                                         onTap: () => controller.onRoomPressed(),
                                         onBookmarkTap: () => controller.bookmarkClick(tripRoom.id),
-                                        onSendTap: () {
-                                          sendBottomModal(
-                                            context,
-                                            tripRoom.invitationCode,
-                                            tripRoom.id,
-                                          );
-                                        },
-                                        onMemberTap: (contexts) => showPopover(
-                                          context: contexts,
-                                          bodyBuilder: (context) => Material(
-                                            child: PopupList(
-                                              members: controller.getPopupMembers(tripRoom),
-                                            ),
-                                          ),
-                                          direction: PopoverDirection.bottom,
+                                        onSendTap: () => sendBottomModal(
+                                          context,
+                                          tripRoom.invitationCode,
+                                          tripRoom.id,
+                                        ),
+                                        onMemberTap: (context) => _showMemberPopover(
+                                          context: context,
+                                          members: controller.getPopupMembers(tripRoom),
                                           width: 14 * controller.tripRooms[index].longestNicknameLength + 100,
                                           height: 50 * tripRoom.memberLength.toDouble(),
-                                          contentDyOffset: 10,
-                                          arrowHeight: 8,
-                                          arrowWidth: 13,
                                         ),
                                       ),
-                                      // GestureDetector(
-                                      //   behavior: HitTestBehavior.opaque,
-                                      //   onTap: () async {
-                                      //     // await ts.getSelectTrip(ms.tripList[index]['id']);
-                                      //     // Get.to(() => BottomNavigator())?.then((v) async {
-                                      //     //   await notis.getNotificationCount();
-                                      //     // });
-                                      //   },
-                                      //   child: Container(
-                                      //     width: Get.width,
-                                      //     height: 140,
-                                      //     decoration: BoxDecoration(
-                                      //       borderRadius: BorderRadius.circular(4),
-                                      //     ),
-                                      //     child: Stack(
-                                      //       children: [
-                                      //         SvgPicture.asset('assets/icon/ticket.svg',
-                                      //             width: Get.width, height: Get.height, fit: BoxFit.fill),
-                                      //         Positioned(
-                                      //             left: 16,
-                                      //             top: 8,
-                                      //             right: 16,
-                                      //             child: Container(
-                                      //               width: Get.width,
-                                      //               child: Row(
-                                      //                 children: [
-                                      //                   controller.selectIdx == 1
-                                      //                       ? SvgPicture.asset('assets/icon/calender.svg',
-                                      //                           colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn))
-                                      //                       : Container(
-                                      //                           decoration: BoxDecoration(
-                                      //                               border: Border.all(
-                                      //                                 color: Color(int.parse(
-                                      //                                     '${controller.tripList[index].labelColor}')),
-                                      //                                 width: 1.5, // 1.5px 두께
-                                      //                               ),
-                                      //                               borderRadius: BorderRadius.circular(100)),
-                                      //                           child: Padding(
-                                      //                             padding: const EdgeInsets.symmetric(
-                                      //                                 vertical: 2, horizontal: 10),
-                                      //                             child: Text(
-                                      //                               (DateTime.parse('${controller.tripList[index].startDate}')
-                                      //                                               .difference(DateTime.now())
-                                      //                                               .inDays +
-                                      //                                           1) <
-                                      //                                       1
-                                      //                                   ? '여행중'
-                                      //                                   : 'D-${DateTime.parse('${controller.tripList[index].startDate}').difference(DateTime.now()).inDays + 1}',
-                                      //                               style: changeColor(Color(int.parse(
-                                      //                                   '${controller.tripList[index].labelColor}'))),
-                                      //                             ),
-                                      //                           ),
-                                      //                         ),
-                                      //                   const SizedBox(width: 6),
-                                      //                   Text(
-                                      //                     '${controller.tripList[index].startDate} ~ ${controller.tripList[index].endDate}',
-                                      //                     style: f12Gray800w500,
-                                      //                   ),
-                                      //                   Spacer(),
-                                      //                   controller.selectIdx == 1
-                                      //                       ? const SizedBox()
-                                      //                       : GestureDetector(
-                                      //                           behavior: HitTestBehavior.opaque,
-                                      //                           onTap: () {
-                                      //                             // sendBottomModal(
-                                      //                             //     context,
-                                      //                             //     ms.tripList[index]['invitationCode'],
-                                      //                             //     ms.tripList[index]['id']);
-                                      //                           },
-                                      //                           child: Container(
-                                      //                               padding: const EdgeInsets.all(6.0),
-                                      //                               child: SvgPicture.asset('assets/icon/send.svg',
-                                      //                                   color: gray900))),
-                                      //                   const SizedBox(width: 4),
-                                      //                   InkWell(
-                                      //                     onTap: () async {
-                                      //                       await controller.bookmarkClick(
-                                      //                           int.parse('${controller.tripList[index].id}'));
-                                      //                       // controller.tripList[index]['bookmark'] = !controller.tripList[index]['bookmark'];
-                                      //                       // controller.tripList.refresh();
-                                      //                     },
-                                      //                     highlightColor: Colors.black,
-                                      //                     splashColor: Colors.black,
-                                      //                     child: Container(
-                                      //                       padding: const EdgeInsets.all(4.0),
-                                      //                       child: controller.tripList[index].bookmark
-                                      //                           ? SvgPicture.asset(
-                                      //                               'assets/icon/checkBookmark.svg',
-                                      //                               fit: BoxFit.none,
-                                      //                             )
-                                      //                           : SvgPicture.asset(
-                                      //                               'assets/icon/bookmark.svg',
-                                      //                               fit: BoxFit.none,
-                                      //                             ),
-                                      //                     ),
-                                      //                   )
-                                      //                 ],
-                                      //               ),
-                                      //             )),
-                                      //         Positioned(
-                                      //           left: 16,
-                                      //           top: 58,
-                                      //           right: 16,
-                                      //           bottom: 14,
-                                      //           child: SizedBox(
-                                      //             width: Get.width,
-                                      //             child: Row(
-                                      //               mainAxisAlignment: MainAxisAlignment.start,
-                                      //               crossAxisAlignment: CrossAxisAlignment.start,
-                                      //               children: [
-                                      //                 SizedBox(
-                                      //                   width: 66,
-                                      //                   height: 66,
-                                      //                   child: ClipRRect(
-                                      //                     borderRadius: BorderRadius.circular(4),
-                                      //                     child: CachedNetworkImage(
-                                      //                       imageUrl: controller.tripList[index].thumbnail ?? "",
-                                      //                       imageBuilder: (context, imageProvider) => Container(
-                                      //                         decoration: BoxDecoration(
-                                      //                           image: DecorationImage(
-                                      //                               image: imageProvider, fit: BoxFit.fill),
-                                      //                         ),
-                                      //                       ),
-                                      //                       errorWidget: (context, url, error) {
-                                      //                         return DefaultImageScreen(context);
-                                      //                       },
-                                      //                     ),
-                                      //                   ),
-                                      //                 ),
-                                      //                 const SizedBox(width: 12),
-                                      //                 Column(
-                                      //                   mainAxisAlignment: MainAxisAlignment.start,
-                                      //                   crossAxisAlignment: CrossAxisAlignment.start,
-                                      //                   children: [
-                                      //                     Row(
-                                      //                       children: [
-                                      //                         Container(
-                                      //                           width: 20,
-                                      //                           height: 20,
-                                      //                           decoration: BoxDecoration(
-                                      //                               color: Color(
-                                      //                                 int.parse(controller.tripList[index].labelColor),
-                                      //                               ),
-                                      //                               shape: BoxShape.circle),
-                                      //                           child: Center(
-                                      //                             child: Text(
-                                      //                               controller.tripList[index].type,
-                                      //                               style: f12Whitew700,
-                                      //                             ),
-                                      //                           ),
-                                      //                         ),
-                                      //                         const SizedBox(width: 6),
-                                      //                         Text(
-                                      //                           controller.tripList[index].name,
-                                      //                           style: f15gray800w600,
-                                      //                         )
-                                      //                       ],
-                                      //                     ),
-                                      //                     Spacer(),
-                                      //                     Text(
-                                      //                       controller.tripList[index].country,
-                                      //                       style: f12gray600w600,
-                                      //                     ),
-                                      //                   ],
-                                      //                 ),
-                                      //                 Spacer(),
-                                      //                 Builder(builder: (context) {
-                                      //                   return Column(
-                                      //                     mainAxisAlignment: MainAxisAlignment.end,
-                                      //                     children: [
-                                      //                       GestureDetector(
-                                      //                         onTap: () async {
-                                      //                           int maxlen = await getLongestNicknameLength(
-                                      //                               ms.tripList[index]['tripMemberDtoList']);
-                                      //                           showPopover(
-                                      //                               context: context,
-                                      //                               bodyBuilder: (context) => ListItems(
-                                      //                                     index: index,
-                                      //                                   ),
-                                      //                               direction: PopoverDirection.bottom,
-                                      //                               width: 14 * maxlen + 100,
-                                      //                               height: 50 *
-                                      //                                       ms.tripList[index]['tripMemberDtoList']
-                                      //                                           .length +
-                                      //                                   0,
-                                      //                               contentDyOffset: 10,
-                                      //                               arrowHeight: 8,
-                                      //                               arrowWidth: 13);
-                                      //                         },
-                                      //                         child: Container(
-                                      //                           decoration: BoxDecoration(
-                                      //                               color: gray200,
-                                      //                               borderRadius: BorderRadius.circular(100)),
-                                      //                           child: Padding(
-                                      //                             padding: const EdgeInsets.symmetric(
-                                      //                                 horizontal: 12, vertical: 5),
-                                      //                             child: Row(
-                                      //                               children: [
-                                      //                                 SvgPicture.asset(
-                                      //                                   'assets/icon/userIcon.svg',
-                                      //                                 ),
-                                      //                                 const SizedBox(width: 5),
-                                      //                                 Text(
-                                      //                                   '${controller.tripList[index].tripMemberDtoList.length}',
-                                      //                                   style: f14gray600w700,
-                                      //                                 )
-                                      //                               ],
-                                      //                             ),
-                                      //                           ),
-                                      //                         ),
-                                      //                       ),
-                                      //                     ],
-                                      //                   );
-                                      //                 })
-                                      //               ],
-                                      //             ),
-                                      //           ),
-                                      //         ),
-                                      //       ],
-                                      //     ),
-                                      //   ),
-                                      // ),
-                                      SizedBox(height: 12)
+                                      SizedBox(height: 12),
                                     ],
                                   );
                                 }),
@@ -441,6 +212,34 @@ class TripRoomListView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  /**
+   *
+   *  width : 14px 글자 픽셀 , 100 프로필이미지 여백 패딩 크기
+   *
+   *  height : 각 멤버 항목의 높이를 50px로 고정
+   */
+  void _showMemberPopover({
+    required BuildContext context,
+    required List<PopupItemModel> members,
+    required double width,
+    required double height,
+  }) {
+    showPopover(
+      context: context,
+      bodyBuilder: (context) => Material(
+        child: PopupList(
+          members: members,
+        ),
+      ),
+      direction: PopoverDirection.bottom,
+      width: width,
+      height: height,
+      contentDyOffset: 10,
+      arrowHeight: 8,
+      arrowWidth: 13,
     );
   }
 }
