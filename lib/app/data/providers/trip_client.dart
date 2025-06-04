@@ -20,4 +20,9 @@ class TripClient {
     final response = await _dio.get('/trip/list/bookmark');
     return response.data;
   }
+
+  Future<bool> updateBookMark(int tripId) async {
+    final response = await _dio.put('/trip/bookmark/toggle?tripId=$tripId');
+    return response.data;
+  }
 }

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/util/color.dart';
+import 'package:tripStory/view/rooms/main_page/views/rooms_view.dart';
 
 import '../../../component/bottomContainer.dart';
 import '../../../util/font.dart';
-import '../../main/main_page/views/rooms_view.dart';
 
 class SuccessPage extends StatefulWidget {
   const SuccessPage({super.key});

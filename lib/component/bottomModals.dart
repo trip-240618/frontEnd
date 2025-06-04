@@ -9,9 +9,8 @@ import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
-import 'package:tripStory/view/main/tripAdd/tirpDirectSearch.dart';
-import 'package:tripStory/view/main/tripAdd/tripSearch.dart';
-
+import 'package:tripStory/view/rooms/tripAdd/tirpDirectSearch.dart';
+import 'package:tripStory/view/rooms/tripAdd/tripSearch.dart';
 
 void bottomModel(BuildContext context) {
   final ms = Get.put(MainState());
@@ -23,20 +22,18 @@ void bottomModel(BuildContext context) {
         return StatefulBuilder(
           builder: (context, StateSetter setState) {
             return GestureDetector(
-              onTap: (){
+              onTap: () {
                 FocusScope.of(context).unfocus();
               },
               child: Container(
                 width: Get.width,
                 height: Get.height * 0.8,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(25.0),
-                  topRight: const Radius.circular(25.0))
-                ),
+                    color: Colors.white,
+                    borderRadius: new BorderRadius.only(
+                        topLeft: const Radius.circular(25.0), topRight: const Radius.circular(25.0))),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10,bottom: 44),
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 44),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,18 +42,16 @@ void bottomModel(BuildContext context) {
                         child: Container(
                           width: 50,
                           height: 5,
-                          decoration: BoxDecoration(
-                            color:greyColor
-                          ),
+                          decoration: BoxDecoration(color: greyColor),
                         ),
                       ),
                       const SizedBox(height: 33),
                       TabBar(
                         onTap: (int i) {
-                          if(i==1){
+                          if (i == 1) {
                             ms.tripCitySearchCon.text = '';
                             ms.selectedCity.value = '';
-                          }else if(i==0){
+                          } else if (i == 0) {
                             ms.tripDirectSearchCon.text = '';
                             ms.directSelectedCity.value = '';
                           }
@@ -82,7 +77,7 @@ void bottomModel(BuildContext context) {
                                 child: Center(
                                   child: Text(
                                     '여행지 검색',
-                                    style: ms.tabController.index==0?f16gray900w700:f16gray400w700,
+                                    style: ms.tabController.index == 0 ? f16gray900w700 : f16gray400w700,
                                   ),
                                 ),
                               ),
@@ -95,7 +90,7 @@ void bottomModel(BuildContext context) {
                                 child: Center(
                                   child: Text(
                                     '직접 입력',
-                                      style: ms.tabController.index==1?f16gray900w700:f16gray400w700,
+                                    style: ms.tabController.index == 1 ? f16gray900w700 : f16gray400w700,
                                   ),
                                 ),
                               ),
@@ -114,14 +109,17 @@ void bottomModel(BuildContext context) {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Obx(()=>BottomContainer(onTap: ()async{
-                        await ms.saveDestination();
-                      },title: '입력 완료',
-                        isBlack:ms.tabController.index == 0
-                          ? (ms.selectedCity.value == '' ? false : true)
-                          : (ms.tripLeaveType == '해외'
-                          ? (ms.directSelectedCity.value == '' ? false : true)
-                          : (ms.tripDirectSearchCon.text.isEmpty ? false : true)),))
+                      Obx(() => BottomContainer(
+                            onTap: () async {
+                              await ms.saveDestination();
+                            },
+                            title: '입력 완료',
+                            isBlack: ms.tabController.index == 0
+                                ? (ms.selectedCity.value == '' ? false : true)
+                                : (ms.tripLeaveType == '해외'
+                                    ? (ms.directSelectedCity.value == '' ? false : true)
+                                    : (ms.tripDirectSearchCon.text.isEmpty ? false : true)),
+                          ))
                     ],
                   ),
                 ),
@@ -130,7 +128,7 @@ void bottomModel(BuildContext context) {
           },
         );
       });
-  }
+}
 
 void timeBottomModel(BuildContext context) {
   final js = Get.put(JPlanState());
@@ -141,7 +139,7 @@ void timeBottomModel(BuildContext context) {
         return StatefulBuilder(
           builder: (context, StateSetter setState) {
             return GestureDetector(
-              onTap: (){
+              onTap: () {
                 FocusScope.of(context).unfocus();
               },
               child: Container(
@@ -164,13 +162,22 @@ void timeBottomModel(BuildContext context) {
                         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         child: Row(
                           children: [
-                            Text('시간 입력', style: f14whitew500,),
+                            Text(
+                              '시간 입력',
+                              style: f14whitew500,
+                            ),
                             Spacer(),
                             GestureDetector(
-                                onTap: (){Get.back();},
-                                child: SvgPicture.asset('assets/icon/close.svg', color: Colors.white,)),
+                                onTap: () {
+                                  Get.back();
+                                },
+                                child: SvgPicture.asset(
+                                  'assets/icon/close.svg',
+                                  color: Colors.white,
+                                )),
                           ],
-                        ),),
+                        ),
+                      ),
                     ),
                     Expanded(
                       child: Container(
@@ -194,7 +201,7 @@ void timeBottomModel(BuildContext context) {
       });
 }
 
-void sendBottomModal(BuildContext context,String inviteCode,int tripId) {
+void sendBottomModal(BuildContext context, String inviteCode, int tripId) {
   final ms = Get.put(MainState());
   FToast fToast;
   fToast = FToast();
@@ -205,7 +212,7 @@ void sendBottomModal(BuildContext context,String inviteCode,int tripId) {
         return StatefulBuilder(
           builder: (context, StateSetter setState) {
             return GestureDetector(
-              onTap: (){
+              onTap: () {
                 FocusScope.of(context).unfocus();
               },
               child: Container(
@@ -214,11 +221,9 @@ void sendBottomModal(BuildContext context,String inviteCode,int tripId) {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: new BorderRadius.only(
-                        topLeft: const Radius.circular(25.0),
-                        topRight: const Radius.circular(25.0))
-                ),
+                        topLeft: const Radius.circular(25.0), topRight: const Radius.circular(25.0))),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 20,right: 20,top: 10),
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,17 +232,20 @@ void sendBottomModal(BuildContext context,String inviteCode,int tripId) {
                         child: Container(
                           width: 50,
                           height: 5,
-                          decoration: BoxDecoration(
-                              color:greyColor
-                          ),
+                          decoration: BoxDecoration(color: greyColor),
                         ),
                       ),
                       const SizedBox(height: 40),
-                      Text('초대 코드를 복사했어요',style: f18gray800w700,),
-                      const SizedBox(height: 20,),
+                      Text(
+                        '초대 코드를 복사했어요',
+                        style: f18gray800w700,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       GestureDetector(
-                        onTap: (){
-                          ms.kakaoShare(tripId,inviteCode);
+                        onTap: () {
+                          ms.kakaoShare(tripId, inviteCode);
                         },
                         child: Container(
                           child: Padding(
@@ -246,21 +254,24 @@ void sendBottomModal(BuildContext context,String inviteCode,int tripId) {
                               children: [
                                 SvgPicture.asset('assets/icon/kakao.svg'),
                                 const SizedBox(width: 20),
-                                Text('카카오톡으로 공유하기',style: f15gray800w600,)
+                                Text(
+                                  '카카오톡으로 공유하기',
+                                  style: f15gray800w600,
+                                )
                               ],
                             ),
                           ),
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Clipboard.setData(ClipboardData(text: inviteCode));
                           fToast.showToast(
                             child: Container(
                               width: Get.width,
                               height: 58,
                               decoration: BoxDecoration(
-                                color: Color(0xff212121).withOpacity(0.7),  // 반투명한 배경
+                                color: Color(0xff212121).withOpacity(0.7), // 반투명한 배경
                                 borderRadius: BorderRadius.circular(8),
                                 boxShadow: [
                                   BoxShadow(
@@ -290,12 +301,19 @@ void sendBottomModal(BuildContext context,String inviteCode,int tripId) {
                                   ),
                                 ],
                               ),
-                              child: Center(child: Row(
+                              child: Center(
+                                  child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  SvgPicture.asset('assets/icon/copy.svg',colorFilter: ColorFilter.mode(Colors.white,BlendMode.srcIn)),
-                                  const SizedBox(width: 8,),
-                                  Text('초대코드를 복사했습니다',style: f14whitew600,),
+                                  SvgPicture.asset('assets/icon/copy.svg',
+                                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    '초대코드를 복사했습니다',
+                                    style: f14whitew600,
+                                  ),
                                 ],
                               )),
                             ),
@@ -310,7 +328,10 @@ void sendBottomModal(BuildContext context,String inviteCode,int tripId) {
                               children: [
                                 SvgPicture.asset('assets/icon/copy.svg'),
                                 const SizedBox(width: 20),
-                                Text('초대 코드 복사하기',style: f15gray800w600,)
+                                Text(
+                                  '초대 코드 복사하기',
+                                  style: f15gray800w600,
+                                )
                               ],
                             ),
                           ),
@@ -326,7 +347,7 @@ void sendBottomModal(BuildContext context,String inviteCode,int tripId) {
       });
 }
 
-void appSendBottomModal(BuildContext context,String inviteCode) {
+void appSendBottomModal(BuildContext context, String inviteCode) {
   final ms = Get.put(MainState());
   FToast fToast;
   fToast = FToast();
@@ -337,7 +358,7 @@ void appSendBottomModal(BuildContext context,String inviteCode) {
         return StatefulBuilder(
           builder: (context, StateSetter setState) {
             return GestureDetector(
-              onTap: (){
+              onTap: () {
                 FocusScope.of(context).unfocus();
               },
               child: Container(
@@ -346,11 +367,9 @@ void appSendBottomModal(BuildContext context,String inviteCode) {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: new BorderRadius.only(
-                        topLeft: const Radius.circular(25.0),
-                        topRight: const Radius.circular(25.0))
-                ),
+                        topLeft: const Radius.circular(25.0), topRight: const Radius.circular(25.0))),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 20,right: 20,top: 10),
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,16 +378,19 @@ void appSendBottomModal(BuildContext context,String inviteCode) {
                         child: Container(
                           width: 50,
                           height: 5,
-                          decoration: BoxDecoration(
-                              color:greyColor
-                          ),
+                          decoration: BoxDecoration(color: greyColor),
                         ),
                       ),
                       const SizedBox(height: 40),
-                      Text('앱 초대하기',style: f18gray800w700,),
-                      const SizedBox(height: 20,),
+                      Text(
+                        '앱 초대하기',
+                        style: f18gray800w700,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           // ms.kakaoShare();
                         },
                         child: Container(
@@ -376,25 +398,26 @@ void appSendBottomModal(BuildContext context,String inviteCode) {
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             child: Row(
                               children: [
-                                Container(
-                                  width: 24,
-                                    child: SvgPicture.asset('assets/icon/kakao.svg')),
+                                Container(width: 24, child: SvgPicture.asset('assets/icon/kakao.svg')),
                                 const SizedBox(width: 20),
-                                Text('카카오톡으로 공유하기',style: f15gray800w600,)
+                                Text(
+                                  '카카오톡으로 공유하기',
+                                  style: f15gray800w600,
+                                )
                               ],
                             ),
                           ),
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Clipboard.setData(ClipboardData(text: inviteCode));
                           fToast.showToast(
                             child: Container(
                               width: Get.width,
                               height: 58,
                               decoration: BoxDecoration(
-                                color: Color(0xff212121).withOpacity(0.7),  // 반투명한 배경
+                                color: Color(0xff212121).withOpacity(0.7), // 반투명한 배경
                                 borderRadius: BorderRadius.circular(8),
                                 boxShadow: [
                                   BoxShadow(
@@ -424,12 +447,19 @@ void appSendBottomModal(BuildContext context,String inviteCode) {
                                   ),
                                 ],
                               ),
-                              child: Center(child: Row(
+                              child: Center(
+                                  child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  SvgPicture.asset('assets/icon/copy.svg',colorFilter: ColorFilter.mode(Colors.white,BlendMode.srcIn)),
-                                  const SizedBox(width: 8,),
-                                  Text('초대코드를 복사했습니다',style: f14whitew600,),
+                                  SvgPicture.asset('assets/icon/copy.svg',
+                                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    '초대코드를 복사했습니다',
+                                    style: f14whitew600,
+                                  ),
                                 ],
                               )),
                             ),
@@ -444,12 +474,14 @@ void appSendBottomModal(BuildContext context,String inviteCode) {
                               children: [
                                 Container(
                                   width: 24,
-                                  child: SvgPicture.asset('assets/icon/link.svg'
-                                  ,fit: BoxFit.none,
-                                  colorFilter: ColorFilter.mode(gray600,BlendMode.srcIn)),
+                                  child: SvgPicture.asset('assets/icon/link.svg',
+                                      fit: BoxFit.none, colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn)),
                                 ),
                                 const SizedBox(width: 24),
-                                Text('다른 방법으로 공유',style: f15gray800w600,)
+                                Text(
+                                  '다른 방법으로 공유',
+                                  style: f15gray800w600,
+                                )
                               ],
                             ),
                           ),
