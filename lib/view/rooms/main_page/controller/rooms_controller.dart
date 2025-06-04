@@ -9,12 +9,14 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/app/api/fileApi.dart';
 import 'package:tripStory/app/api/tripApi.dart';
 import 'package:tripStory/app/config/dio_client.dart';
-import 'package:tripStory/app/data/models/trip_room_model.dart';
+import 'package:tripStory/app/data/models/trip_room.dart';
 import 'package:tripStory/app/data/repositories/trip_repository.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
 import 'package:tripStory/view/myPage/myPage.dart';
+import 'package:tripStory/view/rooms/main_page/enum/trip_rooms_type.dart';
 import 'package:tripStory/view/rooms/main_page/model/trip_rooms_state.dart';
 import 'package:tripStory/view/rooms/notification/notification_main.dart';
+import 'package:tripStory/view/rooms/tripAdd/tripRoomAdd.dart';
 import 'package:tripStory/view/trip/bottomNavigator.dart';
 
 class RoomsController extends GetxController with GetSingleTickerProviderStateMixin {
@@ -30,10 +32,10 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   TripRoomsState tripRoomsState = TripRoomsState();
 
   DateTime? _lastBackPressTime;
-  int selectIdx = 0;
+
   int notificationCount = 0;
 
-  List<PopupItemModel> getPopupMembers(TripRoomModel tripRoom) => tripRoom.tripMemberDtoList
+  List<PopupItemModel> getPopupMembers(TripRoom tripRoom) => tripRoom.tripMemberDtoList
       .map(
         (member) => PopupItemModel(
           nickname: member.nickname,
@@ -42,7 +44,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
       )
       .toList();
 
-  int getLongestNicknameLength(TripRoomModel room) {
+  int getLongestNicknameLength(TripRoom room) {
     return room.tripMemberDtoList.map((e) => e.nickname.length).fold(0, (a, b) => a > b ? a : b);
   }
 
@@ -61,27 +63,33 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   /// side Effect
 
   Future<void> onComingTripPressed() async {
-    selectIdx = 0;
     final result = await _tripRepository.fetchComingTrips();
-    tripRoomsState = tripRoomsState.copyWith(tripRooms: result);
+    tripRoomsState = tripRoomsState.copyWith(
+      tripRooms: result,
+      tripRoomType: TripRoomType.coming,
+    );
     update();
   }
 
   Future<void> onLastTripPressed() async {
-    selectIdx = 1;
     final result = await _tripRepository.fetchLastTrips();
-    tripRoomsState = tripRoomsState.copyWith(tripRooms: result);
+    tripRoomsState = tripRoomsState.copyWith(
+      tripRooms: result,
+      tripRoomType: TripRoomType.lastTrip,
+    );
     update();
   }
 
   Future<void> onBookMarkTripPressed() async {
-    selectIdx = 2;
     final result = await _tripRepository.fetchBookmarkedTrips();
-    tripRoomsState = tripRoomsState.copyWith(tripRooms: result);
+    tripRoomsState = tripRoomsState.copyWith(
+      tripRooms: result,
+      tripRoomType: TripRoomType.bookmarked,
+    );
     update();
   }
 
-  Future<void> onBookmarkPressed(int tripId) async {
+  Future<void> onBookmarkIconPressed(int tripId) async {
     final result = await _tripRepository.updateBookmark(tripId);
 
     final room = tripRoomsState.findTripRoom(tripId);
@@ -95,21 +103,17 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     update();
   }
 
-  void onRoomPressed() {
-    Get.to(() => BottomNavigator())?.then((v) async {
-      // await notis.getNotificationCount();
-    });
-  }
+  void onRoomPressed() => Get.to(() => BottomNavigator())?.then((v) async {
+        // await notis.getNotificationCount();
+      });
 
-  void onNotificationPressed() {
-    Get.to(() => NotificationMain())?.then((v) async {
-      // await notis.getNotificationCount();
-    });
-  }
+  void onNotificationPressed() => Get.to(() => NotificationMain())?.then((v) async {
+        // await notis.getNotificationCount();
+      });
 
-  void onMyPagePressed() {
-    Get.to(() => MyPage());
-  }
+  void onMyPagePressed() => Get.to(() => MyPage());
+
+  void onRoomCreatedPressed() => Get.to(() => TripRoomAddScreen());
 
   /// 탭
   Rx<XFile?> pickedImage = Rx<XFile?>(null);

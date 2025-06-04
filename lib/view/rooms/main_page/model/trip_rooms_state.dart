@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/app/data/models/trip_room_model.dart';
+import 'package:tripStory/app/data/models/trip_room.dart';
+import 'package:tripStory/view/rooms/main_page/enum/trip_rooms_type.dart';
 
 part 'trip_rooms_state.freezed.dart';
 
@@ -9,12 +10,13 @@ abstract class TripRoomsState with _$TripRoomsState {
   const TripRoomsState._();
 
   const factory TripRoomsState({
-    @Default([]) List<TripRoomModel> tripRooms,
+    @Default([]) List<TripRoom> tripRooms,
+    @Default(TripRoomType.coming) TripRoomType tripRoomType,
   }) = _TripRoomsState;
 
   int get tripListLength => tripRooms.length;
 
   bool get isTripRoomEmpty => tripRooms.isEmpty;
 
-  TripRoomModel? findTripRoom(int tripId) => tripRooms.firstWhereOrNull((room) => room.id == tripId);
+  TripRoom? findTripRoom(int tripId) => tripRooms.firstWhereOrNull((room) => room.id == tripId);
 }
