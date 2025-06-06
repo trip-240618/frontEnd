@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/app/data/models/trip_room.dart';
-import 'package:tripStory/view/rooms/main_page/enum/trip_rooms_type.dart';
+import 'package:tripStory/view/hoom/enum/trip_rooms_type.dart';
 
 part 'trip_rooms_state.freezed.dart';
 

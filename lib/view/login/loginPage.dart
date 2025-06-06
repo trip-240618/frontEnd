@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:tripStory/app/sns/snsLogin.dart';
 import 'package:tripStory/component/container/snsContainer.dart';
 import 'package:tripStory/controller/userState.dart';
-import 'package:tripStory/view/rooms/main_page/views/rooms_view.dart';
+import 'package:tripStory/view/hoom/views/rooms_view.dart';
 
 import '../../util/font.dart';
 import 'register/term.dart';

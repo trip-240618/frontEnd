@@ -16,8 +16,8 @@ import 'package:tripStory/component/empty/emptyScreen.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/util/helper/hex_color_helper.dart';
-import 'package:tripStory/view/rooms/main_page/controller/rooms_controller.dart';
-import 'package:tripStory/view/rooms/main_page/enum/trip_rooms_type.dart';
+import 'package:tripStory/view/hoom/controller/rooms_controller.dart';
+import 'package:tripStory/view/hoom/enum/trip_rooms_type.dart';
 
 class TripRoomListView extends StatelessWidget {
   const TripRoomListView({super.key});
