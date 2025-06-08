@@ -31,7 +31,6 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
       tripRoomCreateState = tripRoomCreateState.copyWith(
         roomImage: XFile(pickedFile.path),
       );
-      print("?? ${tripRoomCreateState}");
       update();
     }
   }
