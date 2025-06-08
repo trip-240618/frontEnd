@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tripStory/common/button/color_select_button.dart';
 import 'package:tripStory/common/button/image_button.dart';
+import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/enum/trip_type.dart';
 import 'package:tripStory/common/text/common_text_form_field.dart';
 import 'package:tripStory/component/appbar.dart';
-import 'package:tripStory/component/button/typeChoose.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/hoom/controller/trip_rooms_create_controller.dart';
@@ -95,45 +97,10 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                         style: f12gray600w600,
                       ),
                       const SizedBox(height: 12),
-                      Container(
-                        width: Get.width,
-                        height: 24,
-                        child: ListView.builder(
-                          itemCount: 4,
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    selectedColor = index;
-                                    setState(() {});
-                                  },
-                                  child: selectedColor == index
-                                      ? Container(
-                                          width: 24,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(color: gray900, width: 2),
-                                              color: colorList[index]),
-                                          child: SvgPicture.asset(
-                                            'assets/icon/checkIcon.svg',
-                                            fit: BoxFit.none,
-                                          ),
-                                        )
-                                      : Container(
-                                          width: 24,
-                                          height: 24,
-                                          decoration: BoxDecoration(shape: BoxShape.circle, color: colorList[index]),
-                                        ),
-                                ),
-                                const SizedBox(width: 12)
-                              ],
-                            );
-                          },
+                      ColorSelectButton(
+                        selectedColor: controller.tripRoomCreateState.selectedColor,
+                        onSelected: (tripColor) => controller.onColorPressed(
+                          tripColor,
                         ),
                       ),
                       const SizedBox(height: 30),
@@ -145,23 +112,27 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                       Row(
                         children: [
                           Expanded(
-                            child: TypeChoose(
-                                text: 'J형',
-                                onTap: () {
-                                  tripType = 'J형';
-                                  setState(() {});
-                                },
-                                value: tripType),
+                            child: RoundedBoxButton(
+                              onTap: () => controller.onTypePressed(TripType.j),
+                              text: "${TripType.j.name.toUpperCase()}형",
+                              height: 52,
+                              borderRadius: 4,
+                              borderColor: controller.tripRoomCreateState.type == TripType.j ? gray900 : gray200,
+                              textStyle:
+                                  controller.tripRoomCreateState.type == TripType.j ? f15gray900w600 : f15gray300w600,
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: TypeChoose(
-                                text: 'P형',
-                                onTap: () {
-                                  tripType = 'P형';
-                                  setState(() {});
-                                },
-                                value: tripType),
+                            child: RoundedBoxButton(
+                              onTap: () => controller.onTypePressed(TripType.p),
+                              text: "${TripType.p.name.toUpperCase()}형",
+                              height: 52,
+                              borderRadius: 4,
+                              borderColor: controller.tripRoomCreateState.type == TripType.p ? gray900 : gray200,
+                              textStyle:
+                                  controller.tripRoomCreateState.type == TripType.p ? f15gray900w600 : f15gray300w600,
+                            ),
                           ),
                         ],
                       ),
@@ -171,41 +142,41 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                         style: f12gray600w600,
                       ),
                       const SizedBox(height: 8),
-                      Obx(() => GestureDetector(
-                            onTap: () async {
-                              Get.to(() => TripCalendar(
-                                    selectedColor: colorList[selectedColor],
-                                  ));
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: gray50,
-                                  borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(color: gray200)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset('assets/icon/date.svg',
-                                        fit: BoxFit.none,
-                                        colorFilter: ColorFilter.mode(colorList[selectedColor], BlendMode.srcIn)),
-                                    const SizedBox(width: 4),
-                                    // ms.tripDate.isEmpty
-                                    //     ? Text(
-                                    //         '여행 날짜를 입력해 주세요',
-                                    //         style: f15gray400w500,
-                                    //       )
-                                    //     : Text(
-                                    //         ms.tripDate.length == 1
-                                    //             ? '${DateFormat('yyyy-MM-dd').format(ms.tripDate[0])}'
-                                    //             : '${DateFormat('yyyy-MM-dd').format(ms.tripDate[0])} ~ ${DateFormat('yyyy-MM-dd').format(ms.tripDate[1])}',
-                                    //         style: f15gray800w500,
-                                    //       )
-                                  ],
-                                ),
-                              ),
+                      GestureDetector(
+                        onTap: () async {
+                          Get.to(() => TripCalendar(
+                                selectedColor: colorList[selectedColor],
+                              ));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: gray50,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: gray200)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset('assets/icon/date.svg',
+                                    fit: BoxFit.none,
+                                    colorFilter: ColorFilter.mode(colorList[selectedColor], BlendMode.srcIn)),
+                                const SizedBox(width: 4),
+                                // ms.tripDate.isEmpty
+                                //     ? Text(
+                                //         '여행 날짜를 입력해 주세요',
+                                //         style: f15gray400w500,
+                                //       )
+                                //     : Text(
+                                //         ms.tripDate.length == 1
+                                //             ? '${DateFormat('yyyy-MM-dd').format(ms.tripDate[0])}'
+                                //             : '${DateFormat('yyyy-MM-dd').format(ms.tripDate[0])} ~ ${DateFormat('yyyy-MM-dd').format(ms.tripDate[1])}',
+                                //         style: f15gray800w500,
+                                //       )
+                              ],
                             ),
-                          )),
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 20),
                       Text(
                         '여행지',

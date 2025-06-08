@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/app/data/repositories/trip_repository.dart';
 import 'package:tripStory/app/permission/permission.dart';
+import 'package:tripStory/common/enum/trip_color.dart';
+import 'package:tripStory/common/enum/trip_type.dart';
 import 'package:tripStory/services/country_cache_manager.dart';
 import 'package:tripStory/view/hoom/model/trip_room_create_state.dart';
 
@@ -19,6 +21,8 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
     await CountryFlagCacheManager.precacheAll(context);
   }
 
+  /// side Effect
+
   Future<void> onImagePressed(
     ImageSource imageSource,
     BuildContext context,
@@ -33,5 +37,21 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
       );
       update();
     }
+  }
+
+  void onColorPressed(
+    TripColor selectedColor,
+  ) {
+    tripRoomCreateState = tripRoomCreateState.copyWith(
+      selectedColor: selectedColor,
+    );
+    update();
+  }
+
+  void onTypePressed(
+    TripType tripType,
+  ) {
+    tripRoomCreateState = tripRoomCreateState.copyWith(type: tripType);
+    update();
   }
 }
