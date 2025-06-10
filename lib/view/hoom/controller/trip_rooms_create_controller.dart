@@ -7,6 +7,7 @@ import 'package:tripStory/common/enum/trip_color.dart';
 import 'package:tripStory/common/enum/trip_type.dart';
 import 'package:tripStory/services/country_cache_manager.dart';
 import 'package:tripStory/view/hoom/model/trip_room_create_state.dart';
+import 'package:tripStory/view/hoom/views/trip_room_calendar_view.dart';
 
 class TripRoomsCreateController extends GetxController with GetSingleTickerProviderStateMixin {
   final TripRepository _tripRepository;
@@ -53,5 +54,14 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
   ) {
     tripRoomCreateState = tripRoomCreateState.copyWith(type: tripType);
     update();
+  }
+
+  void onCalendarPressed() {
+    Get.to(() => TripRoomCalendarView(selectedColor: tripRoomCreateState.getColor))?.then((dates) {
+      if (dates != null) {
+        tripRoomCreateState = tripRoomCreateState.copyWith(tripDate: dates);
+        update();
+      }
+    });
   }
 }

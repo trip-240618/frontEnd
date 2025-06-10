@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/common/button/color_select_button.dart';
+import 'package:tripStory/common/button/icon_text_button.dart';
 import 'package:tripStory/common/button/image_button.dart';
 import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/common/enum/trip_type.dart';
@@ -12,7 +13,6 @@ import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/hoom/controller/trip_rooms_create_controller.dart';
-import 'package:tripStory/view/hoom/tripAdd/tripCalendar.dart';
 
 class TripRoomCreateView extends StatefulWidget {
   const TripRoomCreateView({super.key});
@@ -142,39 +142,14 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                         style: f12gray600w600,
                       ),
                       const SizedBox(height: 8),
-                      GestureDetector(
-                        onTap: () async {
-                          Get.to(() => TripCalendar(
-                                selectedColor: colorList[selectedColor],
-                              ));
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: gray50,
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: gray200)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset('assets/icon/date.svg',
-                                    fit: BoxFit.none,
-                                    colorFilter: ColorFilter.mode(colorList[selectedColor], BlendMode.srcIn)),
-                                const SizedBox(width: 4),
-                                // ms.tripDate.isEmpty
-                                //     ? Text(
-                                //         '여행 날짜를 입력해 주세요',
-                                //         style: f15gray400w500,
-                                //       )
-                                //     : Text(
-                                //         ms.tripDate.length == 1
-                                //             ? '${DateFormat('yyyy-MM-dd').format(ms.tripDate[0])}'
-                                //             : '${DateFormat('yyyy-MM-dd').format(ms.tripDate[0])} ~ ${DateFormat('yyyy-MM-dd').format(ms.tripDate[1])}',
-                                //         style: f15gray800w500,
-                                //       )
-                              ],
-                            ),
-                          ),
+                      IconTextButton(
+                        onTap: () => controller.onCalendarPressed(),
+                        text: controller.tripRoomCreateState.tripDateText,
+                        textStyle: controller.tripRoomCreateState.isTripDateEmpty ? f15gray400w500 : f15gray800w500,
+                        icon: SvgPicture.asset(
+                          'assets/icon/date.svg',
+                          fit: BoxFit.none,
+                          colorFilter: ColorFilter.mode(controller.tripRoomCreateState.getColor, BlendMode.srcIn),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -183,35 +158,35 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                         style: f12gray600w600,
                       ),
                       const SizedBox(height: 8),
-                      Obx(() => GestureDetector(
-                            onTap: () async {
-                              // await ms.bottomModalReset();
-                              // bottomModel(context);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: gray50,
-                                  borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(color: gray200)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset('assets/icon/search.svg',
-                                        fit: BoxFit.none,
-                                        colorFilter: ColorFilter.mode(colorList[selectedColor], BlendMode.srcIn)),
-                                    const SizedBox(width: 4),
-                                    // ms.tripDestination.value == ''
-                                    //     ? Text('여행지를 입력해 주세요', style: f15gray400w500)
-                                    //     : Text(
-                                    //         '${ms.tripDestination.value}',
-                                    //         style: f15gray800w500,
-                                    //       )
-                                  ],
-                                ),
-                              ),
+                      GestureDetector(
+                        onTap: () async {
+                          // await ms.bottomModalReset();
+                          // bottomModel(context);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: gray50,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: gray200)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset('assets/icon/search.svg',
+                                    fit: BoxFit.none,
+                                    colorFilter: ColorFilter.mode(colorList[selectedColor], BlendMode.srcIn)),
+                                const SizedBox(width: 4),
+                                // ms.tripDestination.value == ''
+                                //     ? Text('여행지를 입력해 주세요', style: f15gray400w500)
+                                //     : Text(
+                                //         '${ms.tripDestination.value}',
+                                //         style: f15gray800w500,
+                                //       )
+                              ],
                             ),
-                          )),
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 20),
                     ],
                   ),

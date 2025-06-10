@@ -10,6 +10,7 @@ class RoundedBoxButton extends StatelessWidget {
   final Color backgroundColor;
   final Color borderColor;
   final EdgeInsets? padding;
+  final MainAxisAlignment? mainAxisAlignment;
   final VoidCallback? onTap;
 
   const RoundedBoxButton({
@@ -23,6 +24,7 @@ class RoundedBoxButton extends StatelessWidget {
     this.backgroundColor = Colors.transparent,
     this.borderColor = Colors.transparent,
     this.padding,
+    this.mainAxisAlignment,
     this.onTap,
   });
 
@@ -45,7 +47,7 @@ class RoundedBoxButton extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.center,
           children: [
             if (icon != null) icon!,
             if (icon != null && text != null) const SizedBox(width: 5),
