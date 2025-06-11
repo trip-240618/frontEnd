@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tripStory/common/bottom/trip_search_bottom_sheet.dart';
 import 'package:tripStory/common/button/color_select_button.dart';
 import 'package:tripStory/common/button/icon_text_button.dart';
 import 'package:tripStory/common/button/image_button.dart';
@@ -25,11 +26,6 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
   final _tripRoomsCreateController = Get.find<TripRoomsCreateController>();
   final TextEditingController _tripNameCon = TextEditingController();
 
-  /// 여행방 입력
-  List colorList = [pastelBlue, mainRed, yellowColor, greenColor];
-  int selectedColor = 0;
-  String tripType = '';
-
   @override
   void initState() {
     super.initState();
@@ -41,11 +37,21 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<TripRoomsCreateController>(builder: (controller) {
+      Future.microtask(() {
+        final shouldShow = controller.state.showTripSearchBottomSheet?.consume() ?? false;
+        if (!context.mounted || !shouldShow) return;
+        TripDestinationBottomSheetContent.show(context).then((tripDestination) {
+          if (tripDestination != null) {
+            controller.updateDestination(tripDestination);
+          }
+        });
+      });
+
       return Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
         appBar: BackAppBar(
-          text: '여행방 만들기',
+          text: "여행방 만들기",
           onTap: () => Get.back(),
         ),
         body: Column(
@@ -57,7 +63,7 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                 child: Column(
                   children: [
                     ImageButton(
-                      pickedImage: controller.tripRoomCreateState.roomImage,
+                      pickedImage: controller.state.roomImage,
                       onPressed: () => _tripRoomsCreateController.onImagePressed(
                         ImageSource.gallery,
                         context,
@@ -67,14 +73,14 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                     CommonTextField(
                       controller: _tripNameCon,
                       textStyle: f16gray800w600,
-                      hintText: '여행방 제목을 입력해주세요 :)',
+                      hintText: "여행방 제목을 입력해주세요 :)",
                       onChanged: (v) {
                         setState(() {});
                       },
                       contentPadding: const EdgeInsets.all(16),
                       inputFormatters: [LengthLimitingTextInputFormatter(15)],
                       trailing: Text(
-                        '${_tripNameCon.text.length}/15',
+                        "${_tripNameCon.text.length}/15",
                         style: f11Gray400w600,
                       ),
                     ),
@@ -93,19 +99,19 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '아이콘 컬러',
+                        "아이콘 컬러",
                         style: f12gray600w600,
                       ),
                       const SizedBox(height: 12),
                       ColorSelectButton(
-                        selectedColor: controller.tripRoomCreateState.selectedColor,
+                        selectedColor: controller.state.selectedColor,
                         onSelected: (tripColor) => controller.onColorPressed(
                           tripColor,
                         ),
                       ),
                       const SizedBox(height: 30),
                       Text(
-                        '여행방 타입',
+                        "여행방 타입",
                         style: f12gray600w600,
                       ),
                       const SizedBox(height: 8),
@@ -117,9 +123,8 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                               text: "${TripType.j.name.toUpperCase()}형",
                               height: 52,
                               borderRadius: 4,
-                              borderColor: controller.tripRoomCreateState.type == TripType.j ? gray900 : gray200,
-                              textStyle:
-                                  controller.tripRoomCreateState.type == TripType.j ? f15gray900w600 : f15gray300w600,
+                              borderColor: controller.state.type == TripType.j ? gray900 : gray200,
+                              textStyle: controller.state.type == TripType.j ? f15gray900w600 : f15gray300w600,
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -129,61 +134,49 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                               text: "${TripType.p.name.toUpperCase()}형",
                               height: 52,
                               borderRadius: 4,
-                              borderColor: controller.tripRoomCreateState.type == TripType.p ? gray900 : gray200,
-                              textStyle:
-                                  controller.tripRoomCreateState.type == TripType.p ? f15gray900w600 : f15gray300w600,
+                              borderColor: controller.state.type == TripType.p ? gray900 : gray200,
+                              textStyle: controller.state.type == TripType.p ? f15gray900w600 : f15gray300w600,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 20),
                       const Text(
-                        '여행 날짜',
+                        "여행 날짜",
                         style: f12gray600w600,
                       ),
                       const SizedBox(height: 8),
                       IconTextButton(
                         onTap: () => controller.onCalendarPressed(),
-                        text: controller.tripRoomCreateState.tripDateText,
-                        textStyle: controller.tripRoomCreateState.isTripDateEmpty ? f15gray400w500 : f15gray800w500,
+                        text: controller.state.tripDateText,
+                        textStyle: controller.state.isTripDateEmpty ? f15gray400w500 : f15gray800w500,
                         icon: SvgPicture.asset(
-                          'assets/icon/date.svg',
+                          "assets/icon/date.svg",
                           fit: BoxFit.none,
-                          colorFilter: ColorFilter.mode(controller.tripRoomCreateState.getColor, BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(
+                            controller.state.getColor,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        '여행지',
+                        "여행지",
                         style: f12gray600w600,
                       ),
                       const SizedBox(height: 8),
-                      GestureDetector(
-                        onTap: () async {
-                          // await ms.bottomModalReset();
-                          // bottomModel(context);
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: gray50,
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: gray200)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset('assets/icon/search.svg',
-                                    fit: BoxFit.none,
-                                    colorFilter: ColorFilter.mode(colorList[selectedColor], BlendMode.srcIn)),
-                                const SizedBox(width: 4),
-                                // ms.tripDestination.value == ''
-                                //     ? Text('여행지를 입력해 주세요', style: f15gray400w500)
-                                //     : Text(
-                                //         '${ms.tripDestination.value}',
-                                //         style: f15gray800w500,
-                                //       )
-                              ],
-                            ),
+                      IconTextButton(
+                        onTap: () => controller.onTripDestinationPressed(),
+                        text: controller.state.tripDestination.isEmpty
+                            ? "여행지를 입력해 주세요"
+                            : controller.state.tripDestination,
+                        textStyle: controller.state.isTripDateEmpty ? f15gray400w500 : f15gray800w500,
+                        icon: SvgPicture.asset(
+                          "assets/icon/search.svg",
+                          fit: BoxFit.none,
+                          colorFilter: ColorFilter.mode(
+                            controller.state.getColor,
+                            BlendMode.srcIn,
                           ),
                         ),
                       ),

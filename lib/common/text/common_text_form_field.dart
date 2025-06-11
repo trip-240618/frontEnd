@@ -7,7 +7,7 @@ import 'package:tripStory/util/color.dart';
 class CommonTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
-  final ValueChanged<String>? onChanged;
+  final void Function(String)? onChanged;
   final List<TextInputFormatter>? inputFormatters;
   final Widget? leading;
   final Widget? trailing;

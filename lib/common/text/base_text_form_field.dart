@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 class BaseTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
-  final ValueChanged<String>? onChanged;
+  final void Function(String)? onChanged;
   final List<TextInputFormatter>? inputFormatters;
   final EdgeInsets? scrollPadding;
   final ValueChanged<String>? onFieldSubmitted;

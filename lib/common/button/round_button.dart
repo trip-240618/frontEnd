@@ -9,6 +9,7 @@ class RoundedBoxButton extends StatelessWidget {
   final double? borderRadius;
   final Color backgroundColor;
   final Color borderColor;
+  final bool enabled;
   final EdgeInsets? padding;
   final MainAxisAlignment? mainAxisAlignment;
   final VoidCallback? onTap;
@@ -26,12 +27,13 @@ class RoundedBoxButton extends StatelessWidget {
     this.padding,
     this.mainAxisAlignment,
     this.onTap,
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       child: Container(
         width: width,
         height: height,

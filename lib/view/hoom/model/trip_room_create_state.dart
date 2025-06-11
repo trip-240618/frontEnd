@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/common/enum/trip_color.dart';
 import 'package:tripStory/common/enum/trip_type.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
+import 'package:tripStory/util/one_time_event.dart';
 
 part 'trip_room_create_state.freezed.dart';
 
@@ -17,6 +18,8 @@ abstract class TripRoomCreateState with _$TripRoomCreateState {
     @Default(TripColor.pastelBlue) TripColor selectedColor,
     TripType? type,
     @Default([]) List<DateTime> tripDate,
+    @Default("") String tripDestination,
+    OneTimeEvent<bool>? showTripSearchBottomSheet,
   }) = _TripRoomCreateState;
 
   bool get isTripDateEmpty => tripDate.isEmpty;

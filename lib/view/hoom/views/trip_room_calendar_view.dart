@@ -26,7 +26,7 @@ class _TripRoomCalendarViewState extends State<TripRoomCalendarView> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<TripRoomCalendarController>(
-      init: TripRoomCalendarController(),
+      init: Get.find<TripRoomCalendarController>(),
       builder: (controller) {
         final showDialog = controller.state.showDialog?.consume();
         if (showDialog == true) {

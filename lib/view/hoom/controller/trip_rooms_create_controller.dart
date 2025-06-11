@@ -6,13 +6,19 @@ import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/common/enum/trip_color.dart';
 import 'package:tripStory/common/enum/trip_type.dart';
 import 'package:tripStory/services/country_cache_manager.dart';
+import 'package:tripStory/util/one_time_event.dart';
 import 'package:tripStory/view/hoom/model/trip_room_create_state.dart';
 import 'package:tripStory/view/hoom/views/trip_room_calendar_view.dart';
+
+import '../bindings/trip_calendar_binding.dart';
 
 class TripRoomsCreateController extends GetxController with GetSingleTickerProviderStateMixin {
   final TripRepository _tripRepository;
   final ImagePicker _picker = ImagePicker();
+  bool _isBottomSheetOpening = false;
   TripRoomCreateState tripRoomCreateState = TripRoomCreateState();
+
+  TripRoomCreateState get state => tripRoomCreateState;
 
   TripRoomsCreateController(
     this._tripRepository,
@@ -33,7 +39,7 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
 
     final pickedFile = await _picker.pickImage(source: imageSource);
     if (pickedFile != null) {
-      tripRoomCreateState = tripRoomCreateState.copyWith(
+      tripRoomCreateState = state.copyWith(
         roomImage: XFile(pickedFile.path),
       );
       update();
@@ -43,7 +49,7 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
   void onColorPressed(
     TripColor selectedColor,
   ) {
-    tripRoomCreateState = tripRoomCreateState.copyWith(
+    tripRoomCreateState = state.copyWith(
       selectedColor: selectedColor,
     );
     update();
@@ -52,16 +58,30 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
   void onTypePressed(
     TripType tripType,
   ) {
-    tripRoomCreateState = tripRoomCreateState.copyWith(type: tripType);
+    tripRoomCreateState = state.copyWith(type: tripType);
     update();
   }
 
   void onCalendarPressed() {
-    Get.to(() => TripRoomCalendarView(selectedColor: tripRoomCreateState.getColor))?.then((dates) {
+    Get.to(() => TripRoomCalendarView(selectedColor: state.getColor), binding: TripCalendarBinding())?.then((dates) {
       if (dates != null) {
-        tripRoomCreateState = tripRoomCreateState.copyWith(tripDate: dates);
+        tripRoomCreateState = state.copyWith(tripDate: dates);
         update();
       }
     });
+  }
+
+  void onTripDestinationPressed() {
+    tripRoomCreateState = state.copyWith(
+      showTripSearchBottomSheet: OneTimeEvent(true),
+    );
+    update();
+  }
+
+  void updateDestination(String tripDestination) {
+    tripRoomCreateState = state.copyWith(
+      tripDestination: tripDestination,
+    );
+    update();
   }
 }
