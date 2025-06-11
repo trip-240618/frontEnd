@@ -92,7 +92,7 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
     );
     update();
 
-    String thumbnailUrl = "";
+    // String thumbnailUrl = "";
     if (state.roomImage != null) {
       final thumbnailData = await tripThumbnailUpload(pickedImage!);
       thumbnailUrl = thumbnailData['preSignedUrls'][0].toString().split('?')[0];
