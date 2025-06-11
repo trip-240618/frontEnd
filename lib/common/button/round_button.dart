@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/font.dart';
 
 class RoundedBoxButton extends StatelessWidget {
   final String? text;
@@ -43,7 +45,7 @@ class RoundedBoxButton extends StatelessWidget {
               vertical: 6,
             ),
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: enabled ? backgroundColor : gray300,
           border: Border.all(color: borderColor, width: 1.5),
           borderRadius: BorderRadius.circular(borderRadius ?? 100),
         ),
@@ -56,7 +58,7 @@ class RoundedBoxButton extends StatelessWidget {
             if (text != null)
               Text(
                 text ?? "",
-                style: textStyle,
+                style: enabled ? textStyle : f16gray400w700,
               ),
           ],
         ),

@@ -11,6 +11,7 @@ import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/common/enum/trip_type.dart';
 import 'package:tripStory/common/text/common_text_form_field.dart';
 import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/hoom/controller/trip_rooms_create_controller.dart';
@@ -38,15 +39,24 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
   Widget build(BuildContext context) {
     return GetBuilder<TripRoomsCreateController>(builder: (controller) {
       Future.microtask(() {
-        final shouldShow = controller.state.showTripSearchBottomSheet?.consume() ?? false;
-        if (!context.mounted || !shouldShow) return;
-        TripDestinationBottomSheetContent.show(context).then((tripDestination) {
-          if (tripDestination != null) {
-            controller.updateDestination(tripDestination);
-          }
-        });
-      });
+        final state = controller.state;
+        final shouldShowBottomSheet = state.showTripSearchBottomSheet?.consume() ?? false;
+        final shouldShowLoading = state.showLoading?.consume() ?? false;
 
+        if (!context.mounted) return;
+
+        if (shouldShowLoading) {
+          showLoading(context);
+        }
+
+        if (shouldShowBottomSheet) {
+          TripDestinationBottomSheetContent.show(context).then((tripDestination) {
+            if (tripDestination != null) {
+              controller.updateDestination(tripDestination);
+            }
+          });
+        }
+      });
       return Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
@@ -170,7 +180,7 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                         text: controller.state.tripDestination.isEmpty
                             ? "여행지를 입력해 주세요"
                             : controller.state.tripDestination,
-                        textStyle: controller.state.isTripDateEmpty ? f15gray400w500 : f15gray800w500,
+                        textStyle: controller.state.tripDestination.isEmpty ? f15gray400w500 : f15gray800w500,
                         icon: SvgPicture.asset(
                           "assets/icon/search.svg",
                           fit: BoxFit.none,
@@ -187,6 +197,23 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
               ),
             ),
           ],
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 10,
+            bottom: 42,
+          ),
+          child: RoundedBoxButton(
+            height: 60,
+            backgroundColor: gray900,
+            textStyle: f16Whitew700,
+            borderRadius: 4,
+            text: "저장",
+            onTap: () => controller.onSavePressed(),
+            enabled: controller.state.isValid,
+          ),
         ),
         // bottomNavigationBar: Padding(
         //     padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),

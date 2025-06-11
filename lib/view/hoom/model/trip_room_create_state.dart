@@ -20,6 +20,7 @@ abstract class TripRoomCreateState with _$TripRoomCreateState {
     @Default([]) List<DateTime> tripDate,
     @Default("") String tripDestination,
     OneTimeEvent<bool>? showTripSearchBottomSheet,
+    OneTimeEvent<bool>? showLoading,
   }) = _TripRoomCreateState;
 
   bool get isTripDateEmpty => tripDate.isEmpty;
@@ -31,4 +32,6 @@ abstract class TripRoomCreateState with _$TripRoomCreateState {
     if (tripDate.length == 1) return tripDate[0].formatYMDWithHyphen();
     return '${tripDate[0].formatYMDWithHyphen()} ~ ${tripDate[1].formatYMDWithHyphen()}';
   }
+
+  bool get isValid => type != null && tripDate.isNotEmpty && tripDestination.trim().isNotEmpty;
 }
