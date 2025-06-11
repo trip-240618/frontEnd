@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/font.dart';
 
 class RoundedBoxButton extends StatelessWidget {
   final String? text;
@@ -9,7 +11,9 @@ class RoundedBoxButton extends StatelessWidget {
   final double? borderRadius;
   final Color backgroundColor;
   final Color borderColor;
+  final bool enabled;
   final EdgeInsets? padding;
+  final MainAxisAlignment? mainAxisAlignment;
   final VoidCallback? onTap;
 
   const RoundedBoxButton({
@@ -23,13 +27,15 @@ class RoundedBoxButton extends StatelessWidget {
     this.backgroundColor = Colors.transparent,
     this.borderColor = Colors.transparent,
     this.padding,
+    this.mainAxisAlignment,
     this.onTap,
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       child: Container(
         width: width,
         height: height,
@@ -39,20 +45,20 @@ class RoundedBoxButton extends StatelessWidget {
               vertical: 6,
             ),
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: enabled ? backgroundColor : gray300,
           border: Border.all(color: borderColor, width: 1.5),
           borderRadius: BorderRadius.circular(borderRadius ?? 100),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.center,
           children: [
             if (icon != null) icon!,
             if (icon != null && text != null) const SizedBox(width: 5),
             if (text != null)
               Text(
                 text ?? "",
-                style: textStyle,
+                style: enabled ? textStyle : f16gray400w700,
               ),
           ],
         ),

@@ -14,8 +14,8 @@ import 'package:tripStory/component/bottomModals.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/empty/emptyScreen.dart';
 import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/extension/string_extension.dart';
 import 'package:tripStory/util/font.dart';
-import 'package:tripStory/util/helper/hex_color_helper.dart';
 import 'package:tripStory/view/hoom/controller/rooms_controller.dart';
 import 'package:tripStory/view/hoom/enum/trip_rooms_type.dart';
 
@@ -237,7 +237,7 @@ class _TripRoomTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final labelColor = HexColorHelper.fromHex(tripRoom.labelColor);
+    final labelColor = tripRoom.labelColor.toColor();
     final dateRange = "${tripRoom.startDate} ~ ${tripRoom.endDate}";
 
     return GestureDetector(
