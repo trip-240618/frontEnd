@@ -16,7 +16,7 @@ import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
-import 'package:tripStory/view/rooms/main_page/views/rooms_view.dart';
+import 'package:tripStory/view/hoom/views/rooms_view.dart';
 
 class TripEditPage extends StatefulWidget {
   const TripEditPage({super.key});

@@ -1,10 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
-
-import '../../component/empty/emptyScreen.dart';
-import '../../util/color.dart';
-import '../../util/font.dart';
+import 'package:tripStory/common/widget/round_thumbnail_image.dart';
+import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/font.dart';
 
 class PopupList extends StatelessWidget {
   final List<PopupItemModel> members;
@@ -37,19 +36,12 @@ class PopupList extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
-                      child: CachedNetworkImage(
-                        width: 24,
-                        height: 24,
+                      child: RoundThumbnailImage(
                         imageUrl: member.profileImg ?? "",
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
+                        size: 24,
+                        defaultIcon: SvgPicture.asset(
+                          'assets/icon/defaultIcon.svg',
                         ),
-                        errorWidget: (context, url, error) => DefaultProfileScreen(context),
                       ),
                     ),
                     const SizedBox(width: 10),

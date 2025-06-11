@@ -1,11 +1,11 @@
-import 'package:tripStory/app/data/models/trip_room_model.dart';
+import 'package:tripStory/app/data/models/trip_room.dart';
 
 abstract class TripRepository {
-  Future<List<TripRoomModel>> fetchComingTrips();
+  Future<List<TripRoom>> fetchComingTrips();
 
-  Future<List<TripRoomModel>> fetchLastTrips();
+  Future<List<TripRoom>> fetchLastTrips();
 
-  Future<List<TripRoomModel>> fetchBookmarkedTrips();
+  Future<List<TripRoom>> fetchBookmarkedTrips();
 
   Future<bool> updateBookmark(
     int tripId,

@@ -14,7 +14,7 @@ import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
-import 'package:tripStory/view/rooms/main_page/views/rooms_view.dart';
+import 'package:tripStory/view/hoom/views/rooms_view.dart';
 import 'package:tripStory/view/trip/bottomNavigator.dart';
 
 class MainState extends GetxController with GetSingleTickerProviderStateMixin {

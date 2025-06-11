@@ -17,7 +17,7 @@ import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
-import 'package:tripStory/view/rooms/tripAdd/tripCalendar.dart';
+import 'package:tripStory/view/hoom/tripAdd/tripCalendar.dart';
 
 class TripRoomAddScreen extends StatefulWidget {
   const TripRoomAddScreen({super.key});

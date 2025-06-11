@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:tripStory/util/color.dart';
 
 class RoundedBoxButton extends StatelessWidget {
-  final String text;
-  final TextStyle textStyle;
+  final String? text;
+  final TextStyle? textStyle;
   final Widget? icon;
+  final double? width;
+  final double? height;
+  final double? borderRadius;
   final Color backgroundColor;
+  final Color borderColor;
+  final EdgeInsets? padding;
   final VoidCallback? onTap;
 
   const RoundedBoxButton({
     super.key,
-    required this.text,
-    required this.textStyle,
+    this.text,
+    this.textStyle,
     this.icon,
-    this.backgroundColor = gray200,
+    this.width,
+    this.height,
+    this.borderRadius,
+    this.backgroundColor = Colors.transparent,
+    this.borderColor = Colors.transparent,
+    this.padding,
     this.onTap,
   });
 
@@ -22,25 +31,30 @@ class RoundedBoxButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 6,
-        ),
+        width: width,
+        height: height,
+        padding: padding ??
+            const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 6,
+            ),
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(100),
+          border: Border.all(color: borderColor, width: 1.5),
+          borderRadius: BorderRadius.circular(borderRadius ?? 100),
         ),
-        child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) ...[
-                icon!,
-                const SizedBox(width: 5),
-              ],
-              Text(text, style: textStyle),
-            ],
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) icon!,
+            if (icon != null && text != null) const SizedBox(width: 5),
+            if (text != null)
+              Text(
+                text ?? "",
+                style: textStyle,
+              ),
+          ],
         ),
       ),
     );

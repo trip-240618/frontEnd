@@ -1,4 +1,4 @@
-import 'package:tripStory/app/data/models/trip_room_model.dart';
+import 'package:tripStory/app/data/models/trip_room.dart';
 import 'package:tripStory/app/data/providers/trip_client.dart';
 
 import 'trip_repository.dart';
@@ -9,21 +9,21 @@ class TripRepositoryImpl implements TripRepository {
   TripRepositoryImpl(this._tripClient);
 
   @override
-  Future<List<TripRoomModel>> fetchComingTrips() async {
+  Future<List<TripRoom>> fetchComingTrips() async {
     final result = await _tripClient.inComingTripGet();
-    return result.map((e) => TripRoomModel.fromJson(e)).toList();
+    return result.map((e) => TripRoom.fromJson(e)).toList();
   }
 
   @override
-  Future<List<TripRoomModel>> fetchLastTrips() async {
+  Future<List<TripRoom>> fetchLastTrips() async {
     final result = await _tripClient.lastTripGet();
-    return result.map((e) => TripRoomModel.fromJson(e)).toList();
+    return result.map((e) => TripRoom.fromJson(e)).toList();
   }
 
   @override
-  Future<List<TripRoomModel>> fetchBookmarkedTrips() async {
+  Future<List<TripRoom>> fetchBookmarkedTrips() async {
     final result = await _tripClient.bookMarkTripGet();
-    return result.map((e) => TripRoomModel.fromJson(e)).toList();
+    return result.map((e) => TripRoom.fromJson(e)).toList();
   }
 
   @override

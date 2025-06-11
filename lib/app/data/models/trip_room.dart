@@ -1,13 +1,13 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'trip_room_model.freezed.dart';
-part 'trip_room_model.g.dart';
+part 'trip_room.freezed.dart';
+part 'trip_room.g.dart';
 
 @freezed
-abstract class TripRoomModel with _$TripRoomModel {
-  const TripRoomModel._();
+abstract class TripRoom with _$TripRoom {
+  const TripRoom._();
 
-  const factory TripRoomModel({
+  const factory TripRoom({
     required int id,
     required String name,
     required String type,
@@ -20,11 +20,17 @@ abstract class TripRoomModel with _$TripRoomModel {
     required bool bookmark,
     required String domain,
     required List<TripMember> tripMemberDtoList,
-  }) = _TripRoomModel;
+  }) = _TripRoom;
 
   int get memberLength => tripMemberDtoList.length;
 
-  factory TripRoomModel.fromJson(Map<String, dynamic> json) => _$TripRoomModelFromJson(json);
+  int get dDay {
+    final start = DateTime.tryParse(startDate);
+    if (start == null) return -9999;
+    return start.difference(DateTime.now()).inDays + 1;
+  }
+
+  factory TripRoom.fromJson(Map<String, dynamic> json) => _$TripRoomFromJson(json);
 }
 
 @freezed

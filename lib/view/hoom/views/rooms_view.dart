@@ -1,22 +1,23 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
-import 'package:tripStory/app/data/models/trip_room_model.dart';
+import 'package:tripStory/app/data/models/trip_room.dart';
 import 'package:tripStory/common/button/popup_list.dart';
 import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
 import 'package:tripStory/common/snack_bar.dart';
+import 'package:tripStory/common/widget/round_thumbnail_image.dart';
 import 'package:tripStory/component/bottomModals.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/empty/emptyScreen.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
-import 'package:tripStory/view/rooms/main_page/controller/rooms_controller.dart';
-import 'package:tripStory/view/rooms/tripAdd/tripRoomAdd.dart';
+import 'package:tripStory/util/helper/hex_color_helper.dart';
+import 'package:tripStory/view/hoom/controller/rooms_controller.dart';
+import 'package:tripStory/view/hoom/enum/trip_rooms_type.dart';
 
 class TripRoomListView extends StatelessWidget {
   const TripRoomListView({super.key});
@@ -59,7 +60,7 @@ class TripRoomListView extends StatelessWidget {
                           width: 28,
                           child: Stack(
                             children: [
-                              SvgPicture.asset('assets/icon/alert.svg'),
+                              SvgPicture.asset("assets/icon/alert.svg"),
                               controller.notificationCount == 0
                                   ? const SizedBox()
                                   : Positioned(
@@ -82,7 +83,7 @@ class TripRoomListView extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () => controller.onMyPagePressed(),
-                        child: SvgPicture.asset('assets/icon/person.svg'),
+                        child: SvgPicture.asset("assets/icon/person.svg"),
                       ),
                     ],
                   ),
@@ -100,28 +101,37 @@ class TripRoomListView extends StatelessWidget {
                   Row(
                     children: [
                       RoundedBoxButton(
-                        backgroundColor: controller.selectIdx == 0 ? gray900 : gray200,
+                        backgroundColor:
+                            controller.tripRoomsState.tripRoomType == TripRoomType.coming ? gray900 : gray200,
                         onTap: () => controller.onComingTripPressed(),
                         text: "다가오는 여행",
-                        textStyle: controller.selectIdx == 0 ? f14Whitew700 : f14gray400w700,
+                        textStyle: controller.tripRoomsState.tripRoomType == TripRoomType.coming
+                            ? f14Whitew700
+                            : f14gray400w700,
                       ),
                       const SizedBox(
                         width: 8,
                       ),
                       RoundedBoxButton(
-                        backgroundColor: controller.selectIdx == 1 ? gray900 : gray200,
+                        backgroundColor:
+                            controller.tripRoomsState.tripRoomType == TripRoomType.lastTrip ? gray900 : gray200,
                         onTap: () => controller.onLastTripPressed(),
                         text: "지난 여행",
-                        textStyle: controller.selectIdx == 1 ? f14Whitew700 : f14gray400w700,
+                        textStyle: controller.tripRoomsState.tripRoomType == TripRoomType.lastTrip
+                            ? f14Whitew700
+                            : f14gray400w700,
                       ),
                       const SizedBox(
                         width: 8,
                       ),
                       RoundedBoxButton(
-                        backgroundColor: controller.selectIdx == 2 ? gray900 : gray200,
+                        backgroundColor:
+                            controller.tripRoomsState.tripRoomType == TripRoomType.bookmarked ? gray900 : gray200,
                         onTap: () => controller.onBookMarkTripPressed(),
                         text: "북마크",
-                        textStyle: controller.selectIdx == 2 ? f14Whitew700 : f14gray400w700,
+                        textStyle: controller.tripRoomsState.tripRoomType == TripRoomType.bookmarked
+                            ? f14Whitew700
+                            : f14gray400w700,
                       ),
                     ],
                   ),
@@ -142,10 +152,10 @@ class TripRoomListView extends StatelessWidget {
                                 return Column(
                                   children: [
                                     _TripRoomTile(
-                                      data: tripRoom,
-                                      selectedIndex: controller.selectIdx,
+                                      tripRoom: tripRoom,
+                                      tripRoomType: controller.tripRoomsState.tripRoomType,
                                       onTap: () => controller.onRoomPressed(),
-                                      onBookmarkTap: () => controller.onBookmarkPressed(tripRoom.id),
+                                      onBookmarkTap: () => controller.onBookmarkIconPressed(tripRoom.id),
                                       onSendTap: () => sendBottomModal(
                                         context,
                                         tripRoom.invitationCode,
@@ -170,45 +180,12 @@ class TripRoomListView extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          InviteDialog(context, () {
-                            Get.back();
-                          });
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(color: gray700, borderRadius: BorderRadius.circular(4)),
-                          child: SvgPicture.asset('assets/icon/chain.svg',
-                              fit: BoxFit.none, colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn)),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Get.to(() => TripRoomAddScreen());
-                          },
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: gray900,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Center(
-                              child: Text(
-                                '새 여행방 생성',
-                                style: f16Whitew700,
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
+                  _TripBottomNavigation(
+                    onInvitePressed: () => InviteDialog(context, () {
+                      Get.back();
+                    }),
+                    onCreatePressed: () => controller.onRoomCreatedPressed(),
+                  ),
                 ],
               ),
             ),
@@ -218,12 +195,6 @@ class TripRoomListView extends StatelessWidget {
     );
   }
 
-  /**
-   *
-   *  width : 14px 글자 픽셀 , 100 프로필이미지 여백 패딩 크기
-   *
-   *  height : 각 멤버 항목의 높이를 50px로 고정
-   */
   void _showMemberPopover({
     required BuildContext context,
     required List<PopupItemModel> members,
@@ -248,16 +219,16 @@ class TripRoomListView extends StatelessWidget {
 }
 
 class _TripRoomTile extends StatelessWidget {
-  final TripRoomModel data;
-  final int selectedIndex;
+  final TripRoomType tripRoomType;
+  final TripRoom tripRoom;
   final VoidCallback? onTap;
   final VoidCallback? onBookmarkTap;
   final VoidCallback? onSendTap;
   final Function(BuildContext)? onMemberTap;
 
   const _TripRoomTile({
-    required this.data,
-    required this.selectedIndex,
+    required this.tripRoomType,
+    required this.tripRoom,
     this.onTap,
     this.onBookmarkTap,
     this.onSendTap,
@@ -266,8 +237,8 @@ class _TripRoomTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final labelColor = Color(int.tryParse(data.labelColor) ?? 0xFF000000);
-    final dDay = DateTime.parse(data.startDate).difference(DateTime.now()).inDays + 1;
+    final labelColor = HexColorHelper.fromHex(tripRoom.labelColor);
+    final dateRange = "${tripRoom.startDate} ~ ${tripRoom.endDate}";
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -281,7 +252,7 @@ class _TripRoomTile extends StatelessWidget {
         child: Stack(
           children: [
             SvgPicture.asset(
-              'assets/icon/ticket.svg',
+              "assets/icon/ticket.svg",
               width: Get.width,
               height: Get.height,
               fit: BoxFit.fill,
@@ -290,45 +261,9 @@ class _TripRoomTile extends StatelessWidget {
               left: 16,
               top: 8,
               right: 16,
-              child: Row(
-                children: [
-                  selectedIndex == 1
-                      ? SvgPicture.asset('assets/icon/calender.svg',
-                          colorFilter: ColorFilter.mode(gray600, BlendMode.srcIn))
-                      : Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: labelColor, width: 1.5),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                          child: Text(
-                            dDay < 1 ? '여행중' : 'D-$dDay',
-                            style: changeColor(labelColor),
-                          ),
-                        ),
-                  const SizedBox(width: 6),
-                  Text('${data.startDate} ~ ${data.endDate}', style: f12Gray800w500),
-                  const Spacer(),
-                  if (selectedIndex != 1)
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: onSendTap,
-                      child: Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: SvgPicture.asset('assets/icon/send.svg', color: gray900),
-                      ),
-                    ),
-                  const SizedBox(width: 4),
-                  InkWell(
-                    onTap: onBookmarkTap,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: data.bookmark
-                          ? SvgPicture.asset('assets/icon/checkBookmark.svg')
-                          : SvgPicture.asset('assets/icon/bookmark.svg'),
-                    ),
-                  )
-                ],
+              child: _buildHeader(
+                labelColor,
+                dateRange,
               ),
             ),
             Positioned(
@@ -336,67 +271,224 @@ class _TripRoomTile extends StatelessWidget {
               top: 58,
               right: 16,
               bottom: 14,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: CachedNetworkImage(
-                      imageUrl: data.thumbnail ?? '',
-                      imageBuilder: (context, imageProvider) => Container(
-                        width: 66,
-                        height: 66,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) => DefaultImageScreen(context),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(color: labelColor, shape: BoxShape.circle),
-                            child: Center(
-                              child: Text(data.type, style: f12Whitew700),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(data.name, style: f15gray800w600),
-                        ],
-                      ),
-                      const Spacer(),
-                      Text(data.country, style: f12gray600w600),
-                    ],
-                  ),
-                  const Spacer(),
-                  Builder(
-                    builder: (context) => GestureDetector(
-                      onTap: () => onMemberTap?.call(context),
-                      child: Container(
-                        decoration: BoxDecoration(color: gray200, borderRadius: BorderRadius.circular(100)),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset('assets/icon/userIcon.svg'),
-                            const SizedBox(width: 5),
-                            Text('${data.tripMemberDtoList.length}', style: f14gray600w700),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              child: _TripContent(
+                tripRoom: tripRoom,
+                labelColor: labelColor,
+                onMemberTap: onMemberTap,
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(Color labelColor, String dateRange) {
+    late final Widget leading;
+    Widget? trailing;
+
+    switch (tripRoomType) {
+      case TripRoomType.lastTrip:
+        leading = SvgPicture.asset("assets/icon/calender.svg");
+        trailing = _buildTrailingWidget();
+        break;
+
+      case TripRoomType.coming:
+      case TripRoomType.bookmarked:
+        leading = RoundedBoxButton(
+          text: tripRoom.dDay < 1 ? "여행중" : "D-${tripRoom.dDay}",
+          textStyle: changeColor(labelColor),
+          borderColor: labelColor,
+          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+        );
+        trailing = _buildTrailingWidget(
+          prefixIcon: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onSendTap,
+            child: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: SvgPicture.asset("assets/icon/send.svg", color: gray900),
+            ),
+          ),
+        );
+        break;
+    }
+
+    return _TripHeader(
+      leadingWidget: leading,
+      dateRange: dateRange,
+      trailingWidget: trailing,
+    );
+  }
+
+  Widget _buildTrailingWidget({
+    Widget? prefixIcon,
+  }) {
+    final children = <Widget>[];
+
+    if (prefixIcon != null) children.add(prefixIcon);
+
+    children.add(
+      InkWell(
+        onTap: onBookmarkTap,
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: tripRoom.bookmark
+              ? SvgPicture.asset("assets/icon/checkBookmark.svg")
+              : SvgPicture.asset("assets/icon/bookmark.svg"),
+        ),
+      ),
+    );
+
+    return Row(children: children);
+  }
+}
+
+class _TripHeader extends StatelessWidget {
+  final Widget leadingWidget;
+  final String dateRange;
+  final Widget? trailingWidget;
+
+  const _TripHeader({
+    required this.leadingWidget,
+    required this.dateRange,
+    this.trailingWidget,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        leadingWidget,
+        const SizedBox(width: 6),
+        Text(dateRange, style: f12Gray800w500),
+        const Spacer(),
+        if (trailingWidget != null) trailingWidget!,
+      ],
+    );
+  }
+}
+
+class _TripContent extends StatelessWidget {
+  final TripRoom tripRoom;
+  final Color labelColor;
+  final void Function(BuildContext)? onMemberTap;
+
+  const _TripContent({
+    required this.tripRoom,
+    required this.labelColor,
+    this.onMemberTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RoundThumbnailImage(
+          imageUrl: tripRoom.thumbnail,
+        ),
+        const SizedBox(width: 12),
+        _buildTripInfo(),
+        const Spacer(),
+        _buildMemberButton(),
+      ],
+    );
+  }
+
+  Widget _buildTripInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                color: labelColor,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  tripRoom.type,
+                  style: f12Whitew700,
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 6,
+            ),
+            Text(
+              tripRoom.name,
+              style: f15gray800w600,
+            ),
+          ],
+        ),
+        const Spacer(),
+        Text(tripRoom.country, style: f12gray600w600),
+      ],
+    );
+  }
+
+  Widget _buildMemberButton() {
+    return Builder(
+      builder: (context) => RoundedBoxButton(
+        onTap: () => onMemberTap?.call(context),
+        text: tripRoom.memberLength.toString(),
+        textStyle: f14gray600w700,
+        backgroundColor: gray200,
+        icon: SvgPicture.asset("assets/icon/userIcon.svg"),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      ),
+    );
+  }
+}
+
+class _TripBottomNavigation extends StatelessWidget {
+  final VoidCallback onInvitePressed;
+  final VoidCallback onCreatePressed;
+
+  const _TripBottomNavigation({
+    required this.onInvitePressed,
+    required this.onCreatePressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 60,
+      child: Row(
+        children: [
+          RoundedBoxButton(
+            width: 60,
+            height: 60,
+            backgroundColor: gray700,
+            borderRadius: 4,
+            icon: SvgPicture.asset(
+              "assets/icon/chain.svg",
+              fit: BoxFit.none,
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: GestureDetector(
+              onTap: onCreatePressed,
+              child: RoundedBoxButton(
+                width: 60,
+                height: 60,
+                backgroundColor: gray900,
+                borderRadius: 4,
+                text: "새 여행방 생성",
+                textStyle: f16Whitew700,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
