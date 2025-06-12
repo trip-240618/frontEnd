@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tripStory/app/data/models/trip_room_create_request.dart';
 import 'package:tripStory/app/data/repositories/file_repository.dart';
 import 'package:tripStory/app/data/repositories/trip_repository.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/common/enum/trip_color.dart';
 import 'package:tripStory/common/enum/trip_type.dart';
+import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/services/country_cache_manager.dart';
+import 'package:tripStory/util/compress_image.dart';
+import 'package:tripStory/util/extension/color_extension.dart';
+import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/util/one_time_event.dart';
 import 'package:tripStory/view/hoom/bindings/trip_calendar_binding.dart';
 import 'package:tripStory/view/hoom/model/trip_room_create_state.dart';
@@ -45,6 +50,15 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
       );
       update();
     }
+  }
+
+  void onTextChanged(
+    String title,
+  ) {
+    tripRoomCreateState = state.copyWith(
+      title: title,
+    );
+    update();
   }
 
   void onColorPressed(
@@ -92,12 +106,31 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
     );
     update();
 
-    // String thumbnailUrl = "";
+    String thumbnailUrl = "";
     if (state.roomImage != null) {
-      final thumbnailData = await tripThumbnailUpload(pickedImage!);
-      thumbnailUrl = thumbnailData['preSignedUrls'][0].toString().split('?')[0];
+      final result = await _fileRepository.getFileUrls(
+        prefix: "profile",
+        photoCnt: 1,
+      );
+
+      thumbnailUrl = result.preSignedUrls.first;
+      final compressedBytes = await compressImage(state.roomImage!);
+      _fileRepository.putUploadImage(url: thumbnailUrl, fileBytes: compressedBytes);
     }
 
+    final tripRoomCreateRequest = TripRoomCreateRequest(
+      name: state.title,
+      type: state.type?.name ?? "j",
+      startDate: state.tripDate.first.formatYMDWithHyphen(),
+      endDate: state.tripDate.last.formatYMDWithHyphen(),
+      country: state.tripDestination,
+      thumbnail: thumbnailUrl,
+      labelColor: state.getColor.toJson(),
+    );
+    final createResult = await _tripRepository.postCreateTrip(tripRoomCreateRequest);
+
+    Get.back();
+    CodeDialog(Get.context!, createResult.tripId, createResult.invitationCode);
     // final createData = await createRoom(
     //   thumbnailUrl,
     //   tripName.text,

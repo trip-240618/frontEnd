@@ -84,9 +84,7 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                       controller: _tripNameCon,
                       textStyle: f16gray800w600,
                       hintText: "여행방 제목을 입력해주세요 :)",
-                      onChanged: (v) {
-                        setState(() {});
-                      },
+                      onChanged: (text) => controller.onTextChanged(text),
                       contentPadding: const EdgeInsets.all(16),
                       inputFormatters: [LengthLimitingTextInputFormatter(15)],
                       trailing: Text(

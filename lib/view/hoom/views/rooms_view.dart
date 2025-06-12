@@ -411,7 +411,7 @@ class _TripContent extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  tripRoom.type,
+                  tripRoom.type.toUpperCase(),
                   style: f12Whitew700,
                 ),
               ),

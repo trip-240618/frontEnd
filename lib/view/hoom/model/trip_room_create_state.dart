@@ -15,6 +15,7 @@ abstract class TripRoomCreateState with _$TripRoomCreateState {
 
   const factory TripRoomCreateState({
     XFile? roomImage,
+    @Default("") String title,
     @Default(TripColor.pastelBlue) TripColor selectedColor,
     TripType? type,
     @Default([]) List<DateTime> tripDate,
