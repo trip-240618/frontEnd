@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tripStory/app/data/models/trip_room_create_request.dart';
 import 'package:tripStory/app/data/repositories/file_repository.dart';
 import 'package:tripStory/app/data/repositories/trip_repository.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/common/enum/trip_color.dart';
 import 'package:tripStory/common/enum/trip_type.dart';
+import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/services/country_cache_manager.dart';
+import 'package:tripStory/util/compress_image.dart';
+import 'package:tripStory/util/extension/color_extension.dart';
+import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/util/one_time_event.dart';
-import 'package:tripStory/view/hoom/bindings/trip_calendar_binding.dart';
+import 'package:tripStory/util/url_utils.dart';
 import 'package:tripStory/view/hoom/model/trip_room_create_state.dart';
-import 'package:tripStory/view/hoom/views/trip_room_calendar_view.dart';
 import 'package:tripStory/view/trip/bottomNavigator.dart';
 
 class TripRoomsCreateController extends GetxController with GetSingleTickerProviderStateMixin {
@@ -74,7 +78,10 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
   }
 
   void onCalendarPressed() {
-    Get.to(() => TripRoomCalendarView(selectedColor: state.getColor), binding: TripCalendarBinding())?.then((dates) {
+    Get.toNamed(
+      Routes.createRoomCalendar,
+      arguments: state.getColor,
+    )?.then((dates) {
       if (dates != null) {
         tripRoomCreateState = state.copyWith(tripDate: dates);
         update();
@@ -101,35 +108,35 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
       showLoading: OneTimeEvent(true),
     );
     update();
-    //
-    // String thumbnailUrl = "";
-    // if (state.roomImage != null) {
-    //   final result = await _fileRepository.getFileUrls(
-    //     prefix: "profile",
-    //     photoCnt: 1,
-    //   );
-    //
-    //   thumbnailUrl = UrlUtils.getBaseUrl(result.preSignedUrls.first);
-    //   final compressedBytes = await compressImage(state.roomImage!);
-    //   _fileRepository.putUploadImage(url: thumbnailUrl, fileBytes: compressedBytes);
-    // }
-    //
-    // final tripRoomCreateRequest = TripRoomCreateRequest(
-    //   name: state.title,
-    //   type: state.type?.name ?? "j",
-    //   startDate: state.tripDate.first.formatYMDWithHyphen(),
-    //   endDate: state.tripDate.last.formatYMDWithHyphen(),
-    //   country: state.tripDestination,
-    //   thumbnail: thumbnailUrl,
-    //   labelColor: state.getColor.toJson(),
-    // );
-    // final createResult = await _tripRepository.postCreateTrip(tripRoomCreateRequest);
-    // Get.back();
-    // tripRoomId = createResult.tripId;
+
+    String thumbnailUrl = "";
+    if (state.roomImage != null) {
+      final result = await _fileRepository.getFileUrls(
+        prefix: "profile",
+        photoCnt: 1,
+      );
+
+      thumbnailUrl = UrlUtils.getBaseUrl(result.preSignedUrls.first);
+      final compressedBytes = await compressImage(state.roomImage!);
+      _fileRepository.putUploadImage(url: thumbnailUrl, fileBytes: compressedBytes);
+    }
+
+    final tripRoomCreateRequest = TripRoomCreateRequest(
+      name: state.title,
+      type: state.type?.name ?? "j",
+      startDate: state.tripDate.first.formatYMDWithHyphen(),
+      endDate: state.tripDate.last.formatYMDWithHyphen(),
+      country: state.tripDestination,
+      thumbnail: thumbnailUrl,
+      labelColor: state.getColor.toJson(),
+    );
+    final createResult = await _tripRepository.postCreateTrip(tripRoomCreateRequest);
+    Get.back();
+    tripRoomId = createResult.tripId;
     tripRoomCreateState = state.copyWith(
       showLoading: OneTimeEvent(false),
       showCodeDialog: OneTimeEvent(
-        "ddas",
+        createResult.invitationCode,
       ),
     );
     update();
