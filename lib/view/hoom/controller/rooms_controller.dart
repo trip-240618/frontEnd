@@ -64,43 +64,50 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
 
   Future<void> onComingTripPressed() async {
     final result = await _tripRepository.fetchComingTrips();
-    tripRoomsState = tripRoomsState.copyWith(
-      tripRooms: result,
-      tripRoomType: TripRoomType.coming,
-    );
-    update();
+    result.fold((error) {}, (rooms) {
+      tripRoomsState = tripRoomsState.copyWith(
+        tripRooms: rooms,
+        tripRoomType: TripRoomType.coming,
+      );
+      update();
+    });
   }
 
   Future<void> onLastTripPressed() async {
     final result = await _tripRepository.fetchLastTrips();
-    tripRoomsState = tripRoomsState.copyWith(
-      tripRooms: result,
-      tripRoomType: TripRoomType.lastTrip,
-    );
-    update();
+    result.fold((error) {}, (rooms) {
+      tripRoomsState = tripRoomsState.copyWith(
+        tripRooms: rooms,
+        tripRoomType: TripRoomType.lastTrip,
+      );
+      update();
+    });
   }
 
   Future<void> onBookMarkTripPressed() async {
     final result = await _tripRepository.fetchBookmarkedTrips();
-    tripRoomsState = tripRoomsState.copyWith(
-      tripRooms: result,
-      tripRoomType: TripRoomType.bookmarked,
-    );
-    update();
+    result.fold((error) {}, (rooms) {
+      tripRoomsState = tripRoomsState.copyWith(
+        tripRooms: rooms,
+        tripRoomType: TripRoomType.bookmarked,
+      );
+      update();
+    });
   }
 
   Future<void> onBookmarkIconPressed(int tripId) async {
     final result = await _tripRepository.updateBookmark(tripId);
+    result.fold((error) {}, (bookmark) {
+      final room = tripRoomsState.findTripRoom(tripId);
+      if (room == null) return;
 
-    final room = tripRoomsState.findTripRoom(tripId);
-    if (room == null) return;
+      final updatedRoom = room.copyWith(bookmark: bookmark);
 
-    final updatedRoom = room.copyWith(bookmark: result);
-
-    tripRoomsState = tripRoomsState.copyWith(
-      tripRooms: tripRoomsState.tripRooms.map((room) => room.id == tripId ? updatedRoom : room).toList(),
-    );
-    update();
+      tripRoomsState = tripRoomsState.copyWith(
+        tripRooms: tripRoomsState.tripRooms.map((room) => room.id == tripId ? updatedRoom : room).toList(),
+      );
+      update();
+    });
   }
 
   void onRoomPressed() => Get.to(() => BottomNavigator())?.then((v) async {

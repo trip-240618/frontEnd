@@ -262,7 +262,7 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
     BuildContext context,
     String inviteCode,
   ) {
-    CodeDialog.show(
+    InviteCodeDialog.show(
       context,
       inviteCode: inviteCode,
       onSendPressed: () {},

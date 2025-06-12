@@ -135,16 +135,20 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
       labelColor: state.getColor.toJson(),
     );
     final createResult = await _tripRepository.postCreateTrip(tripRoomCreateRequest);
-
-    Get.back();
-    tripRoomId = createResult.tripId;
-    tripRoomCreateState = state.copyWith(
-      showLoading: OneTimeEvent(false),
-      showCodeDialog: OneTimeEvent(
-        createResult.invitationCode,
-      ),
-    );
-    update();
+    createResult.fold((error) {
+      print("? ${error}");
+      Get.back();
+    }, (createResult) {
+      Get.back();
+      tripRoomId = createResult.tripId;
+      tripRoomCreateState = state.copyWith(
+        showLoading: OneTimeEvent(false),
+        showCodeDialog: OneTimeEvent(
+          createResult.invitationCode,
+        ),
+      );
+      update();
+    });
   }
 
   void onNavigateToRoomPressed() async {
