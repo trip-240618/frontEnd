@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:tripStory/app/bindings/app_binding.dart';
 import 'package:tripStory/router/router_info.dart';
 import 'package:tripStory/util/color.dart';
 
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      initialBinding: AppBinding(),
       initialRoute: "/",
       getPages: RouterInfo.config,
       theme: ThemeData(

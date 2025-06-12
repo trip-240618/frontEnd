@@ -12,6 +12,7 @@ import 'package:tripStory/services/country_cache_manager.dart';
 import 'package:tripStory/util/compress_image.dart';
 import 'package:tripStory/util/extension/color_extension.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
+import 'package:tripStory/util/helper/file_upload_helper.dart';
 import 'package:tripStory/util/one_time_event.dart';
 import 'package:tripStory/util/url_utils.dart';
 import 'package:tripStory/view/hoom/model/trip_room_create_state.dart';
@@ -118,7 +119,10 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
 
       thumbnailUrl = UrlUtils.getBaseUrl(result.preSignedUrls.first);
       final compressedBytes = await compressImage(state.roomImage!);
-      _fileRepository.putUploadImage(url: thumbnailUrl, fileBytes: compressedBytes);
+      await FileUploadHelper.putUploadImage(
+        url: thumbnailUrl,
+        fileBytes: compressedBytes,
+      );
     }
 
     final tripRoomCreateRequest = TripRoomCreateRequest(
@@ -131,6 +135,7 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
       labelColor: state.getColor.toJson(),
     );
     final createResult = await _tripRepository.postCreateTrip(tripRoomCreateRequest);
+
     Get.back();
     tripRoomId = createResult.tripId;
     tripRoomCreateState = state.copyWith(

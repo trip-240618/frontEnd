@@ -6,40 +6,41 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tripStory/app/data/log/network_log.dart';
 
 class DioClient {
-  final logger = Logger();
-  late Dio dio;
+  static final DioClient _instance = DioClient._internal();
 
-  DioClient() {
+  factory DioClient() => _instance;
+
+  late final Dio dio;
+  final logger = Logger();
+
+  DioClient._internal() {
     dio = Dio(BaseOptions(
       baseUrl: 'https://trip-story.site',
       connectTimeout: const Duration(seconds: 5),
       receiveTimeout: const Duration(seconds: 3),
     ));
+
     dio.interceptors.add(NetworkLog(logger));
+
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         final prefs = await SharedPreferences.getInstance();
-        String accessToken = '${prefs.getString('accessToken')}';
-        String refreshToken = '${prefs.getString('refreshToken')}';
+        final accessToken = prefs.getString('accessToken') ?? "";
+        final refreshToken = prefs.getString('refreshToken') ?? "";
         if (accessToken.isNotEmpty && refreshToken.isNotEmpty) {
-          options.headers[HttpHeaders.cookieHeader] = '${accessToken};${refreshToken}';
+          options.headers[HttpHeaders.cookieHeader] = '$accessToken;$refreshToken';
         }
-        return handler.next(options); // 요청 계속 진행
+        return handler.next(options);
       },
       onResponse: (response, handler) async {
         final setCookieHeader = response.headers['set-cookie'];
         if (setCookieHeader != null) {
-          await saveAccessToken('${response.headers['set-cookie']![0]}');
+          await saveAccessToken(setCookieHeader.first);
         }
-        return handler.next(response); // 응답 계속 진행
+        return handler.next(response);
       },
       onError: (error, handler) {
         return handler.next(error);
-
-        /// 리프레쉬 토큰 만료 토큰
-        if (error.response?.statusCode == 420) {
-          print('새로운 토큰 갱신 후 실패했던 api 다시 진행');
-        }
       },
     ));
   }

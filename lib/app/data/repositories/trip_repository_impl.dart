@@ -11,22 +11,13 @@ class TripRepositoryImpl implements TripRepository {
   TripRepositoryImpl(this._tripClient);
 
   @override
-  Future<List<TripRoom>> fetchComingTrips() async {
-    final result = await _tripClient.inComingTripGet();
-    return result.map((e) => TripRoom.fromJson(e)).toList();
-  }
+  Future<List<TripRoom>> fetchComingTrips() async => await _tripClient.inComingTripGet();
 
   @override
-  Future<List<TripRoom>> fetchLastTrips() async {
-    final result = await _tripClient.lastTripGet();
-    return result.map((e) => TripRoom.fromJson(e)).toList();
-  }
+  Future<List<TripRoom>> fetchLastTrips() async => await _tripClient.lastTripGet();
 
   @override
-  Future<List<TripRoom>> fetchBookmarkedTrips() async {
-    final result = await _tripClient.bookMarkTripGet();
-    return result.map((e) => TripRoom.fromJson(e)).toList();
-  }
+  Future<List<TripRoom>> fetchBookmarkedTrips() async => await _tripClient.bookMarkTripGet();
 
   @override
   Future<bool> updateBookmark(int tripId) async {
