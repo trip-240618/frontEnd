@@ -32,8 +32,10 @@ class TripClient {
   Future<TripRoomCreateResponse> postCreateTrip(
     TripRoomCreateRequest request,
   ) async {
-    final response = await _dio.post("/trip/create", data: request.toJson());
-
+    final response = await _dio.post(
+      "/trip/create",
+      data: request.toJson(),
+    );
     return TripRoomCreateResponse.fromJson(response.data);
   }
 

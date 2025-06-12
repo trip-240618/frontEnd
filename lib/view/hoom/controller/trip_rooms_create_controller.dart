@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tripStory/app/data/models/trip_room_create_request.dart';
 import 'package:tripStory/app/data/repositories/file_repository.dart';
 import 'package:tripStory/app/data/repositories/trip_repository.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/common/enum/trip_color.dart';
 import 'package:tripStory/common/enum/trip_type.dart';
-import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/services/country_cache_manager.dart';
-import 'package:tripStory/util/compress_image.dart';
-import 'package:tripStory/util/extension/color_extension.dart';
-import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/util/one_time_event.dart';
 import 'package:tripStory/view/hoom/bindings/trip_calendar_binding.dart';
 import 'package:tripStory/view/hoom/model/trip_room_create_state.dart';
 import 'package:tripStory/view/hoom/views/trip_room_calendar_view.dart';
+import 'package:tripStory/view/trip/bottomNavigator.dart';
 
 class TripRoomsCreateController extends GetxController with GetSingleTickerProviderStateMixin {
   final TripRepository _tripRepository;
   final FileRepository _fileRepository;
   final ImagePicker _picker = ImagePicker();
-
+  int? tripRoomId;
   TripRoomCreateState tripRoomCreateState = TripRoomCreateState();
 
   TripRoomCreateState get state => tripRoomCreateState;
@@ -105,47 +101,42 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
       showLoading: OneTimeEvent(true),
     );
     update();
-
-    String thumbnailUrl = "";
-    if (state.roomImage != null) {
-      final result = await _fileRepository.getFileUrls(
-        prefix: "profile",
-        photoCnt: 1,
-      );
-
-      thumbnailUrl = result.preSignedUrls.first;
-      final compressedBytes = await compressImage(state.roomImage!);
-      _fileRepository.putUploadImage(url: thumbnailUrl, fileBytes: compressedBytes);
-    }
-
-    final tripRoomCreateRequest = TripRoomCreateRequest(
-      name: state.title,
-      type: state.type?.name ?? "j",
-      startDate: state.tripDate.first.formatYMDWithHyphen(),
-      endDate: state.tripDate.last.formatYMDWithHyphen(),
-      country: state.tripDestination,
-      thumbnail: thumbnailUrl,
-      labelColor: state.getColor.toJson(),
-    );
-    final createResult = await _tripRepository.postCreateTrip(tripRoomCreateRequest);
-
-    Get.back();
-    CodeDialog(Get.context!, createResult.tripId, createResult.invitationCode);
-    // final createData = await createRoom(
-    //   thumbnailUrl,
-    //   tripName.text,
-    //   '0x${colorList[selectedColor].value.toRadixString(16).toUpperCase()}',
-    //   tripType,
-    //   tripDate,
-    //   tripDestination,
-    // );
     //
-    // // 로딩 다이얼로그 닫기
-    // if (Get.isDialogOpen ?? false) Get.back();
+    // String thumbnailUrl = "";
+    // if (state.roomImage != null) {
+    //   final result = await _fileRepository.getFileUrls(
+    //     prefix: "profile",
+    //     photoCnt: 1,
+    //   );
     //
-    // if (createData.isNotEmpty) {
-    //   await ts.getSelectTrip(createData['tripId']);
-    //   CodeDialog(Get.context!, createData['tripId'], createData['invitationCode']);
+    //   thumbnailUrl = UrlUtils.getBaseUrl(result.preSignedUrls.first);
+    //   final compressedBytes = await compressImage(state.roomImage!);
+    //   _fileRepository.putUploadImage(url: thumbnailUrl, fileBytes: compressedBytes);
     // }
+    //
+    // final tripRoomCreateRequest = TripRoomCreateRequest(
+    //   name: state.title,
+    //   type: state.type?.name ?? "j",
+    //   startDate: state.tripDate.first.formatYMDWithHyphen(),
+    //   endDate: state.tripDate.last.formatYMDWithHyphen(),
+    //   country: state.tripDestination,
+    //   thumbnail: thumbnailUrl,
+    //   labelColor: state.getColor.toJson(),
+    // );
+    // final createResult = await _tripRepository.postCreateTrip(tripRoomCreateRequest);
+    // Get.back();
+    // tripRoomId = createResult.tripId;
+    tripRoomCreateState = state.copyWith(
+      showLoading: OneTimeEvent(false),
+      showCodeDialog: OneTimeEvent(
+        "ddas",
+      ),
+    );
+    update();
+  }
+
+  void onNavigateToRoomPressed() async {
+    Get.back(closeOverlays: true);
+    Get.to(() => BottomNavigator());
   }
 }

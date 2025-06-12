@@ -22,6 +22,7 @@ abstract class TripRoomCreateState with _$TripRoomCreateState {
     @Default("") String tripDestination,
     OneTimeEvent<bool>? showTripSearchBottomSheet,
     OneTimeEvent<bool>? showLoading,
+    OneTimeEvent<String>? showCodeDialog,
   }) = _TripRoomCreateState;
 
   bool get isTripDateEmpty => tripDate.isEmpty;
