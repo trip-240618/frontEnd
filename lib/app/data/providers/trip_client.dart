@@ -1,53 +1,34 @@
 import 'package:dio/dio.dart';
-import 'package:tripStory/app/config/dio_client.dart';
+import 'package:retrofit/retrofit.dart';
 import 'package:tripStory/app/data/models/trip_room.dart';
 import 'package:tripStory/app/data/models/trip_room_create_request.dart';
 import 'package:tripStory/app/data/models/trip_room_create_response.dart';
 
-class TripClient {
-  final Dio _dio;
+part 'trip_client.g.dart';
 
-  TripClient(DioClient dioClient) : _dio = dioClient.dio;
+@RestApi(baseUrl: "https://trip-story.site/trip")
+abstract class TripClient {
+  factory TripClient(Dio dio, {String baseUrl}) = _TripClient;
 
-  Future<List<dynamic>> inComingTripGet() async {
-    final response = await _dio.get('/trip/list/incoming');
-    return response.data;
-  }
+  @GET("/list/incoming")
+  Future<List<TripRoom>> inComingTripGet();
 
-  Future<List<dynamic>> lastTripGet() async {
-    final response = await _dio.get('/trip/list/last');
-    return response.data;
-  }
+  @GET("/list/last")
+  Future<List<TripRoom>> lastTripGet();
 
-  Future<List<dynamic>> bookMarkTripGet() async {
-    final response = await _dio.get('/trip/list/bookmark');
-    return response.data;
-  }
+  @GET("/list/bookmark")
+  Future<List<TripRoom>> bookMarkTripGet();
 
-  Future<bool> updateBookMark(int tripId) async {
-    final response = await _dio.put('/trip/bookmark/toggle?tripId=$tripId');
-    return response.data;
-  }
+  @PUT("/bookmark/toggle")
+  Future<bool> updateBookMark(@Query("tripId") int tripId);
 
+  @POST("/create")
   Future<TripRoomCreateResponse> postCreateTrip(
-    TripRoomCreateRequest request,
-  ) async {
-    final response = await _dio.post(
-      "/trip/create",
-      data: request.toJson(),
-    );
-    return TripRoomCreateResponse.fromJson(response.data);
-  }
+    @Body() TripRoomCreateRequest request,
+  );
 
+  @GET("/enter")
   Future<TripRoom> getEnterTrip(
-    int tripId,
-  ) async {
-    final response = await _dio.get(
-      "/trip/enter",
-      queryParameters: {
-        "tripId": tripId,
-      },
-    );
-    return TripRoom.fromJson(response.data);
-  }
+    @Query("tripId") int tripId,
+  );
 }

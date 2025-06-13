@@ -5,12 +5,12 @@ import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
-class CodeDialog extends StatelessWidget {
+class InviteCodeDialog extends StatelessWidget {
   final String inviteCode;
   final VoidCallback onSendPressed;
   final VoidCallback onConfirmPressed;
 
-  const CodeDialog({
+  const InviteCodeDialog({
     super.key,
     required this.inviteCode,
     required this.onSendPressed,
@@ -88,7 +88,7 @@ class CodeDialog extends StatelessWidget {
     required VoidCallback onConfirmPressed,
   }) {
     Get.dialog(
-      CodeDialog(
+      InviteCodeDialog(
         inviteCode: inviteCode,
         onSendPressed: onSendPressed,
         onConfirmPressed: onConfirmPressed,
