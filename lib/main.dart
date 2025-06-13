@@ -5,10 +5,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:tripStory/router/router_info.dart';
 import 'package:tripStory/util/color.dart';
-import 'package:tripStory/view/splashScreen.dart';
 
-void main() async{
+void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp();
@@ -16,38 +16,35 @@ void main() async{
     nativeAppKey: '39c88180cf07b71dc3e44c8b41822afa',
     javaScriptAppKey: '401159aa34400f2b53f252d9f4448744',
   );
-   await SystemChrome.setPreferredOrientations([
-     DeviceOrientation.portraitUp,
-     DeviceOrientation.portraitDown,
-   ]);
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-
     return GetMaterialApp(
       title: 'tripStory',
-        supportedLocales: [
-          Locale('ko', 'KR'),
-        ],
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+      supportedLocales: [
+        Locale('ko', 'KR'),
+      ],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      initialRoute: "/",
+      getPages: RouterInfo.config,
       theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: Colors.white,
-          dividerTheme: DividerThemeData(
-              color: gray200
-          ),
-        appBarTheme: const AppBarTheme(color: Colors.white,surfaceTintColor: Colors.white)
-      ),
-      home: SplashPage(),
+          useMaterial3: true,
+          scaffoldBackgroundColor: Colors.white,
+          dividerTheme: DividerThemeData(color: gray200),
+          appBarTheme: const AppBarTheme(color: Colors.white, surfaceTintColor: Colors.white)),
     );
   }
 }
-

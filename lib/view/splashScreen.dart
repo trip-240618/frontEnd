@@ -8,8 +8,7 @@ import 'package:tripStory/app/config/dio_client.dart';
 import 'package:tripStory/app/notification/local_notification_setting.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/userState.dart';
-import 'package:tripStory/view/hoom/bindings/rooms_binding.dart';
-import 'package:tripStory/view/hoom/views/rooms_view.dart';
+import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/login/loginPage.dart';
 
 class SplashPage extends StatefulWidget {
@@ -72,7 +71,7 @@ class _SplashPageState extends State<SplashPage> {
         FlutterNativeSplash.remove();
 
         if (us.userList.isNotEmpty) {
-          Get.offAll(() => TripRoomListView(), binding: RoomsBinding());
+          Get.offAllNamed(Routes.rooms);
         } else {
           Get.offAll(() => LoginPage());
         }
