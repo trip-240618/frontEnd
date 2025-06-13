@@ -8,6 +8,7 @@ import 'package:tripStory/common/button/color_select_button.dart';
 import 'package:tripStory/common/button/icon_text_button.dart';
 import 'package:tripStory/common/button/image_button.dart';
 import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/dialog/code_dialog.dart';
 import 'package:tripStory/common/enum/trip_type.dart';
 import 'package:tripStory/common/text/common_text_form_field.dart';
 import 'package:tripStory/component/appbar.dart';
@@ -42,7 +43,7 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
         final state = controller.state;
         final shouldShowBottomSheet = state.showTripSearchBottomSheet?.consume() ?? false;
         final shouldShowLoading = state.showLoading?.consume() ?? false;
-
+        final inviteCode = state.showCodeDialog?.consume();
         if (!context.mounted) return;
 
         if (shouldShowLoading) {
@@ -55,6 +56,10 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
               controller.updateDestination(tripDestination);
             }
           });
+        }
+
+        if (inviteCode != null) {
+          showCodeDialog(context, inviteCode);
         }
       });
       return Scaffold(
@@ -84,9 +89,7 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                       controller: _tripNameCon,
                       textStyle: f16gray800w600,
                       hintText: "여행방 제목을 입력해주세요 :)",
-                      onChanged: (v) {
-                        setState(() {});
-                      },
+                      onChanged: (text) => controller.onTextChanged(text),
                       contentPadding: const EdgeInsets.all(16),
                       inputFormatters: [LengthLimitingTextInputFormatter(15)],
                       trailing: Text(
@@ -253,6 +256,18 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
         //             : true))),
       );
     });
+  }
+
+  void showCodeDialog(
+    BuildContext context,
+    String inviteCode,
+  ) {
+    CodeDialog.show(
+      context,
+      inviteCode: inviteCode,
+      onSendPressed: () {},
+      onConfirmPressed: () => _tripRoomsCreateController.onNavigateToRoomPressed(),
+    );
   }
 
   @override

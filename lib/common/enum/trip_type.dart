@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 enum TripType {
-  @JsonValue("J")
+  @JsonValue("j")
   j,
-  @JsonValue("P")
+  @JsonValue("p")
   p,
 }

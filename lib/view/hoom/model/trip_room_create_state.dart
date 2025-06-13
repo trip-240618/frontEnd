@@ -15,12 +15,14 @@ abstract class TripRoomCreateState with _$TripRoomCreateState {
 
   const factory TripRoomCreateState({
     XFile? roomImage,
+    @Default("") String title,
     @Default(TripColor.pastelBlue) TripColor selectedColor,
     TripType? type,
     @Default([]) List<DateTime> tripDate,
     @Default("") String tripDestination,
     OneTimeEvent<bool>? showTripSearchBottomSheet,
     OneTimeEvent<bool>? showLoading,
+    OneTimeEvent<String>? showCodeDialog,
   }) = _TripRoomCreateState;
 
   bool get isTripDateEmpty => tripDate.isEmpty;
