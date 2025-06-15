@@ -46,34 +46,39 @@
 
 ## 🗂 폴더 구조
 ```
-lib
-├── App
-│   ├── API
-│   ├── Config
-│   ├── Notification
-│   ├── Permission
-│   └── Sns
-├── Component
-│   ├── Button
-│   ├── Container
-│   ├── Dialog
-│   ├── Empty
-│   ├── History
-│   ├── Loading
-│   ├── TextForm
-│   └── Toast
-├── Controller
-│   └── State
-├── Model
-├── Screen
-│   ├── Login
-│   ├── Main
-│   ├── MyPage
-│   └── Trip
-└──  Util
-     ├── Color
-     ├── CustomMarker
-     ├── FileUtils
-     ├── Font
-     └── HistoryClusterItem
+
+lib/
+  ├── app/
+  │     ├── injection/
+  │     ├── router/
+  │     └── themes/
+  ├── data/
+  │     ├── datasources/
+  │     │     ├── local/
+  │     │     └── remote/
+  │     ├── models/ 
+  │     └── repositories/
+  ├── domain/
+  │     ├── usecases/ 
+  │     ├── entities/  
+  │     └── repositories/
+  ├── presentation/
+  │     ├── common/
+  │     ├── home/
+  │     │     ├── controllers/
+  │     │     ├── enums/
+  │     │     ├── views/
+  │     │     └── widgets/
+  │     ├── login/
+  │     │     ├── controllers/
+  │     │     ├── enums/
+  │     │     ├── views/
+  │     │     └── widgets/
+  ...
+  ├── utils/
+  │     ├── helpers/
+  │     ├── constants/
+  │     └── extensions/
+  └── main.dart
+
 ```
