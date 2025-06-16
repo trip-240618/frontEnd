@@ -8,7 +8,9 @@ import 'package:tripStory/view/hoom/controller/notification_list_controller.dart
 import 'package:tripStory/view/hoom/enum/notification_type.dart';
 
 class NotificationListView extends StatelessWidget {
-  const NotificationListView({super.key});
+  const NotificationListView({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
