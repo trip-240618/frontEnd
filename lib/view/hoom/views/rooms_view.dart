@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
-import 'package:tripStory/app/data/models/trip_room.dart';
 import 'package:tripStory/common/button/popup_list.dart';
 import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
@@ -13,7 +12,9 @@ import 'package:tripStory/common/widget/round_thumbnail_image.dart';
 import 'package:tripStory/component/bottomModals.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/empty/emptyScreen.dart';
+import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/util/extension/string_extension.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/hoom/controller/rooms_controller.dart';
@@ -165,7 +166,7 @@ class TripRoomListView extends StatelessWidget {
                                         context: context,
                                         members: controller.getPopupMembers(tripRoom),
                                         width: 14 * controller.getLongestNicknameLength(tripRoom) + 100,
-                                        height: 50 * tripRoom.memberLength.toDouble(),
+                                        height: 50 * tripRoom.memberCount.toDouble(),
                                       ),
                                     ),
                                     SizedBox(
@@ -220,7 +221,7 @@ class TripRoomListView extends StatelessWidget {
 
 class _TripRoomTile extends StatelessWidget {
   final TripRoomType tripRoomType;
-  final TripRoom tripRoom;
+  final TripRoomEntity tripRoom;
   final VoidCallback? onTap;
   final VoidCallback? onBookmarkTap;
   final VoidCallback? onSendTap;
@@ -238,7 +239,7 @@ class _TripRoomTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final labelColor = tripRoom.labelColor.toColor();
-    final dateRange = "${tripRoom.startDate} ~ ${tripRoom.endDate}";
+    final dateRange = "${tripRoom.startDate.formatYMDWithHyphen()} ~ ${tripRoom.endDate.formatYMDWithHyphen()}";
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -370,7 +371,7 @@ class _TripHeader extends StatelessWidget {
 }
 
 class _TripContent extends StatelessWidget {
-  final TripRoom tripRoom;
+  final TripRoomEntity tripRoom;
   final Color labelColor;
   final void Function(BuildContext)? onMemberTap;
 
@@ -435,7 +436,7 @@ class _TripContent extends StatelessWidget {
     return Builder(
       builder: (context) => RoundedBoxButton(
         onTap: () => onMemberTap?.call(context),
-        text: tripRoom.memberLength.toString(),
+        text: tripRoom.memberCount.toString(),
         textStyle: f14gray600w700,
         backgroundColor: gray200,
         icon: SvgPicture.asset("assets/icon/userIcon.svg"),

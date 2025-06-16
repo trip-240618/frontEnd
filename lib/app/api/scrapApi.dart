@@ -1,35 +1,33 @@
 import 'package:get/get.dart';
 
 import '../../controller/tripState.dart';
-import '../config/dio_client.dart';
+import '../../data/network/dio_client.dart';
 
-class ApiScrapClient{
+class ApiScrapClient {
   final DioClient dioClient;
 
   ApiScrapClient(this.dioClient);
 
   /// 스크랩 생성
   Future<List<dynamic>> createScrap(
-      String title,
-      String content,
-      bool hasImage,
-      String color,
-      List photoList,
-      )async{
+    String title,
+    String content,
+    bool hasImage,
+    String color,
+    List photoList,
+  ) async {
     final ts = Get.put(TripState());
     try {
-      final response = await dioClient.dio.post('/trip/${ts.selectTripList[0]['id']}/scrap/create',
-          data: {
-            "title": '${title}',
-            "content": '${content}',
-            "hasImage": '${hasImage}',
-            "color": '${color}',
-            "photoList": photoList,
-          }
-      );
+      final response = await dioClient.dio.post('/trip/${ts.selectTripList[0]['id']}/scrap/create', data: {
+        "title": '${title}',
+        "content": '${content}',
+        "hasImage": '${hasImage}',
+        "color": '${color}',
+        "photoList": photoList,
+      });
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return [data];
@@ -44,28 +42,20 @@ class ApiScrapClient{
 
   /// 스크랩 수정
   Future<List<dynamic>> modifyScrap(
-      int id,
-      String title,
-      String content,
-      bool hasImage,
-      String color,
-      List photoList
-      )async{
+      int id, String title, String content, bool hasImage, String color, List photoList) async {
     final ts = Get.put(TripState());
     try {
-      final response = await dioClient.dio.put('/trip/${ts.selectTripList[0]['id']}/scrap/modify',
-          data: {
-            "id": id,
-            "title": '${title}',
-            "content": '${content}',
-            "hasImage": '${hasImage}',
-            "color": '${color}',
-            "photoList": photoList,
-          }
-      );
+      final response = await dioClient.dio.put('/trip/${ts.selectTripList[0]['id']}/scrap/modify', data: {
+        "id": id,
+        "title": '${title}',
+        "content": '${content}',
+        "hasImage": '${hasImage}',
+        "color": '${color}',
+        "photoList": photoList,
+      });
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return [data];
@@ -76,17 +66,16 @@ class ApiScrapClient{
       print('Error during flight-delete: $e');
       rethrow;
     }
-
   }
 
   /// 스크랩 가져오기
-  Future<List<dynamic>> getScrap() async{
+  Future<List<dynamic>> getScrap() async {
     final ts = Get.put(TripState());
     try {
       final response = await dioClient.dio.get('/trip/${ts.selectTripList[0]['id']}/scrap/list');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return data;
@@ -100,14 +89,13 @@ class ApiScrapClient{
   }
 
   /// 선택한 스크랩 리스드 가져오기
-  Future<List<dynamic>> getSelectScrap(int scrapId) async{
+  Future<List<dynamic>> getSelectScrap(int scrapId) async {
     final ts = Get.put(TripState());
     try {
       final response = await dioClient.dio.get('/trip/${ts.selectTripList[0]['id']}/scrap/detail/${scrapId}');
       if (response.statusCode == 200) {
-
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return [data];
@@ -120,13 +108,12 @@ class ApiScrapClient{
     }
   }
 
-
   /// 스크랩 북마크 클릭
   Future<void> clickScrapBookmark(int scrapId) async {
     final ts = Get.put(TripState());
     try {
-      final response = await dioClient.dio.post(
-        '/trip/${ts.selectTripList[0]['id']}/scrap/bookmark/toggle?scrapId=${scrapId}');
+      final response =
+          await dioClient.dio.post('/trip/${ts.selectTripList[0]['id']}/scrap/bookmark/toggle?scrapId=${scrapId}');
       if (response.statusCode == 200) {
         final data = response.data;
       } else {
@@ -139,13 +126,13 @@ class ApiScrapClient{
   }
 
   /// 스크랩 북마크 목록
-  Future<List<dynamic>> getScrapBookmark() async{
+  Future<List<dynamic>> getScrapBookmark() async {
     final ts = Get.put(TripState());
     try {
       final response = await dioClient.dio.get('/trip/${ts.selectTripList[0]['id']}/scrap/bookmark/list');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return data;
@@ -159,16 +146,14 @@ class ApiScrapClient{
   }
 
   /// 스크랩 삭제
-  Future<void> deleteScrap(int scrapId)async{
+  Future<void> deleteScrap(int scrapId) async {
     final ts = Get.put(TripState());
     try {
-      final response = await dioClient.dio.delete(
-          '/trip/${ts.selectTripList[0]['id']}/scrap/delete?scrapId=${scrapId}'
-      );
+      final response =
+          await dioClient.dio.delete('/trip/${ts.selectTripList[0]['id']}/scrap/delete?scrapId=${scrapId}');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
-        }
+        if (data.length == 0) {}
       } else {
         throw Exception('Failed to flight-delete: ${response.statusCode}');
       }
@@ -177,6 +162,4 @@ class ApiScrapClient{
       rethrow;
     }
   }
-
-
 }

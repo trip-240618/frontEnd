@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:tripStory/app/data/models/file_response.dart';
+import 'package:tripStory/data/models/file_response.dart';
 
-part 'file_client.g.dart';
+part 'file_data_source.g.dart';
 
 @RestApi(baseUrl: "https://trip-story.site/file")
-abstract class FileClient {
-  factory FileClient(Dio dio, {String baseUrl}) = _FileClient;
+abstract class FileDataSource {
+  factory FileDataSource(Dio dio, {String baseUrl}) = _FileDataSource;
 
   @GET("/request/url")
-  Future<FileResponse> getFileUrls({
+  Future<FileResponse> fetchFileUrls({
     @Query("prefix") required String prefix,
     @Query("photoCnt") required int photoCnt,
   });

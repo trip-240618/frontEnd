@@ -1,5 +1,4 @@
-import 'package:tripStory/app/config/dio_client.dart';
-
+import 'package:tripStory/data/network/dio_client.dart';
 
 class ApiNotiClient {
   final DioClient dioClient;
@@ -9,12 +8,10 @@ class ApiNotiClient {
   /// 공지사항 가져오기
   Future<List> getNotiList(String type) async {
     try {
-      final response = await dioClient.dio.get(
-          type=='전체'?'/notice/list':'/notice/list?type=$type'
-      );
+      final response = await dioClient.dio.get(type == '전체' ? '/notice/list' : '/notice/list?type=$type');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return data;
@@ -28,14 +25,12 @@ class ApiNotiClient {
   }
 
   /// 공지사항 디테일 가져오기
-  Future<Map> getDetailNotiList(int noticeId,String type) async {
+  Future<Map> getDetailNotiList(int noticeId, String type) async {
     try {
-      final response = await dioClient.dio.get(
-          '/notice/detail/${noticeId}?type=${type}'
-      );
+      final response = await dioClient.dio.get('/notice/detail/${noticeId}?type=${type}');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return {};
         }
         return data;

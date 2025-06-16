@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/hoom/bindings/rooms_binding.dart';
 import 'package:tripStory/view/hoom/bindings/trip_calendar_binding.dart';
-import 'package:tripStory/view/hoom/bindings/trip_rooms_binding.dart';
+import 'package:tripStory/view/hoom/bindings/trip_rooms_create_binding.dart';
 import 'package:tripStory/view/hoom/views/rooms_view.dart';
 import 'package:tripStory/view/hoom/views/trip_room_calendar_view.dart';
 import 'package:tripStory/view/hoom/views/trip_room_create_view.dart';
@@ -24,7 +24,7 @@ class RouterInfo {
     GetPage(
       name: Routes.createRoom,
       page: () => const TripRoomCreateView(),
-      binding: TripRoomsBinding(),
+      binding: TripRoomsCreateBinding(),
     ),
     GetPage(
       name: Routes.createRoomCalendar,
@@ -38,9 +38,5 @@ class RouterInfo {
       },
       binding: TripCalendarBinding(),
     ),
-    // GetPage(
-    //   name: Routes.createRoomCalendar.name,
-    //   page: () => const TripRoomCalendarView(selectedColor: null,),
-    // ),
   ];
 }

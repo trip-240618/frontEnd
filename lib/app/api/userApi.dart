@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:get/get.dart';
-import 'package:tripStory/app/config/dio_client.dart';
-import 'package:tripStory/controller/userState.dart';
 import 'package:http/http.dart' as http;
+import 'package:tripStory/controller/userState.dart';
+import 'package:tripStory/data/network/dio_client.dart';
+
 import '../../model/userModel.dart';
 
 class ApiUserClient {
@@ -21,9 +21,9 @@ class ApiUserClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data['type']!='register'){
+        if (data['type'] != 'register') {
           us.userList.value = [UserModel.fromJson(data)];
-        }else{
+        } else {
           us.userList.clear();
         }
       }
@@ -32,13 +32,12 @@ class ApiUserClient {
       us.userList.clear();
     }
   }
+
   /// 로그아웃
   Future<void> logOut() async {
     final us = Get.put(UserState());
     try {
-      final response = await dioClient.dio.put(
-          '/user/update/fcmToken'
-      );
+      final response = await dioClient.dio.put('/user/update/fcmToken');
       us.userList.clear();
       dioClient.deleteCookies();
     } catch (e) {
@@ -46,17 +45,17 @@ class ApiUserClient {
       rethrow;
     }
   }
+
   /// 토큰 업데이트
   Future<void> updateToken(String token) async {
     try {
-      final response = await dioClient.dio.put(
-          '/user/update/fcmToken?fcmToken=$token'
-      );
+      final response = await dioClient.dio.put('/user/update/fcmToken?fcmToken=$token');
     } catch (e) {
       print('Error during auto-login: $e');
       rethrow;
     }
   }
+
   /// 유저 삭제
   Future<void> userDelete() async {
     final us = Get.put(UserState());
@@ -71,19 +70,18 @@ class ApiUserClient {
       rethrow;
     }
   }
+
   /// 유저 정보 디테일
-  Future<Map<String, dynamic>> userRegister(String nickName,String memo,String profileImg,String thumbnailImg,bool marketing) async {
+  Future<Map<String, dynamic>> userRegister(
+      String nickName, String memo, String profileImg, String thumbnailImg, bool marketing) async {
     try {
-      final response = await dioClient.dio.put(
-        '/user/register',
-        data: {
-          'nickname':'${nickName}',
-          'memo':memo,
-          'profileImg':'${profileImg}',
-          'thumbnail':'${thumbnailImg}',
-          "marketing": marketing
-        }
-      );
+      final response = await dioClient.dio.put('/user/register', data: {
+        'nickname': '${nickName}',
+        'memo': memo,
+        'profileImg': '${profileImg}',
+        'thumbnail': '${thumbnailImg}',
+        "marketing": marketing
+      });
       if (response.statusCode == 200) {
         final data = response.data;
         return data;
@@ -95,19 +93,17 @@ class ApiUserClient {
       rethrow;
     }
   }
+
   /// 유저 정보 수정
-  Future<Map<String, dynamic>> userModify(String nickName,String memo,String thumbnailImg,String profileImg) async {
+  Future<Map<String, dynamic>> userModify(String nickName, String memo, String thumbnailImg, String profileImg) async {
     final us = Get.put(UserState());
     try {
-      final response = await dioClient.dio.put(
-          '/user/modify',
-          data:{
-            "nickname": "${nickName}",
-            "memo": "${memo}",
-            "thumbnail": "${thumbnailImg}",
-            "profileImg": "${profileImg}"
-          }
-      );
+      final response = await dioClient.dio.put('/user/modify', data: {
+        "nickname": "${nickName}",
+        "memo": "${memo}",
+        "thumbnail": "${thumbnailImg}",
+        "profileImg": "${profileImg}"
+      });
       if (response.statusCode == 200) {
         final data = response.data;
         us.userList.value = [UserModel.fromJson(data)];
@@ -126,15 +122,14 @@ class ApiUserClient {
   Future<void> getVersionList() async {
     final us = Get.put(UserState());
     try {
-       final response = await http.get(
-          Uri.parse('https://trip-story.site/version/last'),
-          headers: {
-           'Content-Type': 'application/json',
-         },
+      final response = await http.get(
+        Uri.parse('https://trip-story.site/version/last'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       );
       us.versionList.value = jsonDecode(response.body);
-    }
-    catch (e) {
+    } catch (e) {
       rethrow;
     }
   }

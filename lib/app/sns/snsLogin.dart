@@ -1,35 +1,33 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:tripStory/app/config/dio_client.dart';
-import 'package:tripStory/component/dialog/dialog.dart';
-import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/controller/userState.dart';
+import 'package:tripStory/data/network/dio_client.dart';
 import 'package:tripStory/model/userModel.dart';
-import '../api/userApi.dart';
 
 /// 카카오로그인
 Future<void> kakaoLogin() async {
   if (await isKakaoTalkInstalled()) {
     try {
-      final oauthToken= await UserApi.instance.loginWithKakaoTalk();
-      await sendTokenToServer(oauthToken.accessToken,oauthToken.refreshToken.toString());
+      final oauthToken = await UserApi.instance.loginWithKakaoTalk();
+      await sendTokenToServer(oauthToken.accessToken, oauthToken.refreshToken.toString());
       await requestUserInfo();
     } catch (error) {
       if (error is PlatformException && error.code == 'CANCELED') {
         return;
       }
+
       /// 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
       try {
         final oauthToken = await UserApi.instance.loginWithKakaoAccount();
-        await sendTokenToServer(oauthToken.accessToken,oauthToken.refreshToken.toString());
+        await sendTokenToServer(oauthToken.accessToken, oauthToken.refreshToken.toString());
       } catch (error) {
         print('카카오계정으로 로그인 실패 $error');
       }
@@ -37,12 +35,13 @@ Future<void> kakaoLogin() async {
   } else {
     try {
       final oauthToken = await UserApi.instance.loginWithKakaoAccount();
-      await sendTokenToServer(oauthToken.accessToken,oauthToken.refreshToken.toString());
+      await sendTokenToServer(oauthToken.accessToken, oauthToken.refreshToken.toString());
     } catch (error) {
       print('카카오계정으로 로그인 실패 $error');
     }
   }
 }
+
 Future<void> requestUserInfo() async {
   User user;
   try {
@@ -51,6 +50,7 @@ Future<void> requestUserInfo() async {
     print('사용자 정보 요청 실패 $error');
     return;
   }
+
   /// 사용자의 추가 동의가 필요한 사용자 정보 동의항목 확인
   List<String> scopes = [];
 
@@ -74,7 +74,6 @@ Future<void> requestUserInfo() async {
   }
 
   if (scopes.length > 0) {
-
     OAuthToken token;
     try {
       token = await UserApi.instance.loginWithNewScopes(scopes);
@@ -82,6 +81,7 @@ Future<void> requestUserInfo() async {
       print('추가 동의 요청 실패 $error');
       return;
     }
+
     /// 사용자 정보 재요청
     try {
       User user = await UserApi.instance.me();
@@ -95,14 +95,15 @@ Future<void> requestUserInfo() async {
     }
   }
 }
-Future<void> sendTokenToServer(String accessToken,String refreshToken) async {
+
+Future<void> sendTokenToServer(String accessToken, String refreshToken) async {
   final us = Get.put(UserState());
   final dioClient = DioClient();
   String? tokens = await FirebaseMessaging.instance.getToken();
+
   /// 백엔드 서버로 토큰 전송
-  var response = await http.get(
-    Uri.parse('https://trip-story.site/user/oauth2/callback/kakao?kakaoToken=${accessToken}&fcmToken=$tokens')
-  );
+  var response = await http
+      .get(Uri.parse('https://trip-story.site/user/oauth2/callback/kakao?kakaoToken=${accessToken}&fcmToken=$tokens'));
   if (response.statusCode == 200) {
     await dioClient.loginCookies('${response.headers['set-cookie']}');
     var decodedBody = utf8.decode(response.bodyBytes); // 응답 데이터 디코딩
@@ -112,12 +113,13 @@ Future<void> sendTokenToServer(String accessToken,String refreshToken) async {
     print('서버에 토큰 전송 실패: ${response.statusCode}');
   }
 }
+
 /// 구글로그인
 Future<void> googleLogin() async {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   try {
-    await _googleSignIn.signIn().then((value)async{
-      if(value!=null){
+    await _googleSignIn.signIn().then((value) async {
+      if (value != null) {
         await requestGoogleInfo(value);
       }
     });
@@ -131,9 +133,9 @@ Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
   final us = Get.put(UserState());
   final dioClient = DioClient();
   String? tokens;
-  if(Platform.isIOS){
+  if (Platform.isIOS) {
     tokens = await FirebaseMessaging.instance.getAPNSToken();
-  }else{
+  } else {
     tokens = await FirebaseMessaging.instance.getToken();
   }
   final url = 'https://trip-story.site/user/oauth2/login/google';
@@ -143,13 +145,10 @@ Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
     "id": user.id,
     "photoUrl": user.photoUrl,
     "serverAuthCode": '',
-    'fcmToken':tokens
+    'fcmToken': tokens
   };
-  var response = await http.post(
-      Uri.parse(url),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(userData)
-  );
+  var response =
+      await http.post(Uri.parse(url), headers: {'Content-Type': 'application/json'}, body: jsonEncode(userData));
   if (response.statusCode == 200) {
     await dioClient.loginCookies('${response.headers['set-cookie']}');
     var decodedBody = utf8.decode(response.bodyBytes);
@@ -158,7 +157,6 @@ Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
   } else {
     print('서버에 토큰 전송 실패: ${response}');
   }
-
 }
 
 /// 애플 로그인
@@ -170,14 +168,14 @@ Future<void> appleLogin() async {
     AppleIDAuthorizationScopes.email,
     AppleIDAuthorizationScopes.fullName,
     // 사용할 사용자 정보 범위
-  ]).then((AuthorizationCredentialAppleID user)async{
+  ]).then((AuthorizationCredentialAppleID user) async {
     print('user???${user}');
     final url = 'https://trip-story.site/user/oauth2/login/apple';
     final body = {
       "identityToken": "${user.identityToken}",
-      "state":"${user.state}",
+      "state": "${user.state}",
       "userIdentifier": "${user.userIdentifier}",
-      'fcmToken':tokens
+      'fcmToken': tokens
     };
     print('--${body}');
     final response = await http.post(
@@ -191,7 +189,7 @@ Future<void> appleLogin() async {
       var jsonResponse = jsonDecode(decodedBody);
       us.userList.value = [UserModel.fromJson(jsonResponse)];
       print('애플 로그인 했을 때 정보 ${us.userList[0].name}');
-    }else {
+    } else {
       print('서버 응답 상태 코드: ${response.statusCode}');
       print('서버 응답 헤더: ${response.headers}');
       print('서버 응답 본문: ${response.body}');

@@ -1,5 +1,4 @@
-import 'package:tripStory/app/config/dio_client.dart';
-
+import 'package:tripStory/data/network/dio_client.dart';
 
 class ApiFaqClient {
   final DioClient dioClient;
@@ -9,12 +8,10 @@ class ApiFaqClient {
   /// faq 가져오기
   Future<List> getFaqList(String type) async {
     try {
-      final response = await dioClient.dio.get(
-          type=='전체'?'/faq/list':'/faq/list?type=$type'
-      );
+      final response = await dioClient.dio.get(type == '전체' ? '/faq/list' : '/faq/list?type=$type');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return data;
@@ -30,12 +27,10 @@ class ApiFaqClient {
   /// faq 검색하기
   Future<List> searchFaqList(String text) async {
     try {
-      final response = await dioClient.dio.get(
-          '/faq/search?text=$text'
-      );
+      final response = await dioClient.dio.get('/faq/search?text=$text');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return data;
@@ -51,12 +46,10 @@ class ApiFaqClient {
   /// faq 디테일 가져오기
   Future<Map> getFaqDetailList(int faqId) async {
     try {
-      final response = await dioClient.dio.get(
-          '/faq/detail/${faqId}'
-      );
+      final response = await dioClient.dio.get('/faq/detail/${faqId}');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return {};
         }
         return data;
