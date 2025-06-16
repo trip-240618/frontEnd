@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tripStory/app/data/models/trip_room_create_request.dart';
-import 'package:tripStory/app/data/repositories/file_repository.dart';
-import 'package:tripStory/app/data/repositories/trip_repository.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/common/enum/trip_color.dart';
 import 'package:tripStory/common/enum/trip_type.dart';
+import 'package:tripStory/data/models/file_request.dart';
+import 'package:tripStory/data/models/trip_room_create_request.dart';
+import 'package:tripStory/domain/usecases/create_trip_room_usecase.dart';
+import 'package:tripStory/domain/usecases/fetch_presigned_url_usecase.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/services/country_cache_manager.dart';
 import 'package:tripStory/util/compress_image.dart';
@@ -19,8 +20,9 @@ import 'package:tripStory/view/hoom/model/trip_room_create_state.dart';
 import 'package:tripStory/view/trip/bottomNavigator.dart';
 
 class TripRoomsCreateController extends GetxController with GetSingleTickerProviderStateMixin {
-  final TripRepository _tripRepository;
-  final FileRepository _fileRepository;
+  final CreateTripRoomUseCase _createTripRoomUseCase;
+  final FetchPresignedUrlUsecase _fetchPresignedUrlUsecase;
+
   final ImagePicker _picker = ImagePicker();
   int? tripRoomId;
   TripRoomCreateState tripRoomCreateState = TripRoomCreateState();
@@ -28,8 +30,8 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
   TripRoomCreateState get state => tripRoomCreateState;
 
   TripRoomsCreateController(
-    this._tripRepository,
-    this._fileRepository,
+    this._createTripRoomUseCase,
+    this._fetchPresignedUrlUsecase,
   );
 
   Future<void> precacheFlags(BuildContext context) async {
@@ -112,16 +114,25 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
 
     String thumbnailUrl = "";
     if (state.roomImage != null) {
-      final result = await _fileRepository.getFileUrls(
-        prefix: "profile",
-        photoCnt: 1,
+      final result = await _fetchPresignedUrlUsecase.call(
+        FileRequest(prefix: "profile", photoCnt: 1),
       );
 
-      thumbnailUrl = UrlUtils.getBaseUrl(result.preSignedUrls.first);
-      final compressedBytes = await compressImage(state.roomImage!);
-      await FileUploadHelper.putUploadImage(
-        url: thumbnailUrl,
-        fileBytes: compressedBytes,
+      await result.fold(
+        (e) async {
+          print("error");
+          // 필요한 에러 처리 추가 가능
+        },
+        (urlData) async {
+          final presignedUrl = urlData.preSignedUrls.first;
+          thumbnailUrl = UrlUtils.getBaseUrl(presignedUrl);
+
+          final compressedBytes = await compressImage(state.roomImage!);
+          await FileUploadHelper.putUploadImage(
+            url: presignedUrl,
+            fileBytes: compressedBytes,
+          );
+        },
       );
     }
 
@@ -134,9 +145,10 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
       thumbnail: thumbnailUrl,
       labelColor: state.getColor.toJson(),
     );
-    final createResult = await _tripRepository.postCreateTrip(tripRoomCreateRequest);
+
+    final createResult = await _createTripRoomUseCase(tripRoomCreateRequest);
+
     createResult.fold((error) {
-      print("? ${error}");
       Get.back();
     }, (createResult) {
       Get.back();

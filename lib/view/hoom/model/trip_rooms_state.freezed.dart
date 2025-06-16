@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$TripRoomsState {
-  List<TripRoom> get tripRooms;
+  List<TripRoomEntity> get tripRooms;
   TripRoomType get tripRoomType;
 
   /// Create a copy of TripRoomsState
@@ -52,7 +52,7 @@ abstract mixin class $TripRoomsStateCopyWith<$Res> {
           TripRoomsState value, $Res Function(TripRoomsState) _then) =
       _$TripRoomsStateCopyWithImpl;
   @useResult
-  $Res call({List<TripRoom> tripRooms, TripRoomType tripRoomType});
+  $Res call({List<TripRoomEntity> tripRooms, TripRoomType tripRoomType});
 }
 
 /// @nodoc
@@ -75,7 +75,7 @@ class _$TripRoomsStateCopyWithImpl<$Res>
       tripRooms: null == tripRooms
           ? _self.tripRooms
           : tripRooms // ignore: cast_nullable_to_non_nullable
-              as List<TripRoom>,
+              as List<TripRoomEntity>,
       tripRoomType: null == tripRoomType
           ? _self.tripRoomType
           : tripRoomType // ignore: cast_nullable_to_non_nullable
@@ -88,15 +88,15 @@ class _$TripRoomsStateCopyWithImpl<$Res>
 
 class _TripRoomsState extends TripRoomsState {
   const _TripRoomsState(
-      {final List<TripRoom> tripRooms = const [],
+      {final List<TripRoomEntity> tripRooms = const [],
       this.tripRoomType = TripRoomType.coming})
       : _tripRooms = tripRooms,
         super._();
 
-  final List<TripRoom> _tripRooms;
+  final List<TripRoomEntity> _tripRooms;
   @override
   @JsonKey()
-  List<TripRoom> get tripRooms {
+  List<TripRoomEntity> get tripRooms {
     if (_tripRooms is EqualUnmodifiableListView) return _tripRooms;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_tripRooms);
@@ -143,7 +143,7 @@ abstract mixin class _$TripRoomsStateCopyWith<$Res>
       __$TripRoomsStateCopyWithImpl;
   @override
   @useResult
-  $Res call({List<TripRoom> tripRooms, TripRoomType tripRoomType});
+  $Res call({List<TripRoomEntity> tripRooms, TripRoomType tripRoomType});
 }
 
 /// @nodoc
@@ -166,7 +166,7 @@ class __$TripRoomsStateCopyWithImpl<$Res>
       tripRooms: null == tripRooms
           ? _self._tripRooms
           : tripRooms // ignore: cast_nullable_to_non_nullable
-              as List<TripRoom>,
+              as List<TripRoomEntity>,
       tripRoomType: null == tripRoomType
           ? _self.tripRoomType
           : tripRoomType // ignore: cast_nullable_to_non_nullable

@@ -9,11 +9,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/app/api/fileApi.dart';
 import 'package:tripStory/app/api/tripApi.dart';
-import 'package:tripStory/app/config/dio_client.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/data/network/dio_client.dart';
 import 'package:tripStory/view/hoom/views/rooms_view.dart';
 import 'package:tripStory/view/trip/bottomNavigator.dart';
 

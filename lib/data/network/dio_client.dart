@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tripStory/app/data/log/network_log.dart';
+import 'package:tripStory/core/logger/network_log.dart';
 
 class DioClient {
   static final DioClient _instance = DioClient._internal();

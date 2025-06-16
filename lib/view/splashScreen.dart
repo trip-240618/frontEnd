@@ -4,10 +4,10 @@ import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/app/api/userApi.dart';
-import 'package:tripStory/app/config/dio_client.dart';
 import 'package:tripStory/app/notification/local_notification_setting.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/userState.dart';
+import 'package:tripStory/data/network/dio_client.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/login/loginPage.dart';
 

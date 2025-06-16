@@ -1,11 +1,7 @@
-import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/app/config/dio_client.dart';
-import 'package:tripStory/controller/historyState.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
-import 'package:tripStory/controller/userState.dart';
+import 'package:tripStory/data/network/dio_client.dart';
 
 class ApiTripClient {
   final DioClient dioClient;
@@ -19,7 +15,7 @@ class ApiTripClient {
       if (response.statusCode == 200) {
         final data = response.data;
 
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return data;
@@ -31,6 +27,7 @@ class ApiTripClient {
       rethrow;
     }
   }
+
   /// 다가오는 여행 가져오기
   Future<List<dynamic>> lastTripGet() async {
     try {
@@ -38,8 +35,7 @@ class ApiTripClient {
       if (response.statusCode == 200) {
         final data = response.data;
 
-
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return data;
@@ -51,13 +47,14 @@ class ApiTripClient {
       rethrow;
     }
   }
+
   /// 북마크 여행 가져오기
   Future<List<dynamic>> bookMarkTripGet() async {
     try {
       final response = await dioClient.dio.get('/trip/list/bookmark');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return data;
@@ -69,30 +66,27 @@ class ApiTripClient {
       rethrow;
     }
   }
+
   /// 여행방 생성하기
-  Future<Map<String,dynamic>> tripCreate(
-      String thumnail,
-      String name,
-      String labelColor,
-      String type,
-      String startDate,
-      String endDate,
-      String country,
-      ) async {
+  Future<Map<String, dynamic>> tripCreate(
+    String thumnail,
+    String name,
+    String labelColor,
+    String type,
+    String startDate,
+    String endDate,
+    String country,
+  ) async {
     try {
-      final response = await dioClient.dio.post(
-          '/trip/create',
-          data:
-          {
-            'name':'${name}',
-            'type':type=='J형'?'J':'P',
-            'startDate':'${startDate.toString().split(' ')[0]}',
-            "endDate": '${endDate.toString().split(' ')[0]}',
-            "country": '${country}',
-            "thumbnail": '${thumnail}',
-            "labelColor": labelColor,
-          }
-      );
+      final response = await dioClient.dio.post('/trip/create', data: {
+        'name': '${name}',
+        'type': type == 'J형' ? 'J' : 'P',
+        'startDate': '${startDate.toString().split(' ')[0]}',
+        "endDate": '${endDate.toString().split(' ')[0]}',
+        "country": '${country}',
+        "thumbnail": '${thumnail}',
+        "labelColor": labelColor,
+      });
       if (response.statusCode == 200) {
         final data = response.data;
         return data;
@@ -104,6 +98,7 @@ class ApiTripClient {
       rethrow;
     }
   }
+
   /// 주소 자동 완성
   Future<List<dynamic>> autoLocationGet(String place, String domain) async {
     try {
@@ -120,7 +115,7 @@ class ApiTripClient {
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return data;
@@ -141,8 +136,7 @@ class ApiTripClient {
         final data = response.data;
         js.searchLocation.value = [data];
         js.searchLocation.refresh();
-        if(data.length==0){
-        }
+        if (data.length == 0) {}
       } else {
         throw Exception('Failed to detailLocation: ${response.statusCode}');
       }
@@ -151,11 +145,11 @@ class ApiTripClient {
       rethrow;
     }
   }
+
   /// 북마크 클릭
   Future<void> bookmarkClick(int tripId) async {
     try {
-      final response = await dioClient.dio.put(
-          '/trip/bookmark/toggle?tripId=${tripId}');
+      final response = await dioClient.dio.put('/trip/bookmark/toggle?tripId=${tripId}');
       if (response.statusCode == 200) {
         final data = response.data;
       } else {
@@ -166,15 +160,15 @@ class ApiTripClient {
       rethrow;
     }
   }
+
   /// 여행방 참여
-  Future<Map<String,dynamic>> tripJoin(String invitationCode) async {
+  Future<Map<String, dynamic>> tripJoin(String invitationCode) async {
     final ts = Get.put(TripState());
     try {
-      final response = await dioClient.dio.post(
-          '/trip/join?invitationCode=${invitationCode}');
+      final response = await dioClient.dio.post('/trip/join?invitationCode=${invitationCode}');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return {};
         }
         return data;
@@ -185,14 +179,14 @@ class ApiTripClient {
       return {};
     }
   }
+
   /// 여행방 입장
   Future<List<dynamic>> tripEnter(int tripId) async {
     try {
-      final response = await dioClient.dio.get(
-          '/trip/enter?tripId=${tripId}');
+      final response = await dioClient.dio.get('/trip/enter?tripId=${tripId}');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return [data];
@@ -204,11 +198,11 @@ class ApiTripClient {
       rethrow;
     }
   }
+
   /// 여행방 강퇴
-  Future<void> tripKick(int tripId,String tripType,String uuid) async {
+  Future<void> tripKick(int tripId, String tripType, String uuid) async {
     try {
-      final response = await dioClient.dio.delete(
-          '/trip/kick?tripId=$tripId&tripType=$tripType&uuid=$uuid');
+      final response = await dioClient.dio.delete('/trip/kick?tripId=$tripId&tripType=$tripType&uuid=$uuid');
       if (response.statusCode == 200) {
         final data = response.data;
       } else {
@@ -221,10 +215,11 @@ class ApiTripClient {
   }
 
   /// 여행방 삭제
-  Future<void> tripDelete(int tripId,) async {
+  Future<void> tripDelete(
+    int tripId,
+  ) async {
     try {
-      final response = await dioClient.dio.delete(
-          '/trip/delete?tripId=$tripId');
+      final response = await dioClient.dio.delete('/trip/delete?tripId=$tripId');
       if (response.statusCode == 200) {
         final data = response.data;
       } else {
@@ -237,19 +232,17 @@ class ApiTripClient {
   }
 
   /// 여행방 수정
-  Future<void> tripModify(int tripId,String name,String thumbnail,String labelColor,String startDate,String endDate) async {
+  Future<void> tripModify(
+      int tripId, String name, String thumbnail, String labelColor, String startDate, String endDate) async {
     final ts = Get.put(TripState());
     try {
-      final response = await dioClient.dio.put(
-          '/trip/modify?tripId=${tripId}',
-          data: {
-            "name": "${name}",
-            "thumbnail": "${thumbnail}",
-            "labelColor": labelColor,
-            "startDate": "${startDate}",
-            "endDate": "${endDate}"
-          }
-      );
+      final response = await dioClient.dio.put('/trip/modify?tripId=${tripId}', data: {
+        "name": "${name}",
+        "thumbnail": "${thumbnail}",
+        "labelColor": labelColor,
+        "startDate": "${startDate}",
+        "endDate": "${endDate}"
+      });
       if (response.statusCode == 200) {
         final data = response.data;
         ts.selectTripList.value = [response.data];
@@ -265,11 +258,9 @@ class ApiTripClient {
   }
 
   /// 여행방 나가기
-  Future<void> tripLeave(int tripId,String tripType) async {
+  Future<void> tripLeave(int tripId, String tripType) async {
     try {
-      final response = await dioClient.dio.delete(
-          '/trip/leave?tripType=$tripType&tripId=$tripId'
-      );
+      final response = await dioClient.dio.delete('/trip/leave?tripType=$tripType&tripId=$tripId');
       if (response.statusCode == 200) {
         final data = response.data;
       } else {
@@ -284,11 +275,10 @@ class ApiTripClient {
   /// 해외 여행지 자동 완성
   Future<List<dynamic>> autoCountryGet(String country) async {
     try {
-      final response = await dioClient.dio.get(
-          '/country/search/autocomplete?keyword=$country');
+      final response = await dioClient.dio.get('/country/search/autocomplete?keyword=$country');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return data;

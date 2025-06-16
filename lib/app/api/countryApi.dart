@@ -1,5 +1,4 @@
-import 'package:tripStory/app/config/dio_client.dart';
-
+import 'package:tripStory/data/network/dio_client.dart';
 
 class ApiCountryClient {
   final DioClient dioClient;
@@ -9,12 +8,10 @@ class ApiCountryClient {
   /// 다녀온 나라 가져오기
   Future<List> getCountry() async {
     try {
-      final response = await dioClient.dio.get(
-        '/country/visited'
-      );
+      final response = await dioClient.dio.get('/country/visited');
       if (response.statusCode == 200) {
         final data = response.data;
-        if(data.length==0){
+        if (data.length == 0) {
           return [];
         }
         return data;
@@ -26,5 +23,4 @@ class ApiCountryClient {
       rethrow;
     }
   }
-
 }
