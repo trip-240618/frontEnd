@@ -6,6 +6,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/Injection/app_binding.dart';
+import 'package:tripStory/common/theme/app_theme.dart';
 import 'package:tripStory/router/router_info.dart';
 import 'package:tripStory/util/color.dart';
 
@@ -42,11 +43,7 @@ class MyApp extends StatelessWidget {
       initialBinding: AppBinding(),
       initialRoute: "/",
       getPages: RouterInfo.config,
-      theme: ThemeData(
-          useMaterial3: true,
-          scaffoldBackgroundColor: Colors.white,
-          dividerTheme: DividerThemeData(color: gray200),
-          appBarTheme: const AppBarTheme(color: Colors.white, surfaceTintColor: Colors.white)),
+      theme: AppTheme.light,
     );
   }
 }
