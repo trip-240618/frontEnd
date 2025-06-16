@@ -119,17 +119,14 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
       );
 
       await result.fold(
-        (e) async {
-          print("error");
-          // 필요한 에러 처리 추가 가능
-        },
+        (error) async {},
         (urlData) async {
-          final presignedUrl = urlData.preSignedUrls.first;
-          thumbnailUrl = UrlUtils.getBaseUrl(presignedUrl);
+          final preSignedUrl = urlData.preSignedUrls.first;
+          thumbnailUrl = UrlUtils.getBaseUrl(preSignedUrl);
 
           final compressedBytes = await compressImage(state.roomImage!);
           await FileUploadHelper.putUploadImage(
-            url: presignedUrl,
+            url: preSignedUrl,
             fileBytes: compressedBytes,
           );
         },

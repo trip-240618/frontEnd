@@ -2,9 +2,11 @@ import 'dart:ui';
 
 import 'package:get/get.dart';
 import 'package:tripStory/router/routes.dart';
+import 'package:tripStory/view/hoom/bindings/notification_list_binding.dart';
 import 'package:tripStory/view/hoom/bindings/rooms_binding.dart';
 import 'package:tripStory/view/hoom/bindings/trip_calendar_binding.dart';
 import 'package:tripStory/view/hoom/bindings/trip_rooms_create_binding.dart';
+import 'package:tripStory/view/hoom/views/notification_list_view.dart';
 import 'package:tripStory/view/hoom/views/rooms_view.dart';
 import 'package:tripStory/view/hoom/views/trip_room_calendar_view.dart';
 import 'package:tripStory/view/hoom/views/trip_room_create_view.dart';
@@ -37,6 +39,11 @@ class RouterInfo {
         return TripRoomCalendarView(selectedColor: selectedColor);
       },
       binding: TripCalendarBinding(),
+    ),
+    GetPage(
+      name: Routes.notificationList,
+      page: () => const NotificationListView(),
+      binding: NotificationListBinding(),
     ),
   ];
 }
