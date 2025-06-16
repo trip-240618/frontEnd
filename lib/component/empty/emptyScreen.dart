@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-
-import '../../util/color.dart';
-import '../../util/font.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 
 class EmptyScreen extends StatelessWidget {
   final String content;
@@ -24,7 +22,7 @@ class EmptyScreen extends StatelessWidget {
         children: [
           Text(
             content,
-            style: f22gray400w700,
+            style: context.style.heading1.copyWith(color: context.color.gray400),
             textAlign: TextAlign.center,
           ),
         ],
@@ -35,7 +33,7 @@ class EmptyScreen extends StatelessWidget {
 
 Widget DefaultImageScreen(BuildContext context) {
   return Container(
-    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: gray100),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: context.color.gray100),
     width: 66,
     height: 66,
     child: SvgPicture.asset(
@@ -47,7 +45,7 @@ Widget DefaultImageScreen(BuildContext context) {
 
 Widget DefaultProfileScreen(BuildContext context) {
   return Container(
-    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: gray200),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: context.color.gray200),
     child: SvgPicture.asset(
       'assets/icon/defaultIcon.svg',
       fit: BoxFit.none,
@@ -57,7 +55,7 @@ Widget DefaultProfileScreen(BuildContext context) {
 
 Widget SettingDefaultProfileScreen(BuildContext context) {
   return Container(
-    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: gray200),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: context.color.gray200),
     width: 80,
     height: 80,
     child: Align(
