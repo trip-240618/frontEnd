@@ -20,10 +20,16 @@ class AppBinding extends Bindings {
     //data
     Get.lazyPut<TripDataSource>(() => TripDataSource(Get.find<Dio>()));
     Get.lazyPut<FileDataSource>(() => FileDataSource(Get.find<Dio>()));
-    Get.lazyPut<NotificationDataSource>(() => NotificationDataSource(Get.find<Dio>()));
+    Get.lazyPut<NotificationDataSource>(
+      () => NotificationDataSource(Get.find<Dio>()),
+      fenix: true,
+    );
     //repository
     Get.lazyPut<TripRepository>(() => TripRepositoryImpl(Get.find<TripDataSource>()));
     Get.lazyPut<FileRepository>(() => FileRepositoryImpl(Get.find<FileDataSource>()));
-    Get.lazyPut<NotificationRepository>(() => NotificationRepositoryImpl(Get.find<NotificationDataSource>()));
+    Get.lazyPut<NotificationRepository>(
+      () => NotificationRepositoryImpl(Get.find<NotificationDataSource>()),
+      fenix: true,
+    );
   }
 }
