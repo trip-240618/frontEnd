@@ -9,7 +9,6 @@ import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/data/network/dio_client.dart';
 import 'package:tripStory/router/routes.dart';
-import 'package:tripStory/view/login/loginPage.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -73,7 +72,8 @@ class _SplashPageState extends State<SplashPage> {
         if (us.userList.isNotEmpty) {
           Get.offAllNamed(Routes.rooms);
         } else {
-          Get.offAll(() => LoginPage());
+          Get.offAllNamed(Routes.login);
+          // Get.offAll(() => LoginPage());
         }
       }
     });
