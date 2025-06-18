@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:tripStory/data/models/apple_login_request.dart';
 import 'package:tripStory/data/models/user_request.dart';
 import 'package:tripStory/data/models/user_response.dart';
 
@@ -22,6 +23,6 @@ abstract class OauthDataSource {
 
   @POST("/login/apple")
   Future<UserResponse> postAppleUserInfo(
-    @Body() UserRequest request,
+    @Body() AppleLoginRequest request,
   );
 }

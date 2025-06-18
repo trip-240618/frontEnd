@@ -60,7 +60,7 @@ class LoginView extends GetView<LoginController> {
             if (!Platform.isAndroid) ...[
               const SizedBox(height: 18),
               RoundedBoxButton(
-                onTap: () {},
+                onTap: () => controller.onApplePressed(),
                 icon: SvgPicture.asset("assets/sns/apple.svg"),
                 text: "Apple로 시작하기",
                 textStyle: f16Whitew700,

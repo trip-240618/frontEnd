@@ -2,9 +2,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tripStory/app/services/user_service.dart';
 import 'package:tripStory/common/enum/user_type.dart';
+import 'package:tripStory/data/models/apple_login_request.dart';
 import 'package:tripStory/data/models/user_request.dart';
+import 'package:tripStory/domain/usecases/login_apple_usecase.dart';
 import 'package:tripStory/domain/usecases/login_google_usecase.dart';
 import 'package:tripStory/domain/usecases/login_kakao_usecase.dart';
 import 'package:tripStory/router/routes.dart';
@@ -13,11 +16,13 @@ import 'package:tripStory/view/login/register/term.dart';
 class LoginController extends GetxController with GetSingleTickerProviderStateMixin {
   final LoginWithKakaoUseCase kakaoUseCase;
   final LoginGoogleUsecase googleUsecase;
+  final LoginAppleUsecase appleUsecase;
   final UserService userService;
 
   LoginController(
     this.kakaoUseCase,
     this.googleUsecase,
+    this.appleUsecase,
     this.userService,
   );
 
@@ -84,6 +89,31 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
     );
 
     final result = await googleUsecase.call(userRequest);
+
+    result.fold(
+      (failure) {},
+      (user) async {
+        userService.setUser(user);
+        _handleUserType(user.type);
+      },
+    );
+  }
+
+  Future<void> onApplePressed() async {
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+    final appleUser = await SignInWithApple.getAppleIDCredential(scopes: [
+      AppleIDAuthorizationScopes.email,
+      AppleIDAuthorizationScopes.fullName,
+    ]);
+    final userRequest = AppleLoginRequest(
+      identityToken: appleUser.identityToken ?? "",
+      state: appleUser.state ?? "",
+      userIdentifier: appleUser.userIdentifier ?? "",
+      fcmToken: fcmToken,
+    );
+
+    final result = await appleUsecase.call(userRequest);
 
     result.fold(
       (failure) {},
