@@ -1,26 +1,18 @@
 
 import 'package:flutter/material.dart';
-import 'package:tripStory/common/theme/app_colors.dart';
-import 'package:tripStory/common/theme/app_text_styles.dart';
+import 'package:tripStory/core/theme/app_colors.dart';
+import 'package:tripStory/core/theme/app_text_styles.dart';
+
 
 class AppTheme {
   static ThemeData get light => _buildTheme(brightness: Brightness.light);
   static ThemeData get dark => _buildTheme(brightness: Brightness.dark);
 
   static ThemeData _buildTheme({required Brightness brightness}) {
-    const baseFontFamily = "Pretendard";
-
-    final baseTextTheme = ThemeData.light().textTheme.apply(
-      fontFamily: baseFontFamily,
-      bodyColor: _appColorScheme.gray900,
-      displayColor: brightness == Brightness.dark ? Colors.white : Colors.black,
-    );
 
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
-      fontFamily: baseFontFamily,
-      textTheme: baseTextTheme,
       scaffoldBackgroundColor: Colors.white,
       extensions: <ThemeExtension<dynamic>>[
         _appColorScheme,
@@ -50,11 +42,8 @@ class AppTheme {
   );
 
   static final _baseTextStyle = TextStyle(
-      fontSize: 12,
-      fontWeight: FontWeight.w600,
-      color: _appColorScheme.gray900,
-      letterSpacing: 0.0,
-      height: 1.0
+    fontFamily: "Pretendard",
+    color: _appColorScheme.gray900,
   );
 
   static final _appTextTheme = AppTextStyles(

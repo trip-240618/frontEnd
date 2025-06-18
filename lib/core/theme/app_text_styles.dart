@@ -34,15 +34,8 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
   });
 
   @override
-  ThemeExtension<AppTextStyles> copyWith() {
-    // TODO: implement copyWith
-    throw UnimplementedError();
-  }
+  AppTextStyles copyWith() => this;
 
   @override
-  ThemeExtension<AppTextStyles> lerp(
-      covariant ThemeExtension<AppTextStyles>? other, double t) {
-    // TODO: implement lerp
-    throw UnimplementedError();
-  }
+  AppTextStyles lerp(ThemeExtension<AppTextStyles>? other, double t) => this;
 }

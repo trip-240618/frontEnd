@@ -7,9 +7,8 @@ import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/app/Injection/app_binding.dart';
 import 'package:tripStory/Injection/app_binding.dart';
-import 'package:tripStory/common/theme/app_theme.dart';
+import 'package:tripStory/core/theme/app_theme.dart';
 import 'package:tripStory/router/router_info.dart';
-import 'package:tripStory/util/color.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
