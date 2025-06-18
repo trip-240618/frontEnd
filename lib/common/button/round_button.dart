@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tripStory/common/button/base/base_button.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
@@ -34,9 +35,10 @@ class RoundedBoxButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: enabled ? onTap : null,
-      child: Container(
+    return BaseButton(
+      onTap: onTap,
+      borderRadius: borderRadius,
+      child: Ink(
         width: width,
         height: height,
         padding: padding ??
