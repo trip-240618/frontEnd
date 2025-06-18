@@ -11,6 +11,7 @@ import 'package:tripStory/view/hoom/views/rooms_view.dart';
 import 'package:tripStory/view/hoom/views/trip_room_calendar_view.dart';
 import 'package:tripStory/view/hoom/views/trip_room_create_view.dart';
 import 'package:tripStory/view/login/binding/login_binding.dart';
+import 'package:tripStory/view/login/binding/term_binding.dart';
 import 'package:tripStory/view/login/views/login_view.dart';
 import 'package:tripStory/view/login/views/term_view.dart';
 import 'package:tripStory/view/splashScreen.dart';
@@ -29,6 +30,7 @@ class RouterInfo {
     GetPage(
       name: Routes.term,
       page: () => const TermView(),
+      binding: TermBinding(),
     ),
     GetPage(
       name: Routes.rooms,
