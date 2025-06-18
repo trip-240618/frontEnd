@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
 class CircleBadge extends StatelessWidget {
   final String text;
+  final TextStyle? textStyle;
   final double size;
   final bool enabled;
+  final Color? backgroundColor;
 
   const CircleBadge({
     super.key,
     required this.text,
+    this.textStyle,
     this.size = 20,
     this.enabled = true,
+    this.backgroundColor,
   });
 
   @override
@@ -21,12 +24,12 @@ class CircleBadge extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: enabled ? gray900 : gray200,
+        color: backgroundColor,
       ),
       child: Center(
         child: Text(
           text,
-          style: f12Whitew700,
+          style: textStyle ?? f12Whitew700,
         ),
       ),
     );

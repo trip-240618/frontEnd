@@ -14,5 +14,5 @@ abstract class TermState with _$TermState {
     @Default(false) bool isMarketingTerm,
   }) = _TermState;
 
-  bool get isAllTerms => isServiceTerm && isPrivateTerm && isLocationTerm && isThreeTerm && isMarketingTerm;
+  bool get isAllTerms => isServiceTerm && isPrivateTerm && isLocationTerm && isThreeTerm;
 }

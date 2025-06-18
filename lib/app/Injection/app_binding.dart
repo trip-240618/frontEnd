@@ -30,8 +30,14 @@ class AppBinding extends Bindings {
     // service
     Get.put<UserService>(UserService(), permanent: true);
     //data
-    Get.lazyPut<TripDataSource>(() => TripDataSource(Get.find<Dio>()));
-    Get.lazyPut<FileDataSource>(() => FileDataSource(Get.find<Dio>()));
+    Get.lazyPut<TripDataSource>(
+      () => TripDataSource(Get.find<Dio>()),
+      fenix: true,
+    );
+    Get.lazyPut<FileDataSource>(
+      () => FileDataSource(Get.find<Dio>()),
+      fenix: true,
+    );
     Get.lazyPut<NotificationDataSource>(
       () => NotificationDataSource(Get.find<Dio>()),
       fenix: true,
@@ -41,8 +47,14 @@ class AppBinding extends Bindings {
       fenix: true,
     );
     //repository
-    Get.lazyPut<TripRepository>(() => TripRepositoryImpl(Get.find<TripDataSource>()));
-    Get.lazyPut<FileRepository>(() => FileRepositoryImpl(Get.find<FileDataSource>()));
+    Get.lazyPut<TripRepository>(
+      () => TripRepositoryImpl(Get.find<TripDataSource>()),
+      fenix: true,
+    );
+    Get.lazyPut<FileRepository>(
+      () => FileRepositoryImpl(Get.find<FileDataSource>()),
+      fenix: true,
+    );
     Get.lazyPut<NotificationRepository>(
       () => NotificationRepositoryImpl(Get.find<NotificationDataSource>()),
       fenix: true,

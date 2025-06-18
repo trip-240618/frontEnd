@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tripStory/common/button/base_tile_button.dart';
+import 'package:tripStory/common/button/base/base_tile_button.dart';
 import 'package:tripStory/util/font.dart';
 
 class CheckTileButton extends StatelessWidget {

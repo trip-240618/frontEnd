@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:tripStory/view/login/models/term_state.dart';
+import 'package:tripStory/view/login/register/profile.dart';
 
 class TermController extends GetxController with GetSingleTickerProviderStateMixin {
   TermState termState = TermState();
@@ -9,14 +10,12 @@ class TermController extends GetxController with GetSingleTickerProviderStateMix
   TermController();
 
   void onAllTermPressed() {
-    final newValue = !state.isAllTerm;
-
     termState = TermState(
-      isServiceTerm: newValue,
-      isPrivateTerm: newValue,
-      isMarketingTerm: newValue,
-      isLocationTerm: newValue,
-      isThreeTerm: newValue,
+      isServiceTerm: true,
+      isPrivateTerm: true,
+      isMarketingTerm: true,
+      isLocationTerm: true,
+      isThreeTerm: true,
     );
     update();
   }
@@ -55,4 +54,10 @@ class TermController extends GetxController with GetSingleTickerProviderStateMix
     );
     update();
   }
+
+  void onConfirmPressed() => Get.to(
+        () => ProfilePage(
+          marketing: state.isMarketingTerm,
+        ),
+      );
 }
