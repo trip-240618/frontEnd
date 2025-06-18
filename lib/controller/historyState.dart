@@ -22,8 +22,10 @@ import 'MapState.dart';
 
 class HistoryState extends GetxController {
   final ts = Get.put(TripState());
-  final apiHistoryClient = ApiHistoryClient(DioClient());
-  final apiFileClient = ApiFileClient(DioClient());
+
+  final dio = Get.find<DioClient>();
+  late final apiHistoryClient = ApiHistoryClient(dio);
+  late final apiFileClient = ApiFileClient(dio);
   AlbumModel? albumModel;
   final ImagePicker _picker = ImagePicker();
   final RxList albums = [].obs;

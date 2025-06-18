@@ -42,11 +42,11 @@ class UserState extends GetxController {
   final versionList = {}.obs;
 
   /// 버전 리스
-  final dioClient = DioClient();
-  final apiUserClient = ApiUserClient(DioClient());
-  final apiFileClient = ApiFileClient(DioClient());
-  final apiNotificationClient = ApiNotificationClient(DioClient());
-  final apiCountryClient = ApiCountryClient(DioClient());
+  final dio = Get.find<DioClient>();
+  late final apiUserClient = ApiUserClient(dio);
+  late final apiFileClient = ApiFileClient(dio);
+  late final apiNotificationClient = ApiNotificationClient(dio);
+  late final apiCountryClient = ApiCountryClient(dio);
 
   Future<void> checkNetworkAndProceed() async {
     /// 초기 네트워크 상태 확인

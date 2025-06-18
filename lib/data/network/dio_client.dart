@@ -2,43 +2,48 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tripStory/core/logger/network_log.dart';
+import 'package:tripStory/data/datasources/local/token_storage.dart';
 
 class DioClient {
-  static final DioClient _instance = DioClient._internal();
-
-  factory DioClient() => _instance;
-
-  late final Dio dio;
+  final TokenStorage tokenStorage;
+  final Dio dio;
   final logger = Logger();
 
-  DioClient._internal() {
-    dio = Dio(BaseOptions(
-      baseUrl: 'https://trip-story.site',
-      connectTimeout: const Duration(seconds: 5),
-      receiveTimeout: const Duration(seconds: 3),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    ));
-
+  DioClient({
+    required this.tokenStorage,
+  }) : dio = Dio(BaseOptions(
+          baseUrl: "https://trip-story.site",
+          connectTimeout: const Duration(seconds: 5),
+          receiveTimeout: const Duration(seconds: 3),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        )) {
     dio.interceptors.add(NetworkLog(logger));
 
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        final prefs = await SharedPreferences.getInstance();
-        final accessToken = prefs.getString('accessToken') ?? "";
-        final refreshToken = prefs.getString('refreshToken') ?? "";
-        if (accessToken.isNotEmpty && refreshToken.isNotEmpty) {
-          options.headers[HttpHeaders.cookieHeader] = '$accessToken;$refreshToken';
+        final tokens = await tokenStorage.getTokens();
+        final accessToken = tokens['accessToken'];
+        final refreshToken = tokens['refreshToken'];
+        if ((accessToken?.isNotEmpty ?? false) && (refreshToken?.isNotEmpty ?? false)) {
+          options.headers[HttpHeaders.cookieHeader] = 'accessToken=$accessToken; refreshToken=$refreshToken';
         }
         return handler.next(options);
       },
       onResponse: (response, handler) async {
         final setCookieHeader = response.headers['set-cookie'];
-        if (setCookieHeader != null) {
-          await saveAccessToken(setCookieHeader.first);
+        if (setCookieHeader != null && setCookieHeader.isNotEmpty) {
+          final cookies = _parseSetCookieHeader(setCookieHeader.first);
+          final accessToken = cookies['accessToken'];
+          final refreshToken = cookies['refreshToken'];
+
+          if (accessToken != null && refreshToken != null) {
+            await tokenStorage.saveTokens(accessToken, refreshToken);
+          } else if (accessToken != null) {
+            await tokenStorage.saveAccessToken(accessToken);
+          }
         }
         return handler.next(response);
       },
@@ -48,29 +53,15 @@ class DioClient {
     ));
   }
 
-  /// 로그인 할 때 엑세스토큰,리프리쉬 토큰 저장
-  Future<void> loginCookies(String cookies) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('accessToken', '${cookies.toString().split(',')[0]}');
-    await prefs.setString('refreshToken', '${cookies.toString().split(',')[1]}');
-  }
-
-  /// 응답값 보낼 엑세스 토큰 갱신
-  Future<void> saveAccessToken(String cookies) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('accessToken', '${cookies.toString().split(',')[0]}');
-  }
-
-  ///엑세스 토큰 리프레쉬 토큰 가져오기
-  Future<String?> getRefreshToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('refreshToken');
-  }
-
-  /// 쿠키 삭제
-  Future<void> deleteCookies() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('accessToken');
-    await prefs.remove('refreshToken');
+  Map<String, String> _parseSetCookieHeader(String rawHeader) {
+    final Map<String, String> cookies = {};
+    final cookieParts = rawHeader.split(RegExp(r',(?! )'));
+    for (var part in cookieParts) {
+      final kv = part.split(';').first.trim().split('=');
+      if (kv.length == 2) {
+        cookies[kv[0].trim()] = kv[1].trim();
+      }
+    }
+    return cookies;
   }
 }

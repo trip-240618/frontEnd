@@ -6,8 +6,10 @@ import '../data/network/dio_client.dart';
 
 class NotiState extends GetxController {
   final selectTabIndex = 0.obs;
-  final apiNotificationClient = ApiNotificationClient(DioClient());
-  final apiHistoryClient = ApiHistoryClient(DioClient());
+  final dio = Get.find<DioClient>();
+  late final apiNotificationClient = ApiNotificationClient(dio);
+  late final apiHistoryClient = ApiHistoryClient(dio);
+
   final notificationList = [].obs;
   final notificationHistory = {}.obs;
 

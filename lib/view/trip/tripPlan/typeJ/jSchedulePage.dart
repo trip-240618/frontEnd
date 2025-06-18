@@ -7,7 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:tripStory/app/api/flightApi.dart';
 import 'package:tripStory/component/button/plusFloating.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/dialog/loading.dart';
@@ -16,7 +15,6 @@ import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/socketState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
-import 'package:tripStory/data/network/dio_client.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/util/tooltip_shape.dart';
@@ -35,7 +33,8 @@ class JSchedulePage extends StatefulWidget {
 class _JSchedulePageState extends State<JSchedulePage> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  final apiFlightClient = ApiFlightClient(DioClient());
+
+  // final apiFlightClient = ApiFlightClient(DioClient());
   final js = Get.find<JPlanState>();
   final ts = Get.find<TripState>();
   final us = Get.find<UserState>();

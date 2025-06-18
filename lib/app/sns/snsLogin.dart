@@ -9,7 +9,6 @@ import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tripStory/controller/userState.dart';
-import 'package:tripStory/data/network/dio_client.dart';
 import 'package:tripStory/model/userModel.dart';
 
 /// 카카오로그인
@@ -98,14 +97,14 @@ Future<void> requestUserInfo() async {
 
 Future<void> sendTokenToServer(String accessToken, String refreshToken) async {
   final us = Get.put(UserState());
-  final dioClient = DioClient();
+  // final dioClient = DioClient();
   String? tokens = await FirebaseMessaging.instance.getToken();
 
   /// 백엔드 서버로 토큰 전송
   var response = await http
       .get(Uri.parse('https://trip-story.site/user/oauth2/callback/kakao?kakaoToken=${accessToken}&fcmToken=$tokens'));
   if (response.statusCode == 200) {
-    await dioClient.loginCookies('${response.headers['set-cookie']}');
+    // await dioClient.loginCookies('${response.headers['set-cookie']}');
     var decodedBody = utf8.decode(response.bodyBytes); // 응답 데이터 디코딩
     var jsonResponse = jsonDecode(decodedBody); // JSON 디코딩
     us.userList.value = [UserModel.fromJson(jsonResponse)];
@@ -131,7 +130,7 @@ Future<void> googleLogin() async {
 /// 구글 로그인 서버로 데이터
 Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
   final us = Get.put(UserState());
-  final dioClient = DioClient();
+  // final dioClient = DioClient();
   String? tokens;
   if (Platform.isIOS) {
     tokens = await FirebaseMessaging.instance.getAPNSToken();
@@ -150,7 +149,7 @@ Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
   var response =
       await http.post(Uri.parse(url), headers: {'Content-Type': 'application/json'}, body: jsonEncode(userData));
   if (response.statusCode == 200) {
-    await dioClient.loginCookies('${response.headers['set-cookie']}');
+    // await dioClient.loginCookies('${response.headers['set-cookie']}');
     var decodedBody = utf8.decode(response.bodyBytes);
     var jsonResponse = jsonDecode(decodedBody);
     us.userList.value = [UserModel.fromJson(jsonResponse)];
@@ -161,7 +160,7 @@ Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
 
 /// 애플 로그인
 Future<void> appleLogin() async {
-  final dioClient = DioClient();
+  // final dioClient = DioClient();
   final us = Get.put(UserState());
   String? tokens = await FirebaseMessaging.instance.getAPNSToken();
   await SignInWithApple.getAppleIDCredential(scopes: [
@@ -184,7 +183,7 @@ Future<void> appleLogin() async {
       body: jsonEncode(body),
     );
     if (response.statusCode == 200) {
-      await dioClient.loginCookies('${response.headers['set-cookie']}');
+      // await dioClient.loginCookies('${response.headers['set-cookie']}');
       var decodedBody = utf8.decode(response.bodyBytes);
       var jsonResponse = jsonDecode(decodedBody);
       us.userList.value = [UserModel.fromJson(jsonResponse)];

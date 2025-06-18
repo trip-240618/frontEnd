@@ -39,7 +39,7 @@ class ApiUserClient {
     try {
       final response = await dioClient.dio.put('/user/update/fcmToken');
       us.userList.clear();
-      dioClient.deleteCookies();
+      // dioClient.deleteCookies();
     } catch (e) {
       print('Error during auto-login: $e');
       rethrow;
@@ -64,7 +64,7 @@ class ApiUserClient {
         '/user/delete/account',
       );
       us.userList.clear();
-      dioClient.deleteCookies();
+      // dioClient.deleteCookies();
     } catch (e) {
       print('Error during auto-login: $e');
       rethrow;

@@ -5,8 +5,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/util/font.dart';
+import 'package:tripStory/view/login/controller/login_controller.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends GetView<LoginController> {
   const LoginView({super.key});
 
   @override
@@ -24,19 +25,19 @@ class LoginView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '이제부터\n트립스토리와\n여행을 간단하게 기록해 보세요',
+              "이제부터\n트립스토리와\n여행을 간단하게 기록해 보세요",
               style: f22gray900w700,
             ),
             Spacer(),
             Center(
               child: Text(
-                '트립스토리는 간편 로그인을 지원해요',
+                "트립스토리는 간편 로그인을 지원해요",
                 style: f14gray600w500,
               ),
             ),
             const SizedBox(height: 18),
             RoundedBoxButton(
-              onTap: () {},
+              onTap: () => controller.onKakaoPressed(),
               icon: SvgPicture.asset("assets/sns/kakao.svg"),
               text: "카카오로 시작하기",
               textStyle: f16sns400w700,
@@ -47,7 +48,7 @@ class LoginView extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             RoundedBoxButton(
-              onTap: () {},
+              onTap: () => controller.onGooglePressed(),
               icon: SvgPicture.asset("assets/sns/google.svg"),
               text: "구글로 시작하기",
               textStyle: f16sns400w700,

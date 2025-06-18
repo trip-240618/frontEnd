@@ -1,19 +1,22 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/app/api/jPlanApi.dart';
 import 'package:tripStory/controller/tripState.dart';
+
 import '../app/api/flightApi.dart';
-import '../data/network/dio_client.dart';
 import '../app/permission/permission.dart';
+import '../data/network/dio_client.dart';
 import '../util/custom_marker.dart';
-import 'dart:math';
 
 class JPlanState extends GetxController {
-  final apiFlightClient = ApiFlightClient(DioClient());
-  final apijplanClient = ApiJPlanClient(DioClient());
+  final dio = Get.find<DioClient>();
+  late final apiFlightClient = ApiFlightClient(dio);
+  late final apijplanClient = ApiJPlanClient(dio);
+
   final ts = Get.put(TripState());
 
   Completer<GoogleMapController> mapController = Completer<GoogleMapController>();

@@ -1,10 +1,7 @@
 import 'package:get/get.dart';
 
-import '../app/api/faqApi.dart';
-import '../data/network/dio_client.dart';
-
 class FaqState extends GetxController {
-  final apiFaqClient = ApiFaqClient(DioClient());
+  // final apiFaqClient = ApiFaqClient(DioClient(tokenStorage:tokenStorage ));
   final RxList faqList = [].obs;
 
   /// faq 리스트
@@ -17,19 +14,19 @@ class FaqState extends GetxController {
 
   /// faq 리스트
   Future<void> getFaq(String field) async {
-    faqList.value = await apiFaqClient.getFaqList(field);
+    // faqList.value = await apiFaqClient.getFaqList(field);
     faqList.refresh();
   }
 
   /// faq 검색
   Future<void> searchFaq(String text) async {
-    searchFaqList.value = await apiFaqClient.searchFaqList(text);
+    // searchFaqList.value = await apiFaqClient.searchFaqList(text);
     searchFaqList.refresh();
   }
 
   /// faq 상세
   Future<void> getFaqDetail(int faqId) async {
-    faqDetailList.value = await apiFaqClient.getFaqDetailList(faqId);
+    // faqDetailList.value = await apiFaqClient.getFaqDetailList(faqId);
     faqDetailList.refresh();
   }
 }

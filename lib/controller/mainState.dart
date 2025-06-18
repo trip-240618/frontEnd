@@ -23,8 +23,10 @@ class MainState extends GetxController with GetSingleTickerProviderStateMixin {
   final selectIdx = 0.obs;
 
   /// (탭바 클릭)
-  final apiTripClient = ApiTripClient(DioClient());
-  final apiFileClient = ApiFileClient(DioClient());
+
+  final dio = Get.find<DioClient>();
+  late final apiTripClient = ApiTripClient(dio);
+  late final apiFileClient = ApiFileClient(dio);
 
   /// tripRoomAdd
   late TabController tabController;
