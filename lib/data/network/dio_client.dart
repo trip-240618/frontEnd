@@ -25,19 +25,19 @@ class DioClient {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         final tokens = await tokenStorage.getTokens();
-        final accessToken = tokens['accessToken'];
-        final refreshToken = tokens['refreshToken'];
+        final accessToken = tokens["accessToken"];
+        final refreshToken = tokens["refreshToken"];
         if ((accessToken?.isNotEmpty ?? false) && (refreshToken?.isNotEmpty ?? false)) {
-          options.headers[HttpHeaders.cookieHeader] = 'accessToken=$accessToken; refreshToken=$refreshToken';
+          options.headers[HttpHeaders.cookieHeader] = "accessToken=$accessToken; refreshToken=$refreshToken";
         }
         return handler.next(options);
       },
       onResponse: (response, handler) async {
-        final setCookieHeader = response.headers['set-cookie'];
+        final setCookieHeader = response.headers["set-cookie"];
         if (setCookieHeader != null && setCookieHeader.isNotEmpty) {
-          final cookies = _parseSetCookieHeader(setCookieHeader.first);
-          final accessToken = cookies['accessToken'];
-          final refreshToken = cookies['refreshToken'];
+          final cookies = _parseSetCookieHeader(setCookieHeader);
+          final accessToken = cookies["accessToken"];
+          final refreshToken = cookies["refreshToken"];
 
           if (accessToken != null && refreshToken != null) {
             await tokenStorage.saveTokens(accessToken, refreshToken);
@@ -53,15 +53,18 @@ class DioClient {
     ));
   }
 
-  Map<String, String> _parseSetCookieHeader(String rawHeader) {
+  Map<String, String> _parseSetCookieHeader(List<String> rawHeaders) {
     final Map<String, String> cookies = {};
-    final cookieParts = rawHeader.split(RegExp(r',(?! )'));
-    for (var part in cookieParts) {
-      final kv = part.split(';').first.trim().split('=');
-      if (kv.length == 2) {
-        cookies[kv[0].trim()] = kv[1].trim();
+
+    for (var raw in rawHeaders) {
+      final parts = raw.split(";").first.trim().split("=");
+      if (parts.length == 2) {
+        final key = parts[0].trim();
+        final value = parts[1].trim();
+        cookies[key] = value;
       }
     }
+
     return cookies;
   }
 }

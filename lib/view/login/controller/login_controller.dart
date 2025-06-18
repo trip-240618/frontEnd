@@ -1,18 +1,23 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/app/services/user_service.dart';
 import 'package:tripStory/common/enum/user_type.dart';
+import 'package:tripStory/data/models/user_request.dart';
+import 'package:tripStory/domain/usecases/login_google_usecase.dart';
 import 'package:tripStory/domain/usecases/login_kakao_usecase.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/login/register/term.dart';
 
 class LoginController extends GetxController with GetSingleTickerProviderStateMixin {
   final LoginWithKakaoUseCase kakaoUseCase;
+  final LoginGoogleUsecase googleUsecase;
   final UserService userService;
 
   LoginController(
     this.kakaoUseCase,
+    this.googleUsecase,
     this.userService,
   );
 
@@ -33,15 +38,7 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
       (user) async {
         userService.setUser(user);
         await ensureUserInfoWithConsent();
-
-        switch (user.type) {
-          case UserType.register:
-            Get.to(() => TermPage());
-            break;
-          case UserType.login:
-            Get.offAllNamed(Routes.rooms);
-            break;
-        }
+        _handleUserType(user.type);
       },
     );
   }
@@ -70,32 +67,41 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   }
 
   Future<void> onGooglePressed() async {
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
+    final GoogleSignIn googleSignIn = GoogleSignIn();
 
-    final isInstalled = await isKakaoTalkInstalled();
-    final oauthToken =
-        isInstalled ? await UserApi.instance.loginWithKakaoTalk() : await UserApi.instance.loginWithKakaoAccount();
+    final googleUser = await googleSignIn.signIn();
 
-    final result = await kakaoUseCase.call(
-      kakaoToken: oauthToken.accessToken,
-      fcmToken: fcmToken ?? "",
+    if (googleUser == null) return;
+
+    String? tokens = await FirebaseMessaging.instance.getToken();
+
+    final userRequest = UserRequest(
+      displayName: googleUser.displayName ?? "",
+      email: googleUser.email,
+      id: googleUser.id,
+      photoUrl: googleUser.photoUrl ?? "",
+      fcmToken: tokens,
     );
+
+    final result = await googleUsecase.call(userRequest);
 
     result.fold(
       (failure) {},
       (user) async {
         userService.setUser(user);
-        await ensureUserInfoWithConsent();
-
-        switch (user.type) {
-          case UserType.register:
-            Get.to(() => TermPage());
-            break;
-          case UserType.login:
-            Get.offAllNamed(Routes.rooms);
-            break;
-        }
+        _handleUserType(user.type);
       },
     );
+  }
+
+  void _handleUserType(UserType type) {
+    switch (type) {
+      case UserType.register:
+        Get.to(() => TermPage());
+        break;
+      case UserType.login:
+        Get.offAllNamed(Routes.rooms);
+        break;
+    }
   }
 }
