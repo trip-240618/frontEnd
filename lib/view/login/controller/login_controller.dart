@@ -77,7 +77,8 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
 
     if (googleUser == null) return;
 
-    String? tokens = await FirebaseMessaging.instance.getToken();
+    // String? tokens = await FirebaseMessaging.instance.getToken();
+    String? tokens = "";
 
     final userRequest = UserRequest(
       displayName: googleUser.displayName ?? "",

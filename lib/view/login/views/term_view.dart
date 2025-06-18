@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/component/bottomContainer.dart';
+import 'package:tripStory/component/container/circle_badge.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/textForm/termsForm.dart';
 import 'package:tripStory/component/url_launch.dart';
@@ -52,28 +53,15 @@ class _TermViewState extends State<TermView> {
           children: [
             Row(
               children: [
-                Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: gray900),
-                  child: Center(
-                      child: Text(
-                    '1',
-                    style: f12Whitew700,
-                  )),
+                CircleBadge(
+                  text: "1",
                 ),
                 const SizedBox(
                   width: 10,
                 ),
-                Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: gray200),
-                  child: Center(
-                      child: Text(
-                    '2',
-                    style: f12Whitew700,
-                  )),
+                CircleBadge(
+                  text: "2",
+                  enabled: false,
                 ),
               ],
             ),
