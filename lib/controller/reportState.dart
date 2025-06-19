@@ -6,7 +6,9 @@ import '../data/network/dio_client.dart';
 
 class ReportState extends GetxController {
   final ts = Get.put(TripState());
-  final apiReportClient = ApiReportClient(DioClient());
+
+  final dio = Get.find<DioClient>();
+  late final apiReportClient = ApiReportClient(dio);
 
   /// 신고하기
   Future<void> addReport(String type, int? historyId, int typeId) async {

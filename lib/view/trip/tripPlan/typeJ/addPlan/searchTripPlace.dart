@@ -7,8 +7,6 @@ import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
 
-import '../../../../../app/api/tripApi.dart';
-import '../../../../../data/network/dio_client.dart';
 import '../../../../../util/font.dart';
 
 class SearchTripPlace extends StatefulWidget {
@@ -20,7 +18,8 @@ class SearchTripPlace extends StatefulWidget {
 
 class _SearchTripPlaceState extends State<SearchTripPlace> {
   TextEditingController _placeCon = TextEditingController();
-  final apiTripClient = ApiTripClient(DioClient());
+
+  // final apiTripClient = ApiTripClient(DioClient());
   final js = Get.put(JPlanState());
   final ts = Get.put(TripState());
   List placeList = [];
@@ -99,10 +98,10 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                           setState(() {
                             isLoading = true;
                           });
-                          placeList = await apiTripClient.autoLocationGet(
-                            _placeCon.text,
-                            ts.selectTripList[0]['domain'] ?? '',
-                          );
+                          // placeList = await apiTripClient.autoLocationGet(
+                          //   _placeCon.text,
+                          //   ts.selectTripList[0]['domain'] ?? '',
+                          // );
                           setState(() {
                             isLoading = false;
                           });
@@ -136,7 +135,7 @@ class _SearchTripPlaceState extends State<SearchTripPlace> {
                                       children: [
                                         GestureDetector(
                                           onTap: () async {
-                                            await apiTripClient.detailLocationGet(placeList[index]['placeId']);
+                                            // await apiTripClient.detailLocationGet(placeList[index]['placeId']);
                                             Get.back();
                                           },
                                           child: Container(

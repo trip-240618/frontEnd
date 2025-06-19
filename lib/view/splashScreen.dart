@@ -3,13 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/app/api/userApi.dart';
 import 'package:tripStory/app/notification/local_notification_setting.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/userState.dart';
-import 'package:tripStory/data/network/dio_client.dart';
 import 'package:tripStory/router/routes.dart';
-import 'package:tripStory/view/login/loginPage.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -21,7 +18,8 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   bool jailbroken = false;
   bool developerMode = false;
-  final apiUserClient = ApiUserClient(DioClient());
+
+  // final apiUserClient = ApiUserClient(DioClient());
   final us = Get.put(UserState());
   bool isLoading = true;
 
@@ -44,14 +42,14 @@ class _SplashPageState extends State<SplashPage> {
     } on PlatformException {
       jailbroken = true;
     }
-    final cookies = await us.apiUserClient.dioClient.getRefreshToken();
-    if (cookies != null) {
-      // String? tokens = await FirebaseMessaging.instance.getToken();
-      await us.autoLogin();
-      if (us.userList.isNotEmpty) {
-        await us.tokenUpdate('');
-      }
-    }
+    // final cookies = await us.apiUserClient.dioClient.getRefreshToken();
+    // if (cookies != null) {
+    //   // String? tokens = await FirebaseMessaging.instance.getToken();
+    //   await us.autoLogin();
+    //   if (us.userList.isNotEmpty) {
+    //     await us.tokenUpdate('');
+    //   }
+    // }
     Future.delayed(Duration(seconds: 1), () {
       if (!mounted) return;
       setState(() {
@@ -73,7 +71,8 @@ class _SplashPageState extends State<SplashPage> {
         if (us.userList.isNotEmpty) {
           Get.offAllNamed(Routes.rooms);
         } else {
-          Get.offAll(() => LoginPage());
+          Get.offAllNamed(Routes.login);
+          // Get.offAll(() => LoginPage());
         }
       }
     });

@@ -7,7 +7,8 @@ class TripState extends GetxController {
   final RxList selectTripList = <dynamic>[].obs;
 
   /// 선택한 여행
-  final apiTripClient = ApiTripClient(DioClient());
+  final dio = Get.find<DioClient>();
+  late final apiTripClient = ApiTripClient(dio);
 
   @override
   void onInit() {

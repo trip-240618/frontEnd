@@ -10,6 +10,8 @@ import 'package:tripStory/view/hoom/views/notification_list_view.dart';
 import 'package:tripStory/view/hoom/views/rooms_view.dart';
 import 'package:tripStory/view/hoom/views/trip_room_calendar_view.dart';
 import 'package:tripStory/view/hoom/views/trip_room_create_view.dart';
+import 'package:tripStory/view/login/binding/login_binding.dart';
+import 'package:tripStory/view/login/views/login_view.dart';
 import 'package:tripStory/view/splashScreen.dart';
 
 class RouterInfo {
@@ -17,6 +19,11 @@ class RouterInfo {
     GetPage(
       name: "/",
       page: () => const SplashPage(),
+    ),
+    GetPage(
+      name: Routes.login,
+      page: () => const LoginView(),
+      binding: LoginBinding(),
     ),
     GetPage(
       name: Routes.rooms,

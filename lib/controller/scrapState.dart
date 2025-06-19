@@ -15,8 +15,10 @@ class ScrapState extends GetxController {
   final RxList selectScrapList = <dynamic>[].obs;
 
   /// 선택한 스크랩 리스트
-  final apiScrapClient = ApiScrapClient(DioClient());
-  final apiFileClient = ApiFileClient(DioClient());
+  final dio = Get.find<DioClient>();
+  late final apiScrapClient = ApiScrapClient(dio);
+  late final apiFileClient = ApiFileClient(dio);
+
   final ImagePicker _picker = ImagePicker();
   final addImgUrl = ''.obs;
 

@@ -8,7 +8,8 @@ import '../data/network/dio_client.dart';
 
 class PPlanState extends GetxController {
   final ts = Get.put(TripState());
-  final apiPPlanClient = ApiPPlanClient(DioClient());
+  final dio = Get.find<DioClient>();
+  late final apiPPlanClient = ApiPPlanClient(dio);
 
   final RxList pPlanList = [].obs;
 
