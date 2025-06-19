@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
@@ -16,12 +15,6 @@ class RegisterSuccessView extends StatefulWidget {
 }
 
 class _RegisterSuccessViewState extends State<RegisterSuccessView> {
-  @override
-  void initState() {
-    FlutterNativeSplash.remove();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
