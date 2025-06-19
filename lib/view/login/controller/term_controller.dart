@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
+import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/login/models/term_state.dart';
-import 'package:tripStory/view/login/register/profile.dart';
 
 class TermController extends GetxController with GetSingleTickerProviderStateMixin {
   TermState termState = TermState();
@@ -55,9 +55,8 @@ class TermController extends GetxController with GetSingleTickerProviderStateMix
     update();
   }
 
-  void onConfirmPressed() => Get.to(
-        () => ProfilePage(
-          marketing: state.isMarketingTerm,
-        ),
+  void onConfirmPressed() => Get.toNamed(
+        Routes.profileAdd,
+        arguments: state.isMarketingTerm,
       );
 }
