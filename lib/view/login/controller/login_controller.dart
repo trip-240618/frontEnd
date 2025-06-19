@@ -11,7 +11,6 @@ import 'package:tripStory/domain/usecases/login_apple_usecase.dart';
 import 'package:tripStory/domain/usecases/login_google_usecase.dart';
 import 'package:tripStory/domain/usecases/login_kakao_usecase.dart';
 import 'package:tripStory/router/routes.dart';
-import 'package:tripStory/view/login/register/term.dart';
 
 class LoginController extends GetxController with GetSingleTickerProviderStateMixin {
   final LoginWithKakaoUseCase kakaoUseCase;
@@ -78,7 +77,8 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
 
     if (googleUser == null) return;
 
-    String? tokens = await FirebaseMessaging.instance.getToken();
+    // String? tokens = await FirebaseMessaging.instance.getToken();
+    String? tokens = "";
 
     final userRequest = UserRequest(
       displayName: googleUser.displayName ?? "",
@@ -127,7 +127,7 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   void _handleUserType(UserType type) {
     switch (type) {
       case UserType.register:
-        Get.to(() => TermPage());
+        Get.toNamed(Routes.term);
         break;
       case UserType.login:
         Get.offAllNamed(Routes.rooms);

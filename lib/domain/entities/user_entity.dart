@@ -10,10 +10,10 @@ abstract class UserEntity with _$UserEntity {
   const factory UserEntity({
     required String uuid,
     required String name,
-    required String nickName,
-    required String memo,
-    required String thumbnail,
-    required String profileImg,
+    String? nickName,
+    String? memo,
+    String? thumbnail,
+    String? profileImg,
     required UserType type,
     required DateTime createDate,
   }) = _UserEntity;
