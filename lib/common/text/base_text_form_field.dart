@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 
 class BaseTextFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -9,7 +10,6 @@ class BaseTextFormField extends StatelessWidget {
   final EdgeInsets? scrollPadding;
   final ValueChanged<String>? onFieldSubmitted;
   final FocusNode? focusNode;
-  final TextStyle? hintStyle;
   final TextStyle? textStyle;
   final TextInputType? keyboardType;
   final int? maxLines;
@@ -24,7 +24,6 @@ class BaseTextFormField extends StatelessWidget {
     this.scrollPadding,
     this.onFieldSubmitted,
     this.focusNode,
-    this.hintStyle,
     this.textStyle,
     this.keyboardType,
     this.maxLines,
@@ -55,11 +54,9 @@ class BaseTextFormField extends StatelessWidget {
         enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
         focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
         hintText: hintText,
-        hintStyle: hintStyle ??
-            const TextStyle(
-              color: Colors.grey,
-              fontSize: 14,
-            ),
+        hintStyle: context.style.body2Normal.copyWith(
+          color: context.color.gray400,
+        ),
       ),
     );
   }

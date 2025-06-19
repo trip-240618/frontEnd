@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class AppColors extends ThemeExtension<AppColors>{
+class AppColors extends ThemeExtension<AppColors> {
   final Color white;
-  final Color red;// 기존 color 의 mainRed
+  final Color red; // 기존 color 의 mainRed
   final Color yellow;
   final Color green;
   final Color blue; // 기존 color 의 pastelBlue
@@ -19,6 +19,8 @@ class AppColors extends ThemeExtension<AppColors>{
   final Color gray50;
   final Color neutral100; // light background
   final Color neutral300; // divider / outline
+
+  final Color errorColor;
 
   const AppColors({
     required this.white,
@@ -38,6 +40,7 @@ class AppColors extends ThemeExtension<AppColors>{
     required this.gray50,
     required this.neutral100,
     required this.neutral300,
+    required this.errorColor,
   });
 
   @override
@@ -45,5 +48,4 @@ class AppColors extends ThemeExtension<AppColors>{
 
   @override
   AppColors lerp(ThemeExtension<AppColors>? other, double t) => this;
-
 }

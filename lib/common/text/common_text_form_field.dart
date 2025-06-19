@@ -12,7 +12,6 @@ class CommonTextField extends StatelessWidget {
   final Widget? leading;
   final Widget? trailing;
   final TextStyle? textStyle;
-  final TextStyle? hintStyle;
   final EdgeInsets? contentPadding;
 
   const CommonTextField({
@@ -24,7 +23,6 @@ class CommonTextField extends StatelessWidget {
     this.leading,
     this.trailing,
     this.textStyle,
-    this.hintStyle,
     this.contentPadding,
   });
 
@@ -50,7 +48,6 @@ class CommonTextField extends StatelessWidget {
               onChanged: onChanged,
               inputFormatters: inputFormatters,
               textStyle: textStyle,
-              hintStyle: hintStyle,
               contentPadding: contentPadding,
             ),
           ),
