@@ -3,15 +3,18 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/data/models/file_request.dart';
+import 'package:tripStory/data/models/register_request.dart';
 import 'package:tripStory/domain/usecases/fetch_presigned_url_usecase.dart';
+import 'package:tripStory/domain/usecases/register_user_usecase.dart';
 import 'package:tripStory/util/compress_image.dart';
 import 'package:tripStory/util/helper/file_upload_helper.dart';
 import 'package:tripStory/util/url_utils.dart';
 import 'package:tripStory/view/login/models/profile_add_state.dart';
+import 'package:tripStory/view/login/register/success.dart';
 
 class ProfileAddController extends GetxController with GetSingleTickerProviderStateMixin {
+  final RegisterUserUsecase _registerUserUsecase;
   final FetchPresignedUrlUsecase _fetchPresignedUrlUsecase;
-
   ProfileAddState profileAddState = ProfileAddState();
   final ImagePicker _picker = ImagePicker();
 
@@ -19,6 +22,7 @@ class ProfileAddController extends GetxController with GetSingleTickerProviderSt
 
   ProfileAddController(
     this._fetchPresignedUrlUsecase,
+    this._registerUserUsecase,
   );
 
   Future<void> onProfilePressed(
@@ -48,26 +52,52 @@ class ProfileAddController extends GetxController with GetSingleTickerProviderSt
     update();
   }
 
-  Future<void> onNextPressed() async {
+  Future<void> onNextPressed(
+    bool isMarketing,
+  ) async {
     String thumbnailUrl = "";
+    String originUrl = "";
     if (state.profileImage != null) {
       final result = await _fetchPresignedUrlUsecase.call(
-        FileRequest(prefix: "profile", photoCnt: 1),
+        FileRequest(prefix: "profile", photoCnt: 2),
       );
 
       await result.fold(
         (error) async {},
         (urlData) async {
-          final preSignedUrl = urlData.preSignedUrls.first;
-          thumbnailUrl = UrlUtils.getBaseUrl(preSignedUrl);
+          final preSignedUrls = urlData.preSignedUrls;
+
+          thumbnailUrl = UrlUtils.getBaseUrl(preSignedUrls[0]);
+          originUrl = UrlUtils.getBaseUrl(preSignedUrls[1]);
 
           final compressedBytes = await compressImage(state.profileImage!);
-          await FileUploadHelper.putUploadImage(
-            url: preSignedUrl,
-            fileBytes: compressedBytes,
-          );
+          final originalBytes = await state.profileImage!.readAsBytes();
+
+          await Future.wait([
+            FileUploadHelper.putUploadImage(url: preSignedUrls[0], fileBytes: compressedBytes),
+            FileUploadHelper.putUploadImage(
+              url: preSignedUrls[1],
+              fileBytes: originalBytes,
+            ),
+          ]);
         },
       );
     }
+
+    final registerRequest = RegisterRequest(
+      nickname: state.nickName,
+      marketing: isMarketing,
+      profileImg: originUrl,
+      thumbnail: thumbnailUrl,
+    );
+
+    final result = await _registerUserUsecase(registerRequest);
+
+    result.fold(
+      (error) {},
+      (user) {
+        Get.to(() => SuccessPage());
+      },
+    );
   }
 }

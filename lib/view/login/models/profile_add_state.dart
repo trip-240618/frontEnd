@@ -9,7 +9,7 @@ abstract class ProfileAddState with _$ProfileAddState {
 
   const factory ProfileAddState({
     XFile? profileImage,
-    String? nickName,
+    @Default("") String nickName,
     @Default(false) bool isNicknameValid,
   }) = _ProfileAddState;
 }

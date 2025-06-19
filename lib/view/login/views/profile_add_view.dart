@@ -168,7 +168,9 @@ class _ProfileAddViewState extends State<ProfileAddView> {
             child: BottomButton(
               text: "다음",
               enabled: controller.state.isNicknameValid,
-              onTap: () => {},
+              onTap: () => controller.onNextPressed(
+                widget.marketing,
+              ),
             ),
           ),
         );
