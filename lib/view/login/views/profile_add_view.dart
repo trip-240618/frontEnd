@@ -96,65 +96,6 @@ class _ProfileAddViewState extends State<ProfileAddView> {
                   regexText: "8자 이내의 한글,영문만 가능해요",
                   regexPattern: RegexPatterns.nickname,
                 ),
-                // Container(
-                //   width: Get.width,
-                //   // height: 64,
-                //   decoration: BoxDecoration(
-                //       border: Border.all(color: Color(0xffE0E0E0)),
-                //       borderRadius: BorderRadius.circular(12)
-                //   ),
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     mainAxisAlignment: MainAxisAlignment.start,
-                //     children: [
-                //       Padding(
-                //         padding: const EdgeInsets.only(left:12,top: 8,),
-                //         child: Text('닉네임',style: f14Gray500w400,),
-                //       ),
-                //       Container(
-                //         child: TextFormField(
-                //           controller: nameCon,
-                //           textAlignVertical: TextAlignVertical.center,
-                //           style: f16gray800w600,
-                //           decoration: InputDecoration(
-                //             isDense: true,
-                //             contentPadding:EdgeInsets.symmetric(vertical: 8,horizontal: 12),
-                //             border: OutlineInputBorder(
-                //               borderSide: BorderSide.none,
-                //             ),
-                //             hintText: '닉네임을 입력해주세요',
-                //             hintStyle: f14Gray500w400,
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                Spacer(),
-                // BottomContainer(
-                //     onTap: () async {
-                //       // if (isChecked == true) {
-                //       //   if (pickedImage != null) {
-                //     Map<String, dynamic> url = await us.profileFileUpload(pickedImage!);
-                //       //     Map<String, dynamic> thumbnailUrl = await us.profileThumbnailUpload(pickedImage!);
-                //       //     await us.userRegister(
-                //       //         nameCon.text,
-                //       //         '',
-                //       //         '${url['preSignedUrls'][0].toString().split('?')[0]}',
-                //       //         '${thumbnailUrl['preSignedUrls'][0].toString().split('?')[0]}',
-                //       //         widget.marketing);
-                //       //     Get.offAll(() => SuccessPage());
-                //       //   } else {
-                //       //     await us.userRegister(nameCon.text, '', '', '', widget.marketing);
-                //       //     Get.offAll(() => SuccessPage());
-                //       //   }
-                //       // } else {
-                //       //   regexCheck = true;
-                //       //   setState(() {});
-                //       // }
-                //     },
-                //     title: '다음',
-                //     isBlack: isChecked ? true : false),
               ],
             ),
           ),
