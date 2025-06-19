@@ -9,8 +9,6 @@ import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
-import 'package:tripStory/view/hoom/tripAdd/tirpDirectSearch.dart';
-import 'package:tripStory/view/hoom/tripAdd/tripSearch.dart';
 
 void bottomModel(BuildContext context) {
   final ms = Get.put(MainState());
@@ -103,8 +101,8 @@ void bottomModel(BuildContext context) {
                         child: TabBarView(
                           controller: ms.tabController,
                           children: [
-                            TripSearchPage(),
-                            TripDirectSearchPage(),
+                            // TripSearchPage(),
+                            // TripDirectSearchPage(),
                           ],
                         ),
                       ),
