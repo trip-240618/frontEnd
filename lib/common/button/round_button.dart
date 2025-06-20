@@ -37,7 +37,7 @@ class RoundedBoxButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseButton(
       onTap: onTap,
-      borderRadius: borderRadius,
+      borderRadius: borderRadius ?? 100,
       child: Ink(
         width: width,
         height: height,

@@ -32,7 +32,7 @@ class _SuccessPageState extends State<SuccessPage> {
                   height: 68,
                   decoration: BoxDecoration(color: gray900, shape: BoxShape.circle),
                   child: SvgPicture.asset(
-                    'assets/icon/successCheck.svg',
+                    'assets/icon/success_check.svg',
                     fit: BoxFit.none,
                   )),
               const SizedBox(height: 18),
