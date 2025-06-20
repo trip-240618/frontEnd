@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import 'package:tripStory/util/color.dart';
+
 import '../../../../component/bottomContainer.dart';
 import '../../../../controller/historyState.dart';
 import '../../../../util/font.dart';
@@ -24,6 +26,7 @@ class _AlbumPageState extends State<AlbumPage> {
   final ScrollController scrollController = ScrollController();
   bool isScoll = true;
   Timer? _debounce;
+
   @override
   void initState() {
     hs.getAlbums();
@@ -51,35 +54,33 @@ class _AlbumPageState extends State<AlbumPage> {
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: GestureDetector(
-            onTap: (){
-              Get.to(()=>AlbumListPage(),transition: Transition.downToUp);
+            onTap: () {
+              Get.to(() => AlbumListPage(), transition: Transition.downToUp);
             },
             child: Row(
               children: [
                 InkWell(
                   borderRadius: BorderRadius.circular(100),
-                  onTap: (){
+                  onTap: () {
                     Get.back();
                   },
                   child: Container(
                     width: 24,
                     height: 24,
                     child: SvgPicture.asset(
-                      'assets/icon/leftArrow.svg',
+                      'assets/icon/left_arrow.svg',
                     ),
                   ),
                 ),
                 Spacer(),
                 Obx(() => Text(
-                  hs.albums.isNotEmpty && hs.albums[hs.selectAlbumIndex.value].name.isNotEmpty
-                      ? '${hs.albums[hs.selectAlbumIndex.value].name}'
-                      : '',
-                  style: f16gray900w700,
-                )),
+                      hs.albums.isNotEmpty && hs.albums[hs.selectAlbumIndex.value].name.isNotEmpty
+                          ? '${hs.albums[hs.selectAlbumIndex.value].name}'
+                          : '',
+                      style: f16gray900w700,
+                    )),
                 const SizedBox(width: 5),
-                SvgPicture.asset(
-                    'assets/icon/underArrow.svg',
-                    colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn)),
+                SvgPicture.asset('assets/icon/underArrow.svg', colorFilter: ColorFilter.mode(gray900, BlendMode.srcIn)),
                 Spacer(),
               ],
             ),
@@ -89,212 +90,227 @@ class _AlbumPageState extends State<AlbumPage> {
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left:20,right: 20,top: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
             child: Column(
               children: [
-                Obx(()=>Expanded(
-                  child: GridView.builder(
-                    controller: scrollController,
-                    physics: const ClampingScrollPhysics(),
-                    addAutomaticKeepAlives: false,
-                    cacheExtent: 5000,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 3,
-                      mainAxisSpacing: 3,
-                      childAspectRatio: 1,
-                    ),
-                    shrinkWrap: true,
-                    itemCount: hs.albums.isEmpty||hs.albums[hs.selectAlbumIndex.value].images.length==0?0:hs.albums[hs.selectAlbumIndex.value].images.length,
-                    itemBuilder: (context, index) {
-                      return Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          if (index==0) GestureDetector(
-                            onTap: ()async{
-                              bool isRequest = await hs.requestCameraPermission(context);
-                              if(isRequest){
-                                hs.getSingleCamera(ImageSource.camera,context);
-                              }
-                            },
-                            child: Container(
-                              width: Get.width,
-                              height: 128,
-                              decoration: BoxDecoration(
-                                color: gray50,
-                              ),
-                              child: SvgPicture.asset('assets/icon/camera.svg',colorFilter: ColorFilter.mode(gray900,BlendMode.srcIn),fit: BoxFit.none,),
-                            ),
-                          ) else GestureDetector(
-                            onTap:()async{
-                              if(hs.selectAlbumList.contains(hs.albums[0].images[index-1])){
-                                hs.removeFromSelectedAlbum(hs.albums[0].images[index-1]);
-                              }else{
-                                if(hs.selectAlbumList.length<=9){
-                                  hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
-                                }
-                              }
-                            },
-                            child: AssetEntityImage(
-                              gaplessPlayback: true,
-                              filterQuality: FilterQuality.high,
-                              isOriginal: false,
-                              thumbnailSize: ThumbnailSize.square(isScoll?500:25),
-                              thumbnailFormat: ThumbnailFormat.png,
-                              hs.albums[hs.selectAlbumIndex.value].images[index-1],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          index==0?SizedBox():
-                          Positioned(
-                              top: 8,
-                              right: 8,
-                              child: hs.selectAlbumList.contains(hs.albums[hs.selectAlbumIndex.value].images[index-1])
-                                  ? GestureDetector(
-                                onTap:(){
-                                  if(hs.selectAlbumList.contains(hs.albums[0].images[index-1])){
-                                    hs.removeFromSelectedAlbum(hs.albums[0].images[index-1]);
-                                  }else{
-                                    if(hs.selectAlbumList.length<=9){
-                                      hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
+                Obx(() => Expanded(
+                      child: GridView.builder(
+                        controller: scrollController,
+                        physics: const ClampingScrollPhysics(),
+                        addAutomaticKeepAlives: false,
+                        cacheExtent: 5000,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 3,
+                          mainAxisSpacing: 3,
+                          childAspectRatio: 1,
+                        ),
+                        shrinkWrap: true,
+                        itemCount: hs.albums.isEmpty || hs.albums[hs.selectAlbumIndex.value].images.length == 0
+                            ? 0
+                            : hs.albums[hs.selectAlbumIndex.value].images.length,
+                        itemBuilder: (context, index) {
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              if (index == 0)
+                                GestureDetector(
+                                  onTap: () async {
+                                    bool isRequest = await hs.requestCameraPermission(context);
+                                    if (isRequest) {
+                                      hs.getSingleCamera(ImageSource.camera, context);
                                     }
-                                  }
-                                },
-                                child: Container(
-                                  width: 18,
-                                  height: 18,
-                                  decoration: BoxDecoration(
-                                      color: gray900,
-                                      shape: BoxShape.circle
+                                  },
+                                  child: Container(
+                                    width: Get.width,
+                                    height: 128,
+                                    decoration: BoxDecoration(
+                                      color: gray50,
+                                    ),
+                                    child: SvgPicture.asset(
+                                      'assets/icon/camera.svg',
+                                      colorFilter: ColorFilter.mode(gray900, BlendMode.srcIn),
+                                      fit: BoxFit.none,
+                                    ),
                                   ),
-                                  child: SvgPicture.asset('assets/icon/check2.svg',
-                                    colorFilter: ColorFilter.mode(Colors.white,BlendMode.srcIn),
-                                    width: 8,height: 6,fit: BoxFit.none,),
-                                ),
-                              )
-                                  : GestureDetector(
-                                onTap:(){
-                                  if(hs.selectAlbumList.contains(hs.albums[0].images[index-1])){
-                                    hs.removeFromSelectedAlbum(hs.albums[0].images[index-1]);
-                                  }else{
-                                    if(hs.selectAlbumList.length<=9){
-                                      hs.addToSelectedAlbum(hs.albums[0].images[index-1]);
+                                )
+                              else
+                                GestureDetector(
+                                  onTap: () async {
+                                    if (hs.selectAlbumList.contains(hs.albums[0].images[index - 1])) {
+                                      hs.removeFromSelectedAlbum(hs.albums[0].images[index - 1]);
+                                    } else {
+                                      if (hs.selectAlbumList.length <= 9) {
+                                        hs.addToSelectedAlbum(hs.albums[0].images[index - 1]);
+                                      }
                                     }
-                                  }
-                                },
-                                child: Container(
-                                  width: 18,
-                                  height: 18,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle
+                                  },
+                                  child: AssetEntityImage(
+                                    gaplessPlayback: true,
+                                    filterQuality: FilterQuality.high,
+                                    isOriginal: false,
+                                    thumbnailSize: ThumbnailSize.square(isScoll ? 500 : 25),
+                                    thumbnailFormat: ThumbnailFormat.png,
+                                    hs.albums[hs.selectAlbumIndex.value].images[index - 1],
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                              )
-                          )
-                        ],
-                      );
-                    },
-                  ),
-                )),
+                              index == 0
+                                  ? SizedBox()
+                                  : Positioned(
+                                      top: 8,
+                                      right: 8,
+                                      child: hs.selectAlbumList
+                                              .contains(hs.albums[hs.selectAlbumIndex.value].images[index - 1])
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                if (hs.selectAlbumList.contains(hs.albums[0].images[index - 1])) {
+                                                  hs.removeFromSelectedAlbum(hs.albums[0].images[index - 1]);
+                                                } else {
+                                                  if (hs.selectAlbumList.length <= 9) {
+                                                    hs.addToSelectedAlbum(hs.albums[0].images[index - 1]);
+                                                  }
+                                                }
+                                              },
+                                              child: Container(
+                                                width: 18,
+                                                height: 18,
+                                                decoration: BoxDecoration(color: gray900, shape: BoxShape.circle),
+                                                child: SvgPicture.asset(
+                                                  'assets/icon/check2.svg',
+                                                  colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                                                  width: 8,
+                                                  height: 6,
+                                                  fit: BoxFit.none,
+                                                ),
+                                              ),
+                                            )
+                                          : GestureDetector(
+                                              onTap: () {
+                                                if (hs.selectAlbumList.contains(hs.albums[0].images[index - 1])) {
+                                                  hs.removeFromSelectedAlbum(hs.albums[0].images[index - 1]);
+                                                } else {
+                                                  if (hs.selectAlbumList.length <= 9) {
+                                                    hs.addToSelectedAlbum(hs.albums[0].images[index - 1]);
+                                                  }
+                                                }
+                                              },
+                                              child: Container(
+                                                width: 18,
+                                                height: 18,
+                                                decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                                              ),
+                                            ))
+                            ],
+                          );
+                        },
+                      ),
+                    )),
               ],
             ),
           ),
           Positioned(
             bottom: 0,
-            child: Obx(()=>Container(
+            child: Obx(() => Container(
                 width: Get.width,
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.8), // 불투명도 설정
                 ),
-                height: hs.selectAlbumList.length==0?120:180,
-                child: hs.selectAlbumList.length==0
-                    ? Center(child: Text('사진은 최대 50장 업로드 가능합니다',style: f16gray900w500,))
+                height: hs.selectAlbumList.length == 0 ? 120 : 180,
+                child: hs.selectAlbumList.length == 0
+                    ? Center(
+                        child: Text(
+                        '사진은 최대 50장 업로드 가능합니다',
+                        style: f16gray900w500,
+                      ))
                     : Padding(
-                  padding: const EdgeInsets.only(bottom: 34,top: 8),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20,right: 20),
-                        child: Container(
-                          width: Get.width,
-                          height: 70,
-                          child: ReorderableListView.builder(
-                            itemCount: hs.selectAlbumList.length,
-                            scrollDirection: Axis.horizontal,
-                            onReorder: (int oldIndex, int newIndex) {
-                              if (newIndex > oldIndex) {
-                                newIndex -= 1;
-                              }
-                              final item = hs.selectAlbumList.removeAt(oldIndex);
-                              hs.selectAlbumList.insert(newIndex, item);
-                            },
-                            itemBuilder: (context, index) {
-                              return Row(
-                                key: ValueKey(hs.selectAlbumList[index]),
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Container(
-                                        width:72,
-                                        height: 70,
-                                        child: Stack(
+                        padding: const EdgeInsets.only(bottom: 34, top: 8),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20, right: 20),
+                              child: Container(
+                                width: Get.width,
+                                height: 70,
+                                child: ReorderableListView.builder(
+                                  itemCount: hs.selectAlbumList.length,
+                                  scrollDirection: Axis.horizontal,
+                                  onReorder: (int oldIndex, int newIndex) {
+                                    if (newIndex > oldIndex) {
+                                      newIndex -= 1;
+                                    }
+                                    final item = hs.selectAlbumList.removeAt(oldIndex);
+                                    hs.selectAlbumList.insert(newIndex, item);
+                                  },
+                                  itemBuilder: (context, index) {
+                                    return Row(
+                                      key: ValueKey(hs.selectAlbumList[index]),
+                                      children: [
+                                        Stack(
                                           children: [
-                                            Positioned(
-                                              bottom:0,
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(4),
-                                                child: AssetEntityImage(
-                                                  gaplessPlayback: true,
-                                                  filterQuality: FilterQuality.high,
-                                                  isOriginal: false,
-                                                  width: 64,
-                                                  height: 64,
-                                                  thumbnailSize: ThumbnailSize.square(500),
-                                                  thumbnailFormat: ThumbnailFormat.png,
-                                                  hs.selectAlbumList[index],
-                                                  fit: BoxFit.cover,
-                                                ),
+                                            Container(
+                                              width: 72,
+                                              height: 70,
+                                              child: Stack(
+                                                children: [
+                                                  Positioned(
+                                                    bottom: 0,
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(4),
+                                                      child: AssetEntityImage(
+                                                        gaplessPlayback: true,
+                                                        filterQuality: FilterQuality.high,
+                                                        isOriginal: false,
+                                                        width: 64,
+                                                        height: 64,
+                                                        thumbnailSize: ThumbnailSize.square(500),
+                                                        thumbnailFormat: ThumbnailFormat.png,
+                                                        hs.selectAlbumList[index],
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                    top: 0,
+                                                    right: 0,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        hs.removeFromSelectedAlbum(hs.selectAlbumList[index]);
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                        'assets/icon/minix.svg',
+                                                        fit: BoxFit.contain,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ),
-                                            Positioned(
-                                              top: 0,
-                                              right: 0,
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  hs.removeFromSelectedAlbum(hs.selectAlbumList[index]);
-                                                },
-                                                child: SvgPicture.asset(
-                                                  'assets/icon/minix.svg',
-                                                  fit: BoxFit.contain,
-                                                ),
-                                              ),
-                                            ),
+                                            )
                                           ],
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(width: 8),
-                                ],
-                              );
-                            },
-                          ),
+                                        const SizedBox(width: 8),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20, right: 20),
+                              child: BlackCountContainer(
+                                onTap: () {
+                                  hs.historyFileUpload(hs.selectAlbumList, context);
+                                  Get.to(() => TripHistoryAddPage());
+                                },
+                                title: '선택완료',
+                                count: hs.selectAlbumList.length,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20,right: 20),
-                        child: BlackCountContainer(onTap: (){
-                          hs.historyFileUpload(hs.selectAlbumList,context);
-                          Get.to(()=>TripHistoryAddPage());
-                        },title: '선택완료',count: hs.selectAlbumList.length,),
-                      ),
-                    ],
-                  ),
-                )
-            )),
+                      ))),
           ),
         ],
       ),

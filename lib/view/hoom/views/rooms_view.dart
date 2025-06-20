@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
+import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/icon_button.dart';
 import 'package:tripStory/common/button/popup_list.dart';
 import 'package:tripStory/common/button/round_button.dart';
@@ -45,33 +46,23 @@ class TripRoomListView extends StatelessWidget {
           child: Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: gray50,
-            appBar: AppBar(
-              backgroundColor: gray50,
-              automaticallyImplyLeading: false,
-              titleSpacing: 0,
-              toolbarHeight: 44,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 16,
+            appBar: AppAppbar(
+              isLeadingIcon: false,
+              actionWidget: Row(
+                children: [
+                  AppIconButton(
+                    onTap: () => controller.onNotificationPressed(),
+                    assetPath: controller.notificationCount == 0 ? IconConstants.alert : IconConstants.alertOn,
                   ),
-                  child: Row(
-                    children: [
-                      AppIconButton(
-                        onTap: () => controller.onNotificationPressed(),
-                        assetPath: controller.notificationCount == 0 ? IconConstants.alert : IconConstants.alertOn,
-                      ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      AppIconButton(
-                        onTap: () => controller.onMyPagePressed(),
-                        assetPath: IconConstants.person,
-                      ),
-                    ],
+                  const SizedBox(
+                    width: 4,
                   ),
-                )
-              ],
+                  AppIconButton(
+                    onTap: () => controller.onMyPagePressed(),
+                    assetPath: IconConstants.person,
+                  ),
+                ],
+              ),
             ),
             body: Padding(
               padding: const EdgeInsets.only(
