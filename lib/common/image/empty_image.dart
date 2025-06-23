@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 
 class EmptyImage extends StatelessWidget {
   final Widget icon;
@@ -23,7 +24,7 @@ class EmptyImage extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: context.color.gray200,
         borderRadius: BorderRadius.circular(
           borderRadius,
         ),

@@ -6,7 +6,8 @@ class RoundThumbnailImage extends StatelessWidget {
   final double size;
   final double radius;
   final BoxFit fit;
-  final Widget? defaultIcon;
+  final String? errorIcon;
+  final double? errorIconSize;
 
   const RoundThumbnailImage({
     super.key,
@@ -14,7 +15,8 @@ class RoundThumbnailImage extends StatelessWidget {
     this.size = 66,
     this.radius = 4,
     this.fit = BoxFit.fill,
-    this.defaultIcon,
+    this.errorIcon,
+    this.errorIconSize,
   });
 
   @override
@@ -26,7 +28,8 @@ class RoundThumbnailImage extends StatelessWidget {
         width: size,
         height: size,
         fit: fit,
-        defaultIcon: defaultIcon,
+        errorIcon: errorIcon,
+        errorIconSize: errorIconSize,
       ),
     );
   }

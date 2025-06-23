@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/common/bottom/trip_search_bottom_sheet.dart';
 import 'package:tripStory/common/button/color_select_button.dart';
 import 'package:tripStory/common/button/icon_text_button.dart';
-import 'package:tripStory/common/button/image_button.dart';
+import 'package:tripStory/common/button/picture_image_button.dart';
 import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/common/dialog/code_dialog.dart';
 import 'package:tripStory/common/enum/trip_type.dart';
@@ -77,13 +77,21 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                 child: Column(
                   children: [
-                    ImageButton(
-                      pickedImage: controller.state.roomImage,
+                    PictureImageButton(
                       onPressed: () => _tripRoomsCreateController.onImagePressed(
                         ImageSource.gallery,
                         context,
                       ),
+                      pickedImage: controller.state.roomImage,
                     ),
+                    // ImageButton(
+                    //   pickedImage: controller.state.roomImage,
+                    //   onPressed: () => _tripRoomsCreateController.onImagePressed(
+                    //     ImageSource.gallery,
+                    //     context,
+                    //   ),
+                    //   iconPath: IconConstants.plus,
+                    // ),
                     const SizedBox(height: 16),
                     CommonTextField(
                       controller: _tripNameCon,

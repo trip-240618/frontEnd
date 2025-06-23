@@ -8,4 +8,9 @@ class IconConstants {
   static const String successCheck = "$_iconNormal/success_check.svg";
   static const String person = "$_iconNormal/person.svg";
   static const String leftArrow = "$_iconNormal/left_arrow.svg";
+  static const String setting = "$_iconNormal/setting.svg";
+  static const String appLogo = "$_iconNormal/app_logo.svg";
+  static const String defaultPerson = "$_iconNormal/default_person.svg";
+  static const String plus = "$_iconNormal/plus.svg";
+  static const String pencil = "$_iconNormal/pencil.svg";
 }

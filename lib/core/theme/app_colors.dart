@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors extends ThemeExtension<AppColors> {
   final Color white;
+  final Color whiteEC;
   final Color red; // 기존 color 의 mainRed
   final Color yellow;
   final Color green;
@@ -24,6 +25,7 @@ class AppColors extends ThemeExtension<AppColors> {
 
   const AppColors({
     required this.white,
+    required this.whiteEC,
     required this.red,
     required this.yellow,
     required this.green,

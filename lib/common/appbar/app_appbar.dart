@@ -12,6 +12,7 @@ class AppAppbar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onTap;
   final Widget? leadingWidget;
   final Widget? actionWidget;
+  final Color? backgroundColor;
 
   const AppAppbar({
     super.key,
@@ -21,11 +22,13 @@ class AppAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.onTap,
     this.leadingWidget,
     this.actionWidget,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return BaseAppbar(
+      color: backgroundColor,
       leadingWidget: isLeadingIcon == true
           ? (leadingWidget ??
               AppIconButton(

@@ -1,20 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/component/appbar.dart';
+import 'package:tripStory/common/appbar/app_appbar.dart';
+import 'package:tripStory/common/button/icon_button.dart';
+import 'package:tripStory/common/button/profile_image_button.dart';
 import 'package:tripStory/component/container/settingArrowRow.dart';
 import 'package:tripStory/component/dialog/loading.dart';
-import 'package:tripStory/component/empty/emptyScreen.dart';
 import 'package:tripStory/component/toast/toast.dart';
 import 'package:tripStory/controller/userState.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/myPage/editProfilePage.dart';
 import 'package:tripStory/view/myPage/faq/setting_faq_main.dart';
 import 'package:tripStory/view/myPage/notice/setting_noti_main.dart';
 import 'package:tripStory/view/myPage/setting/setting_main_page.dart';
+import 'package:tripStory/view/setting/controllers/my_page_controller.dart';
 
 class MyPageView extends StatefulWidget {
   const MyPageView({
@@ -440,272 +443,310 @@ class _MyPageViewState extends State<MyPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: TrailingBackAppBar(
-        text: '마이 페이지',
-        backTap: () {
-          Get.back();
-        },
-        svgPicture: SvgPicture.asset(
-          'assets/icon/setting.svg',
-          fit: BoxFit.none,
-        ),
-        trailingTap: () {
-          Get.to(() => SettingMainPage());
-        },
-        color: Colors.white,
-      ),
-      body: isLoading
-          ? Center(child: LoadingWidget())
-          : SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: Column(
-                children: [
-                  /// 프로필 사진 및 프로필
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => EditProfilePage());
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20, top: 60, bottom: 35),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              /// 프로필 사진
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Container(
-                                  width: 98,
-                                  height: 98,
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        child: Obx(() => ClipRRect(
-                                              borderRadius: BorderRadius.circular(4),
-                                              child: us.userList.isEmpty || us.userList[0].profileImg == ''
-                                                  ? SettingDefaultProfileScreen(context)
-                                                  : CachedNetworkImage(
-                                                      imageUrl: us.userList[0].profileImg!,
-                                                      width: 80,
-                                                      height: 80,
-                                                      fit: BoxFit.fill,
-                                                      // placeholder: (context, url) =>// const CircularProgressIndicator(),
-                                                      errorWidget: (context, url, error) {
-                                                        return SettingDefaultProfileScreen(context);
-                                                      },
-                                                    ),
-                                            )),
-                                      ),
-                                      Positioned(
-                                        right: 0,
-                                        bottom: 0,
-                                        child: Container(
-                                          width: 36,
-                                          height: 36,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.white,
-                                              border: Border.all(width: 1, color: Color(0xffECECEC))),
-                                          child: SvgPicture.asset('assets/icon/pencil.svg',
-                                              fit: BoxFit.none,
-                                              colorFilter: ColorFilter.mode(gray500, BlendMode.srcIn)),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 15,
-                              ),
-
-                              /// 닉네임
-                              Obx(() => Padding(
-                                    padding: const EdgeInsets.only(top: 11),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text('${us.userList.isEmpty ? '' : us.userList[0].nickName}',
-                                            style: f20gray800w700),
-                                        const SizedBox(height: 12),
-                                        Text('${us.userList.isEmpty ? '' : us.userList[0].memo}')
-                                      ],
-                                    ),
-                                  ))
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '다녀온 여행지',
-                          style: f20gray800w700,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-
-                        /// 국내, 해외
-                        Obx(() => Row(
-                              children: [
-                                Text('국내 ${us.countryList.where((entry) => entry['country'] == '대한민국').length}',
-                                    style: f14bluew600),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                Text(
-                                  '해외 ${us.countryList.where((entry) => entry['country'] != '대한민국').length}',
-                                  style: f14redw600,
-                                ),
-                              ],
-                            )),
-                        SizedBox(
-                          height: 31,
-                        ),
-                        Obx(() => ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxHeight: 200.0, // 원하는 maxHeight 설정
-                              ),
-                              child: ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  shrinkWrap: true,
-                                  physics: const ClampingScrollPhysics(),
-                                  itemCount: us.countryList.length,
-                                  itemBuilder: (context, index) {
-                                    return Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            /// 국가 이미지
-                                            Container(
-                                              width: 32,
-                                              height: 24,
-                                              decoration: BoxDecoration(border: Border.all(color: gray50, width: 1.25)),
-                                              child: myCountries.isEmpty
-                                                  ? const CircularProgressIndicator()
-                                                  : CachedNetworkImage(
-                                                      imageUrl: '${myCountries[index]['image']}',
-                                                      width: 32,
-                                                      height: 24,
-                                                      fit: BoxFit.fill,
-                                                      // placeholder: (context, url) =>
-                                                      // const CircularProgressIndicator(),
-                                                      errorWidget: (context, url, error) {
-                                                        return const CircularProgressIndicator();
-                                                      },
-                                                    ),
-                                            ),
-                                            const SizedBox(
-                                              width: 12,
-                                            ),
-                                            Text(
-                                              '${us.countryList[index]['country']} (${us.countryList[index]['visitCnt']})',
-                                              style: f16gray800w600,
-                                            ),
-                                          ],
-                                        ),
-                                        index != us.countryList.length - 1
-                                            ? const SizedBox(
-                                                height: 24,
-                                              )
-                                            : const SizedBox(
-                                                height: 28,
-                                              )
-                                      ],
-                                    );
-                                  }),
-                            )),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    thickness: 6,
-                    color: lightGray1,
-                  ),
-
-                  /// 앱초대
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 28,
-                      left: 20,
-                      right: 20,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '앱 초대',
-                          style: f20gray800w700,
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        SettingArrowRow(
-                            title: '초대 링크 보내기',
-                            onTap: () {
-                              showCustomToast(context, fToast!, '현재 준비 중인 기능입니다.', false);
-                            }),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Divider(
-                    thickness: 6,
-                    color: lightGray1,
-                  ),
-
-                  /// 이용 안내
-                  Padding(
-                    padding: const EdgeInsets.only(top: 28, left: 20, right: 20, bottom: 50),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '이용 안내',
-                          style: f20gray800w700,
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        SettingArrowRow(
-                            title: '공지사항',
-                            onTap: () {
-                              Get.to(() => SettingNotiMain());
-                            }),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        SettingArrowRow(
-                            title: 'FAQ',
-                            onTap: () {
-                              Get.to(() => SettingFaqMain());
-                            }),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+    return GetBuilder<MyPageController>(
+      builder: (controller) {
+        return Scaffold(
+          appBar: AppAppbar(
+            text: "마이 페이지",
+            backgroundColor: context.color.white,
+            actionWidget: AppIconButton(
+              onTap: () => Get.to(() => SettingMainPage()),
+              assetPath: IconConstants.setting,
             ),
+          ),
+          body: isLoading
+              ? Center(child: LoadingWidget())
+              : SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 30,
+                          right: 20,
+                          top: 60,
+                          bottom: 35,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ProfileImageButton(
+                              onPressed: () => Get.to(() => EditProfilePage()),
+                              url: controller.user?.profileImg ?? "",
+                              iconPath: IconConstants.pencil,
+                            ),
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 11),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    controller.user?.nickName ?? "",
+                                    style: context.style.headline3,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    controller.user?.memo ?? "dada",
+                                    style: context.style.label1Normal.copyWith(
+                                      color: context.color.gray600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Get.to(() => EditProfilePage());
+                      //   },
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.only(left: 20, right: 20, top: 60, bottom: 35),
+                      //     child: Column(
+                      //       mainAxisAlignment: MainAxisAlignment.start,
+                      //       crossAxisAlignment: CrossAxisAlignment.start,
+                      //       children: [
+                      //         Row(
+                      //           mainAxisAlignment: MainAxisAlignment.start,
+                      //           crossAxisAlignment: CrossAxisAlignment.start,
+                      //           children: [
+                      //             /// 프로필 사진
+                      //             Padding(
+                      //               padding: const EdgeInsets.only(left: 10),
+                      //               child: Container(
+                      //                 width: 98,
+                      //                 height: 98,
+                      //                 child: Stack(
+                      //                   children: [
+                      //                     Positioned(
+                      //                       child: Obx(() => ClipRRect(
+                      //                             borderRadius: BorderRadius.circular(4),
+                      //                             child: us.userList.isEmpty || us.userList[0].profileImg == ''
+                      //                                 ? SettingDefaultProfileScreen(context)
+                      //                                 : CachedNetworkImage(
+                      //                                     imageUrl: us.userList[0].profileImg!,
+                      //                                     width: 80,
+                      //                                     height: 80,
+                      //                                     fit: BoxFit.fill,
+                      //                                     // placeholder: (context, url) =>// const CircularProgressIndicator(),
+                      //                                     errorWidget: (context, url, error) {
+                      //                                       return SettingDefaultProfileScreen(context);
+                      //                                     },
+                      //                                   ),
+                      //                           )),
+                      //                     ),
+                      //                     Positioned(
+                      //                       right: 0,
+                      //                       bottom: 0,
+                      //                       child: Container(
+                      //                         width: 36,
+                      //                         height: 36,
+                      //                         decoration: BoxDecoration(
+                      //                             shape: BoxShape.circle,
+                      //                             color: Colors.white,
+                      //                             border: Border.all(width: 1, color: Color(0xffECECEC))),
+                      //                         child: SvgPicture.asset('assets/icon/pencil.svg',
+                      //                             fit: BoxFit.none,
+                      //                             colorFilter: ColorFilter.mode(gray500, BlendMode.srcIn)),
+                      //                       ),
+                      //                     )
+                      //                   ],
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //             const SizedBox(
+                      //               width: 15,
+                      //             ),
+                      //
+                      //             /// 닉네임
+                      //             Obx(() => Padding(
+                      //                   padding: const EdgeInsets.only(top: 11),
+                      //                   child: Column(
+                      //                     mainAxisAlignment: MainAxisAlignment.start,
+                      //                     crossAxisAlignment: CrossAxisAlignment.start,
+                      //                     children: [
+                      //                       Text('${us.userList.isEmpty ? '' : us.userList[0].nickName}',
+                      //                           style: f20gray800w700),
+                      //                       const SizedBox(height: 12),
+                      //                       Text('${us.userList.isEmpty ? '' : us.userList[0].memo}')
+                      //                     ],
+                      //                   ),
+                      //                 ))
+                      //           ],
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '다녀온 여행지',
+                              style: f20gray800w700,
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+
+                            /// 국내, 해외
+                            Obx(() => Row(
+                                  children: [
+                                    Text('국내 ${us.countryList.where((entry) => entry['country'] == '대한민국').length}',
+                                        style: f14bluew600),
+                                    const SizedBox(
+                                      width: 12,
+                                    ),
+                                    Text(
+                                      '해외 ${us.countryList.where((entry) => entry['country'] != '대한민국').length}',
+                                      style: f14redw600,
+                                    ),
+                                  ],
+                                )),
+                            SizedBox(
+                              height: 31,
+                            ),
+                            Obx(() => ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxHeight: 200.0, // 원하는 maxHeight 설정
+                                  ),
+                                  child: ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      shrinkWrap: true,
+                                      physics: const ClampingScrollPhysics(),
+                                      itemCount: us.countryList.length,
+                                      itemBuilder: (context, index) {
+                                        return Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                /// 국가 이미지
+                                                Container(
+                                                  width: 32,
+                                                  height: 24,
+                                                  decoration:
+                                                      BoxDecoration(border: Border.all(color: gray50, width: 1.25)),
+                                                  child: myCountries.isEmpty
+                                                      ? const CircularProgressIndicator()
+                                                      : CachedNetworkImage(
+                                                          imageUrl: '${myCountries[index]['image']}',
+                                                          width: 32,
+                                                          height: 24,
+                                                          fit: BoxFit.fill,
+                                                          // placeholder: (context, url) =>
+                                                          // const CircularProgressIndicator(),
+                                                          errorWidget: (context, url, error) {
+                                                            return const CircularProgressIndicator();
+                                                          },
+                                                        ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 12,
+                                                ),
+                                                Text(
+                                                  '${us.countryList[index]['country']} (${us.countryList[index]['visitCnt']})',
+                                                  style: f16gray800w600,
+                                                ),
+                                              ],
+                                            ),
+                                            index != us.countryList.length - 1
+                                                ? const SizedBox(
+                                                    height: 24,
+                                                  )
+                                                : const SizedBox(
+                                                    height: 28,
+                                                  )
+                                          ],
+                                        );
+                                      }),
+                                )),
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        thickness: 6,
+                        color: lightGray1,
+                      ),
+
+                      /// 앱초대
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 28,
+                          left: 20,
+                          right: 20,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              '앱 초대',
+                              style: f20gray800w700,
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            SettingArrowRow(
+                                title: '초대 링크 보내기',
+                                onTap: () {
+                                  showCustomToast(context, fToast!, '현재 준비 중인 기능입니다.', false);
+                                }),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Divider(
+                        thickness: 6,
+                        color: lightGray1,
+                      ),
+
+                      /// 이용 안내
+                      Padding(
+                        padding: const EdgeInsets.only(top: 28, left: 20, right: 20, bottom: 50),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              '이용 안내',
+                              style: f20gray800w700,
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            SettingArrowRow(
+                                title: '공지사항',
+                                onTap: () {
+                                  Get.to(() => SettingNotiMain());
+                                }),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            SettingArrowRow(
+                                title: 'FAQ',
+                                onTap: () {
+                                  Get.to(() => SettingFaqMain());
+                                }),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+        );
+      },
     );
   }
 }
