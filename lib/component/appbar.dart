@@ -28,7 +28,7 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
           width: 24,
           height: 24,
           child: SvgPicture.asset(
-            'assets/icon/leftArrow.svg',
+            'assets/icon/left_arrow.svg',
             fit: BoxFit.none,
           ),
         ),
@@ -72,7 +72,7 @@ class TrailingBackAppBar extends StatelessWidget implements PreferredSizeWidget 
           child: Container(
             color: Colors.transparent,
             child: SvgPicture.asset(
-              'assets/icon/leftArrow.svg',
+              'assets/icon/left_arrow.svg',
               fit: BoxFit.none,
             ),
           ),
@@ -125,7 +125,7 @@ class popupBackAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Container(
             color: Colors.transparent,
             child: SvgPicture.asset(
-              'assets/icon/leftArrow.svg',
+              'assets/icon/left_arrow.svg',
               fit: BoxFit.none,
             ),
           ),

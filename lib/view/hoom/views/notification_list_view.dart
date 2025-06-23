@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/round_button.dart';
-import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/hoom/controller/notification_list_controller.dart';
@@ -17,9 +17,8 @@ class NotificationListView extends StatelessWidget {
     return GetBuilder<NotificationListController>(builder: (controller) {
       return Scaffold(
         backgroundColor: gray50,
-        appBar: BackAppBar(
+        appBar: AppAppbar(
           text: "알림",
-          onTap: () => Get.back(),
         ),
         body: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 17),
