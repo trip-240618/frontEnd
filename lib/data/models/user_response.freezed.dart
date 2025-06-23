@@ -17,10 +17,10 @@ T _$identity<T>(T value) => value;
 mixin _$UserResponse {
   String get uuid;
   String get name;
-  String get nickName;
-  String get memo;
-  String get thumbnail;
-  String get profileImg;
+  String? get nickName;
+  String? get memo;
+  String? get thumbnail;
+  String? get profileImg;
   String get type;
   String get createDate;
 
@@ -74,10 +74,10 @@ abstract mixin class $UserResponseCopyWith<$Res> {
   $Res call(
       {String uuid,
       String name,
-      String nickName,
-      String memo,
-      String thumbnail,
-      String profileImg,
+      String? nickName,
+      String? memo,
+      String? thumbnail,
+      String? profileImg,
       String type,
       String createDate});
 }
@@ -96,10 +96,10 @@ class _$UserResponseCopyWithImpl<$Res> implements $UserResponseCopyWith<$Res> {
   $Res call({
     Object? uuid = null,
     Object? name = null,
-    Object? nickName = null,
-    Object? memo = null,
-    Object? thumbnail = null,
-    Object? profileImg = null,
+    Object? nickName = freezed,
+    Object? memo = freezed,
+    Object? thumbnail = freezed,
+    Object? profileImg = freezed,
     Object? type = null,
     Object? createDate = null,
   }) {
@@ -112,22 +112,22 @@ class _$UserResponseCopyWithImpl<$Res> implements $UserResponseCopyWith<$Res> {
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      nickName: null == nickName
+      nickName: freezed == nickName
           ? _self.nickName
           : nickName // ignore: cast_nullable_to_non_nullable
-              as String,
-      memo: null == memo
+              as String?,
+      memo: freezed == memo
           ? _self.memo
           : memo // ignore: cast_nullable_to_non_nullable
-              as String,
-      thumbnail: null == thumbnail
+              as String?,
+      thumbnail: freezed == thumbnail
           ? _self.thumbnail
           : thumbnail // ignore: cast_nullable_to_non_nullable
-              as String,
-      profileImg: null == profileImg
+              as String?,
+      profileImg: freezed == profileImg
           ? _self.profileImg
           : profileImg // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       type: null == type
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -146,10 +146,10 @@ class _UserResponse implements UserResponse {
   const _UserResponse(
       {required this.uuid,
       required this.name,
-      required this.nickName,
-      required this.memo,
-      required this.thumbnail,
-      required this.profileImg,
+      this.nickName,
+      this.memo,
+      this.thumbnail,
+      this.profileImg,
       required this.type,
       required this.createDate});
   factory _UserResponse.fromJson(Map<String, dynamic> json) =>
@@ -160,13 +160,13 @@ class _UserResponse implements UserResponse {
   @override
   final String name;
   @override
-  final String nickName;
+  final String? nickName;
   @override
-  final String memo;
+  final String? memo;
   @override
-  final String thumbnail;
+  final String? thumbnail;
   @override
-  final String profileImg;
+  final String? profileImg;
   @override
   final String type;
   @override
@@ -228,10 +228,10 @@ abstract mixin class _$UserResponseCopyWith<$Res>
   $Res call(
       {String uuid,
       String name,
-      String nickName,
-      String memo,
-      String thumbnail,
-      String profileImg,
+      String? nickName,
+      String? memo,
+      String? thumbnail,
+      String? profileImg,
       String type,
       String createDate});
 }
@@ -251,10 +251,10 @@ class __$UserResponseCopyWithImpl<$Res>
   $Res call({
     Object? uuid = null,
     Object? name = null,
-    Object? nickName = null,
-    Object? memo = null,
-    Object? thumbnail = null,
-    Object? profileImg = null,
+    Object? nickName = freezed,
+    Object? memo = freezed,
+    Object? thumbnail = freezed,
+    Object? profileImg = freezed,
     Object? type = null,
     Object? createDate = null,
   }) {
@@ -267,22 +267,22 @@ class __$UserResponseCopyWithImpl<$Res>
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      nickName: null == nickName
+      nickName: freezed == nickName
           ? _self.nickName
           : nickName // ignore: cast_nullable_to_non_nullable
-              as String,
-      memo: null == memo
+              as String?,
+      memo: freezed == memo
           ? _self.memo
           : memo // ignore: cast_nullable_to_non_nullable
-              as String,
-      thumbnail: null == thumbnail
+              as String?,
+      thumbnail: freezed == thumbnail
           ? _self.thumbnail
           : thumbnail // ignore: cast_nullable_to_non_nullable
-              as String,
-      profileImg: null == profileImg
+              as String?,
+      profileImg: freezed == profileImg
           ? _self.profileImg
           : profileImg // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       type: null == type
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable

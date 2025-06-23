@@ -10,10 +10,10 @@ _UserResponse _$UserResponseFromJson(Map<String, dynamic> json) =>
     _UserResponse(
       uuid: json['uuid'] as String,
       name: json['name'] as String,
-      nickName: json['nickName'] as String,
-      memo: json['memo'] as String,
-      thumbnail: json['thumbnail'] as String,
-      profileImg: json['profileImg'] as String,
+      nickName: json['nickName'] as String?,
+      memo: json['memo'] as String?,
+      thumbnail: json['thumbnail'] as String?,
+      profileImg: json['profileImg'] as String?,
       type: json['type'] as String,
       createDate: json['createDate'] as String,
     );

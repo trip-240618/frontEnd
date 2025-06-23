@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tripStory/common/button/base/base_button.dart';
 
 class ImageButton extends StatelessWidget {
   final XFile? pickedImage;
@@ -16,21 +17,24 @@ class ImageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: SizedBox(
-        width: 92,
-        height: 92,
-        child: Stack(
-          children: [
-            _buildImageContent(),
-            Positioned(
-              bottom: 0,
-              right: 0,
+    return SizedBox(
+      width: 92,
+      height: 92,
+      child: Stack(
+        children: [
+          BaseButton(
+            onTap: onPressed,
+            child: _buildImageContent(),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: BaseButton(
+              onTap: onPressed,
               child: SvgPicture.asset("assets/icon/plus.svg"),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -52,7 +56,6 @@ class ImageButton extends StatelessWidget {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        color: Colors.white,
         border: Border.all(color: const Color(0xFFEEEEEE), width: 1.0),
         borderRadius: BorderRadius.circular(4),
       ),

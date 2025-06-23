@@ -11,8 +11,10 @@ import 'package:tripStory/view/hoom/views/rooms_view.dart';
 import 'package:tripStory/view/hoom/views/trip_room_calendar_view.dart';
 import 'package:tripStory/view/hoom/views/trip_room_create_view.dart';
 import 'package:tripStory/view/login/binding/login_binding.dart';
+import 'package:tripStory/view/login/binding/profile_add_binding.dart';
 import 'package:tripStory/view/login/binding/term_binding.dart';
 import 'package:tripStory/view/login/views/login_view.dart';
+import 'package:tripStory/view/login/views/profile_add_view.dart';
 import 'package:tripStory/view/login/views/term_view.dart';
 import 'package:tripStory/view/splashScreen.dart';
 
@@ -31,6 +33,20 @@ class RouterInfo {
       name: Routes.term,
       page: () => const TermView(),
       binding: TermBinding(),
+    ),
+    GetPage(
+      name: Routes.profileAdd,
+      page: () {
+        final isMarketing = Get.arguments;
+
+        if (isMarketing is! bool) {
+          throw ArgumentError('error');
+        }
+        return ProfileAddView(
+          marketing: isMarketing,
+        );
+      },
+      binding: ProfileAddBinding(),
     ),
     GetPage(
       name: Routes.rooms,

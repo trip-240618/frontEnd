@@ -7,15 +7,18 @@ import 'package:tripStory/data/datasources/remote/file_data_source.dart';
 import 'package:tripStory/data/datasources/remote/notification_data_source.dart';
 import 'package:tripStory/data/datasources/remote/oauth_data_source.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
+import 'package:tripStory/data/datasources/remote/user_data_source.dart';
 import 'package:tripStory/data/network/dio_client.dart';
 import 'package:tripStory/data/repositories/auth_repository_impl.dart';
 import 'package:tripStory/data/repositories/file_repository_impl.dart';
 import 'package:tripStory/data/repositories/notification_repository_impl.dart';
 import 'package:tripStory/data/repositories/trip_repository_impl.dart';
+import 'package:tripStory/data/repositories/user_repository_impl.dart';
 import 'package:tripStory/domain/repositories/auth_repository.dart';
 import 'package:tripStory/domain/repositories/file_repository.dart';
 import 'package:tripStory/domain/repositories/notification_repository.dart';
 import 'package:tripStory/domain/repositories/trip_repository.dart';
+import 'package:tripStory/domain/repositories/user_repository.dart';
 
 class AppBinding extends Bindings {
   @override
@@ -30,38 +33,17 @@ class AppBinding extends Bindings {
     // service
     Get.put<UserService>(UserService(), permanent: true);
     //data
-    Get.lazyPut<TripDataSource>(
-      () => TripDataSource(Get.find<Dio>()),
-      fenix: true,
-    );
-    Get.lazyPut<FileDataSource>(
-      () => FileDataSource(Get.find<Dio>()),
-      fenix: true,
-    );
-    Get.lazyPut<NotificationDataSource>(
-      () => NotificationDataSource(Get.find<Dio>()),
-      fenix: true,
-    );
-    Get.lazyPut<OauthDataSource>(
-      () => OauthDataSource(Get.find<Dio>()),
-      fenix: true,
-    );
+    Get.lazyPut<UserDataSource>(() => UserDataSource(Get.find<Dio>()), fenix: true);
+    Get.lazyPut<TripDataSource>(() => TripDataSource(Get.find<Dio>()), fenix: true);
+    Get.lazyPut<FileDataSource>(() => FileDataSource(Get.find<Dio>()), fenix: true);
+    Get.lazyPut<NotificationDataSource>(() => NotificationDataSource(Get.find<Dio>()), fenix: true);
+    Get.lazyPut<OauthDataSource>(() => OauthDataSource(Get.find<Dio>()), fenix: true);
     //repository
-    Get.lazyPut<TripRepository>(
-      () => TripRepositoryImpl(Get.find<TripDataSource>()),
-      fenix: true,
-    );
-    Get.lazyPut<FileRepository>(
-      () => FileRepositoryImpl(Get.find<FileDataSource>()),
-      fenix: true,
-    );
-    Get.lazyPut<NotificationRepository>(
-      () => NotificationRepositoryImpl(Get.find<NotificationDataSource>()),
-      fenix: true,
-    );
-    Get.lazyPut<AuthRepository>(
-      () => AuthRepositoryImpl(Get.find<OauthDataSource>()),
-      fenix: true,
-    );
+    Get.lazyPut<UserRepository>(() => UserRepositoryImpl(Get.find<UserDataSource>()), fenix: true);
+    Get.lazyPut<TripRepository>(() => TripRepositoryImpl(Get.find<TripDataSource>()), fenix: true);
+    Get.lazyPut<FileRepository>(() => FileRepositoryImpl(Get.find<FileDataSource>()), fenix: true);
+    Get.lazyPut<NotificationRepository>(() => NotificationRepositoryImpl(Get.find<NotificationDataSource>()),
+        fenix: true);
+    Get.lazyPut<AuthRepository>(() => AuthRepositoryImpl(Get.find<OauthDataSource>()), fenix: true);
   }
 }

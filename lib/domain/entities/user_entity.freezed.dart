@@ -17,10 +17,10 @@ T _$identity<T>(T value) => value;
 mixin _$UserEntity {
   String get uuid;
   String get name;
-  String get nickName;
-  String get memo;
-  String get thumbnail;
-  String get profileImg;
+  String? get nickName;
+  String? get memo;
+  String? get thumbnail;
+  String? get profileImg;
   UserType get type;
   DateTime get createDate;
 
@@ -69,10 +69,10 @@ abstract mixin class $UserEntityCopyWith<$Res> {
   $Res call(
       {String uuid,
       String name,
-      String nickName,
-      String memo,
-      String thumbnail,
-      String profileImg,
+      String? nickName,
+      String? memo,
+      String? thumbnail,
+      String? profileImg,
       UserType type,
       DateTime createDate});
 }
@@ -91,10 +91,10 @@ class _$UserEntityCopyWithImpl<$Res> implements $UserEntityCopyWith<$Res> {
   $Res call({
     Object? uuid = null,
     Object? name = null,
-    Object? nickName = null,
-    Object? memo = null,
-    Object? thumbnail = null,
-    Object? profileImg = null,
+    Object? nickName = freezed,
+    Object? memo = freezed,
+    Object? thumbnail = freezed,
+    Object? profileImg = freezed,
     Object? type = null,
     Object? createDate = null,
   }) {
@@ -107,22 +107,22 @@ class _$UserEntityCopyWithImpl<$Res> implements $UserEntityCopyWith<$Res> {
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      nickName: null == nickName
+      nickName: freezed == nickName
           ? _self.nickName
           : nickName // ignore: cast_nullable_to_non_nullable
-              as String,
-      memo: null == memo
+              as String?,
+      memo: freezed == memo
           ? _self.memo
           : memo // ignore: cast_nullable_to_non_nullable
-              as String,
-      thumbnail: null == thumbnail
+              as String?,
+      thumbnail: freezed == thumbnail
           ? _self.thumbnail
           : thumbnail // ignore: cast_nullable_to_non_nullable
-              as String,
-      profileImg: null == profileImg
+              as String?,
+      profileImg: freezed == profileImg
           ? _self.profileImg
           : profileImg // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       type: null == type
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -141,10 +141,10 @@ class _UserEntity extends UserEntity {
   const _UserEntity(
       {required this.uuid,
       required this.name,
-      required this.nickName,
-      required this.memo,
-      required this.thumbnail,
-      required this.profileImg,
+      this.nickName,
+      this.memo,
+      this.thumbnail,
+      this.profileImg,
       required this.type,
       required this.createDate})
       : super._();
@@ -154,13 +154,13 @@ class _UserEntity extends UserEntity {
   @override
   final String name;
   @override
-  final String nickName;
+  final String? nickName;
   @override
-  final String memo;
+  final String? memo;
   @override
-  final String thumbnail;
+  final String? thumbnail;
   @override
-  final String profileImg;
+  final String? profileImg;
   @override
   final UserType type;
   @override
@@ -214,10 +214,10 @@ abstract mixin class _$UserEntityCopyWith<$Res>
   $Res call(
       {String uuid,
       String name,
-      String nickName,
-      String memo,
-      String thumbnail,
-      String profileImg,
+      String? nickName,
+      String? memo,
+      String? thumbnail,
+      String? profileImg,
       UserType type,
       DateTime createDate});
 }
@@ -236,10 +236,10 @@ class __$UserEntityCopyWithImpl<$Res> implements _$UserEntityCopyWith<$Res> {
   $Res call({
     Object? uuid = null,
     Object? name = null,
-    Object? nickName = null,
-    Object? memo = null,
-    Object? thumbnail = null,
-    Object? profileImg = null,
+    Object? nickName = freezed,
+    Object? memo = freezed,
+    Object? thumbnail = freezed,
+    Object? profileImg = freezed,
     Object? type = null,
     Object? createDate = null,
   }) {
@@ -252,22 +252,22 @@ class __$UserEntityCopyWithImpl<$Res> implements _$UserEntityCopyWith<$Res> {
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      nickName: null == nickName
+      nickName: freezed == nickName
           ? _self.nickName
           : nickName // ignore: cast_nullable_to_non_nullable
-              as String,
-      memo: null == memo
+              as String?,
+      memo: freezed == memo
           ? _self.memo
           : memo // ignore: cast_nullable_to_non_nullable
-              as String,
-      thumbnail: null == thumbnail
+              as String?,
+      thumbnail: freezed == thumbnail
           ? _self.thumbnail
           : thumbnail // ignore: cast_nullable_to_non_nullable
-              as String,
-      profileImg: null == profileImg
+              as String?,
+      profileImg: freezed == profileImg
           ? _self.profileImg
           : profileImg // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       type: null == type
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable

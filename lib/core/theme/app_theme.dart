@@ -1,15 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:tripStory/core/theme/app_colors.dart';
 import 'package:tripStory/core/theme/app_text_styles.dart';
 
-
 class AppTheme {
   static ThemeData get light => _buildTheme(brightness: Brightness.light);
+
   static ThemeData get dark => _buildTheme(brightness: Brightness.dark);
 
   static ThemeData _buildTheme({required Brightness brightness}) {
-
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
@@ -22,23 +20,24 @@ class AppTheme {
   }
 
   static const _appColorScheme = AppColors(
-        white: Color(0xFFFFFFFF),
-        red: Color(0xFFFF4D4F),
-        yellow: Color(0xFFFFCC00),
-        green: Color(0xFF27AE60),
-        blue: Color(0xFF4C90FF),
-        gray900: Color(0xFF212121),
-        gray800: Color(0xFF424242),
-        gray700: Color(0xFF616161),
-        gray600: Color(0xFF757575),
-        gray500: Color(0xFF9E9E9E),
-        gray400: Color(0xFFBDBDBD),
-        gray300: Color(0xFFE0E0E0),
-        gray200: Color(0xFFEEEEEE),
-        gray100: Color(0xFFF5F5F5),
-        gray50: Color(0xFFFAFAFA),
-        neutral100: Color(0xFFF4F4F4),
-        neutral300: Color(0xFFCCCCCC),
+    white: Color(0xFFFFFFFF),
+    red: Color(0xFFFF4D4F),
+    yellow: Color(0xFFFFCC00),
+    green: Color(0xFF27AE60),
+    blue: Color(0xFF4C90FF),
+    gray900: Color(0xFF212121),
+    gray800: Color(0xFF424242),
+    gray700: Color(0xFF616161),
+    gray600: Color(0xFF757575),
+    gray500: Color(0xFF9E9E9E),
+    gray400: Color(0xFFBDBDBD),
+    gray300: Color(0xFFE0E0E0),
+    gray200: Color(0xFFEEEEEE),
+    gray100: Color(0xFFF5F5F5),
+    gray50: Color(0xFFFAFAFA),
+    neutral100: Color(0xFFF4F4F4),
+    neutral300: Color(0xFFCCCCCC),
+    errorColor: Color(0xFFFF565C),
   );
 
   static final _baseTextStyle = TextStyle(
@@ -133,5 +132,3 @@ class AppTheme {
     ),
   );
 }
-
-
