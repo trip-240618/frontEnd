@@ -6,11 +6,11 @@ import 'package:tripStory/data/models/file_request.dart';
 import 'package:tripStory/data/models/register_request.dart';
 import 'package:tripStory/domain/usecases/fetch_presigned_url_usecase.dart';
 import 'package:tripStory/domain/usecases/register_user_usecase.dart';
+import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/util/compress_image.dart';
 import 'package:tripStory/util/helper/file_upload_helper.dart';
 import 'package:tripStory/util/url_utils.dart';
 import 'package:tripStory/view/login/models/profile_add_state.dart';
-import 'package:tripStory/view/login/register/success.dart';
 
 class ProfileAddController extends GetxController with GetSingleTickerProviderStateMixin {
   final RegisterUserUsecase _registerUserUsecase;
@@ -96,7 +96,7 @@ class ProfileAddController extends GetxController with GetSingleTickerProviderSt
     result.fold(
       (error) {},
       (user) {
-        Get.to(() => SuccessPage());
+        Get.offAllNamed(Routes.registerSuccess);
       },
     );
   }

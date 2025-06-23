@@ -15,6 +15,7 @@ import 'package:tripStory/view/login/binding/profile_add_binding.dart';
 import 'package:tripStory/view/login/binding/term_binding.dart';
 import 'package:tripStory/view/login/views/login_view.dart';
 import 'package:tripStory/view/login/views/profile_add_view.dart';
+import 'package:tripStory/view/login/views/register_success_view.dart';
 import 'package:tripStory/view/login/views/term_view.dart';
 import 'package:tripStory/view/splashScreen.dart';
 
@@ -47,6 +48,10 @@ class RouterInfo {
         );
       },
       binding: ProfileAddBinding(),
+    ),
+    GetPage(
+      name: Routes.registerSuccess,
+      page: () => const RegisterSuccessView(),
     ),
     GetPage(
       name: Routes.rooms,
