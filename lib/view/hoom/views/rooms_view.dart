@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
+import 'package:tripStory/common/button/icon_button.dart';
 import 'package:tripStory/common/button/popup_list.dart';
 import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
@@ -12,6 +13,7 @@ import 'package:tripStory/common/widget/round_thumbnail_image.dart';
 import 'package:tripStory/component/bottomModals.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/empty/emptyScreen.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
@@ -51,40 +53,20 @@ class TripRoomListView extends StatelessWidget {
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(
-                    right: 20,
+                    right: 16,
                   ),
                   child: Row(
                     children: [
-                      GestureDetector(
+                      AppIconButton(
                         onTap: () => controller.onNotificationPressed(),
-                        child: SizedBox(
-                          width: 28,
-                          child: Stack(
-                            children: [
-                              SvgPicture.asset("assets/icon/alert.svg"),
-                              controller.notificationCount == 0
-                                  ? const SizedBox()
-                                  : Positioned(
-                                      right: 0,
-                                      child: Container(
-                                        width: 6,
-                                        height: 6,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: redColor,
-                                        ),
-                                      ),
-                                    ),
-                            ],
-                          ),
-                        ),
+                        assetPath: controller.notificationCount == 0 ? IconConstants.alert : IconConstants.alertOn,
                       ),
                       const SizedBox(
-                        width: 8,
+                        width: 4,
                       ),
-                      GestureDetector(
+                      AppIconButton(
                         onTap: () => controller.onMyPagePressed(),
-                        child: SvgPicture.asset("assets/icon/person.svg"),
+                        assetPath: IconConstants.person,
                       ),
                     ],
                   ),

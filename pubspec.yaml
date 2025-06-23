@@ -206,6 +206,7 @@ flutter:
     - assets/
     - assets/sns/
     - assets/icon/
+    - assets/icon/normal/
     - assets/bottomNavi/
   fonts:
     - family: Pretendard

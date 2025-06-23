@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
+import 'package:tripStory/common/icon/svg_icon.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 
@@ -36,9 +37,8 @@ class _RegisterSuccessViewState extends State<RegisterSuccessView> {
                   color: context.color.gray900,
                   shape: BoxShape.circle,
                 ),
-                child: SvgPicture.asset(
-                  "assets/icon/successCheck.svg",
-                  fit: BoxFit.none,
+                child: SvgIcon(
+                  assetPath: IconConstants.successCheck,
                 ),
               ),
             ),
