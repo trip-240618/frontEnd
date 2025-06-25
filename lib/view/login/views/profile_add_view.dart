@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
-import 'package:tripStory/common/button/image_button.dart';
+import 'package:tripStory/common/button/picture_image_button.dart';
 import 'package:tripStory/common/text/error_text_form_field.dart';
 import 'package:tripStory/component/container/circle_badge.dart';
 import 'package:tripStory/core/validator/regex_patterns.dart';
@@ -63,12 +63,12 @@ class _ProfileAddViewState extends State<ProfileAddView> {
                 ),
                 const SizedBox(height: 48),
                 Center(
-                  child: ImageButton(
-                    pickedImage: controller.state.profileImage,
+                  child: PictureImageButton(
                     onPressed: () => controller.onProfilePressed(
                       ImageSource.gallery,
                       context,
                     ),
+                    pickedImage: controller.state.profileImage,
                   ),
                 ),
                 Text(

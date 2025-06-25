@@ -20,7 +20,9 @@ abstract class TripDataSource {
   Future<List<TripRoomResponse>> bookMarkTripGet();
 
   @PUT("/bookmark/toggle")
-  Future<bool> updateBookMark(@Query("tripId") int tripId);
+  Future<bool> updateBookMark(
+    @Query("tripId") int tripId,
+  );
 
   @POST("/create")
   Future<TripRoomCreateResponse> postCreateTrip(
