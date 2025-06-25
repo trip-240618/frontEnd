@@ -4,7 +4,6 @@ import 'package:tripStory/app/services/user_service.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_visited_country_usecase.dart';
-import 'package:tripStory/util/helper/country_flag_helper.dart';
 import 'package:tripStory/util/one_time_event.dart';
 import 'package:tripStory/util/throttle.dart';
 import 'package:tripStory/view/myPage/editProfilePage.dart';
@@ -37,13 +36,6 @@ class MyPageController extends GetxController with GetSingleTickerProviderStateM
       myPageState = state.copyWith(
         visitedCountryItems: countries,
       );
-
-      for (final country in countries) {
-        await CountryFlagHelper.cacheImage(
-          country.imageUrl ?? "",
-          context,
-        );
-      }
       update();
     });
   }
