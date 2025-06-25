@@ -84,14 +84,6 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                       ),
                       pickedImage: controller.state.roomImage,
                     ),
-                    // ImageButton(
-                    //   pickedImage: controller.state.roomImage,
-                    //   onPressed: () => _tripRoomsCreateController.onImagePressed(
-                    //     ImageSource.gallery,
-                    //     context,
-                    //   ),
-                    //   iconPath: IconConstants.plus,
-                    // ),
                     const SizedBox(height: 16),
                     CommonTextField(
                       controller: _tripNameCon,

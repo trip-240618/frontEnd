@@ -7,9 +7,9 @@ import 'package:tripStory/common/enum/trip_area_type.dart';
 import 'package:tripStory/common/enum/trip_destination_type.dart';
 import 'package:tripStory/common/image/cached_image.dart';
 import 'package:tripStory/common/text/common_text_form_field.dart';
-import 'package:tripStory/constants/country.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
+import 'package:tripStory/util/models/country.dart';
 
 class TripDestinationBottomSheetContent extends StatefulWidget {
   const TripDestinationBottomSheetContent({super.key});

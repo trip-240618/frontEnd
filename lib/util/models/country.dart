@@ -1,21 +1,21 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+class Country {
+  final String name;
+  final String image;
 
-part 'country.freezed.dart';
-
-@freezed
-abstract class Country with _$Country {
-  const factory Country({
-    required String name,
-    required String image,
-  }) = _Country;
+  const Country({
+    required this.name,
+    required this.image,
+  });
 }
 
-@freezed
-abstract class CountryRegion with _$CountryRegion {
-  const factory CountryRegion({
-    required String region,
-    required List<Country> countries,
-  }) = _CountryRegion;
+class CountryRegion {
+  final String region;
+  final List<Country> countries;
+
+  const CountryRegion({
+    required this.region,
+    required this.countries,
+  });
 }
 
 final List<CountryRegion> countryRegions = [

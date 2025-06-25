@@ -13,4 +13,5 @@ class IconConstants {
   static const String defaultPerson = "$_iconNormal/default_person.svg";
   static const String plus = "$_iconNormal/plus.svg";
   static const String pencil = "$_iconNormal/pencil.svg";
+  static const String photo = "$_iconNormal/photo.svg";
 }

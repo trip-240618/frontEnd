@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/common/button/base/base_button.dart';
+import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/common/widget/round_thumbnail_image.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 
 class BaseImageButton extends StatelessWidget {
@@ -81,13 +82,11 @@ class BaseImageButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Center(
-        child: SvgPicture.asset(
-          'assets/icon/image.svg',
+        child: SvgIcon(
+          assetPath: IconConstants.photo,
           width: 28,
-          colorFilter: const ColorFilter.mode(
-            Color(0xFFBDBDBD),
-            BlendMode.srcIn,
-          ),
+          height: 28,
+          color: context.color.gray400,
         ),
       ),
     );
