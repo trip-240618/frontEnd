@@ -12,6 +12,7 @@ import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/view/login/loginPage.dart';
 import 'package:tripStory/view/myPage/setting/cancel/setting_delete_page.dart';
 import 'package:tripStory/view/myPage/setting/setting_alim_page.dart';
+import 'package:tripStory/view/setting/controllers/my_page_setting_controller.dart';
 
 class MyPageSettingView extends StatefulWidget {
   const MyPageSettingView({
@@ -53,57 +54,61 @@ class _MyPageSettingViewState extends State<MyPageSettingView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppAppbar(
-        text: "설정",
-      ),
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _SettingNotificationSection(
-              onSettingPressed: () => Get.to(() => SettingAlimPage()),
+    return GetBuilder<MyPageSettingController>(
+      builder: (controller) {
+        return Scaffold(
+          appBar: AppAppbar(
+            text: "설정",
+          ),
+          body: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _SettingNotificationSection(
+                  onSettingPressed: () => Get.to(() => SettingAlimPage()),
+                ),
+                Divider(
+                  thickness: 6,
+                  color: lightGray1,
+                ),
+                const SizedBox(
+                  height: 33,
+                ),
+                _SettingUserSection(
+                  onDeletedPressed: () => Get.to(() => SettingDeletePage()),
+                  onLogOutPressed: () => showConfirmCancelTapDialog(context, '로그아웃을 하시겠어요?', '확인', null, () {
+                    Get.offAll(() => LoginPage());
+                    us.logOut();
+                  }),
+                ),
+                Divider(
+                  thickness: 6,
+                  color: lightGray1,
+                ),
+                const SizedBox(
+                  height: 33,
+                ),
+                _SettingServiceSection(
+                  locationServiceText: controller.state.locationText,
+                ),
+                Divider(
+                  thickness: 6,
+                  color: lightGray1,
+                ),
+                const SizedBox(
+                  height: 33,
+                ),
+                _SettingInfoSection(
+                  versionText: controller.state.appVersionText,
+                  onPrivatePressed: () => urlLaunch("https://trip-story.site/policy/privacy"),
+                ),
+              ],
             ),
-            Divider(
-              thickness: 6,
-              color: lightGray1,
-            ),
-            const SizedBox(
-              height: 33,
-            ),
-            _SettingUserSection(
-              onDeletedPressed: () => Get.to(() => SettingDeletePage()),
-              onLogOutPressed: () => showConfirmCancelTapDialog(context, '로그아웃을 하시겠어요?', '확인', null, () {
-                Get.offAll(() => LoginPage());
-                us.logOut();
-              }),
-            ),
-            Divider(
-              thickness: 6,
-              color: lightGray1,
-            ),
-            const SizedBox(
-              height: 33,
-            ),
-            _SettingServiceSection(
-              locationServiceText: locationStatusText,
-            ),
-            Divider(
-              thickness: 6,
-              color: lightGray1,
-            ),
-            const SizedBox(
-              height: 33,
-            ),
-            _SettingInfoSection(
-              versionText: versionText,
-              onPrivatePressed: () => urlLaunch("https://trip-story.site/policy/privacy"),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

@@ -12,7 +12,7 @@ import 'package:tripStory/view/myPage/faq/setting_faq_main.dart';
 import 'package:tripStory/view/myPage/notice/setting_noti_main.dart';
 import 'package:tripStory/view/setting/models/my_page_state.dart';
 
-class MyPageController extends GetxController with GetSingleTickerProviderStateMixin {
+class MyPageController extends GetxController {
   final FetchVisitedCountryUsecase _fetchVisitedCountryUsecase;
   final UserService _userService;
 
