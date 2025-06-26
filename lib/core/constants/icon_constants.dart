@@ -14,4 +14,6 @@ class IconConstants {
   static const String plus = "$_iconNormal/plus.svg";
   static const String pencil = "$_iconNormal/pencil.svg";
   static const String photo = "$_iconNormal/photo.svg";
+  static const String smallCheck = "$_iconNormal/small_check.svg";
+  static const String arrow = "$_iconNormal/arrow.svg";
 }

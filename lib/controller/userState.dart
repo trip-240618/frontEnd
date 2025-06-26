@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart' as imgCom;
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -14,7 +13,6 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tripStory/app/api/countryApi.dart';
-import 'package:tripStory/model/userModel.dart';
 import 'package:version/version.dart';
 
 import '../app/api/fileApi.dart';
@@ -24,7 +22,7 @@ import '../component/dialog/dialog.dart';
 import '../data/network/dio_client.dart';
 
 class UserState extends GetxController {
-  final userList = <UserModel>[].obs;
+  final userList = [].obs;
 
   /// 유저 정보 리스트
   final mapFirstLoading = false.obs;
@@ -166,13 +164,13 @@ class UserState extends GetxController {
 
   /// 프로필 상세 등록 11-19 테스트해봐야함
   Future<void> userRegister(String name, String memo, String profileImg, String thumbnailImg, bool marketing) async {
-    String? tokens = await FirebaseMessaging.instance.getToken();
-    userList.value = [
-      UserModel.fromJson(await apiUserClient.userRegister(name, memo, profileImg, thumbnailImg, marketing))
-    ];
-    if (tokens != null) {
-      apiUserClient.updateToken(tokens);
-    }
+    // String? tokens = await FirebaseMessaging.instance.getToken();
+    // userList.value = [
+    //   UserModel.fromJson(await apiUserClient.userRegister(name, memo, profileImg, thumbnailImg, marketing))
+    // ];
+    // if (tokens != null) {
+    //   apiUserClient.updateToken(tokens);
+    // }
   }
 
   /// 프로필 수정

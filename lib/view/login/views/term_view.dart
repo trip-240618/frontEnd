@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/common/button/base/base_tile_button.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
-import 'package:tripStory/common/button/check_tile_button.dart';
+import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/component/container/circle_badge.dart';
 import 'package:tripStory/component/url_launch.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/login/controller/term_controller.dart';
@@ -103,6 +105,56 @@ class TermView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class CheckTileButton extends StatelessWidget {
+  final String text;
+  final bool isActive;
+  final Color? tileColor;
+  final Color? borderColor;
+  final VoidCallback? onTap;
+  final VoidCallback? onTrailingTap;
+
+  const CheckTileButton({
+    super.key,
+    required this.text,
+    required this.isActive,
+    this.tileColor,
+    this.onTap,
+    this.onTrailingTap,
+    this.borderColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BaseTileButton(
+      text: text,
+      textStyle: isActive ? f15gray900w600 : f15gray800w500,
+      onTap: onTap,
+      tileColor: tileColor,
+      borderColor: borderColor,
+      leading: Container(
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(
+          color: isActive ? const Color(0xFF212121) : Colors.white,
+          border: Border.all(color: const Color(0xFFE0E0E0), width: 1.5),
+          borderRadius: BorderRadius.circular(2),
+        ),
+        child: isActive
+            ? SvgIcon(
+                assetPath: IconConstants.smallCheck,
+              )
+            : null,
+      ),
+      trailing: GestureDetector(
+        onTap: onTrailingTap,
+        child: SvgIcon(
+          assetPath: IconConstants.arrow,
+        ),
+      ),
     );
   }
 }

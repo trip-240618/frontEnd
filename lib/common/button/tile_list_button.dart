@@ -10,6 +10,7 @@ class TileListButton extends StatelessWidget {
   final Color? borderColor;
   final VoidCallback? onTap;
   final VoidCallback? onTrailingTap;
+  final Widget? trailing;
 
   const TileListButton({
     super.key,
@@ -19,6 +20,7 @@ class TileListButton extends StatelessWidget {
     this.onTap,
     this.onTrailingTap,
     this.borderColor,
+    this.trailing,
   });
 
   @override
@@ -32,10 +34,11 @@ class TileListButton extends StatelessWidget {
       onTap: onTap,
       tileColor: tileColor,
       borderColor: borderColor,
-      trailing: GestureDetector(
-        onTap: onTrailingTap,
-        child: SvgPicture.asset("assets/icon/arrow.svg"),
-      ),
+      trailing: trailing ??
+          GestureDetector(
+            onTap: onTrailingTap,
+            child: SvgPicture.asset("assets/icon/arrow.svg"),
+          ),
     );
   }
 }

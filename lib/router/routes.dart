@@ -4,6 +4,7 @@ class Routes {
   static const term = "/term";
   static const profileAdd = "/profileAdd";
   static const myPage = "/my-page";
+  static const myPageSetting = "/my-page/setting";
   static const registerSuccess = "/registerSuccess";
   static const rooms = "/rooms";
   static const createRoom = "/create-room";

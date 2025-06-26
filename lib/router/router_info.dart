@@ -18,6 +18,7 @@ import 'package:tripStory/view/login/views/profile_add_view.dart';
 import 'package:tripStory/view/login/views/register_success_view.dart';
 import 'package:tripStory/view/login/views/term_view.dart';
 import 'package:tripStory/view/setting/bindings/my_page_binding.dart';
+import 'package:tripStory/view/setting/views/my_page_setting_view.dart';
 import 'package:tripStory/view/setting/views/my_page_view.dart';
 import 'package:tripStory/view/splashScreen.dart';
 
@@ -41,6 +42,10 @@ class RouterInfo {
       name: Routes.myPage,
       page: () => const MyPageView(),
       binding: MyPageBinding(),
+    ),
+    GetPage(
+      name: Routes.myPageSetting,
+      page: () => const MyPageSettingView(),
     ),
     GetPage(
       name: Routes.profileAdd,
