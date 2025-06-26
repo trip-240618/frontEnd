@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/tile_list_button.dart';
-import 'package:tripStory/component/dialog/dialog.dart';
+import 'package:tripStory/common/dialog/common_dialog.dart';
 import 'package:tripStory/component/url_launch.dart';
-import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/view/login/loginPage.dart';
@@ -14,43 +11,10 @@ import 'package:tripStory/view/myPage/setting/cancel/setting_delete_page.dart';
 import 'package:tripStory/view/myPage/setting/setting_alim_page.dart';
 import 'package:tripStory/view/setting/controllers/my_page_setting_controller.dart';
 
-class MyPageSettingView extends StatefulWidget {
+class MyPageSettingView extends StatelessWidget {
   const MyPageSettingView({
     super.key,
   });
-
-  @override
-  State<MyPageSettingView> createState() => _MyPageSettingViewState();
-}
-
-class _MyPageSettingViewState extends State<MyPageSettingView> {
-  final us = Get.put(UserState());
-  String locationStatusText = '확인 중...';
-  String versionText = '0.0.0';
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeSettings();
-  }
-
-  Future<void> _initializeSettings() async {
-    try {
-      /// 앱 버전 정보 가져오기
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      String fetchedVersion = packageInfo.version;
-
-      /// 위치 권한 상태 가져오기
-      String fetchedLocationStatus = await getLocationPermissionStatus();
-
-      setState(() {
-        versionText = fetchedVersion;
-        locationStatusText = fetchedLocationStatus;
-      });
-    } catch (e) {
-      print('초기화 중 에러 발생: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +42,7 @@ class _MyPageSettingViewState extends State<MyPageSettingView> {
                 ),
                 _SettingUserSection(
                   onDeletedPressed: () => Get.to(() => SettingDeletePage()),
-                  onLogOutPressed: () => showConfirmCancelTapDialog(context, '로그아웃을 하시겠어요?', '확인', null, () {
-                    Get.offAll(() => LoginPage());
-                    us.logOut();
-                  }),
+                  onLogOutPressed: () => showLogOutDialog(context),
                 ),
                 Divider(
                   thickness: 6,
@@ -108,6 +69,19 @@ class _MyPageSettingViewState extends State<MyPageSettingView> {
             ),
           ),
         );
+      },
+    );
+  }
+
+  void showLogOutDialog(
+    BuildContext context,
+  ) {
+    CommonDialog.show(
+      context,
+      title: "로그아웃을 하시겠어요?",
+      confirmText: "확인",
+      onConfirm: () {
+        Get.offAll(() => LoginPage());
       },
     );
   }
@@ -179,11 +153,11 @@ class _SettingUserSection extends StatelessWidget {
         ),
         TileListButton(
           text: "회원 탈퇴",
-          onTap: onLogOutPressed,
+          onTap: onDeletedPressed,
         ),
         TileListButton(
           text: "로그아웃",
-          onTap: onDeletedPressed,
+          onTap: onLogOutPressed,
         ),
       ],
     );

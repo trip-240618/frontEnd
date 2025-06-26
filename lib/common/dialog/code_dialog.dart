@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/dialog/base_dialog.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
@@ -19,15 +20,7 @@ class InviteCodeDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-      ),
-      contentPadding: const EdgeInsets.symmetric(
-        vertical: 24,
-        horizontal: 20,
-      ),
+    return BaseDialog(
       content: Padding(
         padding: const EdgeInsets.only(
           top: 20,
@@ -37,11 +30,7 @@ class InviteCodeDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 20),
-            Text(
-              "초대코드 생성",
-              textAlign: TextAlign.center,
-              style: f20gray600w700,
-            ),
+            Text("초대코드 생성", textAlign: TextAlign.center, style: f20gray600w700),
             const SizedBox(height: 8),
             Text(inviteCode, style: f28gray600w700),
             const SizedBox(height: 18),
@@ -93,7 +82,6 @@ class InviteCodeDialog extends StatelessWidget {
         onSendPressed: onSendPressed,
         onConfirmPressed: onConfirmPressed,
       ),
-      // barrierDismissible: false,
     );
   }
 }
