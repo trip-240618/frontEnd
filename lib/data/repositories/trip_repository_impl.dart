@@ -80,4 +80,17 @@ class TripRepositoryImpl implements TripRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  ResultFuture<TripRoomEntity> fetchJoinTrip({
+    required String invitationCode,
+  }) async {
+    try {
+      final result = await _tripDataSource.fetchJoinTrip(invitationCode);
+      final entity = TripRoomMapper.toEntity(result);
+      return Right(entity);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

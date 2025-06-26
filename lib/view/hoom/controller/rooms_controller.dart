@@ -5,6 +5,7 @@ import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_bookmarked_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_coming_trips_usecase.dart';
+import 'package:tripStory/domain/usecases/fetch_join_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_last_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/update_bookmark_usecase.dart';
 import 'package:tripStory/router/routes.dart';
@@ -17,16 +18,19 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   final FetchLastTripsUseCase _fetchLastTrips;
   final FetchBookmarkedTripsUseCase _fetchBookmarkedTrips;
   final UpdateBookmarkUseCase _bookmarkUseCase;
+  final FetchJoinRoomUsecase _fetchJoinRoomUsecase;
 
   RoomsController({
     required FetchComingTripsUseCase fetchComingTrips,
     required FetchLastTripsUseCase fetchLastTrips,
     required FetchBookmarkedTripsUseCase fetchBookmarkedTrips,
     required UpdateBookmarkUseCase updateBookmarkUseCase,
+    required FetchJoinRoomUsecase fetchJoinRoomUsecase,
   })  : _fetchComingTrips = fetchComingTrips,
         _fetchLastTrips = fetchLastTrips,
         _fetchBookmarkedTrips = fetchBookmarkedTrips,
-        _bookmarkUseCase = updateBookmarkUseCase;
+        _bookmarkUseCase = updateBookmarkUseCase,
+        _fetchJoinRoomUsecase = fetchJoinRoomUsecase;
 
   TripRoomsState tripRoomsState = TripRoomsState();
   DateTime? _lastBackPressTime;
@@ -105,6 +109,14 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
       );
       update();
     });
+  }
+
+  Future<bool> onJoinCodePressed(String invitationCode) async {
+    final result = await _fetchJoinRoomUsecase(invitationCode);
+    return result.fold(
+      (error) => false,
+      (tripRoom) => true,
+    );
   }
 
   void onRoomPressed() => Get.to(() => BottomNavigator())?.then((v) async {

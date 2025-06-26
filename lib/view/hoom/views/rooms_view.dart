@@ -157,8 +157,8 @@ class TripRoomListView extends StatelessWidget {
                   _TripBottomNavigation(
                     onInvitePressed: () => _showEnterCodeDialog(
                         context: context,
-                        onConfirmPressed: (code) {
-                          return Future.value(false);
+                        onConfirmPressed: (invitationCode) async {
+                          return await controller.onJoinCodePressed(invitationCode);
                         }),
                     onCreatePressed: () => controller.onRoomCreatedPressed(),
                   ),
