@@ -13,4 +13,7 @@ abstract class UserDataSource {
   Future<UserResponse> putUserRegister(
     @Body() RegisterRequest request,
   );
+
+  @GET("/info")
+  Future<UserResponse> fetchUserInfo();
 }

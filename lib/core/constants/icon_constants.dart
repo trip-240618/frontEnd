@@ -2,6 +2,8 @@ class IconConstants {
   static const _icon = "assets/icon";
   static const _iconNormal = "assets/icon/normal";
 
+  static const String appSplash = "$_iconNormal/splash.png";
+
   // normal
   static const String alert = "$_iconNormal/alert.svg";
   static const String alertOn = "$_iconNormal/alert_on.svg";

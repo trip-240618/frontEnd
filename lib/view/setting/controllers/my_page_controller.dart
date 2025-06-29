@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/app/services/user_service.dart';
+import 'package:tripStory/app/services/login_user_service.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_visited_country_usecase.dart';
@@ -14,7 +14,7 @@ import 'package:tripStory/view/setting/models/my_page_state.dart';
 
 class MyPageController extends GetxController {
   final FetchVisitedCountryUsecase _fetchVisitedCountryUsecase;
-  final UserService _userService;
+  final LoginUserService _userService;
 
   MyPageController(
     this._userService,

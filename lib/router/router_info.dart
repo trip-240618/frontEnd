@@ -21,13 +21,15 @@ import 'package:tripStory/view/setting/bindings/my_page_binding.dart';
 import 'package:tripStory/view/setting/bindings/my_page_setting_binding.dart';
 import 'package:tripStory/view/setting/views/my_page_setting_view.dart';
 import 'package:tripStory/view/setting/views/my_page_view.dart';
-import 'package:tripStory/view/splashScreen.dart';
+import 'package:tripStory/view/splash/binding/splash_binding.dart';
+import 'package:tripStory/view/splash/views/splash_view.dart';
 
 class RouterInfo {
   static final config = <GetPage>[
     GetPage(
       name: "/",
-      page: () => const SplashPage(),
+      page: () => const SplashView(),
+      binding: SplashBinding(),
     ),
     GetPage(
       name: Routes.login,

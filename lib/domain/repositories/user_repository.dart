@@ -6,4 +6,6 @@ abstract class UserRepository {
   ResultFuture<UserEntity> putUserRegister(
     RegisterRequest request,
   );
+
+  ResultFuture<UserEntity> fetchUserInfo();
 }

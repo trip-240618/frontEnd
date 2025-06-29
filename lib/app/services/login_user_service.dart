@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 
-class UserService extends GetxService {
+class LoginUserService extends GetxService {
   UserEntity? _user;
 
   UserEntity? get user => _user;

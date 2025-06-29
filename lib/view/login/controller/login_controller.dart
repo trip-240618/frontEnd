@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:tripStory/app/services/user_service.dart';
+import 'package:tripStory/app/services/login_user_service.dart';
 import 'package:tripStory/common/enum/user_type.dart';
 import 'package:tripStory/data/models/apple_login_request.dart';
 import 'package:tripStory/data/models/user_request.dart';
@@ -16,7 +16,7 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   final LoginWithKakaoUseCase kakaoUseCase;
   final LoginGoogleUsecase googleUsecase;
   final LoginAppleUsecase appleUsecase;
-  final UserService userService;
+  final LoginUserService userService;
 
   LoginController(
     this.kakaoUseCase,

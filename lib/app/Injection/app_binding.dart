@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/app/services/user_service.dart';
+import 'package:tripStory/app/services/login_user_service.dart';
 import 'package:tripStory/data/datasources/local/share_preferences_token_storage.dart';
 import 'package:tripStory/data/datasources/local/token_storage.dart';
 import 'package:tripStory/data/datasources/remote/country_data_source.dart';
@@ -34,7 +34,7 @@ class AppBinding extends Bindings {
     Get.put<Dio>(dioClient.dio, permanent: true);
 
     // service
-    Get.put<UserService>(UserService(), permanent: true);
+    Get.put<LoginUserService>(LoginUserService(), permanent: true);
     //data
     Get.lazyPut<UserDataSource>(() => UserDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<TripDataSource>(() => TripDataSource(Get.find<Dio>()), fenix: true);
