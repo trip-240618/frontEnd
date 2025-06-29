@@ -22,4 +22,15 @@ class UserRepositoryImpl implements UserRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  ResultFuture<UserEntity> fetchUserInfo() async {
+    try {
+      final result = await _userDataSource.fetchUserInfo();
+      final entities = UserMapper.toEntity(result);
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }
