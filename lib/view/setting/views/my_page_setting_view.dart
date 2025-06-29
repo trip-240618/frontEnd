@@ -8,7 +8,6 @@ import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/view/login/loginPage.dart';
 import 'package:tripStory/view/myPage/setting/cancel/setting_delete_page.dart';
-import 'package:tripStory/view/myPage/setting/setting_alim_page.dart';
 import 'package:tripStory/view/setting/controllers/my_page_setting_controller.dart';
 
 class MyPageSettingView extends StatelessWidget {
@@ -31,7 +30,7 @@ class MyPageSettingView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _SettingNotificationSection(
-                  onSettingPressed: () => Get.to(() => SettingAlimPage()),
+                  onSettingPressed: () => controller.onAlimSettingPressed(),
                 ),
                 Divider(
                   thickness: 6,
@@ -115,7 +114,7 @@ class _SettingNotificationSection extends StatelessWidget {
         const SizedBox(height: 16),
         TileListButton(
           text: "알림 설정",
-          onTap: () => Get.to(() => SettingAlimPage()),
+          onTap: onSettingPressed,
         ),
       ],
     );
