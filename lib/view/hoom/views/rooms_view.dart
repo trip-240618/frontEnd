@@ -8,11 +8,11 @@ import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/icon_button.dart';
 import 'package:tripStory/common/button/popup_list.dart';
 import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/dialog/code_insert_dialog.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
 import 'package:tripStory/common/snack_bar.dart';
 import 'package:tripStory/common/widget/round_thumbnail_image.dart';
 import 'package:tripStory/component/bottomModals.dart';
-import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/empty/emptyScreen.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
@@ -155,9 +155,11 @@ class TripRoomListView extends StatelessWidget {
                     height: 10,
                   ),
                   _TripBottomNavigation(
-                    onInvitePressed: () => InviteDialog(context, () {
-                      Get.back();
-                    }),
+                    onInvitePressed: () => _showEnterCodeDialog(
+                        context: context,
+                        onConfirmPressed: (invitationCode) async {
+                          return await controller.onJoinCodePressed(invitationCode);
+                        }),
                     onCreatePressed: () => controller.onRoomCreatedPressed(),
                   ),
                 ],
@@ -188,6 +190,16 @@ class TripRoomListView extends StatelessWidget {
       contentDyOffset: 10,
       arrowHeight: 8,
       arrowWidth: 13,
+    );
+  }
+
+  void _showEnterCodeDialog({
+    required BuildContext context,
+    required Future<bool> Function(String inviteCode) onConfirmPressed,
+  }) {
+    CodeInsertDialog.show(
+      context,
+      onConfirmPressed,
     );
   }
 }
@@ -439,6 +451,7 @@ class _TripBottomNavigation extends StatelessWidget {
             height: 60,
             backgroundColor: gray700,
             borderRadius: 4,
+            onTap: onInvitePressed,
             icon: SvgPicture.asset(
               "assets/icon/chain.svg",
               fit: BoxFit.none,

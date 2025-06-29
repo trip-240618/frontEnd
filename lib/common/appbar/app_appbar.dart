@@ -28,7 +28,7 @@ class AppAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return BaseAppbar(
-      color: backgroundColor,
+      color: backgroundColor ?? context.color.white,
       leadingWidget: isLeadingIcon == true
           ? (leadingWidget ??
               AppIconButton(

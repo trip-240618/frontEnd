@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/text/base_text_form_field.dart';
 import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 
 class CommonTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -13,6 +14,9 @@ class CommonTextField extends StatelessWidget {
   final Widget? trailing;
   final TextStyle? textStyle;
   final EdgeInsets? contentPadding;
+  final Color? backgroundColor;
+  final FocusNode? focusNode;
+  final Color? borderColor;
 
   const CommonTextField({
     super.key,
@@ -24,6 +28,9 @@ class CommonTextField extends StatelessWidget {
     this.trailing,
     this.textStyle,
     this.contentPadding,
+    this.backgroundColor,
+    this.focusNode,
+    this.borderColor,
   });
 
   @override
@@ -31,19 +38,20 @@ class CommonTextField extends StatelessWidget {
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: backgroundColor ?? context.color.white,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: gray200),
+        border: Border.all(color: borderColor ?? gray200),
       ),
       child: Row(
         children: [
           if (leading != null) ...[
+            const SizedBox(width: 16),
             leading!,
-            const SizedBox(width: 8),
           ],
           Expanded(
             child: BaseTextFormField(
               controller: controller,
+              focusNode: focusNode,
               hintText: hintText,
               onChanged: onChanged,
               inputFormatters: inputFormatters,

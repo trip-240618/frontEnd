@@ -30,7 +30,7 @@ class BaseTileButton extends StatelessWidget {
         tileColor: tileColor ?? Colors.white,
         dense: true,
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
+          horizontal: 20,
           vertical: 4,
         ),
         shape: RoundedRectangleBorder(

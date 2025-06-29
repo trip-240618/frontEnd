@@ -14,6 +14,8 @@ class BaseTextFormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final int? maxLines;
   final EdgeInsets? contentPadding;
+  final InputBorder? enabledBorder;
+  final InputBorder? focusedBorder;
 
   const BaseTextFormField({
     super.key,
@@ -28,6 +30,8 @@ class BaseTextFormField extends StatelessWidget {
     this.keyboardType,
     this.maxLines,
     this.contentPadding,
+    this.enabledBorder,
+    this.focusedBorder,
   });
 
   @override
@@ -51,8 +55,8 @@ class BaseTextFormField extends StatelessWidget {
       decoration: InputDecoration(
         isDense: true,
         contentPadding: contentPadding ?? const EdgeInsets.symmetric(vertical: 12),
-        enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-        focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+        enabledBorder: enabledBorder ?? OutlineInputBorder(borderSide: BorderSide.none),
+        focusedBorder: focusedBorder ?? OutlineInputBorder(borderSide: BorderSide.none),
         hintText: hintText,
         hintStyle: context.style.body2Normal.copyWith(
           color: context.color.gray400,

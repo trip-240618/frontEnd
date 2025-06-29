@@ -5,8 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/data/network/dio_client.dart';
 
-import '../../model/userModel.dart';
-
 class ApiUserClient {
   final DioClient dioClient;
 
@@ -22,7 +20,7 @@ class ApiUserClient {
       if (response.statusCode == 200) {
         final data = response.data;
         if (data['type'] != 'register') {
-          us.userList.value = [UserModel.fromJson(data)];
+          // us.userList.value = [UserModel.fromJson(data)];
         } else {
           us.userList.clear();
         }
@@ -106,7 +104,7 @@ class ApiUserClient {
       });
       if (response.statusCode == 200) {
         final data = response.data;
-        us.userList.value = [UserModel.fromJson(data)];
+        // us.userList.value = [UserModel.fromJson(data)];
         us.userList.refresh();
         return data;
       } else {

@@ -9,7 +9,6 @@ import 'package:tripStory/common/image/cached_image.dart';
 import 'package:tripStory/component/toast/toast.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
-import 'package:tripStory/view/myPage/setting/setting_main_page.dart';
 import 'package:tripStory/view/setting/controllers/my_page_controller.dart';
 
 class MyPageView extends StatefulWidget {
@@ -53,7 +52,7 @@ class _MyPageViewState extends State<MyPageView> {
             text: "마이 페이지",
             backgroundColor: context.color.white,
             actionWidget: AppIconButton(
-              onTap: () => Get.to(() => SettingMainPage()),
+              onTap: () => controller.onSettingPressed(),
               assetPath: IconConstants.setting,
             ),
           ),

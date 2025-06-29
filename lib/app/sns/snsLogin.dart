@@ -9,7 +9,6 @@ import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tripStory/controller/userState.dart';
-import 'package:tripStory/model/userModel.dart';
 
 /// 카카오로그인
 Future<void> kakaoLogin() async {
@@ -107,7 +106,7 @@ Future<void> sendTokenToServer(String accessToken, String refreshToken) async {
     // await dioClient.loginCookies('${response.headers['set-cookie']}');
     var decodedBody = utf8.decode(response.bodyBytes); // 응답 데이터 디코딩
     var jsonResponse = jsonDecode(decodedBody); // JSON 디코딩
-    us.userList.value = [UserModel.fromJson(jsonResponse)];
+    // us.userList.value = [UserModel.fromJson(jsonResponse)];
   } else {
     print('서버에 토큰 전송 실패: ${response.statusCode}');
   }
@@ -152,7 +151,7 @@ Future<void> requestGoogleInfo(GoogleSignInAccount user) async {
     // await dioClient.loginCookies('${response.headers['set-cookie']}');
     var decodedBody = utf8.decode(response.bodyBytes);
     var jsonResponse = jsonDecode(decodedBody);
-    us.userList.value = [UserModel.fromJson(jsonResponse)];
+    // us.userList.value = [UserModel.fromJson(jsonResponse)];
   } else {
     print('서버에 토큰 전송 실패: ${response}');
   }
@@ -186,7 +185,7 @@ Future<void> appleLogin() async {
       // await dioClient.loginCookies('${response.headers['set-cookie']}');
       var decodedBody = utf8.decode(response.bodyBytes);
       var jsonResponse = jsonDecode(decodedBody);
-      us.userList.value = [UserModel.fromJson(jsonResponse)];
+      // us.userList.value = [UserModel.fromJson(jsonResponse)];
       print('애플 로그인 했을 때 정보 ${us.userList[0].name}');
     } else {
       print('서버 응답 상태 코드: ${response.statusCode}');

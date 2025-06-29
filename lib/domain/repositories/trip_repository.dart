@@ -19,4 +19,8 @@ abstract class TripRepository {
   ResultFuture<TripRoomEntity> getEnterTrip({
     required int tripId,
   });
+
+  ResultFuture<TripRoomEntity> fetchJoinTrip({
+    required String invitationCode,
+  });
 }

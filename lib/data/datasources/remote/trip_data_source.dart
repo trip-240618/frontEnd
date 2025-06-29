@@ -33,4 +33,9 @@ abstract class TripDataSource {
   Future<TripRoomResponse> getEnterTrip(
     @Query("tripId") int tripId,
   );
+
+  @GET("/join")
+  Future<TripRoomResponse> fetchJoinTrip(
+    @Query("invitationCode") String invitationCode,
+  );
 }
