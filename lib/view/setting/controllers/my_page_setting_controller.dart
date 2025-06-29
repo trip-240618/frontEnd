@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tripStory/core/permission/permission_type.dart';
 import 'package:tripStory/core/permission/permisson.dart';
+import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/setting/models/my_page_setting_state.dart';
 
 class MyPageSettingController extends GetxController {
@@ -39,4 +40,6 @@ class MyPageSettingController extends GetxController {
     );
     update();
   }
+
+  void onAlimSettingPressed() => Get.toNamed(Routes.alimSetting);
 }
