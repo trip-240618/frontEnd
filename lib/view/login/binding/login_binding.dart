@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:tripStory/app/services/login_user_service.dart';
+import 'package:tripStory/core/services/login_user_service.dart';
 import 'package:tripStory/domain/usecases/login_apple_usecase.dart';
 import 'package:tripStory/domain/usecases/login_google_usecase.dart';
 import 'package:tripStory/domain/usecases/login_kakao_usecase.dart';

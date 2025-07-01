@@ -42,4 +42,6 @@ class MyPageSettingController extends GetxController {
   }
 
   void onAlimSettingPressed() => Get.toNamed(Routes.alimSetting);
+
+  void onUserDeletePressed() => Get.toNamed(Routes.userDelete);
 }

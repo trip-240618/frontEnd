@@ -2,36 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
-import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/view/setting/controllers/alim_setting_controller.dart';
 import 'package:tripStory/view/setting/models/alim_setting_state.dart';
 
-class AlimSettingView extends StatefulWidget {
+class AlimSettingView extends StatelessWidget {
   const AlimSettingView({
     super.key,
   });
 
   @override
-  State<AlimSettingView> createState() => _AlimSettingViewState();
-}
-
-class _AlimSettingViewState extends State<AlimSettingView> {
-  final us = Get.put(UserState());
-
-  @override
-  void initState() {
-    Future.delayed(Duration.zero, () async {
-      us.getNotificationSetting();
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppAppbar(
-        text: "설정1",
+        text: "설정",
       ),
       body: GetBuilder<AlimSettingController>(builder: (controller) {
         if (controller.state.status == AlimSettingStatus.initial) {

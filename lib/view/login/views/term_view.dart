@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/base/base_tile_button.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
@@ -18,9 +19,7 @@ class TermView extends StatelessWidget {
     return GetBuilder<TermController>(
       builder: (controller) {
         return Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: true,
-          ),
+          appBar: AppAppbar(),
           body: Padding(
             padding: const EdgeInsets.only(
               left: 20,

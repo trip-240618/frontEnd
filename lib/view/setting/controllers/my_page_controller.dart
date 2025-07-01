@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/app/services/login_user_service.dart';
+import 'package:tripStory/core/services/login_user_service.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_visited_country_usecase.dart';

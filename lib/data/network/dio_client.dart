@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:tripStory/core/logger/network_log.dart';
-import 'package:tripStory/data/datasources/local/token_storage.dart';
+import 'package:tripStory/core/services/session_service.dart';
 
 class DioClient {
-  final TokenStorage tokenStorage;
+  final SessionService sessionService;
   final Dio dio;
   final logger = Logger();
 
   DioClient({
-    required this.tokenStorage,
+    required this.sessionService,
   }) : dio = Dio(BaseOptions(
           baseUrl: "https://trip-story.site",
           connectTimeout: const Duration(seconds: 5),
@@ -24,9 +24,10 @@ class DioClient {
 
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        final tokens = await tokenStorage.getTokens();
+        final tokens = await sessionService.getTokens();
         final accessToken = tokens["accessToken"];
         final refreshToken = tokens["refreshToken"];
+
         if ((accessToken?.isNotEmpty ?? false) && (refreshToken?.isNotEmpty ?? false)) {
           options.headers[HttpHeaders.cookieHeader] = "accessToken=$accessToken; refreshToken=$refreshToken";
         }
@@ -40,9 +41,9 @@ class DioClient {
           final refreshToken = cookies["refreshToken"];
 
           if (accessToken != null && refreshToken != null) {
-            await tokenStorage.saveTokens(accessToken, refreshToken);
+            await sessionService.saveTokens(accessToken, refreshToken);
           } else if (accessToken != null) {
-            await tokenStorage.saveAccessToken(accessToken);
+            await sessionService.saveTokens(accessToken, (await sessionService.getTokens())["refreshToken"] ?? "");
           }
         }
         return handler.next(response);

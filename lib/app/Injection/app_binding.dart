@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/app/services/login_user_service.dart';
+import 'package:tripStory/core/services/login_user_service.dart';
+import 'package:tripStory/core/services/session_service.dart';
 import 'package:tripStory/data/datasources/local/share_preferences_token_storage.dart';
 import 'package:tripStory/data/datasources/local/token_storage.dart';
 import 'package:tripStory/data/datasources/remote/country_data_source.dart';
@@ -26,23 +27,31 @@ import 'package:tripStory/domain/repositories/user_repository.dart';
 class AppBinding extends Bindings {
   @override
   void dependencies() {
-    final tokenStorage = SharedPreferencesTokenStorage();
-    Get.put<TokenStorage>(tokenStorage, permanent: true);
-
-    final dioClient = DioClient(tokenStorage: tokenStorage);
-    Get.put<DioClient>(dioClient, permanent: true);
-    Get.put<Dio>(dioClient.dio, permanent: true);
+    // TokenStorage
+    Get.put<TokenStorage>(SharedPreferencesTokenStorage(), permanent: true);
 
     // service
     Get.put<LoginUserService>(LoginUserService(), permanent: true);
-    //data
+    Get.put<SessionService>(
+        SessionService(
+          Get.find<TokenStorage>(),
+          Get.find<LoginUserService>(),
+        ),
+        permanent: true);
+
+    // DioClient
+    Get.put<DioClient>(DioClient(sessionService: Get.find<SessionService>()), permanent: true);
+    Get.put<Dio>(Get.find<DioClient>().dio, permanent: true);
+
+    // DataSource
     Get.lazyPut<UserDataSource>(() => UserDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<TripDataSource>(() => TripDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<FileDataSource>(() => FileDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<NotificationDataSource>(() => NotificationDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<OauthDataSource>(() => OauthDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<CountryDataSource>(() => CountryDataSource(Get.find<Dio>()), fenix: true);
-    //repository
+
+    // Repository
     Get.lazyPut<UserRepository>(() => UserRepositoryImpl(Get.find<UserDataSource>()), fenix: true);
     Get.lazyPut<TripRepository>(() => TripRepositoryImpl(Get.find<TripDataSource>()), fenix: true);
     Get.lazyPut<FileRepository>(() => FileRepositoryImpl(Get.find<FileDataSource>()), fenix: true);

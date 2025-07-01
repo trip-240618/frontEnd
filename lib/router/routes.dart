@@ -11,4 +11,5 @@ class Routes {
   static const createRoomCalendar = "/create-room/calendar";
   static const notificationList = "/notification-list";
   static const alimSetting = "/alim-setting";
+  static const userDelete = "/user-delete";
 }
