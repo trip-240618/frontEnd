@@ -16,4 +16,7 @@ abstract class UserDataSource {
 
   @GET("/info")
   Future<UserResponse> fetchUserInfo();
+
+  @DELETE("/delete/account")
+  Future<void> deleteUser();
 }

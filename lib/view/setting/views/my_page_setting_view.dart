@@ -7,7 +7,6 @@ import 'package:tripStory/component/url_launch.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/view/login/loginPage.dart';
-import 'package:tripStory/view/myPage/setting/cancel/setting_delete_page.dart';
 import 'package:tripStory/view/setting/controllers/my_page_setting_controller.dart';
 
 class MyPageSettingView extends StatelessWidget {
@@ -40,7 +39,7 @@ class MyPageSettingView extends StatelessWidget {
                   height: 33,
                 ),
                 _SettingUserSection(
-                  onDeletedPressed: () => Get.to(() => SettingDeletePage()),
+                  onDeletedPressed: () => controller.onUserDeletePressed(),
                   onLogOutPressed: () => showLogOutDialog(context),
                 ),
                 Divider(

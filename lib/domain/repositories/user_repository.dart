@@ -8,4 +8,6 @@ abstract class UserRepository {
   );
 
   ResultFuture<UserEntity> fetchUserInfo();
+
+  ResultFuture<void> deleteUser();
 }

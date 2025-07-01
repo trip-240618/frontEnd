@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
 import 'package:tripStory/common/button/picture_image_button.dart';
 import 'package:tripStory/common/text/error_text_form_field.dart';
 import 'package:tripStory/component/container/circle_badge.dart';
-import 'package:tripStory/core/validator/regex_patterns.dart';
+import 'package:tripStory/core/constants/regex_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/view/login/controller/profile_add_controller.dart';
 
@@ -31,7 +32,7 @@ class _ProfileAddViewState extends State<ProfileAddView> {
       builder: (controller) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: AppBar(),
+          appBar: AppAppbar(),
           body: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 50),
             child: Column(
@@ -94,7 +95,7 @@ class _ProfileAddViewState extends State<ProfileAddView> {
                     ),
                   ),
                   regexText: "8자 이내의 한글,영문만 가능해요",
-                  regexPattern: RegexPatterns.nickname,
+                  regexPattern: RegexConstants.nickname,
                 ),
               ],
             ),
