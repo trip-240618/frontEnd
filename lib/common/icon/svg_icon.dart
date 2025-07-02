@@ -5,7 +5,7 @@ class SvgIcon extends StatelessWidget {
   final String assetPath;
   final double? width;
   final double? height;
-  final BoxFit fit;
+  final BoxFit? fit;
   final Color? color;
 
   const SvgIcon({
@@ -13,18 +13,20 @@ class SvgIcon extends StatelessWidget {
     required this.assetPath,
     this.width,
     this.height,
-    this.fit = BoxFit.none,
+    this.fit,
     this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      assetPath,
-      width: width,
-      height: height,
-      fit: fit,
-      colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+    return Center(
+      child: SvgPicture.asset(
+        assetPath,
+        width: width,
+        height: height,
+        fit: fit ?? BoxFit.none,
+        colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+      ),
     );
   }
 }

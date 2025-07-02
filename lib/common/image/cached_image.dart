@@ -24,6 +24,18 @@ class CachedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (imageUrl.isEmpty) {
+      return _EmptyImage(
+        icon: SvgIcon(
+          assetPath: errorIcon ?? IconConstants.appLogo,
+          fit: BoxFit.fill,
+          width: errorIconSize,
+          height: errorIconSize,
+        ),
+        width: width,
+        height: height,
+      );
+    }
     return CachedNetworkImage(
       imageUrl: imageUrl,
       placeholder: (context, url) => SizedBox(

@@ -4,9 +4,7 @@ import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/tile_list_button.dart';
 import 'package:tripStory/common/dialog/common_dialog.dart';
 import 'package:tripStory/component/url_launch.dart';
-import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
-import 'package:tripStory/view/login/loginPage.dart';
 import 'package:tripStory/view/setting/controllers/my_page_setting_controller.dart';
 
 class MyPageSettingView extends StatelessWidget {
@@ -33,18 +31,21 @@ class MyPageSettingView extends StatelessWidget {
                 ),
                 Divider(
                   thickness: 6,
-                  color: lightGray1,
+                  color: context.color.gray200,
                 ),
                 const SizedBox(
                   height: 33,
                 ),
                 _SettingUserSection(
                   onDeletedPressed: () => controller.onUserDeletePressed(),
-                  onLogOutPressed: () => showLogOutDialog(context),
+                  onLogOutPressed: () => showLogOutDialog(
+                    context,
+                    () => controller.onLogOutPressed(),
+                  ),
                 ),
                 Divider(
                   thickness: 6,
-                  color: lightGray1,
+                  color: context.color.gray200,
                 ),
                 const SizedBox(
                   height: 33,
@@ -54,7 +55,7 @@ class MyPageSettingView extends StatelessWidget {
                 ),
                 Divider(
                   thickness: 6,
-                  color: lightGray1,
+                  color: context.color.gray200,
                 ),
                 const SizedBox(
                   height: 33,
@@ -73,14 +74,13 @@ class MyPageSettingView extends StatelessWidget {
 
   void showLogOutDialog(
     BuildContext context,
+    VoidCallback onConfirmPressed,
   ) {
     CommonDialog.show(
       context,
       title: "로그아웃을 하시겠어요?",
       confirmText: "확인",
-      onConfirm: () {
-        Get.offAll(() => LoginPage());
-      },
+      onConfirm: onConfirmPressed,
     );
   }
 }

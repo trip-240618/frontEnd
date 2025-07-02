@@ -49,7 +49,7 @@ class BaseTextFormField extends StatelessWidget {
       onChanged: onChanged,
       onFieldSubmitted: onFieldSubmitted,
       keyboardType: keyboardType,
-      maxLines: maxLines,
+      maxLines: maxLines ?? 1,
       scrollPadding: scrollPadding ?? const EdgeInsets.all(20.0),
       onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
       decoration: InputDecoration(
@@ -58,7 +58,7 @@ class BaseTextFormField extends StatelessWidget {
         enabledBorder: enabledBorder ?? OutlineInputBorder(borderSide: BorderSide.none),
         focusedBorder: focusedBorder ?? OutlineInputBorder(borderSide: BorderSide.none),
         hintText: hintText,
-        hintStyle: context.style.body2Normal.copyWith(
+        hintStyle: context.style.body2Reading.copyWith(
           color: context.color.gray400,
         ),
       ),

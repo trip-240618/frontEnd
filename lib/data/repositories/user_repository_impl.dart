@@ -4,6 +4,7 @@ import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/datasources/remote/user_data_source.dart';
 import 'package:tripStory/data/mappers/user_mapper.dart';
 import 'package:tripStory/data/models/register_request.dart';
+import 'package:tripStory/data/models/user_modify_request.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 import 'package:tripStory/domain/repositories/user_repository.dart';
 
@@ -39,6 +40,19 @@ class UserRepositoryImpl implements UserRepository {
     try {
       await _userDataSource.deleteUser();
       return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<UserEntity> putUserModify(
+    UserModifyRequest request,
+  ) async {
+    try {
+      final result = await _userDataSource.putUserModify(request);
+      final entities = UserMapper.toEntity(result);
+      return Right(entities);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }

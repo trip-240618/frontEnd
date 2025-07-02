@@ -12,4 +12,5 @@ class Routes {
   static const notificationList = "/notification-list";
   static const alimSetting = "/alim-setting";
   static const userDelete = "/user-delete";
+  static const userEditProfile = "/user_edit_profile";
 }
