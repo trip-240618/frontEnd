@@ -18,10 +18,12 @@ import 'package:tripStory/view/login/views/profile_add_view.dart';
 import 'package:tripStory/view/login/views/register_success_view.dart';
 import 'package:tripStory/view/login/views/term_view.dart';
 import 'package:tripStory/view/setting/bindings/alim_setting_binding.dart';
+import 'package:tripStory/view/setting/bindings/edit_profile_binding.dart';
 import 'package:tripStory/view/setting/bindings/my_page_binding.dart';
 import 'package:tripStory/view/setting/bindings/my_page_setting_binding.dart';
 import 'package:tripStory/view/setting/bindings/user_delete_binding.dart';
 import 'package:tripStory/view/setting/views/alim_setting_view.dart';
+import 'package:tripStory/view/setting/views/edit_profile_view.dart';
 import 'package:tripStory/view/setting/views/my_page_setting_view.dart';
 import 'package:tripStory/view/setting/views/my_page_view.dart';
 import 'package:tripStory/view/setting/views/user_delete_view.dart';
@@ -64,6 +66,11 @@ class RouterInfo {
       name: Routes.userDelete,
       page: () => const UserDeleteView(),
       binding: UserDeleteBinding(),
+    ),
+    GetPage(
+      name: Routes.userEditProfile,
+      page: () => const EditProfileView(),
+      binding: EditProfileBinding(),
     ),
     GetPage(
       name: Routes.profileAdd,

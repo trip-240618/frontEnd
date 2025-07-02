@@ -55,21 +55,6 @@ class CommonDialog extends StatelessWidget {
                 backgroundColor: context.color.gray200,
               ),
             ),
-            // Expanded(
-            //   child: GestureDetector(
-            //     onTap: Get.back,
-            //     child: Container(
-            //       height: 58,
-            //       decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.circular(10),
-            //         color: gray200,
-            //       ),
-            //       child: Center(
-            //         child: Text('취소', style: f16gray600w400),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             const SizedBox(width: 12),
             Expanded(
               child: GestureDetector(

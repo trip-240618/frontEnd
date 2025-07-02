@@ -11,6 +11,7 @@ class ProfileImageButton extends StatelessWidget {
   final String? url;
   final VoidCallback? onPressed;
   final String iconPath;
+  final double? size;
 
   const ProfileImageButton({
     super.key,
@@ -18,6 +19,7 @@ class ProfileImageButton extends StatelessWidget {
     this.onPressed,
     required this.iconPath,
     this.url,
+    this.size,
   });
 
   @override
@@ -45,6 +47,8 @@ class ProfileImageButton extends StatelessWidget {
           child: SvgIcon(
             assetPath: iconPath,
             color: context.color.gray500,
+            width: size,
+            height: size,
           ),
         ),
       ),

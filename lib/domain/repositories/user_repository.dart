@@ -1,5 +1,6 @@
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/models/register_request.dart';
+import 'package:tripStory/data/models/user_modify_request.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 
 abstract class UserRepository {
@@ -10,4 +11,8 @@ abstract class UserRepository {
   ResultFuture<UserEntity> fetchUserInfo();
 
   ResultFuture<void> deleteUser();
+
+  ResultFuture<UserEntity> putUserModify(
+    UserModifyRequest request,
+  );
 }

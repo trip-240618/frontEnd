@@ -14,6 +14,7 @@ class ErrorTextFormField extends StatefulWidget {
   final Widget? trailing;
   final TextStyle? textStyle;
   final EdgeInsets? contentPadding;
+  final Color? backgroundColor;
 
   const ErrorTextFormField({
     super.key,
@@ -27,6 +28,7 @@ class ErrorTextFormField extends StatefulWidget {
     this.trailing,
     this.textStyle,
     this.contentPadding,
+    this.backgroundColor,
   });
 
   @override
@@ -58,6 +60,7 @@ class _ErrorTextFormFieldState extends State<ErrorTextFormField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CommonTextField(
+          backgroundColor: widget.backgroundColor,
           controller: widget.controller,
           hintText: widget.hintText,
           textStyle: widget.textStyle,

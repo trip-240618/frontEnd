@@ -7,7 +7,6 @@ import 'package:tripStory/domain/usecases/fetch_visited_country_usecase.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/util/one_time_event.dart';
 import 'package:tripStory/util/throttle.dart';
-import 'package:tripStory/view/myPage/editProfilePage.dart';
 import 'package:tripStory/view/myPage/faq/setting_faq_main.dart';
 import 'package:tripStory/view/myPage/notice/setting_noti_main.dart';
 import 'package:tripStory/view/setting/models/my_page_state.dart';
@@ -43,7 +42,13 @@ class MyPageController extends GetxController {
 
   void onSettingPressed() => Get.toNamed(Routes.myPageSetting);
 
-  void onProfilePressed() => Get.to(() => EditProfilePage());
+  void onProfilePressed() => Get.toNamed(Routes.userEditProfile)?.then(
+        (value) {
+          if (value != null) {
+            update();
+          }
+        },
+      );
 
   void onInvitedLinkPressed() {
     _throttle(() {
