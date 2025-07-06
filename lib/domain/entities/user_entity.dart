@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:tripStory/common/enum/user_type.dart';
+import 'package:tripStory/core/enum/user_type.dart';
 
 part 'user_entity.freezed.dart';
 

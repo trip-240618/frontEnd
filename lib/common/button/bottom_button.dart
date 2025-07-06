@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/button/base/base_button.dart';
-import 'package:tripStory/common/enum/button_type.dart';
+import 'package:tripStory/core/enum/button_type.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 

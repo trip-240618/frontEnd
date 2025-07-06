@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tripStory/common/enum/trip_color.dart';
-import 'package:tripStory/common/enum/trip_type.dart';
+import 'package:tripStory/core/enum/trip_color.dart';
+import 'package:tripStory/core/enum/trip_type.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/util/one_time_event.dart';
 

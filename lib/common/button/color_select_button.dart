@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tripStory/common/enum/trip_color.dart';
+import 'package:tripStory/core/enum/trip_color.dart';
 import 'package:tripStory/util/color.dart';
 
 class ColorSelectButton extends StatelessWidget {

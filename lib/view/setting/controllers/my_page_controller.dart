@@ -8,7 +8,6 @@ import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/util/one_time_event.dart';
 import 'package:tripStory/util/throttle.dart';
 import 'package:tripStory/view/myPage/faq/setting_faq_main.dart';
-import 'package:tripStory/view/myPage/notice/setting_noti_main.dart';
 import 'package:tripStory/view/setting/models/my_page_state.dart';
 
 class MyPageController extends GetxController {
@@ -59,7 +58,7 @@ class MyPageController extends GetxController {
     });
   }
 
-  void onNoticePressed() => Get.to(() => SettingNotiMain());
+  void onNoticePressed() => Get.toNamed(Routes.notice);
 
   void onFaqPressed() => Get.to(() => SettingFaqMain());
 

@@ -21,11 +21,13 @@ import 'package:tripStory/view/setting/bindings/alim_setting_binding.dart';
 import 'package:tripStory/view/setting/bindings/edit_profile_binding.dart';
 import 'package:tripStory/view/setting/bindings/my_page_binding.dart';
 import 'package:tripStory/view/setting/bindings/my_page_setting_binding.dart';
+import 'package:tripStory/view/setting/bindings/notices_list_binding.dart';
 import 'package:tripStory/view/setting/bindings/user_delete_binding.dart';
 import 'package:tripStory/view/setting/views/alim_setting_view.dart';
 import 'package:tripStory/view/setting/views/edit_profile_view.dart';
 import 'package:tripStory/view/setting/views/my_page_setting_view.dart';
 import 'package:tripStory/view/setting/views/my_page_view.dart';
+import 'package:tripStory/view/setting/views/notices_list_view.dart';
 import 'package:tripStory/view/setting/views/user_delete_view.dart';
 import 'package:tripStory/view/splash/binding/splash_binding.dart';
 import 'package:tripStory/view/splash/views/splash_view.dart';
@@ -61,6 +63,11 @@ class RouterInfo {
       name: Routes.alimSetting,
       page: () => const AlimSettingView(),
       binding: AlimSettingBinding(),
+    ),
+    GetPage(
+      name: Routes.notice,
+      page: () => const NoticesListView(),
+      binding: NoticesListBinding(),
     ),
     GetPage(
       name: Routes.userDelete,
