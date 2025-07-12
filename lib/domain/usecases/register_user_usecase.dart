@@ -1,5 +1,5 @@
 import 'package:tripStory/core/network/typedefs.dart';
-import 'package:tripStory/data/models/register_request.dart';
+import 'package:tripStory/data/models/request/register_request.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 import 'package:tripStory/domain/repositories/user_repository.dart';

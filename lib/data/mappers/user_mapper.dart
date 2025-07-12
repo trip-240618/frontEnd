@@ -1,5 +1,5 @@
 import 'package:tripStory/core/enum/user_type.dart';
-import 'package:tripStory/data/models/user_response.dart';
+import 'package:tripStory/data/models/response/user_response.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 
 class UserMapper {

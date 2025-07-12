@@ -1,6 +1,6 @@
 import 'package:tripStory/core/network/typedefs.dart';
-import 'package:tripStory/data/models/apple_login_request.dart';
-import 'package:tripStory/data/models/user_request.dart';
+import 'package:tripStory/data/models/request/apple_login_request.dart';
+import 'package:tripStory/data/models/request/user_request.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 
 abstract class AuthRepository {

@@ -43,7 +43,6 @@ class BaseTileButton extends StatelessWidget {
           style: textStyle,
         ),
         trailing: trailing,
-        // onTap: onTap,
       ),
     );
   }

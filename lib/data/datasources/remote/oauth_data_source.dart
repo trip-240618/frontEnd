@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:tripStory/data/models/apple_login_request.dart';
-import 'package:tripStory/data/models/user_request.dart';
-import 'package:tripStory/data/models/user_response.dart';
+import 'package:tripStory/data/models/request/apple_login_request.dart';
+import 'package:tripStory/data/models/request/user_request.dart';
+import 'package:tripStory/data/models/response/user_response.dart';
 
 part 'oauth_data_source.g.dart';
 
-@RestApi(baseUrl: "https://trip-story.site/user/oauth2")
+@RestApi(baseUrl: "https://tripstory.shop/user/oauth2")
 abstract class OauthDataSource {
   factory OauthDataSource(Dio dio, {String baseUrl}) = _OauthDataSource;
 

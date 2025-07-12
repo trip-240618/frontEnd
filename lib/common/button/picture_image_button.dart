@@ -20,6 +20,7 @@ class PictureImageButton extends StatelessWidget {
     return BaseImageButton(
       onPressed: onPressed,
       pickedImage: pickedImage,
+      positioned: 10,
       iconWidget: BaseButton(
         borderRadius: 100,
         onTap: onPressed,

@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:tripStory/data/models/register_request.dart';
-import 'package:tripStory/data/models/user_modify_request.dart';
-import 'package:tripStory/data/models/user_response.dart';
+import 'package:tripStory/data/models/request/register_request.dart';
+import 'package:tripStory/data/models/request/user_modify_request.dart';
+import 'package:tripStory/data/models/response/user_response.dart';
 
 part 'user_data_source.g.dart';
 
-@RestApi(baseUrl: "https://trip-story.site/user")
+@RestApi(baseUrl: "https://tripstory.shop/user")
 abstract class UserDataSource {
   factory UserDataSource(Dio dio, {String baseUrl}) = _UserDataSource;
 

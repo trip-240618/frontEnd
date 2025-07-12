@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:tripStory/data/models/file_response.dart';
+import 'package:tripStory/data/models/response/file_response.dart';
 
 part 'file_data_source.g.dart';
 
-@RestApi(baseUrl: "https://trip-story.site/file")
+@RestApi(baseUrl: "https://tripstory.shop/file")
 abstract class FileDataSource {
   factory FileDataSource(Dio dio, {String baseUrl}) = _FileDataSource;
 

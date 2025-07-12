@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class NoticeListEntity extends Equatable {
-  final String id;
+  final int id;
   final String type;
   final String title;
   final DateTime createDate;
