@@ -1,4 +1,4 @@
-import 'package:tripStory/data/models/trip_room_response.dart';
+import 'package:tripStory/data/models/response/trip_room_response.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 
 class TripRoomMapper {

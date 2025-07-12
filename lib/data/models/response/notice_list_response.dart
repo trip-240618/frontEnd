@@ -6,7 +6,7 @@ part 'notice_list_response.g.dart';
 @freezed
 abstract class NoticeListResponse with _$NoticeListResponse {
   const factory NoticeListResponse({
-    required String id,
+    required int id,
     required String type,
     required String title,
     required String createDate,

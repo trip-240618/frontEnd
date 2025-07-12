@@ -1,4 +1,4 @@
-import 'package:tripStory/data/models/notice_list_response.dart';
+import 'package:tripStory/data/models/response/notice_list_response.dart';
 import 'package:tripStory/domain/entities/notice_list_entity.dart';
 import 'package:tripStory/util/extension/string_extension.dart';
 

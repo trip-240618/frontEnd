@@ -1,4 +1,4 @@
-import 'package:tripStory/data/models/country_visited_response.dart';
+import 'package:tripStory/data/models/response/country_visited_response.dart';
 import 'package:tripStory/domain/entities/visited_country_entity.dart';
 import 'package:tripStory/util/helper/country_flag_helper.dart';
 

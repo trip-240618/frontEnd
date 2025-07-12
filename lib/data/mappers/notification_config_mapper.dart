@@ -1,4 +1,4 @@
-import 'package:tripStory/data/models/notification_config_response.dart';
+import 'package:tripStory/data/models/response/notification_config_response.dart';
 import 'package:tripStory/domain/entities/notification_config_entity.dart';
 
 class NotificationConfigMapper {

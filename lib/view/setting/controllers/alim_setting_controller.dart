@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:tripStory/data/models/notification_config_modify_request.dart';
+import 'package:tripStory/data/models/request/notification_config_modify_request.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_notification_config_usecase.dart';
 import 'package:tripStory/domain/usecases/update_notification_config_usecase.dart';

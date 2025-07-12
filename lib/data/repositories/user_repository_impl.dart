@@ -3,8 +3,8 @@ import 'package:tripStory/core/errors/failure.dart';
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/datasources/remote/user_data_source.dart';
 import 'package:tripStory/data/mappers/user_mapper.dart';
-import 'package:tripStory/data/models/register_request.dart';
-import 'package:tripStory/data/models/user_modify_request.dart';
+import 'package:tripStory/data/models/request/register_request.dart';
+import 'package:tripStory/data/models/request/user_modify_request.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 import 'package:tripStory/domain/repositories/user_repository.dart';
 
