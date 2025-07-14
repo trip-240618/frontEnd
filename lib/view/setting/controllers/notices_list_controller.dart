@@ -13,16 +13,28 @@ class NoticesListController extends GetxController {
 
   NoticesListState get state => _noticesListState;
 
+  @override
+  void onInit() {
+    super.onInit();
+    _fetchNotices(NoticesType.all);
+  }
+
   Future<void> onNoticesTypePressed(NoticesType noticeType) async {
-    final result = await _fetchNoticesUsecase.call(
-      state.selectedNoticesType.name,
+    await _fetchNotices(
+      noticeType,
     );
+  }
+
+  Future<void> _fetchNotices(
+    NoticesType type,
+  ) async {
+    final result = await _fetchNoticesUsecase.call(type.name);
 
     result.fold(
       (error) {},
       (notices) {
         _noticesListState = state.copyWith(
-          selectedNoticesType: noticeType,
+          selectedNoticesType: type,
           notices: notices,
         );
         update();

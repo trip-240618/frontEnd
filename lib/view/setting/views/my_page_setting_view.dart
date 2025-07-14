@@ -4,6 +4,7 @@ import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/tile_list_button.dart';
 import 'package:tripStory/common/dialog/common_dialog.dart';
 import 'package:tripStory/component/url_launch.dart';
+import 'package:tripStory/core/constants/app_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/view/setting/controllers/my_page_setting_controller.dart';
 
@@ -62,7 +63,7 @@ class MyPageSettingView extends StatelessWidget {
                 ),
                 _SettingInfoSection(
                   versionText: controller.state.appVersionText,
-                  onPrivatePressed: () => urlLaunch("https://trip-story.site/policy/privacy"),
+                  onPrivatePressed: () => urlLaunch(AppConstants.privacyPolicy),
                 ),
               ],
             ),

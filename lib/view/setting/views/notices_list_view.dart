@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/round_button.dart';
-import 'package:tripStory/controller/notiState.dart';
-import 'package:tripStory/util/color.dart';
+import 'package:tripStory/common/divider/common_divider.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/font.dart';
-import 'package:tripStory/view/myPage/notice/setting_noti_detail.dart';
 import 'package:tripStory/view/setting/controllers/notices_list_controller.dart';
 import 'package:tripStory/view/setting/models/notices_list_state.dart';
 
@@ -20,15 +18,6 @@ class NoticesListView extends StatefulWidget {
 }
 
 class _NoticesListViewState extends State<NoticesListView> {
-  final notiS = Get.put(Notistate());
-  int selectField = 0;
-  List filedList = ['전체', '일반', '업데이트', '시스템'];
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NoticesListController>(
@@ -120,50 +109,50 @@ class _NoticesListViewState extends State<NoticesListView> {
                   child: SingleChildScrollView(
                     physics: const ClampingScrollPhysics(),
                     child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const ClampingScrollPhysics(),
-                        itemCount: notiS.notiList.length,
-                        padding: EdgeInsets.zero,
-                        itemBuilder: (contexts, index) {
-                          return GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () async {
-                              notiS.notiDetailList.clear();
-                              await notiS.getDetailNoti(notiS.notiList[index]['id'], notiS.notiList[index]['type']);
-                              Get.to(() => SettingNotiDetail());
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                Text(
-                                  '[${notiS.notiList[index]['type']}] ${notiS.notiList[index]['title']}',
-                                  style: f14Gray600w600,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(
-                                  height: 2,
-                                ),
-                                Text(
-                                  '${notiS.notiList[index]['createDate']}',
-                                  style: f12gray400w500,
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                Divider(
-                                  thickness: 1,
-                                  color: gray200,
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      itemCount: controller.state.noticesLength,
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (contexts, index) {
+                        final notice = controller.state.notices[index];
+
+                        return GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () async {
+                            // notiS.notiDetailList.clear();
+                            // await notiS.getDetailNoti(notiS.notiList[index]['id'], notiS.notiList[index]['type']);
+                            // Get.to(() => SettingNotiDetail());
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 12,
+                              ),
+                              Text(
+                                "[${notice.type}] ${notice.title}",
+                                style: context.style.body2Normal,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                "${notice.createDate}",
+                                style: f12gray400w500,
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              CommonDivider(),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           ),
