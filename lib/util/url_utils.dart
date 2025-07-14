@@ -1,5 +1,6 @@
 class UrlUtils {
   static String getBaseUrl(String url) {
-    return url.split("?").first;
+    final uri = Uri.parse(url);
+    return uri.path;
   }
 }

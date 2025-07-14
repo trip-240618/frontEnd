@@ -16,6 +16,7 @@ class BaseImageButton extends StatelessWidget {
   final double? errorIconSize;
   final Widget iconWidget;
   final Color? backgroundColor;
+  final double? positioned;
 
   const BaseImageButton({
     super.key,
@@ -26,6 +27,7 @@ class BaseImageButton extends StatelessWidget {
     this.errorIconSize,
     required this.iconWidget,
     this.backgroundColor,
+    this.positioned,
   });
 
   @override
@@ -40,8 +42,8 @@ class BaseImageButton extends StatelessWidget {
             child: _buildImageContent(context),
           ),
           Positioned(
-            right: 0,
-            bottom: 0,
+            right: positioned ?? 0,
+            bottom: positioned ?? 0,
             child: iconWidget,
           ),
         ],

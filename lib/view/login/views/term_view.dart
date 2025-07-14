@@ -54,7 +54,7 @@ class TermView extends StatelessWidget {
                   style: f22gray900w700,
                 ),
                 const SizedBox(height: 35),
-                CheckTileButton(
+                _CheckTileButton(
                   text: "서비스 이용약관 전체 동의",
                   isActive: controller.state.isAllTerms,
                   tileColor: gray50,
@@ -63,31 +63,31 @@ class TermView extends StatelessWidget {
                   onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/service"),
                 ),
                 const SizedBox(height: 28),
-                CheckTileButton(
+                _CheckTileButton(
                   text: "(필수) 서비스 이용약관",
                   isActive: controller.state.isServiceTerm,
                   onTap: () => controller.onServiceTermPressed(),
                   onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/service"),
                 ),
-                CheckTileButton(
+                _CheckTileButton(
                   text: "(필수) 개인정보 수집 및 이용약관",
                   isActive: controller.state.isPrivateTerm,
                   onTap: () => controller.onPrivateTermPressed(),
                   onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/privacy"),
                 ),
-                CheckTileButton(
+                _CheckTileButton(
                   text: "(필수) 위치정보 서비스 이용약관",
                   isActive: controller.state.isLocationTerm,
                   onTap: () => controller.onLocationTermPressed(),
                   onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/location"),
                 ),
-                CheckTileButton(
+                _CheckTileButton(
                   text: "(필수) 제3자 정보제공 동의",
                   isActive: controller.state.isThreeTerm,
                   onTap: () => controller.onThreeTermPressed(),
                   onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/offerl"),
                 ),
-                CheckTileButton(
+                _CheckTileButton(
                   text: "(선택) 마케팅 정보 수신 동의",
                   isActive: controller.state.isMarketingTerm,
                   onTap: () => controller.onMarketTermPressed(),
@@ -108,7 +108,7 @@ class TermView extends StatelessWidget {
   }
 }
 
-class CheckTileButton extends StatelessWidget {
+class _CheckTileButton extends StatelessWidget {
   final String text;
   final bool isActive;
   final Color? tileColor;
@@ -116,8 +116,7 @@ class CheckTileButton extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onTrailingTap;
 
-  const CheckTileButton({
-    super.key,
+  const _CheckTileButton({
     required this.text,
     required this.isActive,
     this.tileColor,
@@ -150,8 +149,11 @@ class CheckTileButton extends StatelessWidget {
       ),
       trailing: GestureDetector(
         onTap: onTrailingTap,
-        child: SvgIcon(
-          assetPath: IconConstants.arrow,
+        child: SizedBox(
+          width: 24,
+          child: SvgIcon(
+            assetPath: IconConstants.arrow,
+          ),
         ),
       ),
     );

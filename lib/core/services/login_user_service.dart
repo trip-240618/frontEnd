@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:tripStory/core/enum/user_type.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 
 class LoginUserService extends GetxService {
@@ -6,7 +7,7 @@ class LoginUserService extends GetxService {
 
   UserEntity? get user => _user;
 
-  bool get isLoggedIn => _user != null;
+  bool get isLoggedIn => _user != null && _user?.type == UserType.login;
 
   void setUser(UserEntity user) {
     _user = user;

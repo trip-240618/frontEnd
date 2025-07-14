@@ -13,7 +13,7 @@ class DioClient {
   DioClient({
     required this.sessionService,
   }) : dio = Dio(BaseOptions(
-          baseUrl: "https://trip-story.site",
+          baseUrl: "https://tripstory.shop",
           connectTimeout: const Duration(seconds: 5),
           receiveTimeout: const Duration(seconds: 3),
           headers: {

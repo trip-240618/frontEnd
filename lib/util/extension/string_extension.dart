@@ -7,4 +7,8 @@ extension StringExtension on String {
     final parsed = int.tryParse(this);
     return parsed != null ? Color(parsed) : fallback;
   }
+
+  DateTime toDateTime() {
+    return DateTime.parse(this);
+  }
 }

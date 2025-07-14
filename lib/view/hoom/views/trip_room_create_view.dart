@@ -3,16 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/bottom/trip_search_bottom_sheet.dart';
 import 'package:tripStory/common/button/color_select_button.dart';
 import 'package:tripStory/common/button/icon_text_button.dart';
 import 'package:tripStory/common/button/picture_image_button.dart';
 import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/common/dialog/code_dialog.dart';
-import 'package:tripStory/common/enum/trip_type.dart';
 import 'package:tripStory/common/text/common_text_form_field.dart';
-import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/dialog/loading.dart';
+import 'package:tripStory/core/enum/trip_type.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/hoom/controller/trip_rooms_create_controller.dart';
@@ -65,9 +65,8 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
       return Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
-        appBar: BackAppBar(
+        appBar: AppAppbar(
           text: "여행방 만들기",
-          onTap: () => Get.back(),
         ),
         body: Column(
           children: [

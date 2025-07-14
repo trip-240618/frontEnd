@@ -10,7 +10,7 @@ part of 'notification_data_source.dart';
 
 class _NotificationDataSource implements NotificationDataSource {
   _NotificationDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://trip-story.site/notification';
+    baseUrl ??= 'https://tripstory.shop/notification';
   }
 
   final Dio _dio;
