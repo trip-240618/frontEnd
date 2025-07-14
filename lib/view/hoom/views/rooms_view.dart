@@ -128,7 +128,7 @@ class TripRoomListView extends StatelessWidget {
                                     _TripRoomTile(
                                       tripRoom: tripRoom,
                                       tripRoomType: controller.tripRoomsState.tripRoomType,
-                                      onTap: () => controller.onRoomPressed(),
+                                      onTap: () => controller.onRoomPressed(tripRoom.id),
                                       onBookmarkTap: () => controller.onBookmarkIconPressed(tripRoom.id),
                                       onSendTap: () => sendBottomModal(
                                         context,

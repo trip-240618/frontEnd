@@ -20,4 +20,11 @@ class IconConstants {
   static const String arrow = "$_iconNormal/arrow.svg";
   static const String close = "$_iconNormal/close.svg";
   static const String mail = "$_iconNormal/mail.svg";
+  static const String home = "$_iconNormal/home.svg";
+  static const String moreHorizon = "$_iconNormal/moreHorizon.svg";
+  static const String calendar = "$_iconNormal/calendar.svg";
+  static const String inbox = "$_iconNormal/inbox.svg";
+
+  // tag
+  static const String tagUser = "$_icon/userIcon.svg";
 }

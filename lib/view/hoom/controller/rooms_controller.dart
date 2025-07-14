@@ -11,7 +11,6 @@ import 'package:tripStory/domain/usecases/update_bookmark_usecase.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/hoom/enum/trip_rooms_type.dart';
 import 'package:tripStory/view/hoom/model/trip_rooms_state.dart';
-import 'package:tripStory/view/trip/bottomNavigator.dart';
 
 class RoomsController extends GetxController with GetSingleTickerProviderStateMixin {
   final FetchComingTripsUseCase _fetchComingTrips;
@@ -119,7 +118,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     );
   }
 
-  void onRoomPressed() => Get.to(() => BottomNavigator())?.then((v) async {
+  void onRoomPressed(int tripId) => Get.toNamed(Routes.tripRoom, arguments: tripId)?.then((v) async {
         // await notis.getNotificationCount();
       });
 
