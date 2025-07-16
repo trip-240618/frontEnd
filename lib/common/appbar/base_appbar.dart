@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 
 class BaseAppbar extends StatelessWidget implements PreferredSizeWidget {
   final Color? color;
@@ -10,7 +10,7 @@ class BaseAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   const BaseAppbar({
     super.key,
-    this.color = gray50,
+    this.color,
     this.leadingWidget,
     this.titleWidget,
     this.actionWidget,
@@ -31,7 +31,9 @@ class BaseAppbar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         if (actionWidget != null) actionWidget!,
       ],
-      backgroundColor: color,
+      backgroundColor: color ?? context.color.white,
+      elevation: 0,
+      surfaceTintColor: color ?? context.color.white,
     );
   }
 

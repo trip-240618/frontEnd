@@ -6,7 +6,7 @@ import 'package:tripStory/data/models/response/notifications_response.dart';
 
 part 'notification_data_source.g.dart';
 
-@RestApi(baseUrl: "https://tripstory.shop/notification")
+@RestApi(baseUrl: "/notification")
 abstract class NotificationDataSource {
   factory NotificationDataSource(Dio dio, {String baseUrl}) = _NotificationDataSource;
 

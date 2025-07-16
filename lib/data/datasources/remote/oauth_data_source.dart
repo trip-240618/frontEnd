@@ -6,7 +6,7 @@ import 'package:tripStory/data/models/response/user_response.dart';
 
 part 'oauth_data_source.g.dart';
 
-@RestApi(baseUrl: "https://tripstory.shop/user/oauth2")
+@RestApi(baseUrl: "/user/oauth2")
 abstract class OauthDataSource {
   factory OauthDataSource(Dio dio, {String baseUrl}) = _OauthDataSource;
 

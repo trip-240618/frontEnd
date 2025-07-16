@@ -31,6 +31,7 @@ import 'package:tripStory/view/setting/views/notices_list_view.dart';
 import 'package:tripStory/view/setting/views/user_delete_view.dart';
 import 'package:tripStory/view/splash/binding/splash_binding.dart';
 import 'package:tripStory/view/splash/views/splash_view.dart';
+import 'package:tripStory/view/trip/bindings/j_plan_binding.dart';
 import 'package:tripStory/view/trip/bindings/trip_main_binding.dart';
 import 'package:tripStory/view/trip/views/trip_main_view.dart';
 
@@ -138,7 +139,10 @@ class RouterInfo {
           tripId: tripId,
         );
       },
-      binding: TripMainBinding(),
+      bindings: [
+        TripMainBinding(),
+        JPlanBinding(),
+      ],
     ),
   ];
 }

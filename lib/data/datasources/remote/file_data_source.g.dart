@@ -10,7 +10,7 @@ part of 'file_data_source.dart';
 
 class _FileDataSource implements FileDataSource {
   _FileDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://tripstory.shop/file';
+    baseUrl ??= '/file';
   }
 
   final Dio _dio;

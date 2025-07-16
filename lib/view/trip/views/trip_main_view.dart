@@ -6,8 +6,10 @@ import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
+import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/view/trip/controllers/trip_main_controller.dart';
 import 'package:tripStory/view/trip/models/trip_main_state.dart';
+import 'package:tripStory/view/trip/views/j_plan_view.dart';
 
 class TripMainView extends StatefulWidget {
   final int tripId;
@@ -22,25 +24,15 @@ class TripMainView extends StatefulWidget {
 }
 
 class _TripMainViewState extends State<TripMainView> {
-  List<Widget> _widgetOptions = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _widgetOptions = [
-      Text("111"),
-      Text("222"),
-      Text("3333"),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<TripMainController>(
       builder: (controller) {
         return Scaffold(
           appBar: _TripRoomAppbar(
-            title: "5월",
+            title: controller.tripRoomInfo?.name ?? "",
+            roomDate:
+                "${controller.tripRoomInfo?.startDate.formatShortYMD() ?? ""} ~ ${controller.tripRoomInfo?.endDate.formatShortYMD() ?? ""}",
             tripNaviType: controller.state.selectedTripType,
           ),
           body: Column(
@@ -54,7 +46,7 @@ class _TripMainViewState extends State<TripMainView> {
                       assetPath: IconConstants.tagUser,
                       color: context.color.gray900,
                     ),
-                    text: "5",
+                    text: "${controller.tripRoomInfo?.memberCount}",
                     textStyle: context.style.label1Normal,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 14,
@@ -64,9 +56,15 @@ class _TripMainViewState extends State<TripMainView> {
                   ),
                 ),
               ),
-              IndexedStack(
-                index: controller.state.selectedTabIndex,
-                children: _widgetOptions,
+              Expanded(
+                child: IndexedStack(
+                  index: controller.state.selectedTabIndex,
+                  children: [
+                    JPlanView(),
+                    Text("2"),
+                    Text("3"),
+                  ],
+                ),
               ),
             ],
           ),
@@ -114,11 +112,13 @@ class _TripMainViewState extends State<TripMainView> {
 
 class _TripRoomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final TripNaviType tripNaviType;
+  final String roomDate;
   final String title;
 
   const _TripRoomAppbar({
     required this.title,
     required this.tripNaviType,
+    required this.roomDate,
   });
 
   @override
@@ -134,9 +134,7 @@ class _TripRoomAppbar extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.only(left: 10, bottom: 10),
         child: AppIconButton(
           assetPath: IconConstants.home,
-          onTap: () {
-            Get.back();
-          },
+          onTap: () => Get.back(),
         ),
       ),
       titleWidget: Column(
@@ -148,7 +146,7 @@ class _TripRoomAppbar extends StatelessWidget implements PreferredSizeWidget {
           ),
           const SizedBox(height: 3),
           Text(
-            "24.05.10 ~ 24.05.14",
+            roomDate,
             style: context.style.caption1.copyWith(
               color: context.color.gray600,
             ),

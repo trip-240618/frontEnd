@@ -10,7 +10,7 @@ part of 'oauth_data_source.dart';
 
 class _OauthDataSource implements OauthDataSource {
   _OauthDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://tripstory.shop/user/oauth2';
+    baseUrl ??= '/user/oauth2';
   }
 
   final Dio _dio;

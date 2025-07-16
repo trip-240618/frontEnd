@@ -24,6 +24,9 @@ class IconConstants {
   static const String moreHorizon = "$_iconNormal/moreHorizon.svg";
   static const String calendar = "$_iconNormal/calendar.svg";
   static const String inbox = "$_iconNormal/inbox.svg";
+  static const String plane = "$_iconNormal/plane.svg";
+  static const String swap = "$_iconNormal/swap.svg";
+  static const String mainPlus = "$_iconNormal/main_plus.svg";
 
   // tag
   static const String tagUser = "$_icon/userIcon.svg";

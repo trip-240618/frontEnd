@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
+import 'package:tripStory/core/services/trip_room_service.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_bookmarked_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_coming_trips_usecase.dart';
+import 'package:tripStory/domain/usecases/fetch_enter_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_join_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_last_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/update_bookmark_usecase.dart';
@@ -18,18 +20,23 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   final FetchBookmarkedTripsUseCase _fetchBookmarkedTrips;
   final UpdateBookmarkUseCase _bookmarkUseCase;
   final FetchJoinRoomUsecase _fetchJoinRoomUsecase;
+  final FetchEnterRoomUsecase _fetchEnterRoomUsecase;
+  final TripRoomService _tripRoomService;
 
-  RoomsController({
+  RoomsController(
+    this._tripRoomService, {
     required FetchComingTripsUseCase fetchComingTrips,
     required FetchLastTripsUseCase fetchLastTrips,
     required FetchBookmarkedTripsUseCase fetchBookmarkedTrips,
     required UpdateBookmarkUseCase updateBookmarkUseCase,
     required FetchJoinRoomUsecase fetchJoinRoomUsecase,
+    required FetchEnterRoomUsecase fetchEnterRoomUsecase,
   })  : _fetchComingTrips = fetchComingTrips,
         _fetchLastTrips = fetchLastTrips,
         _fetchBookmarkedTrips = fetchBookmarkedTrips,
         _bookmarkUseCase = updateBookmarkUseCase,
-        _fetchJoinRoomUsecase = fetchJoinRoomUsecase;
+        _fetchJoinRoomUsecase = fetchJoinRoomUsecase,
+        _fetchEnterRoomUsecase = fetchEnterRoomUsecase;
 
   TripRoomsState tripRoomsState = TripRoomsState();
   DateTime? _lastBackPressTime;
@@ -56,21 +63,33 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
       _lastBackPressTime = now;
       return false;
     }
-
     return true;
   }
 
-  /// side Effect
+  @override
+  void onInit() {
+    super.onInit();
+    _getComingTrips();
+  }
 
-  Future<void> onComingTripPressed() async {
+  Future<void> _getComingTrips() async {
     final result = await _fetchComingTrips.call(NoParams());
-    result.fold((error) {}, (rooms) {
-      tripRoomsState = tripRoomsState.copyWith(
-        tripRooms: rooms,
-        tripRoomType: TripRoomType.coming,
-      );
-      update();
-    });
+    result.fold(
+      (error) {},
+      (rooms) {
+        tripRoomsState = tripRoomsState.copyWith(
+          tripRooms: rooms,
+          tripRoomType: TripRoomType.coming,
+          tripRoomsStatus: rooms.isEmpty ? TripRoomsStatus.empty : TripRoomsStatus.success,
+        );
+        update();
+      },
+    );
+  }
+
+  /// side Effect
+  Future<void> onComingTripPressed() async {
+    _getComingTrips();
   }
 
   Future<void> onLastTripPressed() async {
@@ -79,6 +98,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
       tripRoomsState = tripRoomsState.copyWith(
         tripRooms: rooms,
         tripRoomType: TripRoomType.lastTrip,
+        tripRoomsStatus: rooms.isEmpty ? TripRoomsStatus.empty : TripRoomsStatus.success,
       );
       update();
     });
@@ -90,6 +110,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
       tripRoomsState = tripRoomsState.copyWith(
         tripRooms: rooms,
         tripRoomType: TripRoomType.bookmarked,
+        tripRoomsStatus: rooms.isEmpty ? TripRoomsStatus.empty : TripRoomsStatus.success,
       );
       update();
     });
@@ -118,9 +139,20 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     );
   }
 
-  void onRoomPressed(int tripId) => Get.toNamed(Routes.tripRoom, arguments: tripId)?.then((v) async {
-        // await notis.getNotificationCount();
-      });
+  Future<void> init(int tripId) async {}
+
+  Future<void> onRoomPressed(int tripId) async {
+    final result = await _fetchEnterRoomUsecase(tripId);
+    result.fold(
+      (failure) {},
+      (room) {
+        _tripRoomService.setTripRoom(room);
+        Get.toNamed(Routes.tripRoom, arguments: tripId)?.then((v) async {
+          // await notis.getNotificationCount();
+        });
+      },
+    );
+  }
 
   void onNotificationPressed() => Get.toNamed(Routes.notificationList)?.then((v) async {
         // await notis.getNotificationCount();

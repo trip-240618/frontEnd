@@ -15,6 +15,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$TripRoomsState {
+  TripRoomsStatus get tripRoomsStatus;
   List<TripRoomEntity> get tripRooms;
   TripRoomType get tripRoomType;
 
@@ -31,18 +32,20 @@ mixin _$TripRoomsState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is TripRoomsState &&
+            (identical(other.tripRoomsStatus, tripRoomsStatus) ||
+                other.tripRoomsStatus == tripRoomsStatus) &&
             const DeepCollectionEquality().equals(other.tripRooms, tripRooms) &&
             (identical(other.tripRoomType, tripRoomType) ||
                 other.tripRoomType == tripRoomType));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
+  int get hashCode => Object.hash(runtimeType, tripRoomsStatus,
       const DeepCollectionEquality().hash(tripRooms), tripRoomType);
 
   @override
   String toString() {
-    return 'TripRoomsState(tripRooms: $tripRooms, tripRoomType: $tripRoomType)';
+    return 'TripRoomsState(tripRoomsStatus: $tripRoomsStatus, tripRooms: $tripRooms, tripRoomType: $tripRoomType)';
   }
 }
 
@@ -52,7 +55,10 @@ abstract mixin class $TripRoomsStateCopyWith<$Res> {
           TripRoomsState value, $Res Function(TripRoomsState) _then) =
       _$TripRoomsStateCopyWithImpl;
   @useResult
-  $Res call({List<TripRoomEntity> tripRooms, TripRoomType tripRoomType});
+  $Res call(
+      {TripRoomsStatus tripRoomsStatus,
+      List<TripRoomEntity> tripRooms,
+      TripRoomType tripRoomType});
 }
 
 /// @nodoc
@@ -68,10 +74,15 @@ class _$TripRoomsStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? tripRoomsStatus = null,
     Object? tripRooms = null,
     Object? tripRoomType = null,
   }) {
     return _then(_self.copyWith(
+      tripRoomsStatus: null == tripRoomsStatus
+          ? _self.tripRoomsStatus
+          : tripRoomsStatus // ignore: cast_nullable_to_non_nullable
+              as TripRoomsStatus,
       tripRooms: null == tripRooms
           ? _self.tripRooms
           : tripRooms // ignore: cast_nullable_to_non_nullable
@@ -88,11 +99,15 @@ class _$TripRoomsStateCopyWithImpl<$Res>
 
 class _TripRoomsState extends TripRoomsState {
   const _TripRoomsState(
-      {final List<TripRoomEntity> tripRooms = const [],
+      {this.tripRoomsStatus = TripRoomsStatus.initial,
+      final List<TripRoomEntity> tripRooms = const [],
       this.tripRoomType = TripRoomType.coming})
       : _tripRooms = tripRooms,
         super._();
 
+  @override
+  @JsonKey()
+  final TripRoomsStatus tripRoomsStatus;
   final List<TripRoomEntity> _tripRooms;
   @override
   @JsonKey()
@@ -119,6 +134,8 @@ class _TripRoomsState extends TripRoomsState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _TripRoomsState &&
+            (identical(other.tripRoomsStatus, tripRoomsStatus) ||
+                other.tripRoomsStatus == tripRoomsStatus) &&
             const DeepCollectionEquality()
                 .equals(other._tripRooms, _tripRooms) &&
             (identical(other.tripRoomType, tripRoomType) ||
@@ -126,12 +143,12 @@ class _TripRoomsState extends TripRoomsState {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
+  int get hashCode => Object.hash(runtimeType, tripRoomsStatus,
       const DeepCollectionEquality().hash(_tripRooms), tripRoomType);
 
   @override
   String toString() {
-    return 'TripRoomsState(tripRooms: $tripRooms, tripRoomType: $tripRoomType)';
+    return 'TripRoomsState(tripRoomsStatus: $tripRoomsStatus, tripRooms: $tripRooms, tripRoomType: $tripRoomType)';
   }
 }
 
@@ -143,7 +160,10 @@ abstract mixin class _$TripRoomsStateCopyWith<$Res>
       __$TripRoomsStateCopyWithImpl;
   @override
   @useResult
-  $Res call({List<TripRoomEntity> tripRooms, TripRoomType tripRoomType});
+  $Res call(
+      {TripRoomsStatus tripRoomsStatus,
+      List<TripRoomEntity> tripRooms,
+      TripRoomType tripRoomType});
 }
 
 /// @nodoc
@@ -159,10 +179,15 @@ class __$TripRoomsStateCopyWithImpl<$Res>
   @override
   @pragma('vm:prefer-inline')
   $Res call({
+    Object? tripRoomsStatus = null,
     Object? tripRooms = null,
     Object? tripRoomType = null,
   }) {
     return _then(_TripRoomsState(
+      tripRoomsStatus: null == tripRoomsStatus
+          ? _self.tripRoomsStatus
+          : tripRoomsStatus // ignore: cast_nullable_to_non_nullable
+              as TripRoomsStatus,
       tripRooms: null == tripRooms
           ? _self._tripRooms
           : tripRooms // ignore: cast_nullable_to_non_nullable

@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/core/services/login_user_service.dart';
 import 'package:tripStory/core/services/session_service.dart';
+import 'package:tripStory/core/services/socket_service.dart';
+import 'package:tripStory/core/services/trip_room_service.dart';
 import 'package:tripStory/data/datasources/local/share_preferences_token_storage.dart';
 import 'package:tripStory/data/datasources/local/token_storage.dart';
 import 'package:tripStory/data/datasources/remote/country_data_source.dart';
@@ -35,13 +37,14 @@ class AppBinding extends Bindings {
 
     // service
     Get.put<LoginUserService>(LoginUserService(), permanent: true);
+    Get.put<TripRoomService>(TripRoomService(), permanent: true);
     Get.put<SessionService>(
         SessionService(
           Get.find<TokenStorage>(),
           Get.find<LoginUserService>(),
         ),
         permanent: true);
-
+    Get.put<SocketService>(SocketService(Get.find<SessionService>()), permanent: true);
     // DioClient
     Get.put<DioClient>(DioClient(sessionService: Get.find<SessionService>()), permanent: true);
     Get.put<Dio>(Get.find<DioClient>().dio, permanent: true);
