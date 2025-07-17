@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
+import 'package:tripStory/core/constants/app_constants.dart';
 import 'package:tripStory/core/services/session_service.dart';
 
 class SocketService extends GetxService {
@@ -10,9 +12,14 @@ class SocketService extends GetxService {
   late StompClient _stompClient;
   bool _isConnected = false;
 
-  SocketService(
-    this._sessionService,
-  );
+  final StreamController<Map<String, dynamic>> _messageStreamController =
+      StreamController<Map<String, dynamic>>.broadcast();
+
+  SocketService(this._sessionService);
+
+  Stream<Map<String, dynamic>> get messageStream => _messageStreamController.stream;
+
+  bool get isConnected => _isConnected;
 
   Future<void> connect({
     required int tripId,
@@ -24,24 +31,22 @@ class SocketService extends GetxService {
 
     _stompClient = StompClient(
       config: StompConfig.sockJS(
-        url: 'https://tripstory.shop/ws',
+        url: AppConstants.socketUrl,
+        reconnectDelay: Duration.zero,
         onConnect: (frame) {
           _isConnected = true;
-          print("연결됨 ${accessToken}");
-          print("연결됨 ${refreshToken}");
+          print("소켓 연결됨 ✅");
         },
         webSocketConnectHeaders: {
           HttpHeaders.cookieHeader: '$accessToken;$refreshToken',
         },
         onWebSocketError: (error) {
-          print("연결됨 ${accessToken}");
-          print("연결됨 ${refreshToken}");
-          print('Socket error: $error');
+          print("error??111 ${error}");
           _stompClient.deactivate();
           _isConnected = false;
         },
         onDisconnect: (_) {
-          print('Socket disconnected');
+          print("error??222 ${_}");
           _isConnected = false;
         },
       ),
@@ -53,21 +58,28 @@ class SocketService extends GetxService {
   void disconnect() {
     _stompClient.deactivate();
     _isConnected = false;
+    _messageStreamController.close();
   }
 
   void send(String destination, {String? body}) {
-    _stompClient.send(destination: destination, body: body);
+    if (_isConnected) {
+      _stompClient.send(destination: destination, body: body);
+    }
   }
 
-  void subscribe(String destination, void Function(Map<String, dynamic>) onData) {
+  void subscribe(String destination) {
     _stompClient.subscribe(
       destination: destination,
       callback: (frame) {
         final data = json.decode(frame.body!);
-        onData(data);
+        _messageStreamController.add(data);
       },
     );
   }
 
-  bool get isConnected => _isConnected;
+  @override
+  void onClose() {
+    _messageStreamController.close();
+    super.onClose();
+  }
 }

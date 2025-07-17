@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
-import 'package:tripStory/domain/entities/trip_room_entity.dart';
 
 part 'trip_main_state.freezed.dart';
 

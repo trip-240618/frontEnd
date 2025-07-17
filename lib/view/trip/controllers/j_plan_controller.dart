@@ -5,14 +5,18 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/core/services/trip_room_service.dart';
+import 'package:tripStory/domain/entities/j_socket_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
+import 'package:tripStory/domain/repositories/j_socket_repository.dart';
 
 import '../models/j_plan_state.dart';
 
 class JPlanController extends GetxController {
+  final JSocketRepository _jSocketRepository;
   final TripRoomService _tripRoomService;
 
   JPlanController(
+    this._jSocketRepository,
     this._tripRoomService,
   );
 
@@ -33,6 +37,7 @@ class JPlanController extends GetxController {
   void onInit() {
     super.onInit();
     getCurrentLocation();
+    planSocketInit();
   }
 
   Future<void> getCurrentLocation() async {
@@ -40,7 +45,6 @@ class JPlanController extends GetxController {
     if (permission == LocationPermission.denied) {
       return;
     }
-
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _jPlanState = state.copyWith(
       mapLatitude: position.latitude,
@@ -48,6 +52,26 @@ class JPlanController extends GetxController {
       jPlanStatus: JPlanStatus.success,
     );
     update();
+  }
+
+  Future<void> planSocketInit() async {
+    final tripId = tripRoomInfo?.id;
+    if (tripId == null) return;
+
+    await _jSocketRepository.connectToTrip(tripId);
+
+    _jSocketRepository.listenToPlans(tripId).listen((event) {
+      switch (event) {
+        case PlanAdded(:final plan):
+          print("📦 Plan 추가됨: $plan");
+          // // 예: 리스트에 추가
+          // _jPlanState = state.copyWith(
+          //   plans: [...state.plans, plan],
+          // );
+          update();
+          break;
+      }
+    });
   }
 
   void onMapDrag(double detail) {
@@ -78,6 +102,7 @@ class JPlanController extends GetxController {
 
   @override
   void onClose() {
+    _jSocketRepository.disconnect();
     scrollController.dispose();
     super.onClose();
   }
