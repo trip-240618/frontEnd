@@ -6,5 +6,5 @@ class AppConstants {
   static final String baseUrl = dotenv.env["BASE_URL"]!;
   static final String privacyPolicy = '$baseUrl${dotenv.env["PRIVACY_POLICY"]}';
   static final String termsOfService = '$baseUrl${dotenv.env['TERMS_POLICY']}';
-  static final String socketUrl = '$baseUrl${dotenv.env['SOCKET_URL']}';
+  static final String socketUrl = dotenv.env["SOCKET_URL"]!;
 }

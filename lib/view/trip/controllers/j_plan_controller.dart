@@ -8,6 +8,7 @@ import 'package:tripStory/core/services/trip_room_service.dart';
 import 'package:tripStory/domain/entities/j_socket_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/repositories/j_socket_repository.dart';
+import 'package:tripStory/router/routes.dart';
 
 import '../models/j_plan_state.dart';
 
@@ -38,6 +39,10 @@ class JPlanController extends GetxController {
     super.onInit();
     getCurrentLocation();
     planSocketInit();
+
+    _jPlanState = state.copyWith(
+      selectedDate: tripRoomInfo?.startDate,
+    );
   }
 
   Future<void> getCurrentLocation() async {
@@ -86,6 +91,7 @@ class JPlanController extends GetxController {
   /// sideEffect
   void onDayPressed(
     int index,
+    DateTime? selectedDate,
   ) {
     double scrollOffset = dayItemWidth * index;
 
@@ -96,8 +102,16 @@ class JPlanController extends GetxController {
     );
     _jPlanState = state.copyWith(
       selectedDayIndex: index,
+      selectedDate: selectedDate,
     );
     update();
+  }
+
+  void onAddPlanPressed() {
+    Get.toNamed(
+      Routes.tripJPlanAdd,
+      arguments: state.selectedDate,
+    );
   }
 
   @override

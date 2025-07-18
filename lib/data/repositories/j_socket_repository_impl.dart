@@ -18,7 +18,7 @@ class JSocketRepositoryImpl implements JSocketRepository {
   Future<void> connectToTrip(int tripId) async {
     await _socketService.connect(tripId: tripId);
 
-    _socketService.subscribe("/sub/plan/j/$tripId");
+    _socketService.subscribe("/topic/api/trip/j/$tripId");
 
     _socketService.messageStream.listen((data) {
       final socketResponse = SocketResponse.fromJson(data);

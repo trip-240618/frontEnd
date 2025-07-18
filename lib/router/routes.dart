@@ -12,7 +12,8 @@ class Routes {
   static const notificationList = "/notification-list";
   static const alimSetting = "/alim-setting";
   static const userDelete = "/user-delete";
-  static const userEditProfile = "/user_edit_profile";
+  static const userEditProfile = "/user-edit-profile";
   static const notice = "/notice";
   static const tripRoom = "/trip-room";
+  static const tripJPlanAdd = "/trip-plan-add";
 }

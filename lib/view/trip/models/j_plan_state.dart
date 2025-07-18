@@ -12,6 +12,7 @@ abstract class JPlanState with _$JPlanState {
   const factory JPlanState({
     @Default(JPlanStatus.initial) JPlanStatus jPlanStatus,
     @Default(0) int selectedDayIndex,
+    DateTime? selectedDate,
     @Default(154.0) double googleMapHeight,
     @Default(0.0) double mapLatitude,
     @Default(0.0) double mapLongitude,
