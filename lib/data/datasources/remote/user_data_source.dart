@@ -6,7 +6,7 @@ import 'package:tripStory/data/models/response/user_response.dart';
 
 part 'user_data_source.g.dart';
 
-@RestApi(baseUrl: "https://tripstory.shop/user")
+@RestApi(baseUrl: "/user")
 abstract class UserDataSource {
   factory UserDataSource(Dio dio, {String baseUrl}) = _UserDataSource;
 

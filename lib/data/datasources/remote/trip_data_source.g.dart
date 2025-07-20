@@ -10,7 +10,7 @@ part of 'trip_data_source.dart';
 
 class _TripDataSource implements TripDataSource {
   _TripDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://tripstory.shop/trip';
+    baseUrl ??= '/trip';
   }
 
   final Dio _dio;

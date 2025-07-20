@@ -4,7 +4,7 @@ import 'package:tripStory/data/models/response/country_visited_response.dart';
 
 part 'country_data_source.g.dart';
 
-@RestApi(baseUrl: "https://tripstory.shop/country")
+@RestApi(baseUrl: "/country")
 abstract class CountryDataSource {
   factory CountryDataSource(Dio dio, {String baseUrl}) = _CountryDataSource;
 

@@ -24,6 +24,8 @@ abstract class TripRoomEntity with _$TripRoomEntity {
   int get memberCount => members.length;
 
   int get dDay => startDate.difference(DateTime.now()).inDays + 1;
+
+  int get durationDays => endDate.difference(startDate).inDays + 1;
 }
 
 @freezed

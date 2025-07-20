@@ -1,10 +1,11 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/round_button.dart';
-import 'package:tripStory/component/appbar.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/hoom/controller/trip_room_calendar_controller.dart';
 
@@ -41,11 +42,7 @@ class _TripRoomCalendarViewState extends State<TripRoomCalendarView> {
           });
         }
         return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: BackAppBar(
-            color: Colors.white,
-            onTap: () => Get.back(),
-          ),
+          appBar: AppAppbar(),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +76,7 @@ class _TripRoomCalendarViewState extends State<TripRoomCalendarView> {
               ),
               Expanded(
                 child: Container(
-                  color: gray50,
+                  color: context.color.gray50,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: CalendarDatePicker2(

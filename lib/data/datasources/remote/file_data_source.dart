@@ -4,7 +4,7 @@ import 'package:tripStory/data/models/response/file_response.dart';
 
 part 'file_data_source.g.dart';
 
-@RestApi(baseUrl: "https://tripstory.shop/file")
+@RestApi(baseUrl: "/file")
 abstract class FileDataSource {
   factory FileDataSource(Dio dio, {String baseUrl}) = _FileDataSource;
 

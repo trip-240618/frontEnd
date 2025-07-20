@@ -5,11 +5,14 @@ import 'package:tripStory/view/hoom/enum/trip_rooms_type.dart';
 
 part 'trip_rooms_state.freezed.dart';
 
+enum TripRoomsStatus { initial, loading, success, failure, empty }
+
 @freezed
 abstract class TripRoomsState with _$TripRoomsState {
   const TripRoomsState._();
 
   const factory TripRoomsState({
+    @Default(TripRoomsStatus.initial) TripRoomsStatus tripRoomsStatus,
     @Default([]) List<TripRoomEntity> tripRooms,
     @Default(TripRoomType.coming) TripRoomType tripRoomType,
   }) = _TripRoomsState;

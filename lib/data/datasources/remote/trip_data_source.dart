@@ -6,7 +6,7 @@ import 'package:tripStory/data/models/response/trip_room_response.dart';
 
 part 'trip_data_source.g.dart';
 
-@RestApi(baseUrl: "https://tripstory.shop/trip")
+@RestApi(baseUrl: "/trip")
 abstract class TripDataSource {
   factory TripDataSource(Dio dio, {String baseUrl}) = _TripDataSource;
 
