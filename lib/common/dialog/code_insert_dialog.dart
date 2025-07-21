@@ -101,7 +101,6 @@ class _CodeInsertDialogState extends State<CodeInsertDialog> {
                 isEmptyRoom = false;
               });
             },
-            contentPadding: const EdgeInsets.all(16),
             inputFormatters: [
               LengthLimitingTextInputFormatter(8),
               UpperCaseTextFormatter(),

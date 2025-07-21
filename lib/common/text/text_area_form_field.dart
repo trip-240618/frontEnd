@@ -17,6 +17,8 @@ class TextAreaFormField extends StatelessWidget {
   final Color? borderColor;
   final double? height;
   final int? maxTextLength;
+  final TextInputType? keyboardType;
+  final EdgeInsets? scrollPadding;
 
   const TextAreaFormField({
     super.key,
@@ -31,6 +33,8 @@ class TextAreaFormField extends StatelessWidget {
     this.borderColor,
     this.height,
     this.maxTextLength,
+    this.keyboardType,
+    this.scrollPadding,
   });
 
   @override
@@ -54,12 +58,13 @@ class TextAreaFormField extends StatelessWidget {
               inputFormatters: inputFormatters,
               textStyle: textStyle,
               contentPadding: contentPadding,
-              maxLines: null,
+              keyboardType: keyboardType,
+              scrollPadding: scrollPadding,
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(
-              bottom: 12,
+              bottom: 10,
               right: 16,
             ),
             child: Row(

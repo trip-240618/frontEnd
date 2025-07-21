@@ -82,8 +82,12 @@ class _JPlanViewState extends State<JPlanView> {
           ),
         ],
       ),
-      floatingActionButton: _FloatingButton(
-        onPressed: () {},
+      floatingActionButton: GetBuilder<JPlanController>(
+        builder: (controller) {
+          return _FloatingButton(
+            onPressed: () => controller.onAddPlanPressed(),
+          );
+        },
       ),
     );
   }
@@ -187,7 +191,7 @@ class _WeekSection extends StatelessWidget {
                         week: date?.weekKo ?? "",
                         day: date?.dayKo ?? "",
                         isActive: index == controller.state.selectedDayIndex,
-                        onPressed: () => controller.onDayPressed(index),
+                        onPressed: () => controller.onDayPressed(index, date),
                       ),
                     ],
                   ),

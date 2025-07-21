@@ -9,7 +9,11 @@ extension DateExtension on DateTime {
 
   String formatShortYMD() => DateFormat("yy.MM.dd").format(this);
 
-  String get weekKo => DateFormat('E', 'ko').format(this);
+  String get weekKo => DateFormat("E", "ko").format(this);
 
-  String get dayKo => DateFormat('d').format(this);
+  String get dayKo => DateFormat("d").format(this);
+
+  String get formatDateWithWeekdayKo => DateFormat("yyyy.MM.dd (EEE)", "ko_KR").format(this);
+
+  String get formatTimeKo => DateFormat("a HH:mm", "ko_KR").format(this);
 }

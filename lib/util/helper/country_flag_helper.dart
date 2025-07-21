@@ -38,8 +38,10 @@ class CountryFlagHelper {
     if (_cachedUrls.contains(url)) return;
 
     try {
-      await precacheImage(CachedNetworkImageProvider(url), context);
-      _cachedUrls.add(url);
+      if (context.mounted) {
+        await precacheImage(CachedNetworkImageProvider(url), context);
+        _cachedUrls.add(url);
+      }
     } catch (e) {
       debugPrint("Failed to precache $url: $e");
     }

@@ -12,6 +12,7 @@ import 'package:tripStory/data/datasources/remote/notice_data_source.dart';
 import 'package:tripStory/data/datasources/remote/notification_data_source.dart';
 import 'package:tripStory/data/datasources/remote/oauth_data_source.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
+import 'package:tripStory/data/datasources/remote/trip_location_data_source.dart';
 import 'package:tripStory/data/datasources/remote/user_data_source.dart';
 import 'package:tripStory/data/network/dio_client.dart';
 import 'package:tripStory/data/repositories/auth_repository_impl.dart';
@@ -59,6 +60,7 @@ class AppBinding extends Bindings {
     Get.lazyPut<OauthDataSource>(() => OauthDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<CountryDataSource>(() => CountryDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<NoticeDataSource>(() => NoticeDataSource(Get.find<Dio>()), fenix: true);
+    Get.lazyPut<TripLocationDataSource>(() => TripLocationDataSource(Get.find<Dio>()), fenix: true);
 
     // Repository
     Get.lazyPut<UserRepository>(() => UserRepositoryImpl(Get.find<UserDataSource>()), fenix: true);

@@ -1,7 +1,7 @@
 class IconConstants {
   static const _icon = "assets/icon";
   static const _iconNormal = "assets/icon/normal";
-
+  static const _iconSmall = "assets/icon/small";
   static const String appSplash = "$_iconNormal/splash.png";
 
   // normal
@@ -28,6 +28,15 @@ class IconConstants {
   static const String swap = "$_iconNormal/swap.svg";
   static const String mainPlus = "$_iconNormal/main_plus.svg";
 
+  // small
+  static const String date = "$_iconSmall/date.svg";
+  static const String time = "$_iconSmall/time.svg";
+  static const String search = "$_iconSmall/search.svg";
+  static const String clear = "$_iconSmall/clear.svg";
+
   // tag
   static const String tagUser = "$_icon/userIcon.svg";
+
+  // default
+  static const String makerImage = "$_icon/marker.png";
 }

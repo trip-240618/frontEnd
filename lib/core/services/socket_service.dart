@@ -11,6 +11,7 @@ class SocketService extends GetxService {
   final SessionService _sessionService;
   late StompClient _stompClient;
   bool _isConnected = false;
+  final List<String> _pendingSubscriptions = [];
 
   final StreamController<Map<String, dynamic>> _messageStreamController =
       StreamController<Map<String, dynamic>>.broadcast();
@@ -28,25 +29,27 @@ class SocketService extends GetxService {
     final tokens = await _sessionService.getTokens();
     final accessToken = tokens["accessToken"] ?? "";
     final refreshToken = tokens["refreshToken"] ?? "";
-
+    print("?? ${AppConstants.socketUrl}");
+    print("?? ${refreshToken}");
     _stompClient = StompClient(
       config: StompConfig.sockJS(
         url: AppConstants.socketUrl,
         reconnectDelay: Duration.zero,
         onConnect: (frame) {
           _isConnected = true;
-          print("소켓 연결됨 ✅");
+          for (final dest in _pendingSubscriptions) {
+            subscribe(dest);
+          }
+          _pendingSubscriptions.clear();
         },
         webSocketConnectHeaders: {
-          HttpHeaders.cookieHeader: '$accessToken;$refreshToken',
+          HttpHeaders.cookieHeader: "accessToken=$accessToken; refreshToken=$refreshToken",
         },
         onWebSocketError: (error) {
-          print("error??111 ${error}");
           _stompClient.deactivate();
           _isConnected = false;
         },
         onDisconnect: (_) {
-          print("error??222 ${_}");
           _isConnected = false;
         },
       ),
@@ -68,13 +71,17 @@ class SocketService extends GetxService {
   }
 
   void subscribe(String destination) {
-    _stompClient.subscribe(
-      destination: destination,
-      callback: (frame) {
-        final data = json.decode(frame.body!);
-        _messageStreamController.add(data);
-      },
-    );
+    if (_isConnected) {
+      _stompClient.subscribe(
+        destination: destination,
+        callback: (frame) {
+          final data = json.decode(frame.body!);
+          _messageStreamController.add(data);
+        },
+      );
+    } else {
+      _pendingSubscriptions.add(destination);
+    }
   }
 
   @override

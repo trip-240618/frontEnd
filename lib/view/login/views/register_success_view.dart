@@ -52,17 +52,9 @@ class _RegisterSuccessViewState extends State<RegisterSuccessView> {
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 10,
-          bottom: 42,
-        ),
-        child: BottomButton(
-          text: "다음",
-          onTap: () => Get.offAllNamed(Routes.rooms),
-        ),
+      bottomNavigationBar: BottomButton(
+        text: "다음",
+        onTap: () => Get.offAllNamed(Routes.rooms),
       ),
     );
   }

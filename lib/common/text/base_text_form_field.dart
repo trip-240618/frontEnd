@@ -39,22 +39,18 @@ class BaseTextFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       autofocus: false,
-      style: textStyle ??
-          const TextStyle(
-            fontSize: 16,
-            color: Colors.black,
-          ),
+      style: textStyle ?? context.style.body2Normal,
       focusNode: focusNode,
       inputFormatters: inputFormatters,
       onChanged: onChanged,
       onFieldSubmitted: onFieldSubmitted,
-      keyboardType: keyboardType,
-      maxLines: maxLines ?? 1,
+      keyboardType: keyboardType ?? TextInputType.text,
+      maxLines: maxLines,
       scrollPadding: scrollPadding ?? const EdgeInsets.all(20.0),
       onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
       decoration: InputDecoration(
         isDense: true,
-        contentPadding: contentPadding ?? const EdgeInsets.symmetric(vertical: 12),
+        contentPadding: contentPadding ?? const EdgeInsets.all(16),
         enabledBorder: enabledBorder ?? OutlineInputBorder(borderSide: BorderSide.none),
         focusedBorder: focusedBorder ?? OutlineInputBorder(borderSide: BorderSide.none),
         hintText: hintText,
