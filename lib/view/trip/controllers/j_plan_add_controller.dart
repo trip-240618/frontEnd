@@ -42,4 +42,18 @@ class JPlanAddController extends GetxController {
     );
     update();
   }
+
+  void onPlanTitleChanged(String text) {
+    _jPlanAddState = state.copyWith(
+      planTitle: text,
+    );
+    update();
+  }
+
+  void onPlanMemoChanged(String text) {
+    _jPlanAddState = state.copyWith(
+      planMemo: text,
+    );
+    update();
+  }
 }

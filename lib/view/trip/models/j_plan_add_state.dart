@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:tripStory/domain/entities/location_entity.dart';
 
 part 'j_plan_add_state.freezed.dart';
 
@@ -9,8 +10,10 @@ abstract class JPlanAddState with _$JPlanAddState {
   const factory JPlanAddState({
     DateTime? selectedDate,
     DateTime? selectedTime,
-    @Default([]) List searchPlace,
+    LocationEntity? searchPlace,
     @Default("") String planTitle,
     @Default("") String planMemo,
   }) = _JPlanAddState;
+
+  bool get planTitleEmpty => planTitle.isEmpty;
 }

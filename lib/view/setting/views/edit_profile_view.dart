@@ -118,7 +118,6 @@ class _EditProfileViewState extends State<EditProfileView> {
                 height: 76,
                 hintText: "자기소개를 작성해 주세요",
                 backgroundColor: context.color.gray50,
-                contentPadding: const EdgeInsets.all(16),
                 maxTextLength: 16,
                 onChanged: (text) => controller.onMemoChanged(text),
                 inputFormatters: [
@@ -131,20 +130,12 @@ class _EditProfileViewState extends State<EditProfileView> {
             ],
           ),
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 10,
-            bottom: 42,
-          ),
-          child: BottomButton(
-            text: "저장하기",
-            enabled: controller.state.isNicknameValid,
-            onTap: () => _showConfirmDialog(
-              context,
-              () => controller.onSaveProfilePressed(),
-            ),
+        bottomNavigationBar: BottomButton(
+          text: "저장하기",
+          enabled: controller.state.isNicknameValid,
+          onTap: () => _showConfirmDialog(
+            context,
+            () => controller.onSaveProfilePressed(),
           ),
         ),
       );

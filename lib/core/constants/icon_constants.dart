@@ -31,6 +31,8 @@ class IconConstants {
   // small
   static const String date = "$_iconSmall/date.svg";
   static const String time = "$_iconSmall/time.svg";
+  static const String search = "$_iconSmall/search.svg";
+  static const String clear = "$_iconSmall/clear.svg";
 
   // tag
   static const String tagUser = "$_icon/userIcon.svg";
