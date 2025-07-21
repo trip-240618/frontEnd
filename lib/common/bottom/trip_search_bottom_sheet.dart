@@ -185,7 +185,7 @@ class _BottomContent extends StatelessWidget {
           controller: tabController,
           unselectedLabelStyle: f16gray300w600,
           indicatorColor: gray900,
-          indicatorWeight: TripDestinationTabType.values.length.toDouble(),
+          indicatorWeight: 2,
           indicatorSize: TabBarIndicatorSize.tab,
           overlayColor: const WidgetStatePropertyAll(Colors.transparent),
           tabs: [

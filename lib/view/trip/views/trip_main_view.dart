@@ -10,6 +10,7 @@ import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/view/trip/controllers/trip_main_controller.dart';
 import 'package:tripStory/view/trip/models/trip_main_state.dart';
 import 'package:tripStory/view/trip/views/j_plan_view.dart';
+import 'package:tripStory/view/trip/views/locker_view.dart';
 
 class TripMainView extends StatefulWidget {
   final int tripId;
@@ -61,7 +62,7 @@ class _TripMainViewState extends State<TripMainView> {
                   index: controller.state.selectedTabIndex,
                   children: [
                     JPlanView(),
-                    Text("2"),
+                    LockerView(),
                     Text("3"),
                   ],
                 ),
@@ -96,7 +97,9 @@ class _TripMainViewState extends State<TripMainView> {
                   return BottomNavigationBarItem(
                     icon: SvgIcon(
                       assetPath: tab.iconPath,
-                      color: isSelected ? context.color.gray900 : context.color.gray300,
+                      color: isSelected
+                          ? context.color.gray900
+                          : context.color.gray300,
                     ),
                     label: tab.title,
                   );
