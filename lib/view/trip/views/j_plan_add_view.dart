@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/bottom/select_day_bottom_sheet.dart';
 import 'package:tripStory/common/bottom/time_picker_bottom_sheet.dart';
@@ -14,6 +17,7 @@ import 'package:tripStory/domain/entities/location_entity.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/util/extension/string_extension.dart';
+import 'package:tripStory/util/helper/maker_helper.dart';
 import 'package:tripStory/view/trip/controllers/j_plan_add_controller.dart';
 
 class JPlanAddView extends StatefulWidget {
@@ -161,113 +165,56 @@ class _JPlanAddViewState extends State<JPlanAddView> {
                     onTilePressed: () => controller.onLocationPressed(),
                     onDeletePressed: () => controller.onLocationDeletePressed(),
                   ),
-                  // IconTextButton(
-                  //   onTap: () => {},
-                  //   text: "여행 장소를 지도에 입력해보세요",
-                  //   textStyle: f15gray400w500,
-                  //   icon: SvgPicture.asset(
-                  //     "assets/icon/date.svg",
-                  //     fit: BoxFit.none,
-                  //     // colorFilter: ColorFilter.mode(
-                  //     //   controller.state.getColor,
-                  //     //   BlendMode.srcIn,
-                  //     // ),
-                  //   ),
-                  // ),
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     Get.to(() => SearchTripPlace());
-                  //     // js.searchLocation.isEmpty ? Get.to(() => SearchTripPlace()) : null;
-                  //   },
-                  //   child: Container(
-                  //     decoration: BoxDecoration(
-                  //       color: gray50,
-                  //       borderRadius: BorderRadius.only(
-                  //         topLeft: Radius.circular(4),
-                  //         topRight: Radius.circular(4),
-                  //         // bottomLeft: js.searchLocation.isEmpty ? Radius.circular(4) : Radius.zero,
-                  //         // bottomRight: js.searchLocation.isEmpty ? Radius.circular(4) : Radius.zero,
-                  //       ),
-                  //       border: Border.all(color: gray200),
-                  //     ),
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
-                  //       child: Obx(() => js.searchLocation.isEmpty
-                  //           ? Row(
-                  //         children: [
-                  //           SvgPicture.asset(
-                  //             'assets/icon/search.svg',
-                  //             colorFilter:
-                  //             ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']), BlendMode.srcIn),
-                  //           ),
-                  //           const SizedBox(width: 5),
-                  //           Text('여행 장소를 검색해주세요', style: f14Gray500w400),
-                  //         ],
-                  //       )
-                  //           : Row(
-                  //         children: [
-                  //           Text(
-                  //             'dada',
-                  //             style: f15gray800w500,
-                  //             overflow: TextOverflow.ellipsis,
-                  //             maxLines: 1,
-                  //           ),
-                  //           Spacer(),
-                  //           GestureDetector(
-                  //             onTap: () {
-                  //               // js.searchLocation.value = [];
-                  //             },
-                  //             child: SvgPicture.asset('assets/icon/smallXRound.svg',
-                  //                 fit: BoxFit.none, colorFilter: ColorFilter.mode(gray900, BlendMode.srcIn)),
-                  //           )
-                  //         ],
-                  //       )),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Container(
-                  //   width: Get.width,
-                  //   height: 240,
-                  //   decoration: BoxDecoration(
-                  //     border: Border(
-                  //       left: BorderSide(color: gray200),
-                  //       right: BorderSide(color: gray200),
-                  //       bottom: BorderSide(color: gray200),
-                  //     ),
-                  //     borderRadius:
-                  //     BorderRadius.only(bottomLeft: Radius.circular(4), bottomRight: Radius.circular(4)),
-                  //   ),
-                  //   child: FutureBuilder<BitmapDescriptor>(
-                  //     future: MarkerHelper.loadCustomMarker(IconConstants.makerImage),
-                  //     builder: (context, snapshot) {
-                  //       if (!snapshot.hasData) return const SizedBox.shrink();
-                  //
-                  //       return GoogleMap(
-                  //         initialCameraPosition: CameraPosition(
-                  //           target: LatLng(
-                  //             double.parse(js.searchLocation[0]['location']['latitude']),
-                  //             double.parse(js.searchLocation[0]['location']['longitude']),
-                  //           ),
-                  //           zoom: 14.4746,
-                  //         ),
-                  //         markers: {
-                  //           MarkerHelper.createMarker(
-                  //             id: js.searchLocation[0]['displayName']['text'],
-                  //             position: LatLng(
-                  //               double.parse(js.searchLocation[0]['location']['latitude']),
-                  //               double.parse(js.searchLocation[0]['location']['longitude']),
-                  //             ),
-                  //             icon: snapshot.data!,
-                  //           )
-                  //         },
-                  //         myLocationButtonEnabled: false,
-                  //         gestureRecognizers: {
-                  //           Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
-                  //         },
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
+                  controller.state.searchPlace != null
+                      ? Container(
+                          width: Get.width,
+                          height: 240,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              left: BorderSide(color: context.color.gray200),
+                              right: BorderSide(color: context.color.gray200),
+                              bottom: BorderSide(color: context.color.gray200),
+                            ),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(4),
+                              bottomRight: Radius.circular(4),
+                            ),
+                          ),
+                          child: FutureBuilder<BitmapDescriptor>(
+                            future: MarkerHelper.loadCustomMarker(IconConstants.makerImage),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return const Center(child: CircularProgressIndicator());
+                              }
+                              final customIcon = snapshot.data!;
+
+                              return GoogleMap(
+                                initialCameraPosition: CameraPosition(
+                                  target: LatLng(
+                                    controller.state.searchLatitude,
+                                    controller.state.searchLongitude,
+                                  ),
+                                  zoom: 14.4746,
+                                ),
+                                markers: {
+                                  MarkerHelper.createMarker(
+                                    id: controller.state.searchPlace?.displayName ?? "",
+                                    position: LatLng(
+                                      controller.state.searchLatitude,
+                                      controller.state.searchLongitude,
+                                    ),
+                                    icon: customIcon,
+                                  ),
+                                },
+                                myLocationButtonEnabled: false,
+                                gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                                  Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
+                                },
+                              );
+                            },
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   const SizedBox(
                     height: 20,
                   ),
@@ -288,6 +235,9 @@ class _JPlanAddViewState extends State<JPlanAddView> {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(20),
                     ],
+                    scrollPadding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                    ),
                     trailing: Row(
                       children: [
                         Text(
@@ -333,13 +283,9 @@ class _JPlanAddViewState extends State<JPlanAddView> {
                     keyboardType: TextInputType.multiline,
                     scrollPadding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 44),
                   ),
-                  const SizedBox(
-                    height: 75,
-                  ),
                   SizedBox(
-                      height: MediaQuery.of(context).viewInsets.bottom > 130
-                          ? MediaQuery.of(context).viewInsets.bottom - 100
-                          : 0),
+                    height: MediaQuery.of(context).viewInsets.bottom,
+                  ),
                 ],
               ),
             ),

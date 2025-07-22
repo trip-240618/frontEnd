@@ -18,6 +18,7 @@ class CommonTextField extends StatelessWidget {
   final Color? backgroundColor;
   final FocusNode? focusNode;
   final Color? borderColor;
+  final EdgeInsets? scrollPadding;
 
   const CommonTextField({
     super.key,
@@ -33,6 +34,7 @@ class CommonTextField extends StatelessWidget {
     this.focusNode,
     this.borderColor,
     this.onFieldSubmitted,
+    this.scrollPadding,
   });
 
   @override
@@ -60,6 +62,7 @@ class CommonTextField extends StatelessWidget {
               textStyle: textStyle,
               contentPadding: contentPadding,
               onFieldSubmitted: onFieldSubmitted,
+              scrollPadding: scrollPadding,
             ),
           ),
           if (trailing != null) ...[

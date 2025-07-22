@@ -71,13 +71,9 @@ class JPlanAddController extends GetxController {
   }
 
   void onLocationDeletePressed() {
-    Get.toNamed(Routes.locationSearch)?.then((value) {
-      if (value is LocationEntity) {
-        _jPlanAddState = state.copyWith(
-          searchPlace: value,
-        );
-        update();
-      }
-    });
+    _jPlanAddState = state.copyWith(
+      searchPlace: null,
+    );
+    update();
   }
 }

@@ -16,4 +16,8 @@ abstract class JPlanAddState with _$JPlanAddState {
   }) = _JPlanAddState;
 
   bool get planTitleEmpty => planTitle.isEmpty;
+
+  double get searchLatitude => searchPlace?.latitude ?? 0.0;
+
+  double get searchLongitude => searchPlace?.longitude ?? 0.0;
 }
