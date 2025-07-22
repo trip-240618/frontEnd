@@ -10,6 +10,7 @@ class CommonTextField extends StatelessWidget {
   final String hintText;
   final void Function(String)? onChanged;
   final List<TextInputFormatter>? inputFormatters;
+  final ValueChanged<String>? onFieldSubmitted;
   final Widget? leading;
   final Widget? trailing;
   final TextStyle? textStyle;
@@ -31,6 +32,7 @@ class CommonTextField extends StatelessWidget {
     this.backgroundColor,
     this.focusNode,
     this.borderColor,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -57,6 +59,7 @@ class CommonTextField extends StatelessWidget {
               inputFormatters: inputFormatters,
               textStyle: textStyle,
               contentPadding: contentPadding,
+              onFieldSubmitted: onFieldSubmitted,
             ),
           ),
           if (trailing != null) ...[

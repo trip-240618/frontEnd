@@ -19,6 +19,7 @@ import 'package:tripStory/data/repositories/auth_repository_impl.dart';
 import 'package:tripStory/data/repositories/country_repository_impl.dart';
 import 'package:tripStory/data/repositories/file_repository_impl.dart';
 import 'package:tripStory/data/repositories/j_socket_repository_impl.dart';
+import 'package:tripStory/data/repositories/location_repository_impl.dart';
 import 'package:tripStory/data/repositories/notice_repository_impl.dart';
 import 'package:tripStory/data/repositories/notification_repository_impl.dart';
 import 'package:tripStory/data/repositories/trip_repository_impl.dart';
@@ -27,6 +28,7 @@ import 'package:tripStory/domain/repositories/auth_repository.dart';
 import 'package:tripStory/domain/repositories/country_repository.dart';
 import 'package:tripStory/domain/repositories/file_repository.dart';
 import 'package:tripStory/domain/repositories/j_socket_repository.dart';
+import 'package:tripStory/domain/repositories/location_repository.dart';
 import 'package:tripStory/domain/repositories/notice_repository.dart';
 import 'package:tripStory/domain/repositories/notification_repository.dart';
 import 'package:tripStory/domain/repositories/trip_repository.dart';
@@ -72,5 +74,6 @@ class AppBinding extends Bindings {
     Get.lazyPut<CountryRepository>(() => CountryRepositoryImpl(Get.find<CountryDataSource>()), fenix: true);
     Get.lazyPut<NoticeRepository>(() => NoticeRepositoryImpl(Get.find<NoticeDataSource>()), fenix: true);
     Get.lazyPut<JSocketRepository>(() => JSocketRepositoryImpl(Get.find()), fenix: true);
+    Get.lazyPut<LocationRepository>(() => LocationRepositoryImpl(Get.find()), fenix: true);
   }
 }

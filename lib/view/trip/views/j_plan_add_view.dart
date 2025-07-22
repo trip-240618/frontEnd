@@ -158,6 +158,8 @@ class _JPlanAddViewState extends State<JPlanAddView> {
                   _LocationTile(
                     iconColor: controller.tripRoomInfo?.labelColor.toColor(),
                     locationEntity: controller.state.searchPlace,
+                    onTilePressed: () => controller.onLocationPressed(),
+                    onDeletePressed: () => controller.onLocationDeletePressed(),
                   ),
                   // IconTextButton(
                   //   onTap: () => {},
@@ -396,10 +398,14 @@ class _JPlanAddViewState extends State<JPlanAddView> {
 class _LocationTile extends StatelessWidget {
   final Color? iconColor;
   final LocationEntity? locationEntity;
+  final VoidCallback onTilePressed;
+  final VoidCallback onDeletePressed;
 
   const _LocationTile({
     required this.iconColor,
     required this.locationEntity,
+    required this.onTilePressed,
+    required this.onDeletePressed,
   });
 
   @override
@@ -407,11 +413,11 @@ class _LocationTile extends StatelessWidget {
     final hasLocation = locationEntity != null;
 
     return BaseTileButton(
-      text: hasLocation ? locationEntity?.formattedAddress ?? "" : "여행 장소를 지도에 입력해 보세요",
+      text: hasLocation ? locationEntity?.displayName ?? "" : "여행 장소를 지도에 입력해 보세요",
       textStyle: context.style.body2Normal.copyWith(
         color: hasLocation ? context.color.gray800 : context.color.gray400,
       ),
-      onTap: hasLocation ? null : () {},
+      onTap: hasLocation ? null : () => onTilePressed(),
       tileColor: context.color.gray50,
       borderColor: context.color.gray200,
       contentPadding: const EdgeInsets.symmetric(
@@ -430,7 +436,7 @@ class _LocationTile extends StatelessWidget {
             ),
       trailing: hasLocation
           ? GestureDetector(
-              onTap: () {},
+              onTap: () => onDeletePressed(),
               child: SizedBox(
                 width: 20,
                 height: 20,

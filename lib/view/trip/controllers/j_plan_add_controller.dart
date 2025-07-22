@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:tripStory/core/services/trip_room_service.dart';
+import 'package:tripStory/domain/entities/location_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
+import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/trip/models/j_plan_add_state.dart';
 
 class JPlanAddController extends GetxController {
@@ -55,5 +57,27 @@ class JPlanAddController extends GetxController {
       planMemo: text,
     );
     update();
+  }
+
+  void onLocationPressed() {
+    Get.toNamed(Routes.locationSearch)?.then((value) {
+      if (value is LocationEntity) {
+        _jPlanAddState = state.copyWith(
+          searchPlace: value,
+        );
+        update();
+      }
+    });
+  }
+
+  void onLocationDeletePressed() {
+    Get.toNamed(Routes.locationSearch)?.then((value) {
+      if (value is LocationEntity) {
+        _jPlanAddState = state.copyWith(
+          searchPlace: value,
+        );
+        update();
+      }
+    });
   }
 }

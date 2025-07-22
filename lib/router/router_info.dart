@@ -33,8 +33,10 @@ import 'package:tripStory/view/splash/binding/splash_binding.dart';
 import 'package:tripStory/view/splash/views/splash_view.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_add_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_binding.dart';
+import 'package:tripStory/view/trip/bindings/location_search_binding.dart';
 import 'package:tripStory/view/trip/bindings/trip_main_binding.dart';
 import 'package:tripStory/view/trip/views/j_plan_add_view.dart';
+import 'package:tripStory/view/trip/views/location_search_view.dart';
 import 'package:tripStory/view/trip/views/trip_main_view.dart';
 
 class RouterInfo {
@@ -157,6 +159,11 @@ class RouterInfo {
         return JPlanAddView(selectedDate: selectedDate);
       },
       binding: JPlanAddBinding(),
+    ),
+    GetPage(
+      name: Routes.locationSearch,
+      page: () => const LocationSearchView(),
+      binding: LocationSearchBinding(),
     ),
   ];
 }
