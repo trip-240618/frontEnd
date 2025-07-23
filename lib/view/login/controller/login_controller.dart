@@ -38,13 +38,9 @@ class LoginController extends GetxController
       kakaoToken: oauthToken.accessToken,
       fcmToken: fcmToken ?? "",
     );
-    print('????');
     result.fold(
-      (failure) {
-        print('????222${failure.message}');
-      },
+      (failure) {},
       (user) async {
-        print('????222');
         userService.setUser(user);
         await ensureUserInfoWithConsent();
         _handleUserType(user.type);

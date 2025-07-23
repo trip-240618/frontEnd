@@ -1,5 +1,6 @@
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/domain/entities/scrap_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_create_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 
@@ -22,5 +23,9 @@ abstract class TripRepository {
 
   ResultFuture<TripRoomEntity> fetchJoinTrip({
     required String invitationCode,
+  });
+
+  ResultFuture<List<ScrapEntity>> fetchScrapList({
+    required int tripId,
   });
 }

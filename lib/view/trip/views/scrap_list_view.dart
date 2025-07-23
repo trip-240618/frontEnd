@@ -15,7 +15,9 @@ class _ScrapListViewState extends State<ScrapListView> {
       backgroundColor: context.color.gray50,
       body: Column(
         children: [
-          Text('scrap'),
+          Text(
+            "Scrap",
+          ),
         ],
       ),
     );

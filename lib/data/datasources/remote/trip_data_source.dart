@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/data/models/response/scrap_response.dart';
 import 'package:tripStory/data/models/response/trip_room_create_response.dart';
 import 'package:tripStory/data/models/response/trip_room_response.dart';
 
@@ -37,5 +38,10 @@ abstract class TripDataSource {
   @GET("/join")
   Future<TripRoomResponse> fetchJoinTrip(
     @Query("invitationCode") String invitationCode,
+  );
+
+  @GET("/{tripId}/scrap/list")
+  Future<List<ScrapResponse>> fetchScrapList(
+    @Path("tripId") int tripId,
   );
 }
