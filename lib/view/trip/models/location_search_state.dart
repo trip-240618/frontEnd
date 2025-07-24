@@ -13,6 +13,8 @@ abstract class LocationSearchState with _$LocationSearchState {
 
   int get searchLocationLength => searchLocations.length;
 
+  bool get isSearchLocationsEmpty => searchLocations.isEmpty;
+
   String getPlaceName(int index) {
     if (index < 0 || index >= searchLocations.length) return '';
 

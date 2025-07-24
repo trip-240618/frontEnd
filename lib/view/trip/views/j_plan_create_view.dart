@@ -18,22 +18,22 @@ import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/util/extension/string_extension.dart';
 import 'package:tripStory/util/helper/maker_helper.dart';
-import 'package:tripStory/view/trip/controllers/j_plan_add_controller.dart';
+import 'package:tripStory/view/trip/controllers/j_plan_create_controller.dart';
 
-class JPlanAddView extends StatefulWidget {
+class JPlanCreateView extends StatefulWidget {
   final DateTime selectedDate;
 
-  const JPlanAddView({
+  const JPlanCreateView({
     super.key,
     required this.selectedDate,
   });
 
   @override
-  State<JPlanAddView> createState() => _JPlanAddViewState();
+  State<JPlanCreateView> createState() => _JPlanCreateViewState();
 }
 
-class _JPlanAddViewState extends State<JPlanAddView> {
-  final _tripRoomsCreateController = Get.find<JPlanAddController>();
+class _JPlanCreateViewState extends State<JPlanCreateView> {
+  final _tripRoomsCreateController = Get.find<JPlanCreateController>();
 
   final TextEditingController _planTitleCon = TextEditingController();
   final TextEditingController _planMemoCon = TextEditingController();
@@ -47,7 +47,7 @@ class _JPlanAddViewState extends State<JPlanAddView> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<JPlanAddController>(
+    return GetBuilder<JPlanCreateController>(
       builder: (controller) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -187,7 +187,6 @@ class _JPlanAddViewState extends State<JPlanAddView> {
                                 return const Center(child: CircularProgressIndicator());
                               }
                               final customIcon = snapshot.data!;
-
                               return GoogleMap(
                                 initialCameraPosition: CameraPosition(
                                   target: LatLng(
@@ -292,7 +291,8 @@ class _JPlanAddViewState extends State<JPlanAddView> {
           ),
           bottomNavigationBar: BottomButton(
             text: "저장",
-            onTap: () => {},
+            enabled: controller.state.isValid,
+            onTap: () => controller.onPlanSavePressed(),
           ),
         );
       },

@@ -65,94 +65,93 @@ class _LocationSearchViewState extends State<LocationSearchView> {
                 ),
                 Container(
                   height: context.screenHeight * 0.5,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(color: context.color.gray200),
-                      right: BorderSide(color: context.color.gray200),
-                      bottom: BorderSide(color: context.color.gray200),
-                    ),
-                  ),
+                  decoration: controller.state.isSearchLocationsEmpty
+                      ? null
+                      : BoxDecoration(
+                          border: Border(
+                            left: BorderSide(color: context.color.gray200),
+                            right: BorderSide(color: context.color.gray200),
+                            bottom: BorderSide(color: context.color.gray200),
+                          ),
+                        ),
                   child: Scrollbar(
                     thumbVisibility: true,
                     thickness: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: controller.state.searchLocationLength,
-                        physics: const ClampingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          final searchLocation = controller.state.searchLocations[index];
-                          return Column(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.state.searchLocationLength,
+                      physics: const ClampingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final searchLocation = controller.state.searchLocations[index];
+                        return BaseButton(
+                          borderRadius: 0,
+                          onTap: () => controller.onLocationPressed(
+                            searchLocation.placeId,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              BaseButton(
-                                onTap: () => controller.onLocationPressed(
-                                  searchLocation.placeId,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 8,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: context.color.gray200,
-                                          borderRadius: BorderRadius.circular(30),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Icon(Icons.location_on_outlined),
-                                        ),
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: context.color.gray200,
+                                        borderRadius: BorderRadius.circular(30),
                                       ),
-                                      const SizedBox(
-                                        width: 8,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Icon(Icons.location_on_outlined),
                                       ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              controller.state.getPlaceName(index),
-                                              style: context.style.caption1,
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            controller.state.getPlaceName(index),
+                                            style: context.style.caption1,
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Text(
+                                            searchLocation.address,
+                                            style: context.style.caption2.copyWith(
+                                              color: context.color.gray500,
                                             ),
-                                            const SizedBox(
-                                              height: 4,
-                                            ),
-                                            Text(
-                                              searchLocation.address,
-                                              style: context.style.caption2.copyWith(
-                                                color: context.color.gray500,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 2,
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                          const SizedBox(
+                                            height: 2,
+                                          ),
+                                        ],
                                       ),
-                                      Icon(
-                                        Icons.north_west_outlined,
-                                        size: 20,
-                                        color: context.color.gray400,
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                    Icon(
+                                      Icons.north_west_outlined,
+                                      size: 20,
+                                      color: context.color.gray400,
+                                    ),
+                                  ],
                                 ),
                               ),
                               Divider(
                                 color: context.color.neutral100,
                                 thickness: 2,
                                 indent: 50,
+                                height: 1,
                               ),
                             ],
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),

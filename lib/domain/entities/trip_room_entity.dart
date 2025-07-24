@@ -26,6 +26,8 @@ abstract class TripRoomEntity with _$TripRoomEntity {
   int get dDay => startDate.difference(DateTime.now()).inDays + 1;
 
   int get durationDays => endDate.difference(startDate).inDays + 1;
+
+  int dayAfterStartFrom(DateTime selectedDay) => selectedDay.difference(startDate).inDays + 1;
 }
 
 @freezed

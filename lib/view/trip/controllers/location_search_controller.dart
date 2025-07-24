@@ -24,7 +24,13 @@ class LocationSearchController extends GetxController {
   LocationSearchState get state => _locationSearchState;
 
   Future<void> onSearchLocation(String input) async {
-    if (input.trim().isEmpty) return;
+    if (input.trim().isEmpty) {
+      _locationSearchState = state.copyWith(
+        searchLocations: [],
+      );
+      update();
+      return;
+    }
 
     final request = LocationAutoRequest(
       input: input,

@@ -35,7 +35,7 @@ import 'package:tripStory/view/trip/bindings/j_plan_add_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_binding.dart';
 import 'package:tripStory/view/trip/bindings/location_search_binding.dart';
 import 'package:tripStory/view/trip/bindings/trip_main_binding.dart';
-import 'package:tripStory/view/trip/views/j_plan_add_view.dart';
+import 'package:tripStory/view/trip/views/j_plan_create_view.dart';
 import 'package:tripStory/view/trip/views/location_search_view.dart';
 import 'package:tripStory/view/trip/views/trip_main_view.dart';
 
@@ -156,7 +156,7 @@ class RouterInfo {
         if (selectedDate is! DateTime) {
           throw ArgumentError('error');
         }
-        return JPlanAddView(selectedDate: selectedDate);
+        return JPlanCreateView(selectedDate: selectedDate);
       },
       binding: JPlanAddBinding(),
     ),
