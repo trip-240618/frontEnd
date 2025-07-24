@@ -8,12 +8,12 @@ abstract class JPlanEntity with _$JPlanEntity {
     required int planId,
     required int dayAfterStart,
     required int orderByDate,
-    required DateTime startTime,
+    required String startTime,
     required String title,
-    required String memo,
-    required String place,
-    required double latitude,
-    required double longitude,
+    String? memo,
+    String? place,
+    double? latitude,
+    double? longitude,
     required bool locker,
   }) = _JPlanEntity;
 }

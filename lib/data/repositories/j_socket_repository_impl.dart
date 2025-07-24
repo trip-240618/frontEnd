@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:tripStory/core/enum/command_type.dart';
 import 'package:tripStory/core/services/socket_service.dart';
-import 'package:tripStory/data/mappers/j_plan_socket_mapper.dart';
+import 'package:tripStory/data/mappers/j_plan_mapper.dart';
 import 'package:tripStory/data/models/response/plan_j_response.dart';
 import 'package:tripStory/data/models/response/socket_response.dart';
 import 'package:tripStory/domain/entities/j_socket_entity.dart';
@@ -27,7 +27,7 @@ class JSocketRepositoryImpl implements JSocketRepository {
 
       switch (command) {
         case CommandType.create:
-          final entity = JPlanSocketMapper.toEntity(PlanJResponse.fromJson(socketData));
+          final entity = JPlanMapper.toEntity(PlanResponse.fromJson(socketData));
           _controller.add(PlanAdded(entity));
           break;
         default:

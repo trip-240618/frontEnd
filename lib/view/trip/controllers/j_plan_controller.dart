@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -8,17 +9,19 @@ import 'package:tripStory/core/services/trip_room_service.dart';
 import 'package:tripStory/domain/entities/j_socket_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/repositories/j_socket_repository.dart';
+import 'package:tripStory/domain/usecases/fetch_j_plan_usecase.dart';
 import 'package:tripStory/router/routes.dart';
-
-import '../models/j_plan_state.dart';
+import 'package:tripStory/view/trip/models/j_plan_state.dart';
 
 class JPlanController extends GetxController {
   final JSocketRepository _jSocketRepository;
   final TripRoomService _tripRoomService;
+  final FetchJPlanUsecase _fetchJPlanUsecase;
 
   JPlanController(
     this._jSocketRepository,
     this._tripRoomService,
+    this._fetchJPlanUsecase,
   );
 
   TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
@@ -37,12 +40,18 @@ class JPlanController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getCurrentLocation();
-    planSocketInit();
-
     _jPlanState = state.copyWith(
       selectedDate: tripRoomInfo?.startDate,
     );
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await Future.wait([
+      getCurrentLocation(),
+      planSocketInit(),
+      getJPlanData(),
+    ]);
   }
 
   Future<void> getCurrentLocation() async {
@@ -79,6 +88,26 @@ class JPlanController extends GetxController {
           break;
       }
     });
+  }
+
+  Future<void> getJPlanData() async {
+    final params = Tuple3(
+      tripRoomInfo?.id ?? 0,
+      tripRoomInfo?.dayAfterStartFrom(state.selectedDate ?? DateTime.now()) ?? 1,
+      false,
+    );
+
+    final result = await _fetchJPlanUsecase.call(params);
+
+    result.fold(
+      (failure) {},
+      (plans) {
+        _jPlanState = state.copyWith(
+          plans: plans,
+        );
+        update();
+      },
+    );
   }
 
   void onMapDrag(double detail) {

@@ -2,10 +2,12 @@ import 'package:dartz/dartz.dart';
 import 'package:tripStory/core/errors/failure.dart';
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
+import 'package:tripStory/data/mappers/j_plan_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_create_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_mapper.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_create_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/repositories/trip_repository.dart';
@@ -91,6 +93,27 @@ class TripRepositoryImpl implements TripRepository {
       final entity = TripRoomMapper.toEntity(result);
       return Right(entity);
     } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<JPlanEntity>> fetchJPlan({
+    required int tripId,
+    required int day,
+    required bool locker,
+  }) async {
+    try {
+      final result = await _tripDataSource.fetchJPlan(
+        tripId,
+        day,
+        locker,
+      );
+      final entities = result.expand((dayPlan) => dayPlan.planList).map(JPlanMapper.toEntity).toList();
+      return Right(entities);
+    } catch (e, stackTrace) {
+      print("❌ fetchJPlan Error: $e");
+      print("🔍 StackTrace: $stackTrace");
       return Left(ServerFailure(e.toString()));
     }
   }
