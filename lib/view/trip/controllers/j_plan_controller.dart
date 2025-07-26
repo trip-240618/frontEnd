@@ -6,10 +6,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/core/services/trip_room_service.dart';
+import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/j_socket_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/repositories/j_socket_repository.dart';
+import 'package:tripStory/domain/usecases/delete_j_plan_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_j_plan_usecase.dart';
+import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/trip/models/j_plan_state.dart';
 
@@ -17,11 +20,15 @@ class JPlanController extends GetxController {
   final JSocketRepository _jSocketRepository;
   final TripRoomService _tripRoomService;
   final FetchJPlanUsecase _fetchJPlanUsecase;
+  final DeleteJPlanUsecase _deleteJPlanUsecase;
+  final MoveJPlanLockerUsecase _moveJPlanLockerUsecase;
 
   JPlanController(
     this._jSocketRepository,
     this._tripRoomService,
     this._fetchJPlanUsecase,
+    this._deleteJPlanUsecase,
+    this._moveJPlanLockerUsecase,
   );
 
   TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
@@ -112,6 +119,7 @@ class JPlanController extends GetxController {
     );
   }
 
+  /// sideEffect
   void onMapDrag(double detail) {
     double nextHeight = state.googleMapHeight + detail;
     if (nextHeight < minHeight) nextHeight = minHeight;
@@ -121,7 +129,6 @@ class JPlanController extends GetxController {
     update();
   }
 
-  /// sideEffect
   void onDayPressed(
     int index,
     DateTime? selectedDate,
@@ -144,6 +151,43 @@ class JPlanController extends GetxController {
     Get.toNamed(
       Routes.tripJPlanAdd,
       arguments: state.selectedDate,
+    );
+  }
+
+  Future<void> onPlanDeletePressed(
+    int planId,
+  ) async {
+    final params = Tuple3(
+      tripRoomInfo?.id ?? 0,
+      planId,
+      tripRoomInfo?.dayAfterStartFrom(state.selectedDate ?? DateTime.now()) ?? 1,
+    );
+
+    final result = await _deleteJPlanUsecase.call(params);
+
+    result.fold(
+      (failure) {},
+      (success) {
+        update();
+      },
+    );
+  }
+
+  Future<void> onMoveToLockerPressed(
+    JPlanEntity plan,
+  ) async {
+    final params = Tuple2(
+      tripRoomInfo?.id ?? 0,
+      plan,
+    );
+
+    final result = await _moveJPlanLockerUsecase.call(params);
+
+    result.fold(
+      (failure) {},
+      (success) {
+        update();
+      },
     );
   }
 

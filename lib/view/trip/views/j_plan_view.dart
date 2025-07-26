@@ -170,12 +170,16 @@ class _JPlanViewState extends State<JPlanView> {
                                                       ),
                                                       PopupMenuAction(
                                                         title: "일정 삭제",
-                                                        onTap: () {},
+                                                        onTap: () => controller.onPlanDeletePressed(
+                                                          plan.planId,
+                                                        ),
                                                         iconPath: IconConstants.delete,
                                                       ),
                                                       PopupMenuAction(
                                                         title: "보관함 이동",
-                                                        onTap: () {},
+                                                        onTap: () => controller.onMoveToLockerPressed(
+                                                          plan,
+                                                        ),
                                                         iconPath: IconConstants.inbox,
                                                       ),
                                                     ],
