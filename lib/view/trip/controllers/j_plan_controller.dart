@@ -31,7 +31,9 @@ class JPlanController extends GetxController {
   JPlanState get state => _jPlanState;
 
   Completer<GoogleMapController> mapController = Completer<GoogleMapController>();
-  ScrollController scrollController = ScrollController();
+
+  ScrollController dayScrollController = ScrollController();
+  ScrollController listController = ScrollController();
 
   final minHeight = 154.0;
   final maxHeight = 300.0;
@@ -126,7 +128,7 @@ class JPlanController extends GetxController {
   ) {
     double scrollOffset = dayItemWidth * index;
 
-    scrollController.animateTo(
+    dayScrollController.animateTo(
       scrollOffset,
       duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
@@ -148,7 +150,7 @@ class JPlanController extends GetxController {
   @override
   void onClose() {
     _jSocketRepository.disconnect();
-    scrollController.dispose();
+    dayScrollController.dispose();
     super.onClose();
   }
 }

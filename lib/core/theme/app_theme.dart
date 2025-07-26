@@ -21,6 +21,7 @@ class AppTheme {
 
   static const _appColorScheme = AppColors(
     white: Color(0xFFFFFFFF),
+    black: Color(0xff000000),
     whiteEC: Color(0xffECECEC),
     red: Color(0xFFFF4D4F),
     yellow: Color(0xFFFFCC00),

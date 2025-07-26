@@ -23,4 +23,6 @@ abstract class JPlanState with _$JPlanState {
   }) = _TripMainStateJPlanState;
 
   int get selectedDay => selectedDayIndex + 1;
+
+  int get plansLength => plans.length;
 }
