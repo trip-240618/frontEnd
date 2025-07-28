@@ -4,6 +4,8 @@ part 'scrap_entity.freezed.dart';
 
 @freezed
 abstract class ScrapEntity with _$ScrapEntity {
+  const ScrapEntity._();
+
   const factory ScrapEntity({
     required int id,
     required String writerUuid,
@@ -15,4 +17,6 @@ abstract class ScrapEntity with _$ScrapEntity {
     required bool bookmark,
     required DateTime createDate,
   }) = _ScrapEntity;
+
+  bool isMine(String myUuid) => writerUuid == myUuid;
 }

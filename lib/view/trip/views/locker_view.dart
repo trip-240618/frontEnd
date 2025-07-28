@@ -5,7 +5,7 @@ import 'package:tripStory/core/enum/locker_tap_type.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/view/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/view/trip/views/plan_b_view.dart';
-import 'package:tripStory/view/trip/views/scrap_list_view.dart';
+import 'package:tripStory/view/trip/views/scraps_view.dart';
 
 class LockerView extends StatefulWidget {
   const LockerView({super.key});
@@ -75,7 +75,7 @@ class _LockerViewState extends State<LockerView>
               controller: _tabController,
               children: [
                 PlanBView(),
-                ScrapListView(),
+                ScrapsView(),
               ],
             ),
           ),

@@ -98,9 +98,9 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
-  ResultFuture<List<ScrapEntity>> fetchScrapList({required int tripId}) async {
+  ResultFuture<List<ScrapEntity>> fetchScraps({required int tripId}) async {
     try {
-      final result = await _tripDataSource.fetchScrapList(tripId);
+      final result = await _tripDataSource.fetchScraps(tripId);
       final entity = result.map(ScrapMapper.toEntity).toList();
       return Right(entity);
     } catch (e) {

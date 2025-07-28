@@ -25,7 +25,7 @@ abstract class TripRepository {
     required String invitationCode,
   });
 
-  ResultFuture<List<ScrapEntity>> fetchScrapList({
+  ResultFuture<List<ScrapEntity>> fetchScraps({
     required int tripId,
   });
 }

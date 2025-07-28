@@ -41,7 +41,7 @@ abstract class TripDataSource {
   );
 
   @GET("/{tripId}/scrap/list")
-  Future<List<ScrapResponse>> fetchScrapList(
+  Future<List<ScrapResponse>> fetchScraps(
     @Path("tripId") int tripId,
   );
 }
