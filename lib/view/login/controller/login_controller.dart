@@ -12,7 +12,8 @@ import 'package:tripStory/domain/usecases/login_google_usecase.dart';
 import 'package:tripStory/domain/usecases/login_kakao_usecase.dart';
 import 'package:tripStory/router/routes.dart';
 
-class LoginController extends GetxController with GetSingleTickerProviderStateMixin {
+class LoginController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final LoginWithKakaoUseCase kakaoUseCase;
   final LoginGoogleUsecase googleUsecase;
   final LoginAppleUsecase appleUsecase;
@@ -29,17 +30,21 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
     String? fcmToken = await FirebaseMessaging.instance.getToken();
 
     final isInstalled = await isKakaoTalkInstalled();
-    final oauthToken =
-        isInstalled ? await UserApi.instance.loginWithKakaoTalk() : await UserApi.instance.loginWithKakaoAccount();
+    final oauthToken = isInstalled
+        ? await UserApi.instance.loginWithKakaoTalk()
+        : await UserApi.instance.loginWithKakaoAccount();
 
     final result = await kakaoUseCase.call(
       kakaoToken: oauthToken.accessToken,
       fcmToken: fcmToken ?? "",
     );
-
+    print('????');
     result.fold(
-      (failure) {},
+      (failure) {
+        print('????222${failure.message}');
+      },
       (user) async {
+        print('????222');
         userService.setUser(user);
         await ensureUserInfoWithConsent();
         _handleUserType(user.type);
@@ -55,7 +60,8 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
         if (user.kakaoAccount?.emailNeedsAgreement == true) "account_email",
         if (user.kakaoAccount?.birthdayNeedsAgreement == true) "birthday",
         if (user.kakaoAccount?.birthyearNeedsAgreement == true) "birthyear",
-        if (user.kakaoAccount?.phoneNumberNeedsAgreement == true) "phone_number",
+        if (user.kakaoAccount?.phoneNumberNeedsAgreement == true)
+          "phone_number",
         if (user.kakaoAccount?.profileNeedsAgreement == true) "profile",
         if (user.kakaoAccount?.ageRangeNeedsAgreement == true) "age_range",
       ];
