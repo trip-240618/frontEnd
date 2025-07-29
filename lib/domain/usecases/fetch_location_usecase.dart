@@ -10,7 +10,7 @@ class FetchLocationUsecase implements UseCase<LocationEntity, String> {
   FetchLocationUsecase(this.repository);
 
   @override
-  Future<Either<Failure, LocationEntity>> call(String placeId) {
-    return repository.fetchPlaceDetail(placeId);
+  Future<Either<Failure, LocationEntity>> call(String placeId) async {
+    return await repository.fetchPlaceDetail(placeId);
   }
 }

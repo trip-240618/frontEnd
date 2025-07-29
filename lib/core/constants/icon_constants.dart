@@ -21,18 +21,21 @@ class IconConstants {
   static const String close = "$_iconNormal/close.svg";
   static const String mail = "$_iconNormal/mail.svg";
   static const String home = "$_iconNormal/home.svg";
-  static const String moreHorizon = "$_iconNormal/moreHorizon.svg";
+  static const String moreHorizon = "$_iconNormal/more_horizon.svg";
   static const String calendar = "$_iconNormal/calendar.svg";
   static const String inbox = "$_iconNormal/inbox.svg";
   static const String plane = "$_iconNormal/plane.svg";
   static const String swap = "$_iconNormal/swap.svg";
   static const String mainPlus = "$_iconNormal/main_plus.svg";
+  static const String delete = "$_iconNormal/delete.svg";
 
   // small
   static const String date = "$_iconSmall/date.svg";
   static const String time = "$_iconSmall/time.svg";
   static const String search = "$_iconSmall/search.svg";
   static const String clear = "$_iconSmall/clear.svg";
+  static const String memo = "$_iconSmall/memo.svg";
+  static const String smallVertical = "$_iconSmall/small_vertical.svg";
 
   // tag
   static const String tagUser = "$_icon/userIcon.svg";

@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
+import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/data/models/response/plan_j_response.dart';
 import 'package:tripStory/data/models/response/trip_room_create_response.dart';
 import 'package:tripStory/data/models/response/trip_room_response.dart';
 
@@ -40,9 +42,29 @@ abstract class TripDataSource {
     @Query("invitationCode") String invitationCode,
   );
 
+  @GET("/{tripId}/plan/j/list")
+  Future<List<PlanJResponse>> fetchJPlan(
+    @Path("tripId") int tripId,
+    @Query("day") int day,
+    @Query("locker") bool locker,
+  );
+
   @POST("/{tripId}/plan/j/create")
   Future<void> postCreateJPlan(
     @Path("tripId") int tripId,
     @Body() PlanJCreateRequest request,
+  );
+
+  @DELETE("/{tripId}/plan/j/delete")
+  Future<void> deleteJPlan(
+    @Path("tripId") int tripId,
+    @Query("planId") int planId,
+    @Query("day") int day,
+  );
+
+  @PUT("/{tripId}/plan/j/edit/modify")
+  Future<void> putModifyJPlan(
+    @Path("tripId") int tripId,
+    @Body() PlanJModifyRequest request,
   );
 }

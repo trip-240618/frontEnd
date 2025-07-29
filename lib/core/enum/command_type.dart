@@ -1,21 +1,18 @@
 enum CommandType {
-  create("create"),
-  // delete("delete"),
-  // modify("modify"),
-  // editStart("edit start"),
-  // editFinish("edit finish"),
-  // swap("swap"),
-  // wait("wait"),
-  unknown("");
+  create,
+  delete,
+  modify;
 
-  final String value;
-
-  const CommandType(this.value);
-
-  static CommandType from(String? value) {
-    return CommandType.values.firstWhere(
-      (e) => e.value == value,
-      orElse: () => CommandType.unknown,
-    );
+  factory CommandType.from(String value) {
+    switch (value) {
+      case "create":
+        return CommandType.create;
+      case "delete":
+        return CommandType.delete;
+      case "modify":
+        return CommandType.modify;
+      default:
+        throw UnimplementedError('Unknown command: $value');
+    }
   }
 }
