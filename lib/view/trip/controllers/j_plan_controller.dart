@@ -188,6 +188,13 @@ class JPlanController extends GetxController {
     );
   }
 
+  void onEditPlanPressed() {
+    Get.toNamed(
+      Routes.tripJPlanEdit,
+      arguments: state.selectedDate,
+    );
+  }
+
   Future<void> onPlanDeletePressed(
     int planId,
   ) async {
