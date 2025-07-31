@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/core/services/trip_room_service.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/create_j_plan_usecase.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
+import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/j_plan_editor_state.dart';
 
 class JPlanCreateController extends GetxController {

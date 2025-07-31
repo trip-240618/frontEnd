@@ -36,15 +36,7 @@ class DioClient {
       onResponse: (response, handler) async {
         final setCookieHeader = response.headers["set-cookie"];
         if (setCookieHeader != null && setCookieHeader.isNotEmpty) {
-          final cookies = _parseSetCookieHeader(setCookieHeader);
-          final accessToken = cookies["accessToken"];
-          final refreshToken = cookies["refreshToken"];
-
-          if (accessToken != null && refreshToken != null) {
-            await sessionService.saveTokens(accessToken, refreshToken);
-          } else if (accessToken != null) {
-            await sessionService.saveTokens(accessToken, (await sessionService.getTokens())["refreshToken"] ?? "");
-          }
+          await sessionService.handleSetCookieHeader(setCookieHeader);
         }
         return handler.next(response);
       },

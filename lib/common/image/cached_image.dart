@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
+import 'package:tripStory/core/cache/custom_cache_manager.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
-import 'package:tripStory/util/custom_cache_manager.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 
 class CachedImage extends StatelessWidget {
@@ -39,7 +40,7 @@ class CachedImage extends StatelessWidget {
     }
     return CachedNetworkImage(
       imageUrl: imageUrl,
-      cacheManager: CustomCacheManager(),
+      cacheManager: Get.find<CustomCacheManager>(),
       placeholder: (context, url) => SizedBox(
         width: width,
         height: height,

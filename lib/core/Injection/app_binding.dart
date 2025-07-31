@@ -1,9 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/core/services/login_user_service.dart';
+import 'package:tripStory/core/cache/custom_cache_manager.dart';
 import 'package:tripStory/core/services/session_service.dart';
-import 'package:tripStory/core/services/socket_service.dart';
-import 'package:tripStory/core/services/trip_room_service.dart';
 import 'package:tripStory/data/datasources/local/share_preferences_token_storage.dart';
 import 'package:tripStory/data/datasources/local/token_storage.dart';
 import 'package:tripStory/data/datasources/remote/country_data_source.dart';
@@ -15,6 +13,7 @@ import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
 import 'package:tripStory/data/datasources/remote/trip_location_data_source.dart';
 import 'package:tripStory/data/datasources/remote/user_data_source.dart';
 import 'package:tripStory/data/network/dio_client.dart';
+import 'package:tripStory/data/network/socket_service.dart';
 import 'package:tripStory/data/repositories/auth_repository_impl.dart';
 import 'package:tripStory/data/repositories/country_repository_impl.dart';
 import 'package:tripStory/data/repositories/file_repository_impl.dart';
@@ -33,12 +32,17 @@ import 'package:tripStory/domain/repositories/notice_repository.dart';
 import 'package:tripStory/domain/repositories/notification_repository.dart';
 import 'package:tripStory/domain/repositories/trip_repository.dart';
 import 'package:tripStory/domain/repositories/user_repository.dart';
+import 'package:tripStory/view/global/login_user_service.dart';
+import 'package:tripStory/view/modules/trip_room_service.dart';
 
 class AppBinding extends Bindings {
   @override
   void dependencies() {
     // TokenStorage
     Get.put<TokenStorage>(SharedPreferencesTokenStorage(), permanent: true);
+
+    // cache
+    Get.lazyPut<CustomCacheManager>(() => CustomCacheManager(Get.find<SessionService>()));
 
     // service
     Get.put<LoginUserService>(LoginUserService(), permanent: true);

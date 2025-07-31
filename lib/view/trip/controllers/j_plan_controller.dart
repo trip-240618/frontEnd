@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:tripStory/core/services/trip_room_service.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/j_socket_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
@@ -14,6 +13,7 @@ import 'package:tripStory/domain/usecases/delete_j_plan_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_j_plan_usecase.dart';
 import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
 import 'package:tripStory/router/routes.dart';
+import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/view/trip/models/j_plan_state.dart';
 

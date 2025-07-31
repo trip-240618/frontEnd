@@ -69,6 +69,7 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
         resizeToAvoidBottomInset: false,
         appBar: AppAppbar(
           text: "여행방 만들기",
+          onTap: () => controller.onBackPressed(),
         ),
         body: Column(
           children: [
