@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:tripStory/core/services/socket_service.dart';
 import 'package:tripStory/data/mappers/j_socket_mapper.dart';
 import 'package:tripStory/data/models/response/socket_response.dart';
+import 'package:tripStory/data/network/socket_service.dart';
 import 'package:tripStory/domain/entities/j_socket_entity.dart';
 import 'package:tripStory/domain/repositories/j_socket_repository.dart';
 

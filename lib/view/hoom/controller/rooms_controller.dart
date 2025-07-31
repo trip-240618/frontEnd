@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
-import 'package:tripStory/core/services/trip_room_service.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_bookmarked_trips_usecase.dart';
@@ -13,6 +12,7 @@ import 'package:tripStory/domain/usecases/update_bookmark_usecase.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/hoom/enum/trip_rooms_type.dart';
 import 'package:tripStory/view/hoom/model/trip_rooms_state.dart';
+import 'package:tripStory/view/modules/trip_room_service.dart';
 
 class RoomsController extends GetxController with GetSingleTickerProviderStateMixin {
   final FetchComingTripsUseCase _fetchComingTrips;

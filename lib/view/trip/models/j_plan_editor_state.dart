@@ -1,19 +1,19 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tripStory/domain/entities/location_entity.dart';
 
-part 'j_plan_create_state.freezed.dart';
+part 'j_plan_editor_state.freezed.dart';
 
 @freezed
-abstract class JPlanCreateState with _$JPlanCreateState {
-  const JPlanCreateState._();
+abstract class JPlanEditorState with _$JPlanEditorState {
+  const JPlanEditorState._();
 
-  const factory JPlanCreateState({
+  const factory JPlanEditorState({
     DateTime? selectedDate,
     DateTime? selectedTime,
     LocationEntity? searchPlace,
     @Default("") String planTitle,
     @Default("") String planMemo,
-  }) = _JPlanCreateState;
+  }) = _JPlanEditorState;
 
   bool get planTitleEmpty => planTitle.isEmpty;
 

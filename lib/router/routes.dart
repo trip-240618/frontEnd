@@ -17,4 +17,5 @@ class Routes {
   static const tripRoom = "/trip-room";
   static const tripJPlanAdd = "/trip-plan-add";
   static const locationSearch = "/location_search";
+  static const tripJPlanEdit = "/trip-plan-edit";
 }

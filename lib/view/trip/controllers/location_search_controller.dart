@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:tripStory/core/services/trip_room_service.dart';
 import 'package:tripStory/data/models/request/location_auto_request.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_location_usecase.dart';
 import 'package:tripStory/domain/usecases/location_auto_complete_usecase.dart';
+import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/location_search_state.dart';
 
 class LocationSearchController extends GetxController {

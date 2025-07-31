@@ -379,7 +379,7 @@ class _TripContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RoundThumbnailImage(
-          imageUrl: tripRoom.thumbnail,
+          imageUrl: "https://c.tripstory.shop${tripRoom.thumbnail}",
         ),
         const SizedBox(width: 12),
         _buildTripInfo(),

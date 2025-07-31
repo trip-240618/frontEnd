@@ -33,9 +33,12 @@ import 'package:tripStory/view/splash/binding/splash_binding.dart';
 import 'package:tripStory/view/splash/views/splash_view.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_add_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_binding.dart';
+import 'package:tripStory/view/trip/bindings/j_plan_edit_binding.dart';
 import 'package:tripStory/view/trip/bindings/location_search_binding.dart';
 import 'package:tripStory/view/trip/bindings/trip_main_binding.dart';
+import 'package:tripStory/view/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/view/trip/views/j_plan_create_view.dart';
+import 'package:tripStory/view/trip/views/j_plan_edit_view.dart';
 import 'package:tripStory/view/trip/views/location_search_view.dart';
 import 'package:tripStory/view/trip/views/trip_main_view.dart';
 
@@ -164,6 +167,17 @@ class RouterInfo {
       name: Routes.locationSearch,
       page: () => const LocationSearchView(),
       binding: LocationSearchBinding(),
+    ),
+    GetPage(
+      name: Routes.tripJPlanEdit,
+      page: () {
+        final args = Get.arguments;
+        if (args is! JPlanEditParams) {
+          throw ArgumentError('error');
+        }
+        return JPlanEditView(params: args);
+      },
+      binding: JPlanEditBinding(),
     ),
   ];
 }

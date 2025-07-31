@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/app/permission/permission.dart';
-import 'package:tripStory/core/services/login_user_service.dart';
 import 'package:tripStory/data/models/request/file_request.dart';
 import 'package:tripStory/data/models/request/user_modify_request.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 import 'package:tripStory/domain/usecases/edit_user_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_presigned_url_usecase.dart';
-import 'package:tripStory/util/compress_image.dart';
 import 'package:tripStory/util/helper/file_upload_helper.dart';
+import 'package:tripStory/util/image_file_util.dart';
 import 'package:tripStory/util/url_utils.dart';
+import 'package:tripStory/view/global/login_user_service.dart';
 import 'package:tripStory/view/setting/models/edit_profile_state.dart';
 
 class EditProfileController extends GetxController {
@@ -92,7 +92,7 @@ class EditProfileController extends GetxController {
           thumbnailUrl = UrlUtils.getBaseUrl(preSignedUrls[0]);
           originUrl = UrlUtils.getBaseUrl(preSignedUrls[1]);
 
-          final compressedBytes = await compressImage(state.profileImage!);
+          final compressedBytes = await ImageFileUtil.compressImage(state.profileImage!);
           final originalBytes = await state.profileImage!.readAsBytes();
 
           await Future.wait([
