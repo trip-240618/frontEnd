@@ -14,6 +14,7 @@ import 'package:tripStory/domain/usecases/delete_j_plan_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_j_plan_usecase.dart';
 import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
 import 'package:tripStory/router/routes.dart';
+import 'package:tripStory/view/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/view/trip/models/j_plan_state.dart';
 
 class JPlanController extends GetxController {
@@ -188,10 +189,13 @@ class JPlanController extends GetxController {
     );
   }
 
-  void onEditPlanPressed() {
+  void onEditPlanPressed(JPlanEntity jPlan) {
     Get.toNamed(
       Routes.tripJPlanEdit,
-      arguments: state.selectedDate,
+      arguments: JPlanEditParams(
+        selectedDate: state.selectedDate ?? DateTime.now(),
+        jPlan: jPlan,
+      ),
     );
   }
 

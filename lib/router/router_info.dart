@@ -36,6 +36,7 @@ import 'package:tripStory/view/trip/bindings/j_plan_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_edit_binding.dart';
 import 'package:tripStory/view/trip/bindings/location_search_binding.dart';
 import 'package:tripStory/view/trip/bindings/trip_main_binding.dart';
+import 'package:tripStory/view/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/view/trip/views/j_plan_create_view.dart';
 import 'package:tripStory/view/trip/views/j_plan_edit_view.dart';
 import 'package:tripStory/view/trip/views/location_search_view.dart';
@@ -170,12 +171,11 @@ class RouterInfo {
     GetPage(
       name: Routes.tripJPlanEdit,
       page: () {
-        final selectedDate = Get.arguments;
-
-        if (selectedDate is! DateTime) {
+        final args = Get.arguments;
+        if (args is! JPlanEditParams) {
           throw ArgumentError('error');
         }
-        return JPlanEditView(selectedDate: selectedDate);
+        return JPlanEditView(params: args);
       },
       binding: JPlanEditBinding(),
     ),

@@ -13,6 +13,7 @@ import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/common/text/common_text_form_field.dart';
 import 'package:tripStory/common/text/text_area_form_field.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
+import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/location_entity.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
@@ -27,13 +28,15 @@ class JPlanEditorView extends StatefulWidget {
   final String bottomButtonText;
   final void Function(JPlanEditorState) onBottomButtonPressed;
 
-  final String? startTime;
-  final String? place;
-  final double? latitude;
-  final double? longitude;
-  final String? title;
-  final String? memo;
-  final int? planId;
+  final JPlanEntity? jPlanEntity;
+
+  // final String? startTime;
+  // final String? place;
+  // final double? latitude;
+  // final double? longitude;
+  // final String? title;
+  // final String? memo;
+  // final int? planId;
 
   const JPlanEditorView({
     super.key,
@@ -41,13 +44,7 @@ class JPlanEditorView extends StatefulWidget {
     required this.selectedDate,
     required this.bottomButtonText,
     required this.onBottomButtonPressed,
-    this.startTime,
-    this.place,
-    this.latitude,
-    this.longitude,
-    this.planId,
-    this.title,
-    this.memo,
+    this.jPlanEntity,
   });
 
   @override
@@ -63,20 +60,21 @@ class _JPlanEditorViewState extends State<JPlanEditorView> {
   @override
   void initState() {
     super.initState();
-    final isEditMode = widget.planId != null;
+    final isEditMode = widget.jPlanEntity != null;
 
     if (isEditMode) {
-      _planTitleCon.text = widget.title ?? "";
-      _planMemoCon.text = widget.memo ?? "";
+      final editJPlan = widget.jPlanEntity;
+      _planTitleCon.text = editJPlan?.title ?? "";
+      _planMemoCon.text = editJPlan?.memo ?? "";
 
       _jPlanEditorController.initForEdit(
         selectedDate: widget.selectedDate,
-        title: widget.title,
-        memo: widget.memo,
-        time: widget.startTime?.toTodayTime(),
-        place: widget.place,
-        latitude: widget.latitude,
-        longitude: widget.longitude,
+        title: editJPlan?.title,
+        memo: editJPlan?.memo,
+        time: editJPlan?.startTime.toTodayTime(),
+        place: editJPlan?.place,
+        latitude: editJPlan?.latitude,
+        longitude: editJPlan?.longitude,
       );
     } else {
       _jPlanEditorController.initForCreate(

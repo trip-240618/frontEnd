@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,6 +27,28 @@ import 'package:tripStory/view/hoom/model/trip_rooms_state.dart';
 
 class TripRoomListView extends StatelessWidget {
   const TripRoomListView({super.key});
+
+  Future<int> _folderSize(Directory dir) async {
+    int size = 0;
+    try {
+      if (await dir.exists()) {
+        final files = dir.listSync(recursive: true);
+        for (var entity in files) {
+          if (entity is File) {
+            size += await entity.length();
+          }
+        }
+      }
+    } catch (_) {}
+    return size;
+  }
+
+  String _formatBytes(int bytes, [int decimals = 2]) {
+    const suffixes = ['B', 'KB', 'MB', 'GB'];
+    if (bytes == 0) return '0 B';
+    final i = (log(bytes) / log(1024)).floor();
+    return '${(bytes / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -379,7 +402,7 @@ class _TripContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RoundThumbnailImage(
-          imageUrl: tripRoom.thumbnail,
+          imageUrl: "https://c.tripstory.shop${tripRoom.thumbnail}",
         ),
         const SizedBox(width: 12),
         _buildTripInfo(),

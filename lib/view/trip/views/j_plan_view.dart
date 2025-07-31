@@ -165,7 +165,7 @@ class _JPlanViewState extends State<JPlanView> {
                                                     items: [
                                                       PopupMenuAction(
                                                         title: "일정 수정",
-                                                        onTap: () => controller.onEditPlanPressed(),
+                                                        onTap: () => controller.onEditPlanPressed(plan),
                                                         iconPath: IconConstants.pencil,
                                                       ),
                                                       PopupMenuAction(
