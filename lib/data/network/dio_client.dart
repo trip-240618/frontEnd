@@ -45,19 +45,4 @@ class DioClient {
       },
     ));
   }
-
-  Map<String, String> _parseSetCookieHeader(List<String> rawHeaders) {
-    final Map<String, String> cookies = {};
-
-    for (var raw in rawHeaders) {
-      final parts = raw.split(";").first.trim().split("=");
-      if (parts.length == 2) {
-        final key = parts[0].trim();
-        final value = parts[1].trim();
-        cookies[key] = value;
-      }
-    }
-
-    return cookies;
-  }
 }
