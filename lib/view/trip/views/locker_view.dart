@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/button/floating_plus_button.dart';
-import 'package:tripStory/core/enum/locker_tap_type.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/view/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/view/trip/views/plan_b_view.dart';
@@ -14,17 +13,17 @@ class LockerView extends StatefulWidget {
   State<LockerView> createState() => _LockerViewState();
 }
 
-class _LockerViewState extends State<LockerView>
-    with SingleTickerProviderStateMixin {
+class _LockerViewState extends State<LockerView> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  LockerTapType _lockerTapType = LockerTapType.planB;
+
+  // LockerTapType _lockerTapType = LockerTapType.planB;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      _lockerTapType = LockerTapType.values[_tabController.index];
+      // _lockerTapType = LockerTapType.values[_tabController.index];
     });
   }
 
@@ -43,8 +42,7 @@ class _LockerViewState extends State<LockerView>
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TabBar(
               controller: _tabController,
-              labelStyle: context.style.body1Normal
-                  .copyWith(fontWeight: FontWeight.w700),
+              labelStyle: context.style.body1Normal.copyWith(fontWeight: FontWeight.w700),
               unselectedLabelStyle: context.style.body1Normal.copyWith(
                 fontWeight: FontWeight.w700,
                 color: context.color.gray400,
@@ -67,10 +65,7 @@ class _LockerViewState extends State<LockerView>
               ],
             ),
           ),
-          Expanded(
-              child: TabBarView(
-                  controller: _tabController,
-                  children: [PlanBView(), ScrapListView()])),
+          Expanded(child: TabBarView(controller: _tabController, children: [PlanBView(), ScrapListView()])),
         ],
       ),
       floatingActionButton: FloatingPlusButton(onPressed: () {

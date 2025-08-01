@@ -39,6 +39,7 @@ import 'package:tripStory/view/trip/bindings/trip_main_binding.dart';
 import 'package:tripStory/view/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/view/trip/views/j_plan_create_view.dart';
 import 'package:tripStory/view/trip/views/j_plan_edit_view.dart';
+import 'package:tripStory/view/trip/views/j_plan_swap_view.dart';
 import 'package:tripStory/view/trip/views/location_search_view.dart';
 import 'package:tripStory/view/trip/views/trip_main_view.dart';
 
@@ -177,6 +178,11 @@ class RouterInfo {
         }
         return JPlanEditView(params: args);
       },
+      binding: JPlanEditBinding(),
+    ),
+    GetPage(
+      name: Routes.tripJPlanSwap,
+      page: () => const JPlanSwapView(),
       binding: JPlanEditBinding(),
     ),
   ];

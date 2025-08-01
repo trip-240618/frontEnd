@@ -182,6 +182,12 @@ class JPlanController extends GetxController {
     update();
   }
 
+  void onPlanSwapPressed() {
+    Get.toNamed(
+      Routes.tripJPlanSwap,
+    );
+  }
+
   void onAddPlanPressed() {
     Get.toNamed(
       Routes.tripJPlanAdd,
