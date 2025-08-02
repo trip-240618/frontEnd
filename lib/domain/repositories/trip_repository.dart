@@ -1,6 +1,7 @@
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
+import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_create_entity.dart';
@@ -47,5 +48,15 @@ abstract class TripRepository {
   ResultFuture<void> putModifyJPlan({
     required int tripId,
     required PlanJModifyRequest request,
+  });
+
+  ResultFuture<void> putSwapJPlan({
+    required int tripId,
+    required PlanJSwapRequest request,
+  });
+
+  ResultFuture<void> fetchRegisterJPlan({
+    required int tripId,
+    required int day,
   });
 }

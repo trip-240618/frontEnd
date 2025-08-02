@@ -1,14 +1,19 @@
+import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/domain/entities/j_plan_swap_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
+import 'package:tripStory/domain/usecases/j_plan_swap_usecase.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/j_plan_swap_param.dart';
 import 'package:tripStory/view/trip/models/j_plan_swap_state.dart';
 
 class JPlanSwapController extends GetxController {
   final TripRoomService _tripRoomService;
+  final JPlanSwapUsecase _jPlanSwapUsecase;
 
   JPlanSwapController(
     this._tripRoomService,
+    this._jPlanSwapUsecase,
   );
 
   JPlanSwapState _jPlanSwapState = JPlanSwapState();
@@ -65,5 +70,31 @@ class JPlanSwapController extends GetxController {
     );
 
     update();
+  }
+
+  Future<void> onSwapSavePressed() async {
+    final tripId = tripRoomInfo?.id ?? 0;
+    final dayAfterStart = state.plans.firstOrNull?.dayAfterStart;
+    final plans = state.plans;
+
+    final entity = JPlanSwapEntity(
+      dayAfterStart: dayAfterStart ?? 1,
+      orderList: plans
+          .map((plan) => JPlanSwapOrderEntity(
+                planId: plan.planId,
+                startTime: plan.startTime,
+                orderByDate: plan.orderByDate,
+              ))
+          .toList(),
+    );
+
+    final result = await _jPlanSwapUsecase.call(Tuple2(tripId, entity));
+
+    result.fold(
+      (failure) {},
+      (success) {
+        Get.back();
+      },
+    );
   }
 }

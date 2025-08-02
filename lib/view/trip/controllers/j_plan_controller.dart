@@ -11,6 +11,7 @@ import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/repositories/j_socket_repository.dart';
 import 'package:tripStory/domain/usecases/delete_j_plan_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_j_plan_usecase.dart';
+import 'package:tripStory/domain/usecases/j_plan_swap_register_usecase.dart';
 import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
@@ -24,6 +25,7 @@ class JPlanController extends GetxController {
   final FetchJPlanUsecase _fetchJPlanUsecase;
   final DeleteJPlanUsecase _deleteJPlanUsecase;
   final MoveJPlanLockerUsecase _moveJPlanLockerUsecase;
+  final JPlanSwapRegisterUsecase _jPlanSwapRegisterUsecase;
 
   JPlanController(
     this._jSocketRepository,
@@ -31,6 +33,7 @@ class JPlanController extends GetxController {
     this._fetchJPlanUsecase,
     this._deleteJPlanUsecase,
     this._moveJPlanLockerUsecase,
+    this._jPlanSwapRegisterUsecase,
   );
 
   TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
@@ -183,9 +186,16 @@ class JPlanController extends GetxController {
     update();
   }
 
-  void onPlanSwapPressed() {
-    final swapParams = state.plans.map(JPlanSwapParam.fromEntity).toList();
+  Future<void> onPlanSwapPressed() async {
+    final tripId = tripRoomInfo?.id;
+    final day = state.selectedDay;
+    if (tripId == null) return;
 
+    await _jPlanSwapRegisterUsecase.call(
+      Tuple2(tripId, day),
+    );
+
+    final swapParams = state.plans.map(JPlanSwapParam.fromEntity).toList();
     Get.toNamed(
       Routes.tripJPlanSwap,
       arguments: swapParams,

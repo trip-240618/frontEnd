@@ -83,7 +83,7 @@ class _JPlanSwapViewState extends State<JPlanSwapView> {
         ),
         bottomNavigationBar: BottomButton(
           text: "순서변경",
-          onTap: () => {showToast(context)},
+          onTap: () => controller.onSwapSavePressed(),
         ),
       ),
     );
@@ -92,7 +92,7 @@ class _JPlanSwapViewState extends State<JPlanSwapView> {
   void showToast(BuildContext context) {
     CustomToast.show(
       context: context,
-      message: '일정 순서 변경이 완료됐습니다.',
+      message: "일정 순서 변경이 완료됐습니다.",
       gravity: ToastGravity.TOP,
     );
   }

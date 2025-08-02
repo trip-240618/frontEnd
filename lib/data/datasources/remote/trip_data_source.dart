@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
+import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
 import 'package:tripStory/data/models/response/plan_j_response.dart';
 import 'package:tripStory/data/models/response/trip_room_create_response.dart';
@@ -66,5 +67,17 @@ abstract class TripDataSource {
   Future<void> putModifyJPlan(
     @Path("tripId") int tripId,
     @Body() PlanJModifyRequest request,
+  );
+
+  @PUT("/{tripId}/plan/j/edit/swap")
+  Future<void> putSwapJPlan(
+    @Path("tripId") int tripId,
+    @Body() PlanJSwapRequest request,
+  );
+
+  @GET("/trip/{tripId}/plan/j/{day}/edit/register")
+  Future<void> fetchRegisterJPlan(
+    @Path("tripId") int tripId,
+    @Path("day") int day,
   );
 }
