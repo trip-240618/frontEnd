@@ -29,8 +29,7 @@ class SocketService extends GetxService {
     final tokens = await _sessionService.getTokens();
     final accessToken = tokens["accessToken"] ?? "";
     final refreshToken = tokens["refreshToken"] ?? "";
-    print("?? ${AppConstants.socketUrl}");
-    print("?? ${refreshToken}");
+
     _stompClient = StompClient(
       config: StompConfig.sockJS(
         url: AppConstants.socketUrl,

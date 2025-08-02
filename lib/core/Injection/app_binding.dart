@@ -41,9 +41,6 @@ class AppBinding extends Bindings {
     // TokenStorage
     Get.put<TokenStorage>(SharedPreferencesTokenStorage(), permanent: true);
 
-    // cache
-    Get.lazyPut<CustomCacheManager>(() => CustomCacheManager(Get.find<SessionService>()));
-
     // service
     Get.put<LoginUserService>(LoginUserService(), permanent: true);
     Get.put<TripRoomService>(TripRoomService(), permanent: true);
@@ -57,6 +54,9 @@ class AppBinding extends Bindings {
     // DioClient
     Get.put<DioClient>(DioClient(sessionService: Get.find<SessionService>()), permanent: true);
     Get.put<Dio>(Get.find<DioClient>().dio, permanent: true);
+
+    // cache
+    Get.lazyPut<CustomCacheManager>(() => CustomCacheManager(Get.find<SessionService>()), fenix: true);
 
     // DataSource
     Get.lazyPut<UserDataSource>(() => UserDataSource(Get.find<Dio>()), fenix: true);

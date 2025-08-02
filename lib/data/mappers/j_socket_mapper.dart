@@ -11,7 +11,6 @@ class JSocketMapper {
   static JSocketEntity? toEntity(SocketResponse response) {
     final command = CommandType.from(response.command);
     final data = response.data;
-    print("?? ${command}");
     switch (command) {
       case CommandType.create:
         final addResponse = PlanResponse.fromJson(data);
@@ -22,7 +21,6 @@ class JSocketMapper {
         return JPlanDeleteMapper.toEntity(deletedResponse);
 
       case CommandType.modify:
-        print("????? ${data}");
         final modifyResponse = PlanResponse.fromJson(data);
         return JPlanModifyMapper.toEntity(modifyResponse);
     }
