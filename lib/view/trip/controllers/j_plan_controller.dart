@@ -16,6 +16,7 @@ import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/view/trip/models/j_plan_state.dart';
+import 'package:tripStory/view/trip/models/j_plan_swap_param.dart';
 
 class JPlanController extends GetxController {
   final JSocketRepository _jSocketRepository;
@@ -183,8 +184,11 @@ class JPlanController extends GetxController {
   }
 
   void onPlanSwapPressed() {
+    final swapParams = state.plans.map(JPlanSwapParam.fromEntity).toList();
+
     Get.toNamed(
       Routes.tripJPlanSwap,
+      arguments: swapParams,
     );
   }
 

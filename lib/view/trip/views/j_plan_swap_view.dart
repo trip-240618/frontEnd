@@ -1,44 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
 import 'package:tripStory/common/toast/custom_toast.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
+import 'package:tripStory/util/extension/string_extension.dart';
+import 'package:tripStory/view/trip/controllers/j_plan_swap_controller.dart';
+import 'package:tripStory/view/trip/models/j_plan_swap_param.dart';
 import 'package:tripStory/view/trip/widgets/j_plan_list_tile.dart';
 
 class JPlanSwapView extends StatefulWidget {
-  const JPlanSwapView({super.key});
+  final List<JPlanSwapParam> plans;
+
+  const JPlanSwapView({
+    super.key,
+    required this.plans,
+  });
 
   @override
   State<JPlanSwapView> createState() => _JPlanSwapViewState();
 }
 
 class _JPlanSwapViewState extends State<JPlanSwapView> {
-  // final js = Get.find<JPlanState>();
-  // final ts = Get.find<TripState>();
-  FToast? fToast;
+  final controller = Get.find<JPlanSwapController>();
 
   @override
   void initState() {
-    fToast = FToast();
-    fToast?.init(context);
     super.initState();
+    controller.init(widget.plans);
   }
-
-  // Future<bool> _handleWillPop(BuildContext context) async {
-  //   if (Platform.isAndroid) {
-  //     showConfirmCancelTapDialog(context, '순서 변경을 종료하시겠습니까?', '확인', null, () async {
-  //       js.jPlanList[0]['checked'] = true;
-  //       js.isSorting.value = false;
-  //       js.deleteSwapJPlan(js.editPlanJList[0]['dayAfterStart']);
-  //       js.firstSwapList.value = {};
-  //       Get.back();
-  //       Get.back();
-  //     });
-  //     return false;
-  //   }
-  //   return false; // iOS는 뒤로가기 방지
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -61,42 +52,81 @@ class _JPlanSwapViewState extends State<JPlanSwapView> {
               const SizedBox(
                 height: 66,
               ),
-              Expanded(
-                child: ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        JPlanListTile(
-                          startTime: "00:00",
-                          title: "wpa",
-                          labelColor: context.color.white,
-                          onTap: () {},
-                        ),
-                        const SizedBox(height: 4)
-                      ],
-                    );
-                  },
-                ),
+              GetBuilder<JPlanSwapController>(
+                builder: (controller) {
+                  return Expanded(
+                    child: ListView.builder(
+                      physics: const ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: controller.state.planLength,
+                      itemBuilder: (context, index) {
+                        final plan = controller.state.plans[index];
+                        final isSelected = controller.state.selectedPlan?.planId == plan.planId;
+                        return Column(
+                          children: [
+                            _EditJPlanListTile(
+                              plan: plan,
+                              isSelected: isSelected,
+                              labelColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.white,
+                              onTap: () => controller.onSwapPlanPressed(index),
+                            ),
+                            const SizedBox(height: 4)
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
             ],
           ),
         ),
         bottomNavigationBar: BottomButton(
           text: "순서변경",
-          onTap: () => {showToast()},
+          onTap: () => {showToast(context)},
         ),
       ),
     );
   }
 
-  void showToast() {
+  void showToast(BuildContext context) {
     CustomToast.show(
       context: context,
       message: '일정 순서 변경이 완료됐습니다.',
       gravity: ToastGravity.TOP,
+    );
+  }
+}
+
+class _EditJPlanListTile extends StatelessWidget {
+  final JPlanSwapParam plan;
+  final Color labelColor;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _EditJPlanListTile({
+    required this.plan,
+    required this.isSelected,
+    required this.onTap,
+    required this.labelColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: isSelected ? context.color.gray900 : Colors.transparent,
+        ),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: JPlanListTile(
+        startTime: plan.startTime.formatDeleteSecondTime,
+        title: plan.title,
+        memo: plan.memo,
+        labelColor: labelColor,
+        onTap: onTap,
+      ),
     );
   }
 }

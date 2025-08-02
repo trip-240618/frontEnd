@@ -347,6 +347,7 @@ class _FloatingButton extends StatelessWidget {
       width: 60,
       height: 60,
       child: FloatingActionButton(
+        heroTag: "add",
         onPressed: onPressed,
         shape: CircleBorder(),
         backgroundColor: context.color.gray900,

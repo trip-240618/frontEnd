@@ -27,11 +27,11 @@ class JPlanListTile extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: SizedBox(
+        height: 50,
         child: Row(
           children: [
             Container(
               width: 58,
-              height: 50,
               decoration: BoxDecoration(
                 color: context.color.gray200,
                 border: Border.all(color: context.color.gray200),
@@ -101,7 +101,7 @@ class _MemoPopupMenu extends StatelessWidget {
     if (memo == null || memo!.isEmpty) return const SizedBox();
 
     return PopupMenuButton(
-      offset: const Offset(-34, 35),
+      offset: const Offset(-35, 45),
       shadowColor: context.color.black.withValues(alpha: 0.4),
       shape: _TooltipShape(borderColor: color),
       color: context.color.white,
