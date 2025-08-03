@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/button/floating_plus_button.dart';
 import 'package:tripStory/core/enum/locker_tap_type.dart';
+import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
-import 'package:tripStory/view/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/view/trip/views/plan_b_view.dart';
-import 'package:tripStory/view/trip/views/scrap_list_view.dart';
+import 'package:tripStory/view/trip/views/scraps_view.dart';
 
 class LockerView extends StatefulWidget {
   const LockerView({super.key});
@@ -43,8 +43,9 @@ class _LockerViewState extends State<LockerView>
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TabBar(
               controller: _tabController,
-              labelStyle: context.style.body1Normal
-                  .copyWith(fontWeight: FontWeight.w700),
+              labelStyle: context.style.body1Normal.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
               unselectedLabelStyle: context.style.body1Normal.copyWith(
                 fontWeight: FontWeight.w700,
                 color: context.color.gray400,
@@ -52,7 +53,9 @@ class _LockerViewState extends State<LockerView>
               indicatorColor: context.color.gray900,
               indicatorWeight: 2,
               indicatorSize: TabBarIndicatorSize.tab,
-              overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+              overlayColor: const WidgetStatePropertyAll(
+                Colors.transparent,
+              ),
               tabs: [
                 Tab(
                   child: Text(
@@ -68,14 +71,19 @@ class _LockerViewState extends State<LockerView>
             ),
           ),
           Expanded(
-              child: TabBarView(
-                  controller: _tabController,
-                  children: [PlanBView(), ScrapListView()])),
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                PlanBView(),
+                ScrapsView(),
+              ],
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingPlusButton(onPressed: () {
         /// TODO AddScrap 테스트 완료 후 바인딩 예정
-        Get.to(() => AddScrapPage());
+        Get.toNamed(Routes.scrapCreate);
       }),
     );
   }
