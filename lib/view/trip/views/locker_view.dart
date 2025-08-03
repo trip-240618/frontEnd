@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/button/floating_plus_button.dart';
 import 'package:tripStory/core/enum/locker_tap_type.dart';
+import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
-import 'package:tripStory/view/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/view/trip/views/plan_b_view.dart';
 import 'package:tripStory/view/trip/views/scraps_view.dart';
 
@@ -83,9 +83,7 @@ class _LockerViewState extends State<LockerView>
       ),
       floatingActionButton: FloatingPlusButton(onPressed: () {
         /// TODO AddScrap 테스트 완료 후 바인딩 예정
-        Get.to(
-          () => AddScrapPage(),
-        );
+        Get.toNamed(Routes.scrapCreate);
       }),
     );
   }

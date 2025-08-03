@@ -23,6 +23,9 @@ import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/hoom/controller/rooms_controller.dart';
 import 'package:tripStory/view/hoom/enum/trip_rooms_type.dart';
 import 'package:tripStory/view/hoom/model/trip_rooms_state.dart';
+import 'package:tripStory/view/trip/controllers/scrap_create_controller.dart';
+import 'package:tripStory/view/trip/controllers/scraps_controller.dart';
+import 'package:tripStory/view/trip/controllers/trip_main_controller.dart';
 
 class TripRoomListView extends StatelessWidget {
   const TripRoomListView({super.key});
@@ -53,7 +56,9 @@ class TripRoomListView extends StatelessWidget {
                 children: [
                   AppIconButton(
                     onTap: () => controller.onNotificationPressed(),
-                    assetPath: controller.notificationCount == 0 ? IconConstants.alert : IconConstants.alertOn,
+                    assetPath: controller.notificationCount == 0
+                        ? IconConstants.alert
+                        : IconConstants.alertOn,
                   ),
                   const SizedBox(
                     width: 4,
@@ -73,14 +78,32 @@ class TripRoomListView extends StatelessWidget {
               ),
               child: Column(
                 children: [
+                  GestureDetector(
+                    onTap: () {
+                      print(
+                          'TripMainController registered: ${Get.isRegistered<TripMainController>()}');
+                      print(
+                          'ScrapCreateController registered: ${Get.isRegistered<ScrapCreateController>()}');
+                      print(
+                          'ScrapsController registered: ${Get.isRegistered<ScrapsController>()}');
+                    },
+                    child: Container(
+                      color: Colors.red,
+                      child: Text('ttttt'),
+                    ),
+                  ),
                   Row(
                     children: [
                       RoundedBoxButton(
                         backgroundColor:
-                            controller.tripRoomsState.tripRoomType == TripRoomType.coming ? gray900 : gray200,
+                            controller.tripRoomsState.tripRoomType ==
+                                    TripRoomType.coming
+                                ? gray900
+                                : gray200,
                         onTap: () => controller.onComingTripPressed(),
                         text: "다가오는 여행",
-                        textStyle: controller.tripRoomsState.tripRoomType == TripRoomType.coming
+                        textStyle: controller.tripRoomsState.tripRoomType ==
+                                TripRoomType.coming
                             ? f14Whitew700
                             : f14gray400w700,
                       ),
@@ -89,10 +112,14 @@ class TripRoomListView extends StatelessWidget {
                       ),
                       RoundedBoxButton(
                         backgroundColor:
-                            controller.tripRoomsState.tripRoomType == TripRoomType.lastTrip ? gray900 : gray200,
+                            controller.tripRoomsState.tripRoomType ==
+                                    TripRoomType.lastTrip
+                                ? gray900
+                                : gray200,
                         onTap: () => controller.onLastTripPressed(),
                         text: "지난 여행",
-                        textStyle: controller.tripRoomsState.tripRoomType == TripRoomType.lastTrip
+                        textStyle: controller.tripRoomsState.tripRoomType ==
+                                TripRoomType.lastTrip
                             ? f14Whitew700
                             : f14gray400w700,
                       ),
@@ -101,10 +128,14 @@ class TripRoomListView extends StatelessWidget {
                       ),
                       RoundedBoxButton(
                         backgroundColor:
-                            controller.tripRoomsState.tripRoomType == TripRoomType.bookmarked ? gray900 : gray200,
+                            controller.tripRoomsState.tripRoomType ==
+                                    TripRoomType.bookmarked
+                                ? gray900
+                                : gray200,
                         onTap: () => controller.onBookMarkTripPressed(),
                         text: "북마크",
-                        textStyle: controller.tripRoomsState.tripRoomType == TripRoomType.bookmarked
+                        textStyle: controller.tripRoomsState.tripRoomType ==
+                                TripRoomType.bookmarked
                             ? f14Whitew700
                             : f14gray400w700,
                       ),
@@ -115,11 +146,13 @@ class TripRoomListView extends StatelessWidget {
                     child: ListView.builder(
                       shrinkWrap: true,
                       physics: const ClampingScrollPhysics(),
-                      itemCount: controller.tripRoomsState.tripRoomsStatus == TripRoomsStatus.empty
+                      itemCount: controller.tripRoomsState.tripRoomsStatus ==
+                              TripRoomsStatus.empty
                           ? 1
                           : controller.tripRoomsState.tripListLength,
                       itemBuilder: (contexts, index) {
-                        final status = controller.tripRoomsState.tripRoomsStatus;
+                        final status =
+                            controller.tripRoomsState.tripRoomsStatus;
 
                         if (status == TripRoomsStatus.initial) {
                           return const SizedBox.shrink();
@@ -130,14 +163,18 @@ class TripRoomListView extends StatelessWidget {
                           );
                         }
 
-                        final tripRoom = controller.tripRoomsState.tripRooms[index];
+                        final tripRoom =
+                            controller.tripRoomsState.tripRooms[index];
                         return Column(
                           children: [
                             _TripRoomTile(
                               tripRoom: tripRoom,
-                              tripRoomType: controller.tripRoomsState.tripRoomType,
-                              onTap: () => controller.onRoomPressed(tripRoom.id),
-                              onBookmarkTap: () => controller.onBookmarkIconPressed(tripRoom.id),
+                              tripRoomType:
+                                  controller.tripRoomsState.tripRoomType,
+                              onTap: () =>
+                                  controller.onRoomPressed(tripRoom.id),
+                              onBookmarkTap: () =>
+                                  controller.onBookmarkIconPressed(tripRoom.id),
                               onSendTap: () => sendBottomModal(
                                 context,
                                 tripRoom.invitationCode,
@@ -146,7 +183,10 @@ class TripRoomListView extends StatelessWidget {
                               onMemberTap: (context) => _showMemberPopover(
                                 context: context,
                                 members: controller.getPopupMembers(tripRoom),
-                                width: 14 * controller.getLongestNicknameLength(tripRoom) + 100,
+                                width: 14 *
+                                        controller.getLongestNicknameLength(
+                                            tripRoom) +
+                                    100,
                                 height: 50 * tripRoom.memberCount.toDouble(),
                               ),
                             ),
@@ -165,7 +205,8 @@ class TripRoomListView extends StatelessWidget {
                     onInvitePressed: () => _showEnterCodeDialog(
                         context: context,
                         onConfirmPressed: (invitationCode) async {
-                          return await controller.onJoinCodePressed(invitationCode);
+                          return await controller
+                              .onJoinCodePressed(invitationCode);
                         }),
                     onCreatePressed: () => controller.onRoomCreatedPressed(),
                   ),
@@ -231,7 +272,8 @@ class _TripRoomTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final labelColor = tripRoom.labelColor.toColor();
-    final dateRange = "${tripRoom.startDate.formatYMDWithHyphen()} ~ ${tripRoom.endDate.formatYMDWithHyphen()}";
+    final dateRange =
+        "${tripRoom.startDate.formatYMDWithHyphen()} ~ ${tripRoom.endDate.formatYMDWithHyphen()}";
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

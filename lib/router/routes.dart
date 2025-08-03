@@ -15,4 +15,5 @@ class Routes {
   static const userEditProfile = "/user_edit_profile";
   static const notice = "/notice";
   static const tripRoom = "/trip-room";
+  static const scrapCreate = "/trip-room/scrap_create";
 }

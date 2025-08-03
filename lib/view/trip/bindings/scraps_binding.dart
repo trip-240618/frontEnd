@@ -14,6 +14,7 @@ class ScrapsBinding extends Bindings {
         Get.find<TripRoomService>(),
         Get.find<FetchScrapsUseCase>(),
       ),
+      fenix: true,
     );
   }
 }

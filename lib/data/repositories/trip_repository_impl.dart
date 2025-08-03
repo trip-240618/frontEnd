@@ -2,10 +2,13 @@ import 'package:dartz/dartz.dart';
 import 'package:tripStory/core/errors/failure.dart';
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
+import 'package:tripStory/data/mappers/scrap_create_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_create_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_mapper.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/domain/entities/scrap_create_entity.dart';
+import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
 import 'package:tripStory/domain/entities/scrap_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_create_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
@@ -102,6 +105,21 @@ class TripRepositoryImpl implements TripRepository {
     try {
       final result = await _tripDataSource.fetchScraps(tripId);
       final entity = result.map(ScrapMapper.toEntity).toList();
+      return Right(entity);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<ScrapDetailEntity> createScrap({
+    required int tripId,
+    required ScrapCreateEntity scrapCreateEntity,
+  }) async {
+    try {
+      final request = ScrapCreateMapper.toRequest(scrapCreateEntity);
+      final response = await _tripDataSource.createScrap(tripId, request);
+      final entity = ScrapCreateMapper.toEntity(response);
       return Right(entity);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
