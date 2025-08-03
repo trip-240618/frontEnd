@@ -83,14 +83,11 @@ class UserDeleteView extends GetView<UserDeleteController> {
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
-        child: BottomButton(
-          text: "확인했어요",
-          onTap: () => _showConfirmDialog(
-            context,
-            () => controller.onUserDeletePressed(),
-          ),
+      bottomNavigationBar: BottomButton(
+        text: "확인했어요",
+        onTap: () => _showConfirmDialog(
+          context,
+          () => controller.onUserDeletePressed(),
         ),
       ),
     );

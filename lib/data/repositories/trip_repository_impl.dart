@@ -4,12 +4,16 @@ import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
 import 'package:tripStory/data/mappers/scrap_create_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_mapper.dart';
+import 'package:tripStory/data/mappers/j_plan_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_create_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_mapper.dart';
+import 'package:tripStory/data/models/request/plan_j_create_request.dart';
+import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
 import 'package:tripStory/domain/entities/scrap_create_entity.dart';
 import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
 import 'package:tripStory/domain/entities/scrap_entity.dart';
+import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_create_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/repositories/trip_repository.dart';
@@ -121,6 +125,68 @@ class TripRepositoryImpl implements TripRepository {
       final response = await _tripDataSource.createScrap(tripId, request);
       final entity = ScrapCreateMapper.toEntity(response);
       return Right(entity);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<JPlanEntity>> fetchJPlan({
+    required int tripId,
+    required int day,
+    required bool locker,
+  }) async {
+    try {
+      final result = await _tripDataSource.fetchJPlan(
+        tripId,
+        day,
+        locker,
+      );
+      final entities = result.expand((dayPlan) => dayPlan.planList).map(JPlanMapper.toEntity).toList();
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> postCreateJPlan({
+    required int tripId,
+    required PlanJCreateRequest planJCreateRequest,
+  }) async {
+    try {
+      await _tripDataSource.postCreateJPlan(
+        tripId,
+        planJCreateRequest,
+      );
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> deleteJPlan({
+    required int tripId,
+    required int planId,
+    required int day,
+  }) async {
+    try {
+      await _tripDataSource.deleteJPlan(tripId, planId, day);
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> putModifyJPlan({
+    required int tripId,
+    required PlanJModifyRequest request,
+  }) async {
+    try {
+      await _tripDataSource.putModifyJPlan(tripId, request);
+      return Right(null);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }

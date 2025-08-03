@@ -25,35 +25,43 @@ class BottomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: Get.width,
-      height: 58,
-      decoration: BoxDecoration(
-        color: buttonType == ButtonType.secondary
-            ? gray200
-            : enabled
-                ? backgroundColor
-                : gray300,
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: 10,
+        bottom: 42,
       ),
-      child: BaseButton(
-        onTap: enabled ? onTap : null,
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                text,
-                style: buttonType == ButtonType.secondary
-                    ? f16gray600w700
-                    : enabled
-                        ? f16Whitew700
-                        : f16gray400w700,
-              ),
-              if (textLabel != null) ...[
-                SizedBox(width: 10),
-                textLabel!,
+      child: Container(
+        width: Get.width,
+        height: 58,
+        decoration: BoxDecoration(
+          color: buttonType == ButtonType.secondary
+              ? gray200
+              : enabled
+                  ? backgroundColor
+                  : gray300,
+        ),
+        child: BaseButton(
+          onTap: enabled ? onTap : null,
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  text,
+                  style: buttonType == ButtonType.secondary
+                      ? f16gray600w700
+                      : enabled
+                          ? f16Whitew700
+                          : f16gray400w700,
+                ),
+                if (textLabel != null) ...[
+                  SizedBox(width: 10),
+                  textLabel!,
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

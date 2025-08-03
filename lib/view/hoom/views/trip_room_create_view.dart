@@ -32,7 +32,9 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _tripRoomsCreateController.precacheFlags(context);
+      if (mounted) {
+        _tripRoomsCreateController.precacheFlags(context);
+      }
     });
   }
 
@@ -67,6 +69,7 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
         resizeToAvoidBottomInset: false,
         appBar: AppAppbar(
           text: "여행방 만들기",
+          onTap: () => controller.onBackPressed(),
         ),
         body: Column(
           children: [
@@ -89,7 +92,6 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                       textStyle: f16gray800w600,
                       hintText: "여행방 제목을 입력해주세요 :)",
                       onChanged: (text) => controller.onTextChanged(text),
-                      contentPadding: const EdgeInsets.all(16),
                       inputFormatters: [LengthLimitingTextInputFormatter(15)],
                       trailing: Text(
                         "${_tripNameCon.text.length}/15",

@@ -6,4 +6,12 @@ abstract class TokenStorage {
   Future<Map<String, String>> getTokens();
 
   Future<void> clear();
+
+  Future<void> saveCloudFrontCookies({
+    required String policy,
+    required String signature,
+    required String keyPairId,
+  });
+
+  Future<Map<String, String>> getCloudFrontCookies();
 }

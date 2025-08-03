@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:get/get.dart';
 
 part 'trip_room_entity.freezed.dart';
 
@@ -26,6 +27,10 @@ abstract class TripRoomEntity with _$TripRoomEntity {
   int get dDay => startDate.difference(DateTime.now()).inDays + 1;
 
   int get durationDays => endDate.difference(startDate).inDays + 1;
+
+  int dayAfterStartFrom(DateTime selectedDay) => selectedDay.difference(startDate).inDays + 1;
+
+  bool isLeader(String myUuid) => members.firstWhereOrNull((member) => member.uuid == myUuid)?.leader ?? false;
 }
 
 @freezed

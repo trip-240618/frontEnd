@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/common/button/base/base_button.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
-import 'package:tripStory/common/widget/round_thumbnail_image.dart';
+import 'package:tripStory/common/image/round_thumbnail_image.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 

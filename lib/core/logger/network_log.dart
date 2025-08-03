@@ -13,6 +13,10 @@ class NetworkLog extends Interceptor {
     logger.i('[REQUEST] ${options.method} ${options.uri}');
     logger.d('Headers: ${_prettify(options.headers)}');
 
+    if (options.queryParameters.isNotEmpty) {
+      logger.d('Query Parameters:\n${_prettify(options.queryParameters)}');
+    }
+    
     if (options.data != null) {
       logger.d('Body:\n${_prettify(options.data)}');
     }

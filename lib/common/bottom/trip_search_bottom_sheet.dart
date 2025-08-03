@@ -254,7 +254,6 @@ class _TripSearch extends StatelessWidget {
           textStyle: f16gray800w600,
           hintText: "여행방 제목을 입력해주세요 :)",
           onChanged: onSearchChanged,
-          contentPadding: const EdgeInsets.all(16),
           leading: Padding(
             padding: const EdgeInsets.only(left: 8),
             child: SvgPicture.asset(
@@ -398,7 +397,6 @@ class _TripDirect extends StatelessWidget {
           textStyle: f16gray800w600,
           hintText: "여행지를 직접 입력해주세요",
           onChanged: onSearchChanged,
-          contentPadding: const EdgeInsets.all(16),
           leading: Padding(
             padding: const EdgeInsets.only(left: 8),
             child: SvgPicture.asset(

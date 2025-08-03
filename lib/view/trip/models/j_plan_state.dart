@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tripStory/domain/entities/j_plan_entity.dart';
 
 part 'j_plan_state.freezed.dart';
 
@@ -12,6 +13,8 @@ abstract class JPlanState with _$JPlanState {
   const factory JPlanState({
     @Default(JPlanStatus.initial) JPlanStatus jPlanStatus,
     @Default(0) int selectedDayIndex,
+    @Default([]) List<JPlanEntity> plans,
+    DateTime? selectedDate,
     @Default(154.0) double googleMapHeight,
     @Default(0.0) double mapLatitude,
     @Default(0.0) double mapLongitude,
@@ -20,4 +23,6 @@ abstract class JPlanState with _$JPlanState {
   }) = _TripMainStateJPlanState;
 
   int get selectedDay => selectedDayIndex + 1;
+
+  int get plansLength => plans.length;
 }

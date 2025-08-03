@@ -9,9 +9,9 @@ import 'package:tripStory/common/button/icon_button.dart';
 import 'package:tripStory/common/button/popup_list.dart';
 import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/common/dialog/code_insert_dialog.dart';
+import 'package:tripStory/common/image/round_thumbnail_image.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
 import 'package:tripStory/common/snack_bar.dart';
-import 'package:tripStory/common/widget/round_thumbnail_image.dart';
 import 'package:tripStory/component/bottomModals.dart';
 import 'package:tripStory/component/empty/emptyScreen.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
@@ -421,7 +421,7 @@ class _TripContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RoundThumbnailImage(
-          imageUrl: tripRoom.thumbnail,
+          imageUrl: "https://c.tripstory.shop${tripRoom.thumbnail}",
         ),
         const SizedBox(width: 12),
         _buildTripInfo(),

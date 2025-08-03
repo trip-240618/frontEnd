@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tripStory/common/image/round_thumbnail_image.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
-import 'package:tripStory/common/widget/round_thumbnail_image.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';

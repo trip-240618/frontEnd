@@ -3,10 +3,10 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/app/notification/local_notification_setting.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
-import 'package:tripStory/core/services/login_user_service.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/usecases/auto_login_usecase.dart';
 import 'package:tripStory/router/routes.dart';
+import 'package:tripStory/view/global/login_user_service.dart';
 
 class SplashController extends GetxController {
   bool _isJailBroken = false;

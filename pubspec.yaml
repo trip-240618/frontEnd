@@ -88,6 +88,7 @@ flutter:
     - assets/sns/
     - assets/icon/
     - assets/icon/normal/
+    - assets/icon/small/
     - assets/bottomNavi/
   fonts:
     - family: Pretendard

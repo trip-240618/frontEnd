@@ -7,8 +7,8 @@ import 'package:tripStory/data/models/request/register_request.dart';
 import 'package:tripStory/domain/usecases/fetch_presigned_url_usecase.dart';
 import 'package:tripStory/domain/usecases/register_user_usecase.dart';
 import 'package:tripStory/router/routes.dart';
-import 'package:tripStory/util/compress_image.dart';
 import 'package:tripStory/util/helper/file_upload_helper.dart';
+import 'package:tripStory/util/image_file_util.dart';
 import 'package:tripStory/util/url_utils.dart';
 import 'package:tripStory/view/login/models/profile_add_state.dart';
 
@@ -70,7 +70,7 @@ class ProfileAddController extends GetxController with GetSingleTickerProviderSt
           thumbnailUrl = UrlUtils.getBaseUrl(preSignedUrls[0]);
           originUrl = UrlUtils.getBaseUrl(preSignedUrls[1]);
 
-          final compressedBytes = await compressImage(state.profileImage!);
+          final compressedBytes = await ImageFileUtil.compressImage(state.profileImage!);
           final originalBytes = await state.profileImage!.readAsBytes();
 
           await Future.wait([

@@ -100,19 +100,11 @@ class _ProfileAddViewState extends State<ProfileAddView> {
               ],
             ),
           ),
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 10,
-              bottom: 42,
-            ),
-            child: BottomButton(
-              text: "다음",
-              enabled: controller.state.isNicknameValid,
-              onTap: () => controller.onNextPressed(
-                widget.marketing,
-              ),
+          bottomNavigationBar: BottomButton(
+            text: "다음",
+            enabled: controller.state.isNicknameValid,
+            onTap: () => controller.onNextPressed(
+              widget.marketing,
             ),
           ),
         );
