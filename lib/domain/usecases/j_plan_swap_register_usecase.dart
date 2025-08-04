@@ -13,7 +13,7 @@ class JPlanSwapRegisterUsecase implements UseCase<void, Tuple2<int, int>> {
     final int tripId = params.value1;
     final int day = params.value2;
 
-    return repository.fetchRegisterJPlan(
+    return await repository.fetchRegisterJPlan(
       tripId: tripId,
       day: day,
     );

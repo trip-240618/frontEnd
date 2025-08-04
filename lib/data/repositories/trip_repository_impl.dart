@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:tripStory/core/constants/network_constants.dart';
 import 'package:tripStory/core/errors/failure.dart';
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
@@ -9,6 +10,7 @@ import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/data/network/socket_service.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_create_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
@@ -16,8 +18,12 @@ import 'package:tripStory/domain/repositories/trip_repository.dart';
 
 class TripRepositoryImpl implements TripRepository {
   final TripDataSource _tripDataSource;
+  final SocketService _socketService;
 
-  TripRepositoryImpl(this._tripDataSource);
+  TripRepositoryImpl(
+    this._tripDataSource,
+    this._socketService,
+  );
 
   @override
   ResultFuture<List<TripRoomEntity>> fetchComingTrips() async {
@@ -180,7 +186,9 @@ class TripRepositoryImpl implements TripRepository {
     required int day,
   }) async {
     try {
-      await _tripDataSource.fetchRegisterJPlan(tripId, day);
+      final destination = NetworkConstants.registerJPlan(tripId, day);
+      _socketService.send(destination);
+
       return Right(null);
     } catch (e) {
       return Left(ServerFailure(e.toString()));

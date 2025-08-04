@@ -27,3 +27,15 @@ class PlanModify extends JSocketEntity {
     required this.plan,
   });
 }
+
+class PlanRegister extends JSocketEntity {
+  final int day;
+  final String editorUuid;
+  final String nickname;
+
+  PlanRegister({
+    required this.day,
+    required this.editorUuid,
+    required this.nickname,
+  });
+}

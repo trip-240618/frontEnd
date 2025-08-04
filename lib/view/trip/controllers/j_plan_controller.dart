@@ -103,6 +103,10 @@ class JPlanController extends GetxController {
         case PlanModify(:final plan):
           _planModify(plan);
           break;
+
+        case PlanRegister(:final day, :final editorUuid, :final nickname):
+          _planRegister();
+          break;
       }
     });
   }
@@ -137,6 +141,14 @@ class JPlanController extends GetxController {
   }
 
   void _planModify(JPlanEntity plan) {}
+
+  void _planRegister() {
+    final swapParams = state.plans.map(JPlanSwapParam.fromEntity).toList();
+    Get.toNamed(
+      Routes.tripJPlanSwap,
+      arguments: swapParams,
+    );
+  }
 
   Future<void> _getJPlanData() async {
     final params = Tuple3(
@@ -191,14 +203,8 @@ class JPlanController extends GetxController {
     final day = state.selectedDay;
     if (tripId == null) return;
 
-    await _jPlanSwapRegisterUsecase.call(
+    final result = await _jPlanSwapRegisterUsecase.call(
       Tuple2(tripId, day),
-    );
-
-    final swapParams = state.plans.map(JPlanSwapParam.fromEntity).toList();
-    Get.toNamed(
-      Routes.tripJPlanSwap,
-      arguments: swapParams,
     );
   }
 

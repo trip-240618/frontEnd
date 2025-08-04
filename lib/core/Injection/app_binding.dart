@@ -70,7 +70,12 @@ class AppBinding extends Bindings {
 
     // Repository
     Get.lazyPut<UserRepository>(() => UserRepositoryImpl(Get.find<UserDataSource>()), fenix: true);
-    Get.lazyPut<TripRepository>(() => TripRepositoryImpl(Get.find<TripDataSource>()), fenix: true);
+    Get.lazyPut<TripRepository>(
+        () => TripRepositoryImpl(
+              Get.find<TripDataSource>(),
+              Get.find<SocketService>(),
+            ),
+        fenix: true);
     Get.lazyPut<FileRepository>(() => FileRepositoryImpl(Get.find<FileDataSource>()), fenix: true);
     Get.lazyPut<NotificationRepository>(() => NotificationRepositoryImpl(Get.find<NotificationDataSource>()),
         fenix: true);
