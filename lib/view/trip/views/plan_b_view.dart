@@ -12,7 +12,11 @@ class _PlanBViewState extends State<PlanBView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [Text('PlanB')],
+        children: [
+          Text(
+            "PlanB",
+          ),
+        ],
       ),
     );
   }
