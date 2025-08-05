@@ -18,7 +18,6 @@ class JSocketRepositoryImpl implements JSocketRepository {
     _socketService.subscribe("/topic/api/trip/j/$tripId");
 
     _socketService.messageStream.listen((data) {
-      print("data?? ${data}");
       final socketResponse = SocketResponse.fromJson(data);
       final entity = JSocketMapper.toEntity(socketResponse);
       if (entity != null) {

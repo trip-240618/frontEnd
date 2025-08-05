@@ -218,14 +218,8 @@ class JPlanController extends GetxController {
     final day = state.selectedDay;
     if (tripId == null) return;
 
-    final result = await _jPlanSwapRegisterUsecase.call(
+    await _jPlanSwapRegisterUsecase.call(
       Tuple2(tripId, day),
-    );
-    result.fold(
-      (failure) {},
-      (sucess) {
-        print("??");
-      },
     );
   }
 
@@ -272,15 +266,7 @@ class JPlanController extends GetxController {
       tripRoomInfo?.id ?? 0,
       plan,
     );
-
-    final result = await _moveJPlanLockerUsecase.call(params);
-
-    result.fold(
-      (failure) {},
-      (success) {
-        update();
-      },
-    );
+    await _moveJPlanLockerUsecase.call(params);
   }
 
   @override
