@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/common/button/icon_button.dart';
 import 'package:tripStory/common/button/round_button.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/common/popup/pop_up_menu.dart';
+import 'package:tripStory/common/toast/custom_toast.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
@@ -25,12 +25,10 @@ class JPlanView extends StatefulWidget {
 
 class _JPlanViewState extends State<JPlanView> {
   ScrollController scrollController = ScrollController();
-  FToast? fToast;
+  final controller = Get.find<JPlanController>();
 
   @override
   void initState() {
-    fToast = FToast();
-    fToast?.init(context);
     super.initState();
   }
 
@@ -53,6 +51,12 @@ class _JPlanViewState extends State<JPlanView> {
             Expanded(
               child: GetBuilder<JPlanController>(
                 builder: (controller) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    final name = controller.state.showWaitToast?.consume();
+                    if (name != null && context.mounted) {
+                      showWaitToast(context, name);
+                    }
+                  });
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
@@ -152,6 +156,16 @@ class _JPlanViewState extends State<JPlanView> {
           );
         },
       ),
+    );
+  }
+
+  void showWaitToast(
+    BuildContext context,
+    String name,
+  ) {
+    CustomToast.show(
+      context: context,
+      message: "$name님이 일정을 수정 중입니다",
     );
   }
 }

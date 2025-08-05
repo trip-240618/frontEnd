@@ -3,6 +3,7 @@ import 'package:tripStory/data/mappers/j_plan_add_mapper.dart';
 import 'package:tripStory/data/mappers/j_plan_delete_mapper.dart';
 import 'package:tripStory/data/mappers/j_plan_modify_mapper.dart';
 import 'package:tripStory/data/mappers/j_plan_register_mapper.dart';
+import 'package:tripStory/data/mappers/j_plan_wait_mapper.dart';
 import 'package:tripStory/data/models/response/j_plan_deleted_response.dart';
 import 'package:tripStory/data/models/response/j_plan_register_response.dart';
 import 'package:tripStory/data/models/response/plan_j_response.dart';
@@ -31,6 +32,10 @@ class JSocketMapper {
       case CommandType.register:
         final registerResponse = JPlanRegisterResponse.fromJson(data);
         return JPlanRegisterMapper.toEntity(registerResponse);
+
+      case CommandType.wait:
+        final registerResponse = JPlanRegisterResponse.fromJson(data);
+        return JPlanWaitMapper.toEntity(registerResponse);
     }
   }
 }

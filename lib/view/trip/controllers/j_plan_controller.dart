@@ -14,6 +14,7 @@ import 'package:tripStory/domain/usecases/fetch_j_plan_usecase.dart';
 import 'package:tripStory/domain/usecases/j_plan_swap_register_usecase.dart';
 import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
 import 'package:tripStory/router/routes.dart';
+import 'package:tripStory/util/one_time_event.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/view/trip/models/j_plan_state.dart';
@@ -107,6 +108,10 @@ class JPlanController extends GetxController {
         case PlanRegister(:final day, :final editorUuid, :final nickname):
           _planRegister();
           break;
+
+        case PlanWait(:final day, :final editorUuid, :final nickname):
+          _planWait(day, nickname);
+          break;
       }
     });
   }
@@ -148,6 +153,16 @@ class JPlanController extends GetxController {
       Routes.tripJPlanSwap,
       arguments: swapParams,
     );
+  }
+
+  void _planWait(
+    int day,
+    String name,
+  ) {
+    _jPlanState = state.copyWith(
+      showWaitToast: OneTimeEvent(name),
+    );
+    update();
   }
 
   Future<void> _getJPlanData() async {
@@ -205,6 +220,12 @@ class JPlanController extends GetxController {
 
     final result = await _jPlanSwapRegisterUsecase.call(
       Tuple2(tripId, day),
+    );
+    result.fold(
+      (failure) {},
+      (sucess) {
+        print("??");
+      },
     );
   }
 

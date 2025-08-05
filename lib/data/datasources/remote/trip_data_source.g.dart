@@ -345,7 +345,7 @@ class _TripDataSource implements TripDataSource {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/trip/${tripId}/plan/j/${day}/edit/register',
+            '/${tripId}/plan/j/${day}/edit/register',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -364,7 +364,7 @@ class _TripDataSource implements TripDataSource {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/trip/${tripId}/plan/j/${day}/edit/finish',
+            '/${tripId}/plan/j/${day}/edit/finish',
             queryParameters: queryParameters,
             data: _data,
           )

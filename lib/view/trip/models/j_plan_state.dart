@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
+import 'package:tripStory/util/one_time_event.dart';
 
 part 'j_plan_state.freezed.dart';
 
@@ -20,6 +21,7 @@ abstract class JPlanState with _$JPlanState {
     @Default(0.0) double mapLongitude,
     @Default({}) Set<Marker> markers,
     @Default({}) Set<Polyline> polylines,
+    OneTimeEvent<String>? showWaitToast,
   }) = _TripMainStateJPlanState;
 
   int get selectedDay => selectedDayIndex + 1;

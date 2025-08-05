@@ -13,7 +13,7 @@ class JPlanRegisterFinishUsecase implements UseCase<void, Tuple2<int, int>> {
     final int tripId = params.value1;
     final int day = params.value2;
 
-    return await repository.fetchRegisterJPlan(
+    return await repository.fetchRegisterFinishJPlan(
       tripId: tripId,
       day: day,
     );

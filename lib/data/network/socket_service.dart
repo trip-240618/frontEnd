@@ -26,6 +26,7 @@ class SocketService extends GetxService {
     required int tripId,
   }) async {
     if (_isConnected) return;
+
     final tokens = await _sessionService.getTokens();
     final accessToken = tokens["accessToken"] ?? "";
     final refreshToken = tokens["refreshToken"] ?? "";
@@ -60,7 +61,6 @@ class SocketService extends GetxService {
   void disconnect() {
     _stompClient.deactivate();
     _isConnected = false;
-    _messageStreamController.close();
   }
 
   void send(String destination, {String? body}) {

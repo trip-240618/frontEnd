@@ -75,13 +75,13 @@ abstract class TripDataSource {
     @Body() PlanJSwapRequest request,
   );
 
-  @GET("/trip/{tripId}/plan/j/{day}/edit/register")
+  @GET("/{tripId}/plan/j/{day}/edit/register")
   Future<void> fetchRegisterJPlan(
     @Path("tripId") int tripId,
     @Path("day") int day,
   );
 
-  @GET("/trip/{tripId}/plan/j/{day}/edit/finish")
+  @GET("/{tripId}/plan/j/{day}/edit/finish")
   Future<void> fetchRegisterFinishJPlan(
     @Path("tripId") int tripId,
     @Path("day") int day,

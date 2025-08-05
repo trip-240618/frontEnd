@@ -39,3 +39,15 @@ class PlanRegister extends JSocketEntity {
     required this.nickname,
   });
 }
+
+class PlanWait extends JSocketEntity {
+  final int day;
+  final String editorUuid;
+  final String nickname;
+
+  PlanWait({
+    required this.day,
+    required this.editorUuid,
+    required this.nickname,
+  });
+}

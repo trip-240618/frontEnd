@@ -317,7 +317,7 @@ class _JSchedulePageState extends State<JSchedulePage> with AutomaticKeepAliveCl
                                     /// 누가 편집중일 때
                                     if (js.jPlanList[0]['waitList'].length != 0) {
                                       showCustomToast(context, fToast!,
-                                          '${js.jPlanList[0]['waitList']['nickname']} 님이 일정을 수정 중입니다', true);
+                                          '${js.jPlanList[0]['waitList']['nickname']} 님이 일정정을 수정 중입니다', true);
                                     } else {
                                       js.isSorting.value = true;
                                       js.jPlanList[0]['checked'] = false;
