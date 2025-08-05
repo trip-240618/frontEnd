@@ -7,7 +7,7 @@ part 'socket_response.g.dart';
 abstract class SocketResponse with _$SocketResponse {
   const factory SocketResponse({
     required String command,
-    required Map<String, dynamic> data,
+    required dynamic data,
   }) = _SocketResponse;
 
   factory SocketResponse.fromJson(Map<String, dynamic> json) => _$SocketResponseFromJson(json);

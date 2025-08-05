@@ -52,7 +52,7 @@ class _JPlanViewState extends State<JPlanView> {
               child: GetBuilder<JPlanController>(
                 builder: (controller) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    final name = controller.state.showWaitToast?.consume();
+                    final name = controller.state.showToast?.consume();
                     if (name != null && context.mounted) {
                       showWaitToast(context, name);
                     }
@@ -161,11 +161,11 @@ class _JPlanViewState extends State<JPlanView> {
 
   void showWaitToast(
     BuildContext context,
-    String name,
+    String message,
   ) {
     CustomToast.show(
       context: context,
-      message: "$name님이 일정을 수정 중입니다",
+      message: message,
     );
   }
 }

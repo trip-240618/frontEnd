@@ -97,7 +97,7 @@ class JPlanSwapController extends GetxController {
     await result.fold(
       (failure) {},
       (success) async {
-        _navigateToBack(tripId, dayAfterStart ?? 1);
+        _navigateToBack(tripId, dayAfterStart ?? 1, showToast: true);
       },
     );
   }
@@ -114,13 +114,14 @@ class JPlanSwapController extends GetxController {
     int tripId,
     int dayAfterStart, {
     bool closeOverlays = false,
+    bool showToast = false,
   }) async {
     final result = await _jPlanRegisterFinishUsecase.call(Tuple2(tripId, dayAfterStart));
     result.fold(
       (failure) {},
       (success) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.back(closeOverlays: closeOverlays);
+          Get.back(result: showToast, closeOverlays: closeOverlays);
         });
       },
     );

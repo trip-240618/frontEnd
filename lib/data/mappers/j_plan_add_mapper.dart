@@ -3,8 +3,8 @@ import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/j_socket_entity.dart';
 
 class JPlanAddMapper {
-  static PlanAdded toEntity(PlanResponse res) {
-    return PlanAdded(
+  static PlanAddedEntity toEntity(PlanResponse res) {
+    return PlanAddedEntity(
       plan: JPlanEntity(
         planId: res.planId,
         dayAfterStart: res.dayAfterStart,

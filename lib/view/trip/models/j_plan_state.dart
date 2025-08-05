@@ -21,7 +21,7 @@ abstract class JPlanState with _$JPlanState {
     @Default(0.0) double mapLongitude,
     @Default({}) Set<Marker> markers,
     @Default({}) Set<Polyline> polylines,
-    OneTimeEvent<String>? showWaitToast,
+    OneTimeEvent<String>? showToast,
   }) = _TripMainStateJPlanState;
 
   int get selectedDay => selectedDayIndex + 1;

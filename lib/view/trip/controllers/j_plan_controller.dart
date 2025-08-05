@@ -93,24 +93,28 @@ class JPlanController extends GetxController {
 
     _jSocketRepository.listenToPlans(tripId).listen((event) {
       switch (event) {
-        case PlanAdded(:final plan):
+        case PlanAddedEntity(:final plan):
           _planAdd(plan);
           break;
 
-        case PlanDeleted(:final planId, :final dayAfterStart):
+        case PlanDeletedEntity(:final planId, :final dayAfterStart):
           _planDelete(planId, dayAfterStart);
           break;
 
-        case PlanModify(:final plan):
+        case PlanModifyEntity(:final plan):
           _planModify(plan);
           break;
 
-        case PlanRegister(:final day, :final editorUuid, :final nickname):
+        case PlanRegisterEntity(:final day, :final editorUuid, :final nickname):
           _planRegister();
           break;
 
-        case PlanWait(:final day, :final editorUuid, :final nickname):
+        case PlanWaitEntity(:final day, :final editorUuid, :final nickname):
           _planWait(day, nickname);
+          break;
+
+        case PlanSwapEntity(:final dayAfterStart, :final planList):
+          _planSwap(dayAfterStart, planList);
           break;
       }
     });
@@ -152,7 +156,14 @@ class JPlanController extends GetxController {
     Get.toNamed(
       Routes.tripJPlanSwap,
       arguments: swapParams,
-    );
+    )?.then((value) {
+      if (value) {
+        _jPlanState = state.copyWith(
+          showToast: OneTimeEvent("일정 순서 변경이 완료됐습니다"),
+        );
+        update();
+      }
+    });
   }
 
   void _planWait(
@@ -160,7 +171,14 @@ class JPlanController extends GetxController {
     String name,
   ) {
     _jPlanState = state.copyWith(
-      showWaitToast: OneTimeEvent(name),
+      showToast: OneTimeEvent("$name님이 일정을 수정 중입니다"),
+    );
+    update();
+  }
+
+  void _planSwap(int dayAfterStart, List<JPlanEntity> plans) {
+    _jPlanState = state.copyWith(
+      plans: plans,
     );
     update();
   }

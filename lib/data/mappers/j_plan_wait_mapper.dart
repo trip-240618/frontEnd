@@ -3,7 +3,7 @@ import 'package:tripStory/domain/entities/j_socket_entity.dart';
 
 class JPlanWaitMapper {
   static JSocketEntity toEntity(JPlanRegisterResponse response) {
-    return PlanWait(
+    return PlanWaitEntity(
       day: response.day,
       editorUuid: response.editorUuid,
       nickname: response.nickname,
