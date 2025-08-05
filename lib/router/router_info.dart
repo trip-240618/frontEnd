@@ -31,7 +31,6 @@ import 'package:tripStory/view/setting/views/notices_list_view.dart';
 import 'package:tripStory/view/setting/views/user_delete_view.dart';
 import 'package:tripStory/view/splash/binding/splash_binding.dart';
 import 'package:tripStory/view/splash/views/splash_view.dart';
-import 'package:tripStory/view/trip/bindings/j_plan_add_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_edit_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_swap_binding.dart';
@@ -164,7 +163,6 @@ class RouterInfo {
         }
         return JPlanCreateView(selectedDate: selectedDate);
       },
-      binding: JPlanAddBinding(),
     ),
     GetPage(
       name: Routes.locationSearch,

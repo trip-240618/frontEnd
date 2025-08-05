@@ -50,6 +50,7 @@ class CommonDialog extends StatelessWidget {
               child: RoundedBoxButton(
                 onTap: Get.back,
                 text: "취소",
+                textStyle: context.style.body1Normal,
                 height: 58,
                 borderRadius: 10,
                 backgroundColor: context.color.gray200,
@@ -57,19 +58,15 @@ class CommonDialog extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: GestureDetector(
+              child: RoundedBoxButton(
                 onTap: onConfirm,
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  height: 58,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.black,
-                  ),
-                  child: Center(
-                    child: Text(confirmText, style: f16whitew400),
-                  ),
+                text: confirmText,
+                textStyle: context.style.body1Normal.copyWith(
+                  color: context.color.white,
                 ),
+                height: 58,
+                borderRadius: 10,
+                backgroundColor: context.color.black,
               ),
             ),
           ],

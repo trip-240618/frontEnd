@@ -80,4 +80,10 @@ abstract class TripDataSource {
     @Path("tripId") int tripId,
     @Path("day") int day,
   );
+
+  @GET("/trip/{tripId}/plan/j/{day}/edit/finish")
+  Future<void> fetchRegisterFinishJPlan(
+    @Path("tripId") int tripId,
+    @Path("day") int day,
+  );
 }

@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
+import 'package:tripStory/common/dialog/common_dialog.dart';
 import 'package:tripStory/common/toast/custom_toast.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/extension/string_extension.dart';
@@ -34,12 +35,23 @@ class _JPlanSwapViewState extends State<JPlanSwapView> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (value, dynamic) {
+      canPop: true,
+      onPopInvokedWithResult: (didPop, dynamic) {
         // TODO: 안드로이드 실기기에서 테스트 진행해야 함
+        if (!didPop) {
+          backDialog(
+            context,
+            () => controller.onBackButtonPressed(),
+          );
+        }
       },
       child: Scaffold(
-        appBar: AppAppbar(),
+        appBar: AppAppbar(
+          onTap: () => backDialog(
+            context,
+            () => controller.onBackButtonPressed(),
+          ),
+        ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
@@ -94,6 +106,18 @@ class _JPlanSwapViewState extends State<JPlanSwapView> {
       context: context,
       message: "일정 순서 변경이 완료됐습니다.",
       gravity: ToastGravity.TOP,
+    );
+  }
+
+  void backDialog(
+    BuildContext context,
+    VoidCallback onConfirm,
+  ) {
+    CommonDialog.show(
+      context,
+      title: "순서 변경을 종료하시겠습니까?",
+      confirmText: "확인",
+      onConfirm: onConfirm,
     );
   }
 }

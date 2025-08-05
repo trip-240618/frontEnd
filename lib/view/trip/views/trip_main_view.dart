@@ -97,9 +97,7 @@ class _TripMainViewState extends State<TripMainView> {
                   return BottomNavigationBarItem(
                     icon: SvgIcon(
                       assetPath: tab.iconPath,
-                      color: isSelected
-                          ? context.color.gray900
-                          : context.color.gray300,
+                      color: isSelected ? context.color.gray900 : context.color.gray300,
                     ),
                     label: tab.title,
                   );

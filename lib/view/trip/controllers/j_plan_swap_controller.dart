@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/domain/entities/j_plan_swap_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
+import 'package:tripStory/domain/usecases/j_plan_register_finish_usecase.dart';
 import 'package:tripStory/domain/usecases/j_plan_swap_usecase.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/j_plan_swap_param.dart';
@@ -10,10 +12,12 @@ import 'package:tripStory/view/trip/models/j_plan_swap_state.dart';
 class JPlanSwapController extends GetxController {
   final TripRoomService _tripRoomService;
   final JPlanSwapUsecase _jPlanSwapUsecase;
+  final JPlanRegisterFinishUsecase _jPlanRegisterFinishUsecase;
 
   JPlanSwapController(
     this._tripRoomService,
     this._jPlanSwapUsecase,
+    this._jPlanRegisterFinishUsecase,
   );
 
   JPlanSwapState _jPlanSwapState = JPlanSwapState();
@@ -94,6 +98,29 @@ class JPlanSwapController extends GetxController {
       (failure) {},
       (success) {
         Get.back();
+      },
+    );
+  }
+
+  Future<void> onBackButtonPressed() async {
+    final tripId = tripRoomInfo?.id ?? 0;
+    final dayAfterStart = state.plans.firstOrNull?.dayAfterStart;
+
+    if (dayAfterStart == null) return;
+
+    final result = await _jPlanRegisterFinishUsecase.call(
+      Tuple2(
+        tripId,
+        dayAfterStart,
+      ),
+    );
+
+    result.fold(
+      (failure) {},
+      (success) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Get.back(closeOverlays: true);
+        });
       },
     );
   }

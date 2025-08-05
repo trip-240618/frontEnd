@@ -194,4 +194,17 @@ class TripRepositoryImpl implements TripRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  ResultFuture<void> fetchRegisterFinishJPlan({
+    required int tripId,
+    required int day,
+  }) async {
+    try {
+      await _tripDataSource.fetchRegisterFinishJPlan(tripId, day);
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

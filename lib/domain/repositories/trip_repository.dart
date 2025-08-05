@@ -59,4 +59,9 @@ abstract class TripRepository {
     required int tripId,
     required int day,
   });
+
+  ResultFuture<void> fetchRegisterFinishJPlan({
+    required int tripId,
+    required int day,
+  });
 }
