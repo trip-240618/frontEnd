@@ -94,10 +94,10 @@ class JPlanSwapController extends GetxController {
 
     final result = await _jPlanSwapUsecase.call(Tuple2(tripId, entity));
 
-    result.fold(
+    await result.fold(
       (failure) {},
-      (success) {
-        Get.back();
+      (success) async {
+        _navigateToBack(tripId, dayAfterStart ?? 1);
       },
     );
   }
@@ -105,21 +105,22 @@ class JPlanSwapController extends GetxController {
   Future<void> onBackButtonPressed() async {
     final tripId = tripRoomInfo?.id ?? 0;
     final dayAfterStart = state.plans.firstOrNull?.dayAfterStart;
-
     if (dayAfterStart == null) return;
 
-    final result = await _jPlanRegisterFinishUsecase.call(
-      Tuple2(
-        tripId,
-        dayAfterStart,
-      ),
-    );
+    await _navigateToBack(tripId, dayAfterStart, closeOverlays: true);
+  }
 
+  Future<void> _navigateToBack(
+    int tripId,
+    int dayAfterStart, {
+    bool closeOverlays = false,
+  }) async {
+    final result = await _jPlanRegisterFinishUsecase.call(Tuple2(tripId, dayAfterStart));
     result.fold(
       (failure) {},
       (success) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.back(closeOverlays: true);
+          Get.back(closeOverlays: closeOverlays);
         });
       },
     );

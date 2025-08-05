@@ -34,16 +34,13 @@ class _JPlanSwapViewState extends State<JPlanSwapView> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: true,
-      onPopInvokedWithResult: (didPop, dynamic) {
-        // TODO: 안드로이드 실기기에서 테스트 진행해야 함
-        if (!didPop) {
-          backDialog(
-            context,
-            () => controller.onBackButtonPressed(),
-          );
-        }
+    return WillPopScope(
+      onWillPop: () async {
+        backDialog(
+          context,
+          () => controller.onBackButtonPressed(),
+        );
+        return false;
       },
       child: Scaffold(
         appBar: AppAppbar(
