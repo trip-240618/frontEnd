@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/j_socket_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
-import 'package:tripStory/domain/repositories/j_socket_repository.dart';
 import 'package:tripStory/domain/usecases/delete_j_plan_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_j_plan_usecase.dart';
+import 'package:tripStory/domain/usecases/j_plan_connect_socket_usecase.dart';
+import 'package:tripStory/domain/usecases/j_plan_disconnect_socket_usecase.dart';
+import 'package:tripStory/domain/usecases/j_plan_listen_socket_usecase.dart';
 import 'package:tripStory/domain/usecases/j_plan_swap_register_usecase.dart';
 import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
 import 'package:tripStory/router/routes.dart';
@@ -21,20 +24,24 @@ import 'package:tripStory/view/trip/models/j_plan_state.dart';
 import 'package:tripStory/view/trip/models/j_plan_swap_param.dart';
 
 class JPlanController extends GetxController {
-  final JSocketRepository _jSocketRepository;
   final TripRoomService _tripRoomService;
   final FetchJPlanUsecase _fetchJPlanUsecase;
   final DeleteJPlanUsecase _deleteJPlanUsecase;
   final MoveJPlanLockerUsecase _moveJPlanLockerUsecase;
   final JPlanSwapRegisterUsecase _jPlanSwapRegisterUsecase;
+  final JPlanConnectSocketUsecase _jPlanConnectSocketUsecase;
+  final JPlanListenSocketUsecase _jPlanListenSocketUsecase;
+  final JPlanDisconnectSocketUsecase _disconnectSocketUsecase;
 
   JPlanController(
-    this._jSocketRepository,
     this._tripRoomService,
     this._fetchJPlanUsecase,
     this._deleteJPlanUsecase,
     this._moveJPlanLockerUsecase,
     this._jPlanSwapRegisterUsecase,
+    this._jPlanConnectSocketUsecase,
+    this._jPlanListenSocketUsecase,
+    this._disconnectSocketUsecase,
   );
 
   TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
@@ -89,34 +96,36 @@ class JPlanController extends GetxController {
     final tripId = tripRoomInfo?.id;
     if (tripId == null) return;
 
-    await _jSocketRepository.connectToTrip(tripId);
+    final result = await _jPlanConnectSocketUsecase.call(tripId);
 
-    _jSocketRepository.listenToPlans(tripId).listen((event) {
-      switch (event) {
-        case PlanAddedEntity(:final plan):
-          _planAdd(plan);
-          break;
+    result.fold((failure) {}, (success) {
+      _jPlanListenSocketUsecase(tripId).listen((event) {
+        switch (event) {
+          case PlanAddedEntity(:final plan):
+            _planAdd(plan);
+            break;
 
-        case PlanDeletedEntity(:final planId, :final dayAfterStart):
-          _planDelete(planId, dayAfterStart);
-          break;
+          case PlanDeletedEntity(:final planId, :final dayAfterStart):
+            _planDelete(planId, dayAfterStart);
+            break;
 
-        case PlanModifyEntity(:final plan):
-          _planModify(plan);
-          break;
+          case PlanModifyEntity(:final plan):
+            _planModify(plan);
+            break;
 
-        case PlanRegisterEntity(:final day, :final editorUuid, :final nickname):
-          _planRegister();
-          break;
+          case PlanRegisterEntity():
+            _planRegister();
+            break;
 
-        case PlanWaitEntity(:final day, :final editorUuid, :final nickname):
-          _planWait(day, nickname);
-          break;
+          case PlanWaitEntity(:final day, :final nickname):
+            _planWait(day, nickname);
+            break;
 
-        case PlanSwapEntity(:final dayAfterStart, :final planList):
-          _planSwap(dayAfterStart, planList);
-          break;
-      }
+          case PlanSwapEntity(:final dayAfterStart, :final planList):
+            _planSwap(dayAfterStart, planList);
+            break;
+        }
+      });
     });
   }
 
@@ -289,7 +298,7 @@ class JPlanController extends GetxController {
 
   @override
   void onClose() {
-    _jSocketRepository.disconnect();
+    _disconnectSocketUsecase.call(NoParams());
     dayScrollController.dispose();
     super.onClose();
   }

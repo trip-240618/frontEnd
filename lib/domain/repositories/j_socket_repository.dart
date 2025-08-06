@@ -1,9 +1,10 @@
+import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/domain/entities/j_socket_entity.dart';
 
 abstract class JSocketRepository {
-  Future<void> connectToTrip(int tripId);
+  ResultFuture<void> connectToTrip(int tripId);
 
-  void disconnect();
+  ResultFuture<void> disconnect();
 
   void send(String destination, {String? body});
 
