@@ -123,6 +123,14 @@ class FlightSearchController extends GetxController {
     _flightSearchState = state.copyWith(
       selectedAirLine: airLineEntity,
     );
+    Get.back();
+    update();
+  }
+
+  void onShowSearchBottomSheet() {
+    _flightSearchState = state.copyWith(
+      airLines: _defaultAirlines,
+    );
     update();
   }
 

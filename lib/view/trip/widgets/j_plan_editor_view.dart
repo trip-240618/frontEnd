@@ -337,18 +337,14 @@ class _JPlanEditorViewState extends State<JPlanEditorView> {
     DateTime endDate,
     void Function(DateTime selectedDate) onChanged,
   ) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: context.color.white,
-      builder: (_) => SelectDayBottomSheet(
-        title: "여행 날짜를 선택해 주세요",
-        edit: false,
-        startDate: startDate,
-        endDate: endDate,
-        selectedDate: selectedDate,
-        onChanged: (value) => onChanged(value),
-      ),
+    SelectDayBottomSheet.show(
+      context,
+      title: "날짜 선택",
+      edit: true,
+      startDate: startDate,
+      endDate: endDate,
+      selectedDate: selectedDate,
+      onChanged: (value) => onChanged(value),
     );
   }
 

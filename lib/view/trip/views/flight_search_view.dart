@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
+import 'package:tripStory/common/bottom/base_bottom_sheet.dart';
 import 'package:tripStory/common/bottom/select_day_bottom_sheet.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
 import 'package:tripStory/common/button/tile/leading_icon_tile_button.dart';
@@ -101,70 +102,18 @@ class _FlightSearchViewState extends State<FlightSearchView> {
                     const SizedBox(
                       height: 8,
                     ),
-                    LeadingIconTextFormField(
-                      controller: _carrierCon,
-                      hintText: "항공사명 또는 코드를 입력해주세요",
+                    LeadingIconTileButton(
+                      text: state.selectedAirLine != null
+                          ? "${state.selectedAirLine?.name} (${state.selectedAirLine?.code})"
+                          : "",
+                      placeholderText: "항공사명 또는 코드를 입력해주세요",
                       leadingIconPath: IconConstants.search,
-                      backgroundColor: context.color.gray50,
-                      onChanged: (text) => controller.onAirLinesSearch(text),
-                      focusNode: _focusNode,
-                      isFocusOnTapOutside: false,
                       iconColor: controller.tripRoomInfo?.labelColor.toColor(),
+                      onTilePressed: () => {
+                        controller.onShowSearchBottomSheet(),
+                        _showFlightBottomSheet(),
+                      },
                     ),
-                    if (_focusNode.hasFocus) ...[
-                      Container(
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(4),
-                            bottomRight: Radius.circular(4),
-                          ),
-                          border: Border(
-                            left: BorderSide(width: 1, color: context.color.gray200),
-                            right: BorderSide(width: 1, color: context.color.gray200),
-                            bottom: BorderSide(width: 1, color: context.color.gray200),
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16, top: 16),
-                              child: Text(
-                                "주요 항공사",
-                                style: context.style.caption1.copyWith(
-                                  color: context.color.gray400,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 12,
-                            ),
-                            ListView.builder(
-                              physics: const ClampingScrollPhysics(),
-                              itemCount: state.airLineLength,
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                final airLine = state.airLines[index];
-
-                                return _AirlineRadioTile(
-                                  airLine: airLine,
-                                  selectedAirLine: state.selectedAirLine,
-                                  onChanged: (airLine) {
-                                    if (airLine == null) return;
-                                    controller.onAirLinesPressed(airLine);
-                                    _carrierCon.text = '${airLine.name} (${airLine.code})';
-                                    _focusNode.unfocus();
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
                     const SizedBox(
                       height: 20,
                     ),
@@ -215,19 +164,122 @@ class _FlightSearchViewState extends State<FlightSearchView> {
     DateTime endDate,
     void Function(DateTime selectedDate) onChanged,
   ) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: context.color.white,
-      builder: (_) => SelectDayBottomSheet(
-        title: "여행 날짜를 선택해 주세요",
-        edit: false,
-        startDate: startDate,
-        endDate: endDate,
-        selectedDate: selectedDate,
-        onChanged: (value) => onChanged(value),
-      ),
+    SelectDayBottomSheet.show(
+      context,
+      title: "날짜 선택",
+      edit: true,
+      startDate: startDate,
+      endDate: endDate,
+      selectedDate: selectedDate,
+      onChanged: (value) => onChanged(value),
     );
+  }
+
+  void _showFlightBottomSheet() {
+    BaseBottomSheet.show(
+      context,
+      heightRatio: 0.7,
+      _FlightSearchContent(),
+    );
+  }
+}
+
+class _FlightSearchContent extends StatefulWidget {
+  @override
+  State<_FlightSearchContent> createState() => _FlightSearchContentState();
+}
+
+class _FlightSearchContentState extends State<_FlightSearchContent> {
+  final TextEditingController _carrierCon = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<FlightSearchController>(
+      builder: (controller) {
+        final state = controller.state;
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 24,
+          ),
+          child: Column(
+            children: [
+              LeadingIconTextFormField(
+                controller: _carrierCon,
+                hintText: "항공사명 또는 코드를 입력해주세요",
+                leadingIconPath: IconConstants.search,
+                backgroundColor: context.color.gray50,
+                onChanged: (text) => controller.onAirLinesSearch(text),
+                iconColor: controller.tripRoomInfo?.labelColor.toColor(),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: Get.width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(4),
+                    bottomRight: Radius.circular(4),
+                  ),
+                  border: Border.all(
+                    width: 1,
+                    color: context.color.gray200,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, top: 16),
+                      child: Text(
+                        "항공사",
+                        style: context.style.caption1.copyWith(
+                          color: context.color.gray400,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    ListView.builder(
+                      physics: const ClampingScrollPhysics(),
+                      itemCount: state.airLineLength,
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final airLine = state.airLines[index];
+
+                        return _AirlineRadioTile(
+                          airLine: airLine,
+                          selectedAirLine: state.selectedAirLine,
+                          onChanged: (airLine) {
+                            if (airLine == null) return;
+                            controller.onAirLinesPressed(airLine);
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _carrierCon.dispose();
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tripStory/common/bottom/base_bottom_sheet.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
 
@@ -20,6 +21,29 @@ class SelectDayBottomSheet extends StatefulWidget {
     required this.selectedDate,
     required this.onChanged,
   });
+
+  static Future<void> show(
+    BuildContext context, {
+    required String title,
+    required bool edit,
+    required DateTime startDate,
+    required DateTime endDate,
+    required DateTime? selectedDate,
+    required void Function(DateTime selectedDate) onChanged,
+  }) {
+    return BaseBottomSheet.show(
+      context,
+      SelectDayBottomSheet(
+        title: title,
+        edit: edit,
+        startDate: startDate,
+        endDate: endDate,
+        selectedDate: selectedDate,
+        onChanged: onChanged,
+      ),
+      heightRatio: 0.5,
+    );
+  }
 
   @override
   State<SelectDayBottomSheet> createState() => _SelectDayBottomSheetState();
@@ -47,12 +71,7 @@ class _SelectDayBottomSheetState extends State<SelectDayBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
       height: context.screenHeight * 0.5,
-      padding: const EdgeInsets.only(
-        top: 10,
-        left: 20,
-        right: 20,
-        bottom: 40,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.vertical(
           top: Radius.circular(20),
@@ -61,13 +80,6 @@ class _SelectDayBottomSheetState extends State<SelectDayBottomSheet> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: Container(
-              width: 50,
-              height: 5,
-              color: context.color.neutral300,
-            ),
-          ),
           const SizedBox(height: 34),
           Text(
             widget.title,
