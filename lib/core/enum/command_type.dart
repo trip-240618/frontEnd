@@ -1,7 +1,10 @@
 enum CommandType {
   create,
   delete,
-  modify;
+  modify,
+  register,
+  wait,
+  swap;
 
   factory CommandType.from(String value) {
     switch (value) {
@@ -11,6 +14,12 @@ enum CommandType {
         return CommandType.delete;
       case "modify":
         return CommandType.modify;
+      case "edit start":
+        return CommandType.register;
+      case "wait":
+        return CommandType.wait;
+      case "swap":
+        return CommandType.swap;
       default:
         throw UnimplementedError('Unknown command: $value');
     }

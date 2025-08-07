@@ -11,11 +11,14 @@ import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/repositories/j_socket_repository.dart';
 import 'package:tripStory/domain/usecases/delete_j_plan_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_j_plan_usecase.dart';
+import 'package:tripStory/domain/usecases/j_plan_swap_register_usecase.dart';
 import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
 import 'package:tripStory/router/routes.dart';
+import 'package:tripStory/util/one_time_event.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/view/trip/models/j_plan_state.dart';
+import 'package:tripStory/view/trip/models/j_plan_swap_param.dart';
 
 class JPlanController extends GetxController {
   final JSocketRepository _jSocketRepository;
@@ -23,6 +26,7 @@ class JPlanController extends GetxController {
   final FetchJPlanUsecase _fetchJPlanUsecase;
   final DeleteJPlanUsecase _deleteJPlanUsecase;
   final MoveJPlanLockerUsecase _moveJPlanLockerUsecase;
+  final JPlanSwapRegisterUsecase _jPlanSwapRegisterUsecase;
 
   JPlanController(
     this._jSocketRepository,
@@ -30,6 +34,7 @@ class JPlanController extends GetxController {
     this._fetchJPlanUsecase,
     this._deleteJPlanUsecase,
     this._moveJPlanLockerUsecase,
+    this._jPlanSwapRegisterUsecase,
   );
 
   TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
@@ -88,16 +93,28 @@ class JPlanController extends GetxController {
 
     _jSocketRepository.listenToPlans(tripId).listen((event) {
       switch (event) {
-        case PlanAdded(:final plan):
+        case PlanAddedEntity(:final plan):
           _planAdd(plan);
           break;
 
-        case PlanDeleted(:final planId, :final dayAfterStart):
+        case PlanDeletedEntity(:final planId, :final dayAfterStart):
           _planDelete(planId, dayAfterStart);
           break;
 
-        case PlanModify(:final plan):
+        case PlanModifyEntity(:final plan):
           _planModify(plan);
+          break;
+
+        case PlanRegisterEntity(:final day, :final editorUuid, :final nickname):
+          _planRegister();
+          break;
+
+        case PlanWaitEntity(:final day, :final editorUuid, :final nickname):
+          _planWait(day, nickname);
+          break;
+
+        case PlanSwapEntity(:final dayAfterStart, :final planList):
+          _planSwap(dayAfterStart, planList);
           break;
       }
     });
@@ -133,6 +150,38 @@ class JPlanController extends GetxController {
   }
 
   void _planModify(JPlanEntity plan) {}
+
+  void _planRegister() {
+    final swapParams = state.plans.map(JPlanSwapParam.fromEntity).toList();
+    Get.toNamed(
+      Routes.tripJPlanSwap,
+      arguments: swapParams,
+    )?.then((value) {
+      if (value) {
+        _jPlanState = state.copyWith(
+          showToast: OneTimeEvent("일정 순서 변경이 완료됐습니다"),
+        );
+        update();
+      }
+    });
+  }
+
+  void _planWait(
+    int day,
+    String name,
+  ) {
+    _jPlanState = state.copyWith(
+      showToast: OneTimeEvent("$name님이 일정을 수정 중입니다"),
+    );
+    update();
+  }
+
+  void _planSwap(int dayAfterStart, List<JPlanEntity> plans) {
+    _jPlanState = state.copyWith(
+      plans: plans,
+    );
+    update();
+  }
 
   Future<void> _getJPlanData() async {
     final params = Tuple3(
@@ -182,6 +231,16 @@ class JPlanController extends GetxController {
     update();
   }
 
+  Future<void> onPlanSwapPressed() async {
+    final tripId = tripRoomInfo?.id;
+    final day = state.selectedDay;
+    if (tripId == null) return;
+
+    await _jPlanSwapRegisterUsecase.call(
+      Tuple2(tripId, day),
+    );
+  }
+
   void onAddPlanPressed() {
     Get.toNamed(
       Routes.tripJPlanAdd,
@@ -225,15 +284,7 @@ class JPlanController extends GetxController {
       tripRoomInfo?.id ?? 0,
       plan,
     );
-
-    final result = await _moveJPlanLockerUsecase.call(params);
-
-    result.fold(
-      (failure) {},
-      (success) {
-        update();
-      },
-    );
+    await _moveJPlanLockerUsecase.call(params);
   }
 
   @override

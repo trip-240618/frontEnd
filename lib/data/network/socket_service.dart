@@ -11,7 +11,6 @@ class SocketService extends GetxService {
   final SessionService _sessionService;
   late StompClient _stompClient;
   bool _isConnected = false;
-  final List<String> _pendingSubscriptions = [];
 
   final StreamController<Map<String, dynamic>> _messageStreamController =
       StreamController<Map<String, dynamic>>.broadcast();
@@ -26,21 +25,20 @@ class SocketService extends GetxService {
     required int tripId,
   }) async {
     if (_isConnected) return;
+
+    final completer = Completer<void>();
+
     final tokens = await _sessionService.getTokens();
     final accessToken = tokens["accessToken"] ?? "";
     final refreshToken = tokens["refreshToken"] ?? "";
-    print("?? ${AppConstants.socketUrl}");
-    print("?? ${refreshToken}");
+
     _stompClient = StompClient(
       config: StompConfig.sockJS(
         url: AppConstants.socketUrl,
         reconnectDelay: Duration.zero,
         onConnect: (frame) {
           _isConnected = true;
-          for (final dest in _pendingSubscriptions) {
-            subscribe(dest);
-          }
-          _pendingSubscriptions.clear();
+          completer.complete();
         },
         webSocketConnectHeaders: {
           HttpHeaders.cookieHeader: "accessToken=$accessToken; refreshToken=$refreshToken",
@@ -56,12 +54,12 @@ class SocketService extends GetxService {
     );
 
     _stompClient.activate();
+    return completer.future;
   }
 
   void disconnect() {
     _stompClient.deactivate();
     _isConnected = false;
-    _messageStreamController.close();
   }
 
   void send(String destination, {String? body}) {
@@ -79,8 +77,6 @@ class SocketService extends GetxService {
           _messageStreamController.add(data);
         },
       );
-    } else {
-      _pendingSubscriptions.add(destination);
     }
   }
 

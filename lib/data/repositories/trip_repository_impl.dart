@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:tripStory/core/constants/network_constants.dart';
 import 'package:tripStory/core/errors/failure.dart';
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
@@ -9,7 +10,9 @@ import 'package:tripStory/data/mappers/trip_room_create_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_mapper.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
+import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/data/network/socket_service.dart';
 import 'package:tripStory/domain/entities/scrap_create_entity.dart';
 import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
 import 'package:tripStory/domain/entities/scrap_entity.dart';
@@ -20,8 +23,12 @@ import 'package:tripStory/domain/repositories/trip_repository.dart';
 
 class TripRepositoryImpl implements TripRepository {
   final TripDataSource _tripDataSource;
+  final SocketService _socketService;
 
-  TripRepositoryImpl(this._tripDataSource);
+  TripRepositoryImpl(
+    this._tripDataSource,
+    this._socketService,
+  );
 
   @override
   ResultFuture<List<TripRoomEntity>> fetchComingTrips() async {
@@ -71,8 +78,7 @@ class TripRepositoryImpl implements TripRepository {
     TripRoomCreateRequest tripRoomCreateRequest,
   ) async {
     try {
-      final response =
-          await _tripDataSource.postCreateTrip(tripRoomCreateRequest);
+      final response = await _tripDataSource.postCreateTrip(tripRoomCreateRequest);
       final entity = TripRoomCreateMapper.toEntity(response);
       return Right(entity);
     } catch (e) {
@@ -186,6 +192,47 @@ class TripRepositoryImpl implements TripRepository {
   }) async {
     try {
       await _tripDataSource.putModifyJPlan(tripId, request);
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> putSwapJPlan({
+    required int tripId,
+    required PlanJSwapRequest request,
+  }) async {
+    try {
+      await _tripDataSource.putSwapJPlan(tripId, request);
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> fetchRegisterJPlan({
+    required int tripId,
+    required int day,
+  }) async {
+    try {
+      final destination = NetworkConstants.registerJPlan(tripId, day);
+      _socketService.send(destination);
+
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> fetchRegisterFinishJPlan({
+    required int tripId,
+    required int day,
+  }) async {
+    try {
+      await _tripDataSource.fetchRegisterFinishJPlan(tripId, day);
       return Right(null);
     } catch (e) {
       return Left(ServerFailure(e.toString()));

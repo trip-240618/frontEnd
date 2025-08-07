@@ -9,6 +9,7 @@ import 'package:tripStory/domain/repositories/j_socket_repository.dart';
 class JSocketRepositoryImpl implements JSocketRepository {
   final SocketService _socketService;
   final _controller = StreamController<JSocketEntity>.broadcast();
+  StreamSubscription? _socketSubscription;
 
   JSocketRepositoryImpl(this._socketService);
 
@@ -17,7 +18,9 @@ class JSocketRepositoryImpl implements JSocketRepository {
     await _socketService.connect(tripId: tripId);
     _socketService.subscribe("/topic/api/trip/j/$tripId");
 
-    _socketService.messageStream.listen((data) {
+    _socketSubscription?.cancel();
+
+    _socketSubscription = _socketService.messageStream.listen((data) {
       final socketResponse = SocketResponse.fromJson(data);
       final entity = JSocketMapper.toEntity(socketResponse);
       if (entity != null) {
@@ -29,6 +32,8 @@ class JSocketRepositoryImpl implements JSocketRepository {
   @override
   void disconnect() {
     _socketService.disconnect();
+    _socketSubscription?.cancel();
+    _socketSubscription = null;
     _controller.close();
   }
 

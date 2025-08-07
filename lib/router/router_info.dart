@@ -34,13 +34,16 @@ import 'package:tripStory/view/splash/views/splash_view.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_add_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_edit_binding.dart';
+import 'package:tripStory/view/trip/bindings/j_plan_swap_binding.dart';
 import 'package:tripStory/view/trip/bindings/location_search_binding.dart';
 import 'package:tripStory/view/trip/bindings/scrap_create_binding.dart';
 import 'package:tripStory/view/trip/bindings/scraps_binding.dart';
 import 'package:tripStory/view/trip/bindings/trip_main_binding.dart';
 import 'package:tripStory/view/trip/models/j_plan_edit_param.dart';
+import 'package:tripStory/view/trip/models/j_plan_swap_param.dart';
 import 'package:tripStory/view/trip/views/j_plan_create_view.dart';
 import 'package:tripStory/view/trip/views/j_plan_edit_view.dart';
+import 'package:tripStory/view/trip/views/j_plan_swap_view.dart';
 import 'package:tripStory/view/trip/views/location_search_view.dart';
 import 'package:tripStory/view/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/view/trip/views/trip_main_view.dart';
@@ -187,6 +190,17 @@ class RouterInfo {
         return JPlanEditView(params: args);
       },
       binding: JPlanEditBinding(),
+    ),
+    GetPage(
+      name: Routes.tripJPlanSwap,
+      page: () {
+        final args = Get.arguments;
+        if (args is! List<JPlanSwapParam>) {
+          throw ArgumentError('error');
+        }
+        return JPlanSwapView(plans: args);
+      },
+      binding: JPlanSwapBinding(),
     ),
   ];
 }

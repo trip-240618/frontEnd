@@ -41,9 +41,6 @@ class AppBinding extends Bindings {
     // TokenStorage
     Get.put<TokenStorage>(SharedPreferencesTokenStorage(), permanent: true);
 
-    // cache
-    Get.lazyPut<CustomCacheManager>(() => CustomCacheManager(Get.find<SessionService>()));
-
     // service
     Get.put<LoginUserService>(LoginUserService(), permanent: true);
     Get.put<TripRoomService>(TripRoomService(), permanent: true);
@@ -58,6 +55,9 @@ class AppBinding extends Bindings {
     Get.put<DioClient>(DioClient(sessionService: Get.find<SessionService>()), permanent: true);
     Get.put<Dio>(Get.find<DioClient>().dio, permanent: true);
 
+    // cache
+    Get.lazyPut<CustomCacheManager>(() => CustomCacheManager(Get.find<SessionService>()), fenix: true);
+
     // DataSource
     Get.lazyPut<UserDataSource>(() => UserDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<TripDataSource>(() => TripDataSource(Get.find<Dio>()), fenix: true);
@@ -70,7 +70,12 @@ class AppBinding extends Bindings {
 
     // Repository
     Get.lazyPut<UserRepository>(() => UserRepositoryImpl(Get.find<UserDataSource>()), fenix: true);
-    Get.lazyPut<TripRepository>(() => TripRepositoryImpl(Get.find<TripDataSource>()), fenix: true);
+    Get.lazyPut<TripRepository>(
+        () => TripRepositoryImpl(
+              Get.find<TripDataSource>(),
+              Get.find<SocketService>(),
+            ),
+        fenix: true);
     Get.lazyPut<FileRepository>(() => FileRepositoryImpl(Get.find<FileDataSource>()), fenix: true);
     Get.lazyPut<NotificationRepository>(() => NotificationRepositoryImpl(Get.find<NotificationDataSource>()),
         fenix: true);
