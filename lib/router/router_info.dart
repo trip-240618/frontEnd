@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:get/get.dart';
-import 'package:tripStory/domain/entities/flight_entity.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/hoom/bindings/notification_list_binding.dart';
 import 'package:tripStory/view/hoom/bindings/rooms_binding.dart';
@@ -32,6 +31,7 @@ import 'package:tripStory/view/setting/views/notices_list_view.dart';
 import 'package:tripStory/view/setting/views/user_delete_view.dart';
 import 'package:tripStory/view/splash/binding/splash_binding.dart';
 import 'package:tripStory/view/splash/views/splash_view.dart';
+import 'package:tripStory/view/trip/bindings/flight_create_binding.dart';
 import 'package:tripStory/view/trip/bindings/flight_flight_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_add_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_binding.dart';
@@ -42,6 +42,7 @@ import 'package:tripStory/view/trip/bindings/scrap_create_binding.dart';
 import 'package:tripStory/view/trip/bindings/scraps_binding.dart';
 import 'package:tripStory/view/trip/bindings/trip_main_binding.dart';
 import 'package:tripStory/view/trip/locker/scrap/addScrapPage.dart';
+import 'package:tripStory/view/trip/models/flight_create_param.dart';
 import 'package:tripStory/view/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/view/trip/models/j_plan_swap_param.dart';
 import 'package:tripStory/view/trip/views/flight_create_view.dart';
@@ -215,11 +216,12 @@ class RouterInfo {
       name: Routes.createFlight,
       page: () {
         final args = Get.arguments;
-        if (args is! FlightEntity) {
+        if (args is! FlightCreateParam) {
           throw ArgumentError('error');
         }
-        return FlightCreateView(flightEntity: args);
+        return FlightCreateView(param: args);
       },
+      binding: FlightCreateBinding(),
     ),
   ];
 }

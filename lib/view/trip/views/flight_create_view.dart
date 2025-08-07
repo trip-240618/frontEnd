@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
+import 'package:tripStory/common/button/base/base_tile_button.dart';
+import 'package:tripStory/common/button/bottom_button.dart';
+import 'package:tripStory/common/button/tile/date_time_tile_button.dart';
 import 'package:tripStory/common/button/tile/deleted_tile_button.dart';
-import 'package:tripStory/component/bottomContainer.dart';
-import 'package:tripStory/domain/entities/flight_entity.dart';
-import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
-import 'package:tripStory/util/font.dart';
+import 'package:tripStory/util/extension/date_extension.dart';
+import 'package:tripStory/util/extension/string_extension.dart';
+import 'package:tripStory/view/trip/controllers/flight_create_controller.dart';
+import 'package:tripStory/view/trip/models/flight_create_param.dart';
 
-class FlightCreateView extends StatelessWidget {
-  final FlightEntity flightEntity;
+class FlightCreateView extends GetView<FlightCreateController> {
+  final FlightCreateParam param;
 
   const FlightCreateView({
     super.key,
-    required this.flightEntity,
+    required this.param,
   });
 
   @override
@@ -43,167 +44,86 @@ class FlightCreateView extends StatelessWidget {
               height: 8,
             ),
             DeletedTileButton(
-              text: "",
+              text: "${param.flightName} (${param.flightEntity?.airlineNumber})",
               placeholderText: "여행 장소를 지도에 입력해 보세요",
-              iconColor: Colors.red,
+              iconColor: controller.tripRoomInfo?.labelColor.toColor(),
               onTilePressed: () => {},
-              onDeletePressed: () => {},
+              onDeletePressed: () => Get.back(),
             ),
             const SizedBox(
               height: 20,
             ),
             Text(
-              '출발 일정',
-              style: f12gray600w600,
+              "출발 일정",
+              style: context.style.caption1.copyWith(
+                color: context.color.gray600,
+              ),
             ),
             const SizedBox(
               height: 8,
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: gray50,
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(width: 1, color: gray200),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    SvgPicture.asset('assets/icon/smallDate.svg'),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      '${DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.now())}',
-                      style: f15gray800w500,
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    SvgPicture.asset(
-                      'assets/icon/time.svg',
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      '3131',
-                      style: f15gray800w500,
-                    ),
-                  ],
-                ),
-              ),
+            DateTimeTileButton(
+              iconColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.black,
+              date: param.flightEntity?.departureDateTime.formatDateWithWeekdayKo ?? "",
+              time: param.flightEntity?.departureDateTime.formatTimeKo ?? "",
             ),
             const SizedBox(
               height: 20,
             ),
             Text(
-              '출발 공항',
-              style: f12gray600w600,
+              "출발 공항",
+              style: context.style.caption1.copyWith(
+                color: context.color.gray600,
+              ),
             ),
             const SizedBox(
               height: 8,
             ),
-            Container(
-              width: Get.width,
-              decoration: BoxDecoration(
-                color: gray50,
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(width: 1, color: gray200),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  '대한항공',
-                  style: f15gray800w500,
-                ),
-              ),
+            BaseTileButton(
+              text: "${param.flightEntity?.departureAirportKr ?? ""} (${param.flightEntity?.departureAirport})",
+              tileColor: context.color.gray50,
+              borderColor: context.color.gray200,
             ),
             const SizedBox(
               height: 20,
             ),
             Text(
-              '도착 일정',
-              style: f12gray600w600,
+              "도착 일정",
+              style: context.style.caption1.copyWith(
+                color: context.color.gray600,
+              ),
             ),
             const SizedBox(
               height: 8,
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: gray50,
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(width: 1, color: gray200),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icon/smallDate.svg',
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      '${DateFormat('yyyy.MM.dd (EEE)', 'ko_KR').format(DateTime.now())}',
-                      style: f15gray800w500,
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    SvgPicture.asset(
-                      'assets/icon/time.svg',
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      '도착일',
-                      style: f15gray800w500,
-                    ),
-                  ],
-                ),
-              ),
+            DateTimeTileButton(
+              iconColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.black,
+              date: param.flightEntity?.arrivalDateTime.formatDateWithWeekdayKo ?? "",
+              time: param.flightEntity?.arrivalDateTime.formatTimeKo ?? "",
             ),
             const SizedBox(
               height: 20,
             ),
             Text(
-              '도착 공항',
-              style: f12gray600w600,
+              "도착 공항",
+              style: context.style.caption1.copyWith(
+                color: context.color.gray600,
+              ),
             ),
             const SizedBox(
               height: 8,
             ),
-            Container(
-              width: Get.width,
-              decoration: BoxDecoration(
-                color: gray50,
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(width: 1, color: gray200),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  '도착공항',
-                  style: f15gray800w500,
-                ),
-              ),
+            BaseTileButton(
+              text: "${param.flightEntity?.arrivalAirportKr ?? ""} (${param.flightEntity?.arrivalAirport})",
+              tileColor: context.color.gray50,
+              borderColor: context.color.gray200,
             ),
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
-        child: BottomContainer(
-            onTap: () async {
-              // js.createFlight(widget.flightName);
-              Get.back();
-              Get.back();
-            },
-            title: '등록 완료',
-            isBlack: true),
+      bottomNavigationBar: BottomButton(
+        text: "등록 완료",
+        onTap: () => {},
       ),
     );
   }
