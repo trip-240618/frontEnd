@@ -6,6 +6,7 @@ import 'package:tripStory/data/datasources/local/share_preferences_token_storage
 import 'package:tripStory/data/datasources/local/token_storage.dart';
 import 'package:tripStory/data/datasources/remote/country_data_source.dart';
 import 'package:tripStory/data/datasources/remote/file_data_source.dart';
+import 'package:tripStory/data/datasources/remote/flight_data_source.dart';
 import 'package:tripStory/data/datasources/remote/notice_data_source.dart';
 import 'package:tripStory/data/datasources/remote/notification_data_source.dart';
 import 'package:tripStory/data/datasources/remote/oauth_data_source.dart';
@@ -17,6 +18,7 @@ import 'package:tripStory/data/network/socket_service.dart';
 import 'package:tripStory/data/repositories/auth_repository_impl.dart';
 import 'package:tripStory/data/repositories/country_repository_impl.dart';
 import 'package:tripStory/data/repositories/file_repository_impl.dart';
+import 'package:tripStory/data/repositories/flight_repository_impl.dart';
 import 'package:tripStory/data/repositories/j_socket_repository_impl.dart';
 import 'package:tripStory/data/repositories/location_repository_impl.dart';
 import 'package:tripStory/data/repositories/notice_repository_impl.dart';
@@ -26,6 +28,7 @@ import 'package:tripStory/data/repositories/user_repository_impl.dart';
 import 'package:tripStory/domain/repositories/auth_repository.dart';
 import 'package:tripStory/domain/repositories/country_repository.dart';
 import 'package:tripStory/domain/repositories/file_repository.dart';
+import 'package:tripStory/domain/repositories/flight_repository.dart';
 import 'package:tripStory/domain/repositories/j_socket_repository.dart';
 import 'package:tripStory/domain/repositories/location_repository.dart';
 import 'package:tripStory/domain/repositories/notice_repository.dart';
@@ -67,6 +70,7 @@ class AppBinding extends Bindings {
     Get.lazyPut<CountryDataSource>(() => CountryDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<NoticeDataSource>(() => NoticeDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<TripLocationDataSource>(() => TripLocationDataSource(Get.find<Dio>()), fenix: true);
+    Get.lazyPut<FlightDataSource>(() => FlightDataSource(Get.find<Dio>()), fenix: true);
 
     // Repository
     Get.lazyPut<UserRepository>(() => UserRepositoryImpl(Get.find<UserDataSource>()), fenix: true);
@@ -84,5 +88,6 @@ class AppBinding extends Bindings {
     Get.lazyPut<NoticeRepository>(() => NoticeRepositoryImpl(Get.find<NoticeDataSource>()), fenix: true);
     Get.lazyPut<JSocketRepository>(() => JSocketRepositoryImpl(Get.find()), fenix: true);
     Get.lazyPut<LocationRepository>(() => LocationRepositoryImpl(Get.find()), fenix: true);
+    Get.lazyPut<FlightRepository>(() => FlightRepositoryImpl(Get.find()), fenix: true);
   }
 }

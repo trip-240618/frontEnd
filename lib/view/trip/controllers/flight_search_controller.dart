@@ -1,14 +1,19 @@
+import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/domain/entities/air_line_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
+import 'package:tripStory/domain/usecases/fetch_flight_result_usecase.dart';
+import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/flight_search_state.dart';
 
 class FlightSearchController extends GetxController {
   final TripRoomService _tripRoomService;
+  final FetchFlightResultUsecase _fetchFlightResultUsecase;
 
   FlightSearchController(
     this._tripRoomService,
+    this._fetchFlightResultUsecase,
   );
 
   final List<AirLineEntity> _defaultAirlines = [
@@ -138,6 +143,30 @@ class FlightSearchController extends GetxController {
   void onFlightNumberChanged(String number) {
     _flightSearchState = state.copyWith(
       airLineNumber: number,
+    );
+  }
+
+  Future<void> onBottomPressed() async {
+    final params = Tuple3(
+      int.parse(state.airLineNumber),
+      state.selectedAirLine?.code ?? "",
+      state.departureDate?.formatYMDWithHyphen() ?? "",
+    );
+    final result = await _fetchFlightResultUsecase.call(params);
+
+    result.fold(
+      (failure) {
+        _flightSearchState = state.copyWith(
+          flightSearchStatus: FlightSearchStatus.empty,
+        );
+        update();
+      },
+      (flightEntity) {
+        _flightSearchState = state.copyWith(
+          flightSearchStatus: FlightSearchStatus.success,
+        );
+        update();
+      },
     );
   }
 }

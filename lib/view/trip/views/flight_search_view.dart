@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/bottom/select_day_bottom_sheet.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
@@ -26,14 +25,9 @@ class FlightSearchView extends StatefulWidget {
 }
 
 class _FlightSearchViewState extends State<FlightSearchView> {
-  DateFormat dateFormatter = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR');
-  bool _isFlightNotFound = false;
-  TextEditingController _carrierCon = TextEditingController();
-  TextEditingController _flightNumCon = TextEditingController();
-  FocusNode _focusNode = FocusNode();
-
-  List<Map<String, String>> filteredAirlines = [];
-  String? selectedAirline;
+  final TextEditingController _carrierCon = TextEditingController();
+  final TextEditingController _flightNumCon = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -47,6 +41,7 @@ class _FlightSearchViewState extends State<FlightSearchView> {
   void dispose() {
     _focusNode.dispose();
     _carrierCon.dispose();
+    _flightNumCon.dispose();
     super.dispose();
   }
 
@@ -206,7 +201,7 @@ class _FlightSearchViewState extends State<FlightSearchView> {
             bottomNavigationBar: BottomButton(
               text: "조회하기",
               enabled: state.isValid,
-              onTap: () => {},
+              onTap: () => controller.onBottomPressed(),
             ),
           );
         },

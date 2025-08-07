@@ -34,6 +34,7 @@ class DioClient {
         return handler.next(options);
       },
       onResponse: (response, handler) async {
+        print("???? ${response}");
         final setCookieHeader = response.headers["set-cookie"];
         if (setCookieHeader != null && setCookieHeader.isNotEmpty) {
           await sessionService.handleSetCookieHeader(setCookieHeader);
