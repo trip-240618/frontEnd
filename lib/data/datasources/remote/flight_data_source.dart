@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:tripStory/data/models/request/flight_request.dart';
 import 'package:tripStory/data/models/response/flight_response.dart';
 
 part 'flight_data_source.g.dart';
@@ -13,5 +14,11 @@ abstract class FlightDataSource {
     @Query("flightNumber") required int flightNumber,
     @Query("carrierCode") required String carrierCode,
     @Query("departureDate") required String departureDate,
+  });
+
+  @POST("/trip/{tripId}/create")
+  Future<FlightResponse> postCreateFlight({
+    @Path("tripId") required int tripId,
+    @Body() required FlightRequest request,
   });
 }

@@ -240,7 +240,9 @@ class JPlanController extends GetxController {
     update();
   }
 
-  void onFlightPressed() => Get.toNamed(Routes.searchFlight);
+  void onFlightPressed() => Get.toNamed(Routes.searchFlight)?.then((result) {
+        print("value?? ${result}");
+      });
 
   Future<void> onPlanSwapPressed() async {
     final tripId = tripRoomInfo?.id;
