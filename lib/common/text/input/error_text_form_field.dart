@@ -3,25 +3,26 @@ import 'package:flutter/services.dart';
 import 'package:tripStory/common/text/common_text_form_field.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 
-class ErrorTextFormField extends StatefulWidget {
+class ErrorTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
-  final String regexText;
-  final String regexPattern;
-  final void Function(String text, bool isValid)? onChanged;
+  final String errorText;
+  final bool showError;
+  final ValueChanged<String>? onChanged;
   final List<TextInputFormatter>? inputFormatters;
   final Widget? leading;
   final Widget? trailing;
   final TextStyle? textStyle;
   final EdgeInsets? contentPadding;
   final Color? backgroundColor;
+  final TextInputType? keyboardType;
 
   const ErrorTextFormField({
     super.key,
     required this.controller,
     required this.hintText,
-    required this.regexText,
-    required this.regexPattern,
+    required this.errorText,
+    required this.showError,
     this.onChanged,
     this.inputFormatters,
     this.leading,
@@ -29,30 +30,8 @@ class ErrorTextFormField extends StatefulWidget {
     this.textStyle,
     this.contentPadding,
     this.backgroundColor,
+    this.keyboardType,
   });
-
-  @override
-  State<ErrorTextFormField> createState() => _ErrorTextFormFieldState();
-}
-
-class _ErrorTextFormFieldState extends State<ErrorTextFormField> {
-  bool hasError = false;
-
-  void _validate(String value) {
-    final regex = RegExp(widget.regexPattern);
-
-    setState(() {
-      hasError = !(value.isEmpty || regex.hasMatch(value));
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(() {
-      _validate(widget.controller.text);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,27 +39,22 @@ class _ErrorTextFormFieldState extends State<ErrorTextFormField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CommonTextField(
-          backgroundColor: widget.backgroundColor,
-          controller: widget.controller,
-          hintText: widget.hintText,
-          textStyle: widget.textStyle,
-          trailing: widget.trailing,
-          leading: widget.leading,
-          contentPadding: widget.contentPadding,
-          inputFormatters: widget.inputFormatters,
-          onChanged: (text) {
-            _validate(text);
-            final regex = RegExp(widget.regexPattern);
-            final isValid = text.isNotEmpty && regex.hasMatch(text);
-
-            widget.onChanged?.call(text, isValid);
-          },
+          controller: controller,
+          hintText: hintText,
+          backgroundColor: backgroundColor,
+          textStyle: textStyle,
+          trailing: trailing,
+          leading: leading,
+          contentPadding: contentPadding,
+          inputFormatters: inputFormatters,
+          onChanged: onChanged,
+          keyboardType: keyboardType,
         ),
-        if (hasError)
+        if (showError)
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 4),
             child: Text(
-              widget.regexText,
+              errorText,
               style: context.style.caption2.copyWith(
                 color: context.color.errorColor,
               ),
@@ -88,13 +62,5 @@ class _ErrorTextFormFieldState extends State<ErrorTextFormField> {
           ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(() {
-      _validate(widget.controller.text);
-    });
-    super.dispose();
   }
 }

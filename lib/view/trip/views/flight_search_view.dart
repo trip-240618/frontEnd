@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/tile/leading_icon_tile_button.dart';
+import 'package:tripStory/common/icon/svg_icon.dart';
+import 'package:tripStory/common/text/input/error_text_form_field.dart';
 import 'package:tripStory/common/text/input/leading_icon_text_form_field.dart';
 import 'package:tripStory/component/bottomContainer.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/component/dialog/loading.dart';
-import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/domain/entities/air_line_entity.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
-import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/trip/controllers/flight_search_controller.dart';
 
 class FlightSearchView extends StatefulWidget {
@@ -166,31 +165,30 @@ class _FlightSearchViewState extends State<FlightSearchView> {
                     height: 20,
                   ),
                   Text(
-                    '편명',
-                    style: f12gray600w600,
+                    "편명",
+                    style: context.style.caption1.copyWith(
+                      color: context.color.gray600,
+                    ),
                   ),
                   const SizedBox(
                     height: 8,
                   ),
-                  TextIconFormFields(
+                  ErrorTextFormField(
                     controller: _flightNumCon,
-                    hintText: '항공사명 또는 코드를 입력해주세요',
-                    icon: 'assets/icon/pencil.svg',
-                    inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-                    textInputType: TextInputType.number,
-                    // colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']), BlendMode.srcIn),
-                    hintStyle: f15gray400w500,
-                    onFieldSubmitted: (value) {},
+                    hintText: "항공사명 또는 코드를 입력해주세요",
+                    errorText: "조회되지 않는 편명입니다",
+                    showError: true,
+                    keyboardType: TextInputType.number,
+                    backgroundColor: context.color.gray50,
+                    leading: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: SvgIcon(
+                        assetPath: IconConstants.pencil,
+                        color: context.color.gray700,
+                      ),
+                    ),
                   ),
-                  _isFlightNotFound == true
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 16, top: 4),
-                          child: Text(
-                            '조회되지 않는 편명입니다',
-                            style: f11redw500,
-                          ),
-                        )
-                      : SizedBox(),
                 ],
               ),
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/app/permission/permission.dart';
+import 'package:tripStory/core/constants/regex_constants.dart';
 import 'package:tripStory/data/models/request/file_request.dart';
 import 'package:tripStory/data/models/request/user_modify_request.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
@@ -60,8 +61,9 @@ class EditProfileController extends GetxController {
 
   void onNickNameChanged(
     String nickName,
-    bool isValid,
   ) {
+    final isValid = RegExp(RegexConstants.nickname).hasMatch(nickName);
+
     _editProfileState = state.copyWith(
       nickName: nickName,
       isNicknameValid: isValid,

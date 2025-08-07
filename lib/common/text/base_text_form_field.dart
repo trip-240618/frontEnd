@@ -41,7 +41,10 @@ class BaseTextFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       autofocus: false,
-      style: textStyle ?? context.style.body2Normal,
+      style: textStyle ??
+          context.style.body2Normal.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
       focusNode: focusNode,
       inputFormatters: inputFormatters,
       onChanged: onChanged,

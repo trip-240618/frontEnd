@@ -7,7 +7,6 @@ import 'package:tripStory/common/button/bottom_button.dart';
 import 'package:tripStory/common/button/picture_image_button.dart';
 import 'package:tripStory/common/text/input/error_text_form_field.dart';
 import 'package:tripStory/component/container/circle_badge.dart';
-import 'package:tripStory/core/constants/regex_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/view/login/controller/profile_add_controller.dart';
 
@@ -83,19 +82,22 @@ class _ProfileAddViewState extends State<ProfileAddView> {
                 ),
                 ErrorTextFormField(
                   controller: _nickNameCon,
-                  textStyle: context.style.body2Normal,
                   hintText: "8자 이내의 한글,영문만 가능해요",
-                  onChanged: (text, isValid) => controller.onTextChanged(text, isValid),
+                  errorText: "8자 이내의 한글,영문만 가능해요",
+                  showError: controller.state.nickName.isNotEmpty && !controller.state.isNicknameValid,
+                  textStyle: context.style.body2Normal,
+                  backgroundColor: context.color.gray50,
                   contentPadding: const EdgeInsets.all(16),
+                  onChanged: (text) => controller.onTextChanged(text),
                   inputFormatters: [LengthLimitingTextInputFormatter(8)],
-                  trailing: Text(
-                    "${_nickNameCon.text.length}/8",
-                    style: context.style.caption2.copyWith(
-                      color: context.color.gray400,
+                  trailing: Obx(
+                    () => Text(
+                      "${_nickNameCon.text.length}/8",
+                      style: context.style.caption2.copyWith(
+                        color: context.color.gray400,
+                      ),
                     ),
                   ),
-                  regexText: "8자 이내의 한글,영문만 가능해요",
-                  regexPattern: RegexConstants.nickname,
                 ),
               ],
             ),

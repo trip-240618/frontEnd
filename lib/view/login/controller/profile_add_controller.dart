@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/app/permission/permission.dart';
+import 'package:tripStory/core/constants/regex_constants.dart';
 import 'package:tripStory/data/models/request/file_request.dart';
 import 'package:tripStory/data/models/request/register_request.dart';
 import 'package:tripStory/domain/usecases/fetch_presigned_url_usecase.dart';
@@ -43,8 +44,9 @@ class ProfileAddController extends GetxController with GetSingleTickerProviderSt
 
   void onTextChanged(
     String text,
-    bool isValid,
   ) {
+    final isValid = RegExp(RegexConstants.nickname).hasMatch(text);
+
     profileAddState = state.copyWith(
       nickName: text,
       isNicknameValid: isValid,

@@ -21,6 +21,7 @@ class CommonTextField extends StatelessWidget {
   final EdgeInsets? scrollPadding;
   final int? maxLines;
   final bool? isFocusOnTapOutside;
+  final TextInputType? keyboardType;
 
   const CommonTextField({
     super.key,
@@ -39,6 +40,7 @@ class CommonTextField extends StatelessWidget {
     this.scrollPadding,
     this.maxLines,
     this.isFocusOnTapOutside,
+    this.keyboardType,
   });
 
   @override
@@ -69,6 +71,7 @@ class CommonTextField extends StatelessWidget {
               scrollPadding: scrollPadding,
               maxLines: maxLines,
               isFocusOnTapOutside: isFocusOnTapOutside,
+              keyboardType: keyboardType,
             ),
           ),
           if (trailing != null) ...[
