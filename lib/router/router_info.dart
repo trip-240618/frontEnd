@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:get/get.dart';
+import 'package:tripStory/domain/entities/flight_entity.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/hoom/bindings/notification_list_binding.dart';
 import 'package:tripStory/view/hoom/bindings/rooms_binding.dart';
@@ -212,7 +213,13 @@ class RouterInfo {
     ),
     GetPage(
       name: Routes.createFlight,
-      page: () => const FlightCreateView(),
+      page: () {
+        final args = Get.arguments;
+        if (args is! FlightEntity) {
+          throw ArgumentError('error');
+        }
+        return FlightCreateView(flightEntity: args);
+      },
     ),
   ];
 }

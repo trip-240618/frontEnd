@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:tripStory/domain/entities/air_line_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_flight_result_usecase.dart';
+import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/flight_search_state.dart';
@@ -166,6 +167,10 @@ class FlightSearchController extends GetxController {
           flightSearchStatus: FlightSearchStatus.success,
         );
         update();
+        Get.toNamed(
+          Routes.createFlight,
+          arguments: flightEntity,
+        );
       },
     );
   }

@@ -5,13 +5,17 @@ import 'package:intl/intl.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/tile/deleted_tile_button.dart';
 import 'package:tripStory/component/bottomContainer.dart';
+import 'package:tripStory/domain/entities/flight_entity.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/font.dart';
 
 class FlightCreateView extends StatelessWidget {
+  final FlightEntity flightEntity;
+
   const FlightCreateView({
     super.key,
+    required this.flightEntity,
   });
 
   @override
