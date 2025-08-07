@@ -20,4 +20,6 @@ class Routes {
   static const locationSearch = "/location_search";
   static const tripJPlanEdit = "/trip-plan-edit";
   static const tripJPlanSwap = "/trip-plan-swap";
+  static const searchFlight = "/search-flight";
+  static const createFlight = "/create-flight";
 }

@@ -41,7 +41,7 @@ class BaseTileButton extends StatelessWidget {
               vertical: 14,
             ),
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: borderColor ?? Colors.white, width: 1.5),
+          side: BorderSide(color: borderColor ?? Colors.white, width: 1),
           borderRadius: BorderRadius.circular(4),
         ),
         leading: leading,

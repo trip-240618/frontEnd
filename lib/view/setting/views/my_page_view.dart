@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/icon_button.dart';
 import 'package:tripStory/common/button/profile_image_button.dart';
-import 'package:tripStory/common/button/tile_list_button.dart';
+import 'package:tripStory/common/button/tile/tile_list_button.dart';
 import 'package:tripStory/common/image/cached_image.dart';
 import 'package:tripStory/component/toast/toast.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';

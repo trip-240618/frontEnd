@@ -6,10 +6,9 @@ import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
 import 'package:tripStory/common/button/profile_image_button.dart';
 import 'package:tripStory/common/dialog/common_dialog.dart';
-import 'package:tripStory/common/text/error_text_form_field.dart';
-import 'package:tripStory/common/text/text_area_form_field.dart';
+import 'package:tripStory/common/text/area/text_area_form_field.dart';
+import 'package:tripStory/common/text/input/error_text_form_field.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
-import 'package:tripStory/core/constants/regex_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/view/setting/controllers/edit_profile_controller.dart';
 
@@ -76,11 +75,13 @@ class _EditProfileViewState extends State<EditProfileView> {
                 textStyle: context.style.body2Normal,
                 backgroundColor: context.color.gray50,
                 hintText: "8자 이내의 한글,영문만 가능해요",
-                onChanged: (text, isValid) => controller.onNickNameChanged(text, isValid),
+                onChanged: (text) => controller.onNickNameChanged(text),
                 contentPadding: const EdgeInsets.all(16),
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(8),
                 ],
+                showError: !controller.state.isNicknameValid,
+                errorText: "8자 이내의 한글,영문만 가능해요",
                 trailing: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -98,8 +99,6 @@ class _EditProfileViewState extends State<EditProfileView> {
                     ),
                   ],
                 ),
-                regexText: "8자 이내의 한글,영문만 가능해요",
-                regexPattern: RegexConstants.nickname,
               ),
               const SizedBox(
                 height: 20,

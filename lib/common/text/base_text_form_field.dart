@@ -16,6 +16,7 @@ class BaseTextFormField extends StatelessWidget {
   final EdgeInsets? contentPadding;
   final InputBorder? enabledBorder;
   final InputBorder? focusedBorder;
+  final bool? isFocusOnTapOutside;
 
   const BaseTextFormField({
     super.key,
@@ -32,6 +33,7 @@ class BaseTextFormField extends StatelessWidget {
     this.contentPadding,
     this.enabledBorder,
     this.focusedBorder,
+    this.isFocusOnTapOutside,
   });
 
   @override
@@ -39,7 +41,10 @@ class BaseTextFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       autofocus: false,
-      style: textStyle ?? context.style.body2Normal,
+      style: textStyle ??
+          context.style.body2Normal.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
       focusNode: focusNode,
       inputFormatters: inputFormatters,
       onChanged: onChanged,
@@ -47,15 +52,16 @@ class BaseTextFormField extends StatelessWidget {
       keyboardType: keyboardType ?? TextInputType.text,
       maxLines: maxLines,
       scrollPadding: scrollPadding ?? const EdgeInsets.all(20.0),
-      onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+      onTapOutside: isFocusOnTapOutside ?? true ? (_) => FocusManager.instance.primaryFocus?.unfocus() : null,
       decoration: InputDecoration(
         isDense: true,
         contentPadding: contentPadding ?? const EdgeInsets.all(16),
         enabledBorder: enabledBorder ?? OutlineInputBorder(borderSide: BorderSide.none),
         focusedBorder: focusedBorder ?? OutlineInputBorder(borderSide: BorderSide.none),
         hintText: hintText,
-        hintStyle: context.style.body2Reading.copyWith(
+        hintStyle: context.style.body2Normal.copyWith(
           color: context.color.gray400,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );

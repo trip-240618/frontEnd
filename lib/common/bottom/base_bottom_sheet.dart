@@ -1,40 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
+
+import '../../util/color.dart';
 
 class BaseBottomSheet extends StatelessWidget {
   final Widget child;
   final double heightRatio;
   final bool isScrollControlled;
-  final EdgeInsets padding;
 
   const BaseBottomSheet({
     super.key,
     required this.child,
-    this.heightRatio = 0.8,
+    this.heightRatio = 0.4,
     this.isScrollControlled = true,
-    this.padding = const EdgeInsets.only(
-      left: 20,
-      right: 20,
-      top: 10,
-      bottom: 44,
-    ),
   });
 
   static Future<T?> show<T>(
     BuildContext context,
     Widget child, {
-    double heightRatio = 0.8,
+    double heightRatio = 0.4,
     bool isScrollControlled = true,
-    EdgeInsets padding = const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 44),
   }) {
     return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: isScrollControlled,
-      backgroundColor: Colors.transparent,
       builder: (_) => BaseBottomSheet(
         heightRatio: heightRatio,
         isScrollControlled: isScrollControlled,
-        padding: padding,
         child: child,
       ),
     );
@@ -44,18 +37,43 @@ class BaseBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Container(
-        width: double.infinity,
-        height: Get.height * heightRatio,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(25),
+      child: Material(
+        color: context.color.white,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(25),
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          height: Get.height * heightRatio,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 44,
+            ),
+            child: Column(
+              children: [
+                _BottomHeader(),
+                Expanded(child: child),
+              ],
+            ),
           ),
         ),
-        child: Padding(
-          padding: padding,
-          child: child,
+      ),
+    );
+  }
+}
+
+class _BottomHeader extends StatelessWidget {
+  const _BottomHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 50,
+        height: 5,
+        decoration: BoxDecoration(
+          color: greyColor,
         ),
       ),
     );

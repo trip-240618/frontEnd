@@ -12,9 +12,9 @@ import 'package:tripStory/component/textForm/textform.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/trip/tripPlan/typeJ/addPlan/addFlight.dart';
-
 
 class SearchFlight extends StatefulWidget {
   const SearchFlight({super.key});
@@ -28,8 +28,8 @@ class _SearchFlightState extends State<SearchFlight> {
   final ts = Get.put(TripState());
   DateFormat dateFormatter = DateFormat('yyyy.MM.dd (EEE)', 'ko_KR');
   bool _isFlightNotFound = false;
-  TextEditingController _carrierCon = TextEditingController();
-  TextEditingController _flightNumCon= TextEditingController();
+  final TextEditingController _carrierCon = TextEditingController();
+  TextEditingController _flightNumCon = TextEditingController();
   FocusNode _focusNode = FocusNode();
   List<Map<String, String>> airlines = [
     {'name': '대한항공', 'code': 'KE'},
@@ -117,6 +117,7 @@ class _SearchFlightState extends State<SearchFlight> {
 
   List<Map<String, String>> filteredAirlines = [];
   String? selectedAirline;
+
   @override
   void initState() {
     super.initState();
@@ -125,216 +126,262 @@ class _SearchFlightState extends State<SearchFlight> {
       setState(() {});
     });
   }
+
   @override
   void dispose() {
     _focusNode.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Scaffold(
-          appBar: BackAppBar(text: '항공사 조회', onTap: (){
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: BackAppBar(
+          text: '항공사 조회',
+          onTap: () {
             js.selectedDateReset();
-            Get.back();}, color: Colors.white,),
-          body: Padding(
-            padding: const EdgeInsets.only(top: 36,left: 20, right: 20),
-            child: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('출발일', style: f12gray600w600,),
-                  const SizedBox(height: 8,),
-                  GestureDetector(
-                    onTap: (){
-                      SelectDayBottomSheet(context,'항공편의 출발 날짜를 선택해 주세요', (){});
-                    },
-                    child: Builder(
-                      builder: (context) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: gray50,
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(width: 1, color: gray200),
-                          ),
-                          child: Padding(padding: EdgeInsets.symmetric(vertical: 15,horizontal: 16),
-                            child: Row(
+            Get.back();
+          },
+          color: Colors.white,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.only(top: 36, left: 20, right: 20),
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '출발일',
+                  style: f12gray600w600,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    SelectDayBottomSheet(context, '항공편의 출발 날짜를 선택해 주세요', () {});
+                  },
+                  child: Builder(builder: (context) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: gray50,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(width: 1, color: gray200),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+                        child: Row(
+                          children: [
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 1.67, bottom: 2.5, left: 2.5, right: 6.5),
-                                      child: SvgPicture.asset(
-                                        'assets/bottomNavi/schedule.svg',
-                                        width: 15,
-                                        height: 15.83,
-                                        colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
-                                      ),
-                                    ),
-                                    Obx(()=>Text('${DateFormat('yyyy.MM.dd (EEE)', 'ko').format(DateFormat('yyyy-MM-dd').parse(js.selectedDate.value))}', style: f15gray800w500,),)
-                                  ],
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 1.67, bottom: 2.5, left: 2.5, right: 6.5),
+                                  child: SvgPicture.asset(
+                                    'assets/bottomNavi/schedule.svg',
+                                    width: 15,
+                                    height: 15.83,
+                                    colorFilter:
+                                        ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']), BlendMode.srcIn),
+                                  ),
                                 ),
+                                Obx(
+                                  () => Text(
+                                    '${DateFormat('yyyy.MM.dd (EEE)', 'ko').format(DateFormat('yyyy-MM-dd').parse(js.selectedDate.value))}',
+                                    style: f15gray800w500,
+                                  ),
+                                )
                               ],
                             ),
-                          ),
-                        );
-                      }
-                    ),
-                  ),
-                  const SizedBox(height: 20,),
-                  Text('항공사', style: f12gray600w600,),
-                  const SizedBox(height: 8,),
-                  TextIconFormFields(
-                    controller: _carrierCon,
-                    hintText: '항공사명 또는 코드를 입력해주세요',
-                    icon: 'assets/icon/search.svg',
-                    colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
-                    hintStyle: f15gray400w500,
-                    onFieldSubmitted: (value){},
-                    focusNode: _focusNode,
-                    isUnfocus: true,
-                  ),
-                  _focusNode.hasFocus?GestureDetector(
-                    onTap: (){},
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  '항공사',
+                  style: f12gray600w600,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextIconFormFields(
+                  controller: _carrierCon,
+                  hintText: '항공사명 또는 코드를 입력해주세요',
+                  icon: 'assets/icon/search.svg',
+                  colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']), BlendMode.srcIn),
+                  hintStyle: f15gray400w500,
+                  onFieldSubmitted: (value) {},
+                  focusNode: _focusNode,
+                  isUnfocus: true,
+                ),
+                if (_focusNode.hasFocus) ...[
+                  GestureDetector(
+                    onTap: () {},
                     child: Container(
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(4), // border-radius: 0px 0px 4px 4px
-                            bottomRight: Radius.circular(4),
-                          ),
-                          border: Border(
-                            left: BorderSide(width: 1, color: gray200), // border-width: 1px
-                            right: BorderSide(width: 1, color: gray200),
-                            bottom: BorderSide(width: 1, color: gray200),
-                        ),),
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(4),
+                          bottomRight: Radius.circular(4),
+                        ),
+                        border: Border(
+                          left: BorderSide(width: 1, color: context.color.gray200),
+                          right: BorderSide(width: 1, color: context.color.gray200),
+                          bottom: BorderSide(width: 1, color: context.color.gray200),
+                        ),
+                      ),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 16,top: 16),
-                            child: Text('주요 항공사',style: f12Gray400w600,),
+                            padding: const EdgeInsets.only(left: 16, top: 16),
+                            child: Text(
+                              "주요 항공사",
+                              style: context.style.caption1,
+                            ),
                           ),
-                          const SizedBox(height: 12,),
+                          const SizedBox(
+                            height: 12,
+                          ),
                           ListView.builder(
                             physics: const ClampingScrollPhysics(),
                             itemCount: airlines.length,
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              return airlines.length==0?Container():Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                    onTap:(){
-                                      _carrierCon.text = '${airlines[index]['name']} (${airlines[index]['code']})';
-                                      setState(() {
-                                        selectedAirline = airlines[index]['code']; // 새로운 값으로 업데이트
-                                      });
-                                    },
-                                    child: Container(
-                                      width:Get.width,
-                                      color: Colors.transparent,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(left: 16),
-                                            child: Text(
-                                              '${airlines[index]['name']} (${airlines[index]['code']})',
-                                              style: f14Gray800w500,
+                              return airlines.length == 0
+                                  ? Container()
+                                  : Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            _carrierCon.text =
+                                                '${airlines[index]['name']} (${airlines[index]['code']})';
+                                            setState(() {
+                                              selectedAirline = airlines[index]['code']; // 새로운 값으로 업데이트
+                                            });
+                                          },
+                                          child: Container(
+                                            width: Get.width,
+                                            color: Colors.transparent,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 16),
+                                                  child: Text(
+                                                    '${airlines[index]['name']} (${airlines[index]['code']})',
+                                                    style: f14Gray800w500,
+                                                  ),
+                                                ),
+                                                Radio<String>(
+                                                  value: airlines[index]['code']!,
+                                                  groupValue: selectedAirline,
+                                                  onChanged: (String? newValue) {
+                                                    _carrierCon.text =
+                                                        '${airlines[index]['name']} (${airlines[index]['code']})';
+                                                    setState(() {
+                                                      selectedAirline = airlines[index]['code']; // 새로운 값으로 업데이트
+                                                    });
+                                                  },
+                                                  fillColor: MaterialStateProperty.resolveWith<Color>(
+                                                    (Set<MaterialState> states) {
+                                                      if (states.contains(MaterialState.disabled)) {
+                                                        return gray400.withOpacity(.32);
+                                                      } else if (states.contains(MaterialState.selected)) {
+                                                        return gray900;
+                                                      }
+                                                      return gray400.withOpacity(.32);
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          Radio<String>(
-                                            value: airlines[index]['code']!,
-                                            groupValue: selectedAirline,
-                                            onChanged: (String? newValue) {
-                                              _carrierCon.text = '${airlines[index]['name']} (${airlines[index]['code']})';
-                                              setState(() {
-                                                selectedAirline = airlines[index]['code']; // 새로운 값으로 업데이트
-                                              });
-                                            },
-                                            fillColor: MaterialStateProperty.resolveWith<Color>(
-                                                  (Set<MaterialState> states) {
-                                                if (states.contains(MaterialState.disabled)) {
-                                                  return gray400.withOpacity(.32);
-                                                } else if (states.contains(MaterialState.selected)) {
-                                                  return gray900;
-                                                }
-                                                return gray400.withOpacity(.32);
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              );
+                                        )
+                                      ],
+                                    );
                             },
                           ),
                         ],
                       ),
                     ),
-                  ):SizedBox(),
-                  _focusNode.hasFocus?const SizedBox(height: 20,):const SizedBox(),
-                  const SizedBox(height: 20,),
-                  Text('편명', style: f12gray600w600,),
-                  const SizedBox(height: 8,),
-                  TextIconFormFields(
-                    controller: _flightNumCon,
-                    hintText: '항공사명 또는 코드를 입력해주세요',
-                    icon: 'assets/icon/pencil.svg',
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    textInputType: TextInputType.number,
-                    colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']),BlendMode.srcIn),
-                    hintStyle: f15gray400w500,
-                    onFieldSubmitted: (value){},
                   ),
-                  _isFlightNotFound==true?Padding(
-                    padding: const EdgeInsets.only(left: 16,top: 4),
-                    child: Text('조회되지 않는 편명입니다',style: f11redw500,),
-                  ):SizedBox(),
+                  const SizedBox(
+                    height: 20,
+                  ),
                 ],
-              ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  '편명',
+                  style: f12gray600w600,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextIconFormFields(
+                  controller: _flightNumCon,
+                  hintText: '항공사명 또는 코드를 입력해주세요',
+                  icon: 'assets/icon/pencil.svg',
+                  inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                  textInputType: TextInputType.number,
+                  colorFilter: ColorFilter.mode(Color(ts.selectTripList[0]['labelColor']), BlendMode.srcIn),
+                  hintStyle: f15gray400w500,
+                  onFieldSubmitted: (value) {},
+                ),
+                _isFlightNotFound == true
+                    ? Padding(
+                        padding: const EdgeInsets.only(left: 16, top: 4),
+                        child: Text(
+                          '조회되지 않는 편명입니다',
+                          style: f11redw500,
+                        ),
+                      )
+                    : SizedBox(),
+              ],
             ),
           ),
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 42),
-            child: BottomContainer(
-                onTap: ()async{
-                 if(_carrierCon.text.trim().isEmpty || _flightNumCon.text.trim().isEmpty){
-                   showOnlyConfirmTapDialog(context, '빈칸을 입력해주세요', (){
-                     Get.back();
-                   });
-                 }else{
-                   showLoading(context);
-                   await js.searchFlight(int.parse(_flightNumCon.text),selectedAirline!);
-                   Get.back();
-                   if(js.flightList.isNotEmpty){
-                     _isFlightNotFound = false;
-                     Get.to(()=>AddFlight(flightName: '${_carrierCon.text}',))?.then((v)=>{
-                     _flightNumCon.clear(),
-                     _carrierCon.clear(),
-                      selectedAirline=null
-                     });
-                   }
-                   else{
-                     _isFlightNotFound = true;
-                   }
-                   setState(() {});
-                 }
-                },title: '조회하기',isBlack: _carrierCon.text.trim().isEmpty||_flightNumCon.text.trim().isEmpty?false:true),
-          ),
         ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
+          child: BottomContainer(
+              onTap: () async {
+                if (_carrierCon.text.trim().isEmpty || _flightNumCon.text.trim().isEmpty) {
+                  showOnlyConfirmTapDialog(context, '빈칸을 입력해주세요', () {
+                    Get.back();
+                  });
+                } else {
+                  showLoading(context);
+                  await js.searchFlight(int.parse(_flightNumCon.text), selectedAirline!);
+                  Get.back();
+                  if (js.flightList.isNotEmpty) {
+                    _isFlightNotFound = false;
+                    Get.to(() => AddFlight(
+                          flightName: '${_carrierCon.text}',
+                        ))?.then((v) => {_flightNumCon.clear(), _carrierCon.clear(), selectedAirline = null});
+                  } else {
+                    _isFlightNotFound = true;
+                  }
+                  setState(() {});
+                }
+              },
+              title: '조회하기',
+              isBlack: _carrierCon.text.trim().isEmpty || _flightNumCon.text.trim().isEmpty ? false : true),
+        ),
+      ),
     );
   }
 }

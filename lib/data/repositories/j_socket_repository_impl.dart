@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
+import 'package:tripStory/core/errors/failure.dart';
+import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/mappers/j_socket_mapper.dart';
 import 'package:tripStory/data/models/response/socket_response.dart';
 import 'package:tripStory/data/network/socket_service.dart';
@@ -14,27 +17,38 @@ class JSocketRepositoryImpl implements JSocketRepository {
   JSocketRepositoryImpl(this._socketService);
 
   @override
-  Future<void> connectToTrip(int tripId) async {
-    await _socketService.connect(tripId: tripId);
-    _socketService.subscribe("/topic/api/trip/j/$tripId");
+  ResultFuture<void> connectToTrip(int tripId) async {
+    try {
+      await _socketService.connect(tripId: tripId);
+      _socketService.subscribe("/topic/api/trip/j/$tripId");
 
-    _socketSubscription?.cancel();
+      _socketSubscription?.cancel();
 
-    _socketSubscription = _socketService.messageStream.listen((data) {
-      final socketResponse = SocketResponse.fromJson(data);
-      final entity = JSocketMapper.toEntity(socketResponse);
-      if (entity != null) {
-        _controller.add(entity);
-      }
-    });
+      _socketSubscription = _socketService.messageStream.listen((data) {
+        final socketResponse = SocketResponse.fromJson(data);
+        final entity = JSocketMapper.toEntity(socketResponse);
+        if (entity != null) {
+          _controller.add(entity);
+        }
+      });
+
+      return const Right(null);
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
   }
 
   @override
-  void disconnect() {
-    _socketService.disconnect();
-    _socketSubscription?.cancel();
-    _socketSubscription = null;
-    _controller.close();
+  ResultFuture<void> disconnect() async {
+    try {
+      _socketService.disconnect();
+      await _socketSubscription?.cancel();
+      _socketSubscription = null;
+      await _controller.close();
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
   }
 
   @override

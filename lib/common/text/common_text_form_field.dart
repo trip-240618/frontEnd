@@ -19,6 +19,9 @@ class CommonTextField extends StatelessWidget {
   final FocusNode? focusNode;
   final Color? borderColor;
   final EdgeInsets? scrollPadding;
+  final int? maxLines;
+  final bool? isFocusOnTapOutside;
+  final TextInputType? keyboardType;
 
   const CommonTextField({
     super.key,
@@ -35,6 +38,9 @@ class CommonTextField extends StatelessWidget {
     this.borderColor,
     this.onFieldSubmitted,
     this.scrollPadding,
+    this.maxLines,
+    this.isFocusOnTapOutside,
+    this.keyboardType,
   });
 
   @override
@@ -63,6 +69,9 @@ class CommonTextField extends StatelessWidget {
               contentPadding: contentPadding,
               onFieldSubmitted: onFieldSubmitted,
               scrollPadding: scrollPadding,
+              maxLines: maxLines,
+              isFocusOnTapOutside: isFocusOnTapOutside,
+              keyboardType: keyboardType,
             ),
           ),
           if (trailing != null) ...[

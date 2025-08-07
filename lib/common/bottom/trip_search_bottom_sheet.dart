@@ -17,6 +17,7 @@ class TripDestinationBottomSheetContent extends StatefulWidget {
   static Future<T?> show<T>(BuildContext context) {
     return BaseBottomSheet.show<T>(
       context,
+      heightRatio: 0.8,
       const TripDestinationBottomSheetContent(),
     );
   }
@@ -82,46 +83,50 @@ class _TripDestinationBottomSheetContentState extends State<TripDestinationBotto
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _BottomHeader(),
-        Expanded(
-          child: _BottomContent(
-            tabController: _tabController,
-            countrySearchCon: citySearchCon,
-            directSearchCon: directSearchCon,
-            tripDestinationTabType: _tripDestinationTabType,
-            selectedCountry: selectedCountry,
-            filterCountries: filterCountries,
-            selectedAreaType: _selectedAreaType,
-            onCountryPressed: (country) => setState(() {
-              selectedCountry = country;
-            }),
-            onAreaTypeChanged: (areaType) => setState(() {
-              _selectedAreaType = areaType;
-            }),
-            onSearchTextChanged: (text) {
-              if (_tripDestinationTabType == TripDestinationTabType.direct) selectedCountry = directSearchCon.text;
-              setState(() {
-                filterCountries = getFilteredCountries(text);
-              });
-            },
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: _BottomContent(
+              tabController: _tabController,
+              countrySearchCon: citySearchCon,
+              directSearchCon: directSearchCon,
+              tripDestinationTabType: _tripDestinationTabType,
+              selectedCountry: selectedCountry,
+              filterCountries: filterCountries,
+              selectedAreaType: _selectedAreaType,
+              onCountryPressed: (country) => setState(() {
+                selectedCountry = country;
+              }),
+              onAreaTypeChanged: (areaType) => setState(() {
+                _selectedAreaType = areaType;
+              }),
+              onSearchTextChanged: (text) {
+                if (_tripDestinationTabType == TripDestinationTabType.direct) selectedCountry = directSearchCon.text;
+                setState(() {
+                  filterCountries = getFilteredCountries(text);
+                });
+              },
+            ),
           ),
-        ),
-        RoundedBoxButton(
-          text: "입력 완료",
-          textStyle: isValid ? f16Whitew700 : f16gray400w700,
-          width: MediaQuery.of(context).size.width,
-          height: 58,
-          borderRadius: 4,
-          backgroundColor: isValid ? gray900 : gray300,
-          enabled: isValid,
-          onTap: () => Get.back(
-            result: selectedCountry,
-          ),
-        )
-      ],
+          RoundedBoxButton(
+            text: "입력 완료",
+            textStyle: isValid ? f16Whitew700 : f16gray400w700,
+            width: MediaQuery.of(context).size.width,
+            height: 58,
+            borderRadius: 4,
+            backgroundColor: isValid ? gray900 : gray300,
+            enabled: isValid,
+            onTap: () => Get.back(
+              result: selectedCountry,
+            ),
+          )
+        ],
+      ),
     );
   }
 
