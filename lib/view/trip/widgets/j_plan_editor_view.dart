@@ -9,9 +9,10 @@ import 'package:tripStory/common/bottom/select_day_bottom_sheet.dart';
 import 'package:tripStory/common/bottom/time_picker_bottom_sheet.dart';
 import 'package:tripStory/common/button/base/base_tile_button.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
+import 'package:tripStory/common/button/tile/deleted_tile_button.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
+import 'package:tripStory/common/text/area/text_area_form_field.dart';
 import 'package:tripStory/common/text/common_text_form_field.dart';
-import 'package:tripStory/common/text/text_area_form_field.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/location_entity.dart';
@@ -29,14 +30,6 @@ class JPlanEditorView extends StatefulWidget {
   final void Function(JPlanEditorState) onBottomButtonPressed;
 
   final JPlanEntity? jPlanEntity;
-
-  // final String? startTime;
-  // final String? place;
-  // final double? latitude;
-  // final double? longitude;
-  // final String? title;
-  // final String? memo;
-  // final int? planId;
 
   const JPlanEditorView({
     super.key,
@@ -197,9 +190,10 @@ class _JPlanEditorViewState extends State<JPlanEditorView> {
                   const SizedBox(
                     height: 8,
                   ),
-                  _LocationTile(
+                  DeletedTileButton(
+                    text: controller.state.searchPlace?.displayName,
+                    placeholderText: "여행 장소를 지도에 입력해 보세요",
                     iconColor: controller.tripRoomInfo?.labelColor.toColor(),
-                    locationEntity: controller.state.searchPlace,
                     onTilePressed: () => controller.onLocationPressed(),
                     onDeletePressed: () => controller.onLocationDeletePressed(),
                   ),

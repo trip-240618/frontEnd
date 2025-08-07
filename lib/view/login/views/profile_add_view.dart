@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
 import 'package:tripStory/common/button/picture_image_button.dart';
-import 'package:tripStory/common/text/error_text_form_field.dart';
+import 'package:tripStory/common/text/input/error_text_form_field.dart';
 import 'package:tripStory/component/container/circle_badge.dart';
 import 'package:tripStory/core/constants/regex_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';

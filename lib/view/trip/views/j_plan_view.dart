@@ -76,7 +76,7 @@ class _JPlanViewState extends State<JPlanView> {
                             const Spacer(),
                             AppIconButton(
                               assetPath: IconConstants.plane,
-                              onTap: () => Get.back(),
+                              onTap: () => controller.onFlightPressed(),
                             ),
                             const SizedBox(
                               width: 4,

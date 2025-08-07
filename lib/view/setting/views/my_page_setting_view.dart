@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
-import 'package:tripStory/common/button/tile_list_button.dart';
+import 'package:tripStory/common/button/tile/tile_list_button.dart';
 import 'package:tripStory/common/dialog/common_dialog.dart';
 import 'package:tripStory/component/url_launch.dart';
 import 'package:tripStory/core/constants/app_constants.dart';

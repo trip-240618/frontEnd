@@ -13,7 +13,6 @@ class JPlanEditController extends GetxController {
   TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
 
   Future<void> onEditSavePressed(JPlanEditorState state) async {
-    print("/?");
     // final tripRoomCreateRequest = PlanJCreateRequest(
     //   dayAfterStart: tripRoomInfo?.dayAfterStartFrom(state.selectedDate ?? DateTime.now()) ?? 1,
     //   startTime: state.selectedTime?.formatTime ?? "",
