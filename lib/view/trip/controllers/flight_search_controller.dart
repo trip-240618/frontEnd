@@ -98,6 +98,16 @@ class FlightSearchController extends GetxController {
 
     _flightSearchState = state.copyWith(
       airLines: _defaultAirlines,
+      departureDate: tripRoomInfo?.startDate,
+    );
+    update();
+  }
+
+  void onDateChanged(
+    DateTime selectedDate,
+  ) {
+    _flightSearchState = state.copyWith(
+      departureDate: selectedDate,
     );
     update();
   }
@@ -123,5 +133,11 @@ class FlightSearchController extends GetxController {
     );
 
     update();
+  }
+
+  void onFlightNumberChanged(String number) {
+    _flightSearchState = state.copyWith(
+      airLineNumber: number,
+    );
   }
 }
