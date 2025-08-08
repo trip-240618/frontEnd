@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/bottom/base_bottom_sheet.dart';
-import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/button/app_button.dart';
+import 'package:tripStory/common/button/outline/outline_button.dart';
 import 'package:tripStory/common/image/cached_image.dart';
 import 'package:tripStory/common/text/common_text_form_field.dart';
 import 'package:tripStory/core/enum/trip_area_type.dart';
 import 'package:tripStory/core/enum/trip_destination_type.dart';
 import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/util/models/country.dart';
 
@@ -50,7 +52,6 @@ class _TripDestinationBottomSheetContentState extends State<TripDestinationBotto
       });
     });
     directSearchCon.addListener(() {
-      // 여행지 선택 하고 텍스트 입력시 유효성 검사
       if (directSearchCon.text.isNotEmpty && _selectedAreaType != null) {
         setState(() {});
       }
@@ -113,18 +114,15 @@ class _TripDestinationBottomSheetContentState extends State<TripDestinationBotto
               },
             ),
           ),
-          RoundedBoxButton(
-            text: "입력 완료",
-            textStyle: isValid ? f16Whitew700 : f16gray400w700,
-            width: MediaQuery.of(context).size.width,
-            height: 58,
-            borderRadius: 4,
-            backgroundColor: isValid ? gray900 : gray300,
-            enabled: isValid,
-            onTap: () => Get.back(
-              result: selectedCountry,
+          SizedBox(
+            width: context.screenWidth,
+            child: AppButton(
+              label: "입력 완료",
+              onPressed: () => Get.back(
+                result: selectedCountry,
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -136,23 +134,6 @@ class _TripDestinationBottomSheetContentState extends State<TripDestinationBotto
     citySearchCon.dispose();
     directSearchCon.dispose();
     super.dispose();
-  }
-}
-
-class _BottomHeader extends StatelessWidget {
-  const _BottomHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 50,
-        height: 5,
-        decoration: BoxDecoration(
-          color: greyColor,
-        ),
-      ),
-    );
   }
 }
 
@@ -372,24 +353,18 @@ class _TripDirect extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: RoundedBoxButton(
-                onTap: () => onAreaTypeChanged(TripAreaType.international),
-                text: "해외",
-                height: 52,
-                borderRadius: 4,
-                borderColor: selectedAreaType == TripAreaType.international ? gray900 : gray200,
-                textStyle: selectedAreaType == TripAreaType.international ? f15gray900w600 : f15gray300w600,
+              child: OutlineButton(
+                label: "해외",
+                selected: selectedAreaType == TripAreaType.international,
+                onPressed: () => onAreaTypeChanged(TripAreaType.international),
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: RoundedBoxButton(
-                onTap: () => onAreaTypeChanged(TripAreaType.domestic),
-                text: "국내",
-                height: 52,
-                borderRadius: 4,
-                borderColor: selectedAreaType == TripAreaType.domestic ? gray900 : gray200,
-                textStyle: selectedAreaType == TripAreaType.domestic ? f15gray900w600 : f15gray300w600,
+              child: OutlineButton(
+                label: "국내",
+                selected: selectedAreaType == TripAreaType.domestic,
+                onPressed: () => onAreaTypeChanged(TripAreaType.domestic),
               ),
             ),
           ],

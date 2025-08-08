@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/appbar/base_appbar.dart';
 import 'package:tripStory/common/button/icon_button.dart';
-import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/button/tab/tab_user.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
@@ -42,19 +42,20 @@ class _TripMainViewState extends State<TripMainView> {
                 padding: const EdgeInsets.only(top: 2, right: 20),
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: RoundedBoxButton(
-                    icon: SvgIcon(
-                      assetPath: IconConstants.tagUser,
-                      color: context.color.gray900,
-                    ),
-                    text: "${controller.tripRoomInfo?.memberCount}",
-                    textStyle: context.style.label1Normal,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 6,
-                    ),
-                    backgroundColor: context.color.gray200,
-                  ),
+                  child: TabUser(onPressed: () {}, memberCount: controller.tripRoomInfo?.memberCount ?? 1),
+                  // RoundedBoxButton(
+                  //   icon: SvgIcon(
+                  //     assetPath: IconConstants.tagUser,
+                  //     color: context.color.gray900,
+                  //   ),
+                  //   text: "${controller.tripRoomInfo?.memberCount}",
+                  //   textStyle: context.style.label1Normal,
+                  //   padding: const EdgeInsets.symmetric(
+                  //     horizontal: 14,
+                  //     vertical: 6,
+                  //   ),
+                  //   backgroundColor: context.color.gray200,
+                  // ),
                 ),
               ),
               Expanded(

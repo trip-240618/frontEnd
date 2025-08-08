@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/button/base/base_button.dart';
+import 'package:tripStory/common/icon/svg_icon.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/login/controller/login_controller.dart';
 
@@ -35,41 +36,84 @@ class LoginView extends GetView<LoginController> {
                 style: f14gray600w500,
               ),
             ),
-            const SizedBox(height: 18),
-            RoundedBoxButton(
-              onTap: () => controller.onKakaoPressed(),
-              icon: SvgPicture.asset("assets/sns/kakao.svg"),
-              text: "카카오로 시작하기",
-              textStyle: f16sns400w700,
+            const SizedBox(height: 12),
+            _SnsButton(
+              label: "카카오로 시작하기",
+              labelColor: Color(0xff381E21),
+              icon: "assets/sns/kakao.svg",
+              onPressed: () => controller.onKakaoPressed(),
               backgroundColor: Color(0xffFEE500),
-              borderRadius: 12,
-              width: Get.width,
-              height: 60,
             ),
-            const SizedBox(height: 18),
-            RoundedBoxButton(
-              onTap: () => controller.onGooglePressed(),
-              icon: SvgPicture.asset("assets/sns/google.svg"),
-              text: "구글로 시작하기",
-              textStyle: f16sns400w700,
-              borderRadius: 12,
-              borderColor: Color(0xffE0E0E0),
-              width: Get.width,
-              height: 60,
+            const SizedBox(height: 12),
+            _SnsButton(
+              label: "구글로 시작하기",
+              labelColor: context.color.gray800,
+              backgroundColor: context.color.white,
+              borderColor: context.color.gray300,
+              icon: "assets/sns/google.svg",
+              onPressed: () => controller.onGooglePressed(),
             ),
             if (!Platform.isAndroid) ...[
-              const SizedBox(height: 18),
-              RoundedBoxButton(
-                onTap: () => controller.onApplePressed(),
-                icon: SvgPicture.asset("assets/sns/apple.svg"),
-                text: "Apple로 시작하기",
-                textStyle: f16Whitew700,
-                backgroundColor: Colors.black,
-                borderRadius: 12,
-                width: Get.width,
-                height: 60,
+              const SizedBox(height: 12),
+              _SnsButton(
+                label: "Apple로 시작하기",
+                labelColor: context.color.white,
+                backgroundColor: context.color.black,
+                borderColor: context.color.gray300,
+                icon: "assets/sns/apple.svg",
+                onPressed: () => controller.onApplePressed(),
               ),
             ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SnsButton extends StatelessWidget {
+  final String label;
+  final Color labelColor;
+  final Color backgroundColor;
+  final Color? borderColor;
+  final String icon;
+  final VoidCallback onPressed;
+
+  const _SnsButton({
+    required this.label,
+    required this.labelColor,
+    required this.backgroundColor,
+    this.borderColor,
+    required this.icon,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: Get.width,
+      height: 58,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        border: borderColor != null ? Border.all(width: 1.5, color: borderColor ?? context.color.white) : null,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: BaseButton(
+        onTap: onPressed,
+        borderRadius: 4,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgIcon(assetPath: icon),
+            const SizedBox(
+              width: 12,
+            ),
+            Text(
+              label,
+              style: context.style.body1Normal.copyWith(
+                color: labelColor,
+              ),
+            ),
           ],
         ),
       ),

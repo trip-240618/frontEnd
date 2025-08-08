@@ -2,7 +2,7 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
-import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/button/bottom_button.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
@@ -105,16 +105,9 @@ class _TripRoomCalendarViewState extends State<TripRoomCalendarView> {
               )
             ],
           ),
-          bottomNavigationBar: Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 42),
-            child: RoundedBoxButton(
-              text: "저장",
-              textStyle: f16Whitew700,
-              backgroundColor: gray900,
-              borderRadius: 4,
-              height: 58,
-              onTap: () => controller.onSavePressed(),
-            ),
+          bottomNavigationBar: BottomButton(
+            text: "저장",
+            onTap: () => controller.onSavePressed(),
           ),
         );
       },

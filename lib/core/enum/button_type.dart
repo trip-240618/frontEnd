@@ -1,4 +1,1 @@
-enum ButtonType {
-  primary,
-  secondary,
-}
+enum ButtonLevel { primary, secondary }

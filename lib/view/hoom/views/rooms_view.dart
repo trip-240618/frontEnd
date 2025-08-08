@@ -5,9 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
+import 'package:tripStory/common/button/app_button.dart';
 import 'package:tripStory/common/button/icon_button.dart';
+import 'package:tripStory/common/button/link_button.dart';
 import 'package:tripStory/common/button/popup_list.dart';
-import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/button/tab/tab_box.dart';
+import 'package:tripStory/common/button/tab/tab_day.dart';
+import 'package:tripStory/common/button/tab/tab_user.dart';
 import 'package:tripStory/common/dialog/code_insert_dialog.dart';
 import 'package:tripStory/common/image/round_thumbnail_image.dart';
 import 'package:tripStory/common/model/popup_item_model.dart';
@@ -75,38 +79,26 @@ class TripRoomListView extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      RoundedBoxButton(
-                        backgroundColor:
-                            controller.tripRoomsState.tripRoomType == TripRoomType.coming ? gray900 : gray200,
-                        onTap: () => controller.onComingTripPressed(),
-                        text: "다가오는 여행",
-                        textStyle: controller.tripRoomsState.tripRoomType == TripRoomType.coming
-                            ? f14Whitew700
-                            : f14gray400w700,
+                      TabBox(
+                        label: "다가오는 여행",
+                        onPressed: () => controller.onComingTripPressed(),
+                        selected: controller.tripRoomsState.tripRoomType == TripRoomType.coming,
                       ),
                       const SizedBox(
                         width: 8,
                       ),
-                      RoundedBoxButton(
-                        backgroundColor:
-                            controller.tripRoomsState.tripRoomType == TripRoomType.lastTrip ? gray900 : gray200,
-                        onTap: () => controller.onLastTripPressed(),
-                        text: "지난 여행",
-                        textStyle: controller.tripRoomsState.tripRoomType == TripRoomType.lastTrip
-                            ? f14Whitew700
-                            : f14gray400w700,
+                      TabBox(
+                        label: "지난 여행",
+                        onPressed: () => controller.onLastTripPressed(),
+                        selected: controller.tripRoomsState.tripRoomType == TripRoomType.lastTrip,
                       ),
                       const SizedBox(
                         width: 8,
                       ),
-                      RoundedBoxButton(
-                        backgroundColor:
-                            controller.tripRoomsState.tripRoomType == TripRoomType.bookmarked ? gray900 : gray200,
-                        onTap: () => controller.onBookMarkTripPressed(),
-                        text: "북마크",
-                        textStyle: controller.tripRoomsState.tripRoomType == TripRoomType.bookmarked
-                            ? f14Whitew700
-                            : f14gray400w700,
+                      TabBox(
+                        label: "북마크",
+                        onPressed: () => controller.onLastTripPressed(),
+                        selected: controller.tripRoomsState.tripRoomType == TripRoomType.bookmarked,
                       ),
                     ],
                   ),
@@ -288,12 +280,7 @@ class _TripRoomTile extends StatelessWidget {
 
       case TripRoomType.coming:
       case TripRoomType.bookmarked:
-        leading = RoundedBoxButton(
-          text: tripRoom.dDay < 1 ? "여행중" : "D-${tripRoom.dDay}",
-          textStyle: changeColor(labelColor),
-          borderColor: labelColor,
-          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-        );
+        leading = TabDay(label: tripRoom.dDay < 1 ? "여행중" : "D-${tripRoom.dDay}", color: labelColor);
         trailing = _buildTrailingWidget(
           prefixIcon: GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -376,7 +363,6 @@ class _TripContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RoundThumbnailImage(
           imageUrl: "https://c.tripstory.shop${tripRoom.thumbnail}",
@@ -384,7 +370,18 @@ class _TripContent extends StatelessWidget {
         const SizedBox(width: 12),
         _buildTripInfo(),
         const Spacer(),
-        _buildMemberButton(),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Builder(
+              builder: (context) => TabUser(
+                onPressed: () => onMemberTap?.call(context),
+                memberCount: tripRoom.memberCount,
+                isEnabled: false,
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -423,19 +420,6 @@ class _TripContent extends StatelessWidget {
       ],
     );
   }
-
-  Widget _buildMemberButton() {
-    return Builder(
-      builder: (context) => RoundedBoxButton(
-        onTap: () => onMemberTap?.call(context),
-        text: tripRoom.memberCount.toString(),
-        textStyle: f14gray600w700,
-        backgroundColor: gray200,
-        icon: SvgPicture.asset("assets/icon/userIcon.svg"),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-      ),
-    );
-  }
 }
 
 class _TripBottomNavigation extends StatelessWidget {
@@ -453,33 +437,14 @@ class _TripBottomNavigation extends StatelessWidget {
       height: 60,
       child: Row(
         children: [
-          RoundedBoxButton(
-            width: 60,
-            height: 60,
-            backgroundColor: gray700,
-            borderRadius: 4,
-            onTap: onInvitePressed,
-            icon: SvgPicture.asset(
-              "assets/icon/chain.svg",
-              fit: BoxFit.none,
-              colorFilter: const ColorFilter.mode(
-                Colors.white,
-                BlendMode.srcIn,
-              ),
-            ),
+          LinkButton(
+            onPressed: onInvitePressed,
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: GestureDetector(
-              onTap: onCreatePressed,
-              child: RoundedBoxButton(
-                width: 60,
-                height: 60,
-                backgroundColor: gray900,
-                borderRadius: 4,
-                text: "새 여행방 생성",
-                textStyle: f16Whitew700,
-              ),
+            child: AppButton(
+              label: "새 여행방 생성",
+              onPressed: onCreatePressed,
             ),
           ),
         ],
