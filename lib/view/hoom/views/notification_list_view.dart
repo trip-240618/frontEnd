@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
-import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/button/tab/tab_box.dart';
 import 'package:tripStory/util/color.dart';
-import 'package:tripStory/util/font.dart';
 import 'package:tripStory/view/hoom/controller/notification_list_controller.dart';
 import 'package:tripStory/view/hoom/enum/notification_type.dart';
 
@@ -26,30 +25,22 @@ class NotificationListView extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  RoundedBoxButton(
-                    text: "전체",
-                    backgroundColor: controller.state.notificationType == NotificationType.all ? gray900 : gray200,
-                    textStyle:
-                        controller.state.notificationType == NotificationType.all ? f14Whitew700 : f14gray400w700,
-                    onTap: () => controller.onAllPressed(),
+                  TabBox(
+                    label: "전체",
+                    onPressed: () => controller.onAllPressed(),
+                    selected: controller.state.notificationType == NotificationType.all,
                   ),
                   const SizedBox(width: 8),
-                  RoundedBoxButton(
-                    text: "여행 일정",
-                    backgroundColor:
-                        controller.state.notificationType == NotificationType.tripSchedule ? gray900 : gray200,
-                    textStyle: controller.state.notificationType == NotificationType.tripSchedule
-                        ? f14Whitew700
-                        : f14gray400w700,
-                    onTap: () => controller.onTripSchedulePressed(),
+                  TabBox(
+                    label: "여행 일정",
+                    onPressed: () => controller.onTripSchedulePressed(),
+                    selected: controller.state.notificationType == NotificationType.tripSchedule,
                   ),
                   const SizedBox(width: 8),
-                  RoundedBoxButton(
-                    text: "여행 기록",
-                    backgroundColor: controller.state.notificationType == NotificationType.tripLog ? gray900 : gray200,
-                    textStyle:
-                        controller.state.notificationType == NotificationType.tripLog ? f14Whitew700 : f14gray400w700,
-                    onTap: () => controller.onTripLogPressed(),
+                  TabBox(
+                    label: "여행 기록",
+                    onPressed: () => controller.onTripLogPressed(),
+                    selected: controller.state.notificationType == NotificationType.tripLog,
                   ),
                 ],
               ),

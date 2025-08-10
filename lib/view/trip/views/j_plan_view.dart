@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/common/button/icon_button.dart';
-import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/button/tab/tab_day.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/common/popup/pop_up_menu.dart';
 import 'package:tripStory/common/toast/custom_toast.dart';
@@ -63,15 +63,9 @@ class _JPlanViewState extends State<JPlanView> {
                       children: [
                         Row(
                           children: [
-                            RoundedBoxButton(
-                              text: "Day ${controller.state.selectedDay}",
-                              textStyle: context.style.label1Normal,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 4,
-                              ),
-                              backgroundColor: context.color.white,
-                              borderColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
+                            TabDay(
+                              label: "Day ${controller.state.selectedDay}",
+                              color: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
                             ),
                             const Spacer(),
                             AppIconButton(

@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:tripStory/common/button/base/base_button.dart';
+import 'package:tripStory/common/button/app_button.dart';
 import 'package:tripStory/core/enum/button_type.dart';
 import 'package:tripStory/util/color.dart';
-import 'package:tripStory/util/font.dart';
 
 class BottomButton extends StatelessWidget {
   final String text;
   final bool enabled;
-  final ButtonType? buttonType;
+  final ButtonLevel buttonType;
   final Color? backgroundColor;
-  final VoidCallback? onTap;
-  final Widget? textLabel;
+  final VoidCallback onTap;
+  final Widget? trailingIcon;
 
   const BottomButton({
     super.key,
     required this.text,
-    this.onTap,
+    required this.onTap,
     this.enabled = true,
+    this.buttonType = ButtonLevel.primary,
     this.backgroundColor = gray900,
-    this.buttonType = ButtonType.primary,
-    this.textLabel,
+    this.trailingIcon,
   });
 
   @override
@@ -32,38 +30,12 @@ class BottomButton extends StatelessWidget {
         top: 10,
         bottom: 42,
       ),
-      child: Container(
-        width: Get.width,
-        height: 58,
-        decoration: BoxDecoration(
-          color: buttonType == ButtonType.secondary
-              ? gray200
-              : enabled
-                  ? backgroundColor
-                  : gray300,
-        ),
-        child: BaseButton(
-          onTap: enabled ? onTap : null,
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  text,
-                  style: buttonType == ButtonType.secondary
-                      ? f16gray600w700
-                      : enabled
-                          ? f16Whitew700
-                          : f16gray400w700,
-                ),
-                if (textLabel != null) ...[
-                  SizedBox(width: 10),
-                  textLabel!,
-                ],
-              ],
-            ),
-          ),
-        ),
+      child: AppButton(
+        label: text,
+        onPressed: onTap,
+        isDisabled: !enabled,
+        level: buttonType,
+        trailingIcon: trailingIcon,
       ),
     );
   }
