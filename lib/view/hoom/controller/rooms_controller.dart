@@ -116,17 +116,18 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     });
   }
 
-  Future<void> onBookmarkIconPressed(int tripId) async {
+  Future<void> onBookmarkIconPressed(
+    int tripId,
+    int index,
+  ) async {
     final result = await _bookmarkUseCase(tripId);
     result.fold((error) {}, (bookmark) {
-      final room = tripRoomsState.findTripRoom(tripId);
-      if (room == null) return;
-
+      final room = tripRoomsState.tripRooms[index];
       final updatedRoom = room.copyWith(bookmark: bookmark);
+      final updatedList = List.of(tripRoomsState.tripRooms);
+      updatedList[index] = updatedRoom;
 
-      tripRoomsState = tripRoomsState.copyWith(
-        tripRooms: tripRoomsState.tripRooms.map((room) => room.id == tripId ? updatedRoom : room).toList(),
-      );
+      tripRoomsState = tripRoomsState.copyWith(tripRooms: updatedList);
       update();
     });
   }

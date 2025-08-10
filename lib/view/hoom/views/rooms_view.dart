@@ -21,6 +21,7 @@ import 'package:tripStory/component/empty/emptyScreen.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/util/extension/string_extension.dart';
 import 'package:tripStory/util/font.dart';
@@ -53,6 +54,7 @@ class TripRoomListView extends StatelessWidget {
             backgroundColor: gray50,
             appBar: AppAppbar(
               isLeadingIcon: false,
+              backgroundColor: context.color.gray50,
               actionWidget: Row(
                 children: [
                   AppIconButton(
@@ -97,58 +99,54 @@ class TripRoomListView extends StatelessWidget {
                       ),
                       TabBox(
                         label: "북마크",
-                        onPressed: () => controller.onLastTripPressed(),
+                        onPressed: () => controller.onBookMarkTripPressed(),
                         selected: controller.tripRoomsState.tripRoomType == TripRoomType.bookmarked,
                       ),
                     ],
                   ),
                   const SizedBox(height: 32),
                   Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const ClampingScrollPhysics(),
-                      itemCount: controller.tripRoomsState.tripRoomsStatus == TripRoomsStatus.empty
-                          ? 1
-                          : controller.tripRoomsState.tripListLength,
-                      itemBuilder: (contexts, index) {
-                        final status = controller.tripRoomsState.tripRoomsStatus;
-
-                        if (status == TripRoomsStatus.initial) {
-                          return const SizedBox.shrink();
-                        }
-                        if (status == TripRoomsStatus.empty) {
-                          return const EmptyScreen(
+                    child: controller.tripRoomsState.isTripRoomEmpty
+                        ? const EmptyScreen(
                             content: "새 여행 일정을\n 트립스토리에 등록해 보세요",
-                          );
-                        }
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: const ClampingScrollPhysics(),
+                            itemCount: controller.tripRoomsState.tripListLength,
+                            itemBuilder: (contexts, index) {
+                              final status = controller.tripRoomsState.tripRoomsStatus;
 
-                        final tripRoom = controller.tripRoomsState.tripRooms[index];
-                        return Column(
-                          children: [
-                            _TripRoomTile(
-                              tripRoom: tripRoom,
-                              tripRoomType: controller.tripRoomsState.tripRoomType,
-                              onTap: () => controller.onRoomPressed(tripRoom.id),
-                              onBookmarkTap: () => controller.onBookmarkIconPressed(tripRoom.id),
-                              onSendTap: () => sendBottomModal(
-                                context,
-                                tripRoom.invitationCode,
-                                tripRoom.id,
-                              ),
-                              onMemberTap: (context) => _showMemberPopover(
-                                context: context,
-                                members: controller.getPopupMembers(tripRoom),
-                                width: 14 * controller.getLongestNicknameLength(tripRoom) + 100,
-                                height: 50 * tripRoom.memberCount.toDouble(),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 12,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
+                              if (status == TripRoomsStatus.initial) {
+                                return const SizedBox.shrink();
+                              }
+                              final tripRoom = controller.tripRoomsState.tripRooms[index];
+                              return Column(
+                                children: [
+                                  _TripRoomTile(
+                                    tripRoom: tripRoom,
+                                    tripRoomType: controller.tripRoomsState.tripRoomType,
+                                    onTap: () => controller.onRoomPressed(tripRoom.id),
+                                    onBookmarkTap: () => controller.onBookmarkIconPressed(tripRoom.id, index),
+                                    onSendTap: () => sendBottomModal(
+                                      context,
+                                      tripRoom.invitationCode,
+                                      tripRoom.id,
+                                    ),
+                                    onMemberTap: (context) => _showMemberPopover(
+                                      context: context,
+                                      members: controller.getPopupMembers(tripRoom),
+                                      width: 14 * controller.getLongestNicknameLength(tripRoom) + 100,
+                                      height: 50 * tripRoom.memberCount.toDouble(),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
                   ),
                   const SizedBox(
                     height: 10,
@@ -365,7 +363,7 @@ class _TripContent extends StatelessWidget {
     return Row(
       children: [
         RoundThumbnailImage(
-          imageUrl: "https://c.tripstory.shop${tripRoom.thumbnail}",
+          imageUrl: tripRoom.thumbnail,
         ),
         const SizedBox(width: 12),
         _buildTripInfo(),

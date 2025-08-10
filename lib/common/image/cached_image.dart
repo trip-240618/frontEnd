@@ -39,7 +39,7 @@ class CachedImage extends StatelessWidget {
       );
     }
     return CachedNetworkImage(
-      imageUrl: imageUrl,
+      imageUrl: resolveImageUrl(imageUrl),
       cacheManager: Get.find<CustomCacheManager>(),
       placeholder: (context, url) => SizedBox(
         width: width,
@@ -66,6 +66,12 @@ class CachedImage extends StatelessWidget {
         height: height,
       ),
     );
+  }
+
+  String resolveImageUrl(String? path) {
+    if (path == null || path.isEmpty) return "";
+    if (path.startsWith('https')) return path;
+    return "https://c.tripstory.shop$path";
   }
 }
 
