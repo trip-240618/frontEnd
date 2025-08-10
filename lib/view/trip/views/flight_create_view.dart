@@ -122,12 +122,13 @@ class FlightCreateView extends GetView<FlightCreateController> {
         ),
       ),
       bottomNavigationBar: BottomButton(
-          text: "등록 완료",
-          onTap: () {
-            if (param.flightEntity != null) {
-              controller.onSavePressed(param.flightEntity!);
-            }
-          }),
+        text: "등록 완료",
+        onTap: () {
+          if (param.flightEntity != null) {
+            controller.onSavePressed(param.flightEntity!);
+          }
+        },
+      ),
     );
   }
 }

@@ -40,8 +40,9 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
 
   /// side Effect
   Future<void> onBackPressed() async {
-    if (state.roomImage == null) return;
-    await ImageFileUtil.deleteFile(state.roomImage!);
+    if (state.roomImage != null) {
+      await ImageFileUtil.deleteFile(state.roomImage!);
+    }
     Get.back();
   }
 

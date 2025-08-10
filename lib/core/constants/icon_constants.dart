@@ -28,6 +28,8 @@ class IconConstants {
   static const String swap = "$_iconNormal/swap.svg";
   static const String mainPlus = "$_iconNormal/main_plus.svg";
   static const String delete = "$_iconNormal/delete.svg";
+  static const String chain = "$_iconNormal/chain.svg";
+  static const String send = "$_iconNormal/send.svg";
 
   // small
   static const String date = "$_iconSmall/date.svg";
@@ -39,9 +41,12 @@ class IconConstants {
   static const String smallPlane = "$_iconSmall/air_plane.svg";
   static const String smallArrival = "$_iconSmall/arrival.svg";
   static const String smallDeparture = "$_iconSmall/departure.svg";
+  static const String smallCalendar = "$_iconSmall/small_date.svg";
+  static const String smallSearch = "$_iconSmall/small_search.svg";
+  static const String smallUser = "$_iconSmall/small_user.svg";
 
   // tag
-  static const String tagUser = "$_icon/userIcon.svg";
+  static const String tagUser = "$_icon/small_user.svg";
 
   // default
   static const String makerImage = "$_icon/marker.png";

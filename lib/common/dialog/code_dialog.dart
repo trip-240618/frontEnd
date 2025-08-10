@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/button/app_button.dart';
+import 'package:tripStory/common/button/link_button.dart';
 import 'package:tripStory/common/dialog/base_dialog.dart';
-import 'package:tripStory/util/color.dart';
 import 'package:tripStory/util/font.dart';
 
 class InviteCodeDialog extends StatelessWidget {
@@ -45,24 +44,14 @@ class InviteCodeDialog extends StatelessWidget {
       actions: [
         Row(
           children: [
-            RoundedBoxButton(
-              icon: SvgPicture.asset("assets/icon/send.svg", fit: BoxFit.none),
-              width: 60,
-              height: 60,
-              borderRadius: 4,
-              onTap: onSendPressed,
-              backgroundColor: gray200,
+            LinkButton(
+              onPressed: onSendPressed,
+              type: LinkButtonType.send,
             ),
             const SizedBox(width: 12),
-            Expanded(
-              child: RoundedBoxButton(
-                text: "여행방 이동",
-                textStyle: f16Whitew600,
-                height: 60,
-                borderRadius: 4,
-                onTap: onConfirmPressed,
-                backgroundColor: gray900,
-              ),
+            AppButton(
+              label: "여행방 이동",
+              onPressed: onConfirmPressed,
             ),
           ],
         )
