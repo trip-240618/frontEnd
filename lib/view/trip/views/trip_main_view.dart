@@ -42,20 +42,10 @@ class _TripMainViewState extends State<TripMainView> {
                 padding: const EdgeInsets.only(top: 2, right: 20),
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: TabUser(onPressed: () {}, memberCount: controller.tripRoomInfo?.memberCount ?? 1),
-                  // RoundedBoxButton(
-                  //   icon: SvgIcon(
-                  //     assetPath: IconConstants.tagUser,
-                  //     color: context.color.gray900,
-                  //   ),
-                  //   text: "${controller.tripRoomInfo?.memberCount}",
-                  //   textStyle: context.style.label1Normal,
-                  //   padding: const EdgeInsets.symmetric(
-                  //     horizontal: 14,
-                  //     vertical: 6,
-                  //   ),
-                  //   backgroundColor: context.color.gray200,
-                  // ),
+                  child: TabUser(
+                    onPressed: () {},
+                    memberCount: controller.tripRoomInfo?.memberCount ?? 1,
+                  ),
                 ),
               ),
               Expanded(
