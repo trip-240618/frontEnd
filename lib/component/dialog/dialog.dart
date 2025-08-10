@@ -552,7 +552,7 @@ FlightDialog(BuildContext context, VoidCallback onTap) {
                   child: Stack(
                     children: [
                       SvgPicture.asset(
-                        'assets/icon/ticketBox.svg',
+                        'assets/icon/vertical_ticket_box.svg',
                         width: Get.width, // 크기 조정
                         height: Get.height,
                         fit: BoxFit.fill,

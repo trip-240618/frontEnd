@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/common/button/icon_button.dart';
 import 'package:tripStory/common/button/round_button.dart';
+import 'package:tripStory/common/container/label_container.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/common/popup/pop_up_menu.dart';
 import 'package:tripStory/common/toast/custom_toast.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
+import 'package:tripStory/domain/entities/flight_entity.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
 import 'package:tripStory/util/extension/string_extension.dart';
@@ -76,7 +78,16 @@ class _JPlanViewState extends State<JPlanView> {
                             const Spacer(),
                             AppIconButton(
                               assetPath: IconConstants.plane,
-                              onTap: () => controller.onFlightPressed(),
+                              onTap: controller.state.isFlightEmpty
+                                  ? () => controller.onFlightPressed()
+                                  : () {
+                                      showFlightDialog(
+                                        context,
+                                        flightEntity: controller.state.flightEntity,
+                                        onEditPressed: () => {},
+                                        onClosePressed: () => {},
+                                      );
+                                    },
                               color: controller.state.isFlightEmpty
                                   ? context.color.gray700
                                   : controller.tripRoomInfo?.labelColor.toColor(),
@@ -169,6 +180,100 @@ class _JPlanViewState extends State<JPlanView> {
     CustomToast.show(
       context: context,
       message: message,
+    );
+  }
+
+  void showFlightDialog(
+    BuildContext context, {
+    required FlightEntity? flightEntity,
+    required VoidCallback onEditPressed,
+    required VoidCallback onClosePressed,
+  }) {
+    showGeneralDialog(
+      context: context,
+      barrierLabel: "항공권",
+      barrierDismissible: true,
+      pageBuilder: (context, animation1, animation2) {
+        const double dialogBodyHeight = 508;
+
+        return Material(
+          color: Colors.transparent,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _FlightDialogHeader(
+                    onEdit: () {},
+                    onClose: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  // 본문 영역
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: dialogBodyHeight,
+                      maxWidth: context.screenWidth,
+                    ),
+                    child: Stack(
+                      children: [
+                        SvgIcon(
+                          assetPath: IconConstants.verticalTicket,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.fill,
+                        ),
+                        Positioned.fill(
+                          top: 32,
+                          left: 24,
+                          right: 24,
+                          bottom: 32,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _InfoSection(
+                                caption: "항공편명",
+                                label: "${flightEntity?.airlineCode} (${flightEntity?.airlineNumber})",
+                                leadingIcon: IconConstants.plane,
+                                // iconColor: Colors.red, // 필요하면 컬러 지정
+                              ),
+                              const SizedBox(height: 8),
+                              _InfoSection(
+                                caption: "출발 공항",
+                                label: "${flightEntity?.departureAirportKr} (${flightEntity?.departureAirport})",
+                              ),
+                              const SizedBox(height: 8),
+                              _InfoSection(
+                                caption: "출발 일정",
+                                label:
+                                    "${flightEntity?.departureDateTime.formatDateWithWeekdayKo} ${flightEntity?.departureDateTime.formatTime}",
+                                leadingIcon: IconConstants.smallDeparture,
+                              ),
+                              const SizedBox(height: 40),
+                              _InfoSection(
+                                caption: "도착 공항",
+                                label: "${flightEntity?.arrivalAirportKr} (${flightEntity?.arrivalAirport})",
+                              ),
+                              const SizedBox(height: 8),
+                              _InfoSection(
+                                caption: "도착 일정",
+                                label:
+                                    "${flightEntity?.arrivalDateTime.formatDateWithWeekdayKo} ${flightEntity?.arrivalDateTime.formatTime}",
+                                leadingIcon: IconConstants.smallArrival,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -373,6 +478,76 @@ class _FloatingButton extends StatelessWidget {
           color: context.color.white,
         ),
       ),
+    );
+  }
+}
+
+class _FlightDialogHeader extends StatelessWidget {
+  final VoidCallback onEdit;
+  final VoidCallback onClose;
+
+  const _FlightDialogHeader({
+    required this.onEdit,
+    required this.onClose,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: context.color.gray900,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+      child: Row(
+        children: [
+          Text(
+            "항공권",
+            style: context.style.body2Normal.copyWith(color: context.color.white),
+          ),
+          const Spacer(),
+          AppIconButton(assetPath: IconConstants.pencil, onTap: onEdit),
+          AppIconButton(assetPath: IconConstants.close, color: context.color.white, onTap: onClose),
+        ],
+      ),
+    );
+  }
+}
+
+class _InfoSection extends StatelessWidget {
+  final String caption;
+  final String label;
+  final String? leadingIcon;
+  final Color? iconColor;
+
+  const _InfoSection({
+    required this.caption,
+    required this.label,
+    this.leadingIcon,
+    this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          caption,
+          style: context.style.caption1.copyWith(
+            color: context.color.gray600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        LabelContainer(
+          label: label,
+          leadingIcon: leadingIcon,
+          iconColor: iconColor,
+        ),
+      ],
     );
   }
 }

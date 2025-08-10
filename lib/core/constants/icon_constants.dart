@@ -36,10 +36,14 @@ class IconConstants {
   static const String clear = "$_iconSmall/clear.svg";
   static const String memo = "$_iconSmall/memo.svg";
   static const String smallVertical = "$_iconSmall/small_vertical.svg";
+  static const String smallPlane = "$_iconSmall/air_plane.svg";
+  static const String smallArrival = "$_iconSmall/arrival.svg";
+  static const String smallDeparture = "$_iconSmall/departure.svg";
 
   // tag
   static const String tagUser = "$_icon/userIcon.svg";
 
   // default
   static const String makerImage = "$_icon/marker.png";
+  static const String verticalTicket = "$_icon/vertical_ticket_box.svg";
 }
