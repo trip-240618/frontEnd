@@ -13,13 +13,13 @@ class FlightRepositoryImpl implements FlightRepository {
   FlightRepositoryImpl(this._flightDataSource);
 
   @override
-  ResultFuture<FlightEntity> fetchFlight(
+  ResultFuture<FlightEntity> fetchSearchFlight(
     int flightNumber,
     String carrierCode,
     String departureDate,
   ) async {
     try {
-      final response = await _flightDataSource.fetchFlight(
+      final response = await _flightDataSource.fetchSearchFlight(
         flightNumber: flightNumber,
         carrierCode: carrierCode,
         departureDate: departureDate,
@@ -43,6 +43,35 @@ class FlightRepositoryImpl implements FlightRepository {
       );
       final entity = FlightMapper.toEntity(response);
       return Right(entity);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<FlightEntity>> fetchFlight(
+    int tripId,
+  ) async {
+    try {
+      final response = await _flightDataSource.fetchFlight(tripId: tripId);
+      final entities = response.map(FlightMapper.toEntity).toList();
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> deleteFlight(
+    int tripId,
+    int flightId,
+  ) async {
+    try {
+      await _flightDataSource.deleteFlight(
+        tripId: tripId,
+        flightId: flightId,
+      );
+      return const Right(null);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }

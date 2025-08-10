@@ -9,7 +9,9 @@ import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/j_socket_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
+import 'package:tripStory/domain/usecases/delete_flight_usecase.dart';
 import 'package:tripStory/domain/usecases/delete_j_plan_usecase.dart';
+import 'package:tripStory/domain/usecases/fetch_flight_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_j_plan_usecase.dart';
 import 'package:tripStory/domain/usecases/j_plan_connect_socket_usecase.dart';
 import 'package:tripStory/domain/usecases/j_plan_disconnect_socket_usecase.dart';
@@ -32,6 +34,8 @@ class JPlanController extends GetxController {
   final JPlanConnectSocketUsecase _jPlanConnectSocketUsecase;
   final JPlanListenSocketUsecase _jPlanListenSocketUsecase;
   final JPlanDisconnectSocketUsecase _disconnectSocketUsecase;
+  final FetchFlightUsecase _fetchFlightUsecase;
+  final DeleteFlightUsecase _deleteFlightUsecase;
 
   JPlanController(
     this._tripRoomService,
@@ -42,6 +46,8 @@ class JPlanController extends GetxController {
     this._jPlanConnectSocketUsecase,
     this._jPlanListenSocketUsecase,
     this._disconnectSocketUsecase,
+    this._fetchFlightUsecase,
+    this._deleteFlightUsecase,
   );
 
   TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
@@ -73,7 +79,28 @@ class JPlanController extends GetxController {
       _getCurrentLocation(),
       _planSocketInit(),
       _getJPlanData(),
+      _getFlight(),
     ]);
+  }
+
+  Future<void> _getJPlanData() async {
+    final params = Tuple3(
+      tripRoomInfo?.id ?? 0,
+      tripRoomInfo?.dayAfterStartFrom(state.selectedDate ?? DateTime.now()) ?? 1,
+      false,
+    );
+
+    final result = await _fetchJPlanUsecase.call(params);
+
+    result.fold(
+      (failure) {},
+      (plans) {
+        _jPlanState = state.copyWith(
+          plans: plans,
+        );
+        update();
+      },
+    );
   }
 
   Future<void> _getCurrentLocation() async {
@@ -127,6 +154,22 @@ class JPlanController extends GetxController {
         }
       });
     });
+  }
+
+  Future<void> _getFlight() async {
+    final tripId = tripRoomInfo?.id;
+    if (tripId == null) return;
+    final result = await _fetchFlightUsecase.call(tripId);
+
+    result.fold(
+      (failure) {},
+      (flight) {
+        _jPlanState = state.copyWith(
+          flightEntity: flight,
+        );
+        update();
+      },
+    );
   }
 
   void _planAdd(
@@ -190,26 +233,6 @@ class JPlanController extends GetxController {
       plans: plans,
     );
     update();
-  }
-
-  Future<void> _getJPlanData() async {
-    final params = Tuple3(
-      tripRoomInfo?.id ?? 0,
-      tripRoomInfo?.dayAfterStartFrom(state.selectedDate ?? DateTime.now()) ?? 1,
-      false,
-    );
-
-    final result = await _fetchJPlanUsecase.call(params);
-
-    result.fold(
-      (failure) {},
-      (plans) {
-        _jPlanState = state.copyWith(
-          plans: plans,
-        );
-        update();
-      },
-    );
   }
 
   /// sideEffect

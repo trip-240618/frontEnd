@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tripStory/domain/entities/flight_entity.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/util/one_time_event.dart';
 
@@ -21,10 +22,13 @@ abstract class JPlanState with _$JPlanState {
     @Default(0.0) double mapLongitude,
     @Default({}) Set<Marker> markers,
     @Default({}) Set<Polyline> polylines,
+    FlightEntity? flightEntity,
     OneTimeEvent<String>? showToast,
   }) = _TripMainStateJPlanState;
 
   int get selectedDay => selectedDayIndex + 1;
 
   int get plansLength => plans.length;
+
+  bool get isFlightEmpty => flightEntity == null;
 }

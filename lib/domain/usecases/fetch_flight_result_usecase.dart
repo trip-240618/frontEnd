@@ -11,7 +11,7 @@ class FetchFlightResultUsecase implements UseCase<FlightEntity, Tuple3<int, Stri
 
   @override
   ResultFuture<FlightEntity> call(Tuple3<int, String, String> params) async {
-    return await repository.fetchFlight(
+    return await repository.fetchSearchFlight(
       params.value1,
       params.value2,
       params.value3,
