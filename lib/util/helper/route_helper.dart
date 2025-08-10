@@ -25,5 +25,18 @@ class RouteHelper {
     navigator.popUntil((route) => route is! PopupRoute);
   }
 
-  ///   /// 모든 팝업(다이얼로그/바텀시트/스낵바 등) 닫기
+  /// 모든 오버레이 닫고 지정 라우트로 push
+  static Future<T?> closeOverlaysAndToNamed<T>(
+    String routeName, {
+    dynamic arguments,
+    bool preventDuplicates = true,
+  }) async {
+    closeAllOverlays();
+    await Future.microtask(() {});
+    return Get.toNamed<T>(
+      routeName,
+      arguments: arguments,
+      preventDuplicates: preventDuplicates,
+    );
+  }
 }

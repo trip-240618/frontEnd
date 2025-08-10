@@ -247,7 +247,7 @@ class _JPlanViewState extends State<JPlanView> {
                               const SizedBox(height: 8),
                               _InfoSection(
                                 caption: "출발 공항",
-                                label: "${flightEntity?.departureAirportKr} (${flightEntity?.departureAirport})",
+                                label: "${flightEntity?.departureAirportKr ?? ""} (${flightEntity?.departureAirport})",
                               ),
                               const SizedBox(height: 8),
                               _InfoSection(
@@ -260,7 +260,7 @@ class _JPlanViewState extends State<JPlanView> {
                               const SizedBox(height: 40),
                               _InfoSection(
                                 caption: "도착 공항",
-                                label: "${flightEntity?.arrivalAirportKr} (${flightEntity?.arrivalAirport})",
+                                label: "${flightEntity?.arrivalAirportKr ?? ""} (${flightEntity?.arrivalAirport})",
                               ),
                               const SizedBox(height: 8),
                               _InfoSection(

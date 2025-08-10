@@ -32,7 +32,7 @@ import 'package:tripStory/view/setting/views/user_delete_view.dart';
 import 'package:tripStory/view/splash/binding/splash_binding.dart';
 import 'package:tripStory/view/splash/views/splash_view.dart';
 import 'package:tripStory/view/trip/bindings/flight_create_binding.dart';
-import 'package:tripStory/view/trip/bindings/flight_flight_binding.dart';
+import 'package:tripStory/view/trip/bindings/flight_search_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_add_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_binding.dart';
 import 'package:tripStory/view/trip/bindings/j_plan_edit_binding.dart';
@@ -210,7 +210,7 @@ class RouterInfo {
     GetPage(
       name: Routes.searchFlight,
       page: () => const FlightSearchView(),
-      binding: FlightFlightBinding(),
+      binding: FlightSearchBinding(),
     ),
     GetPage(
       name: Routes.createFlight,
