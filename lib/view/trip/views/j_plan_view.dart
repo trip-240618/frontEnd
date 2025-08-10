@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/common/button/icon_button.dart';
-import 'package:tripStory/common/container/label_container.dart';
 import 'package:tripStory/common/button/tab/tab_day.dart';
+import 'package:tripStory/common/container/label_container.dart';
+import 'package:tripStory/common/dialog/common_dialog.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/common/popup/pop_up_menu.dart';
 import 'package:tripStory/common/toast/custom_toast.dart';
@@ -78,8 +79,10 @@ class _JPlanViewState extends State<JPlanView> {
                                       showFlightDialog(
                                         context,
                                         flightEntity: controller.state.flightEntity,
-                                        onEditPressed: () => {},
-                                        onClosePressed: () => {},
+                                        onEditPressed: () => showFlightDeletedDialog(
+                                          onConfirmPressed: () => controller.onFlightDeletedPressed(),
+                                        ),
+                                        iconColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
                                       );
                                     },
                               color: controller.state.isFlightEmpty
@@ -177,11 +180,22 @@ class _JPlanViewState extends State<JPlanView> {
     );
   }
 
+  void showFlightDeletedDialog({
+    required VoidCallback onConfirmPressed,
+  }) {
+    CommonDialog.show(
+      context,
+      title: "항공편을 삭제하시겠습니까?",
+      confirmText: "확인",
+      onConfirm: () => onConfirmPressed(),
+    );
+  }
+
   void showFlightDialog(
     BuildContext context, {
     required FlightEntity? flightEntity,
     required VoidCallback onEditPressed,
-    required VoidCallback onClosePressed,
+    required Color iconColor,
   }) {
     showGeneralDialog(
       context: context,
@@ -199,10 +213,8 @@ class _JPlanViewState extends State<JPlanView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _FlightDialogHeader(
-                    onEdit: () {},
-                    onClose: () {
-                      Navigator.of(context).pop();
-                    },
+                    onEdit: onEditPressed,
+                    onClose: () => Get.back(),
                   ),
                   // 본문 영역
                   ConstrainedBox(
@@ -230,7 +242,7 @@ class _JPlanViewState extends State<JPlanView> {
                                 caption: "항공편명",
                                 label: "${flightEntity?.airlineCode} (${flightEntity?.airlineNumber})",
                                 leadingIcon: IconConstants.plane,
-                                // iconColor: Colors.red, // 필요하면 컬러 지정
+                                iconColor: iconColor,
                               ),
                               const SizedBox(height: 8),
                               _InfoSection(
@@ -243,6 +255,7 @@ class _JPlanViewState extends State<JPlanView> {
                                 label:
                                     "${flightEntity?.departureDateTime.formatDateWithWeekdayKo} ${flightEntity?.departureDateTime.formatTime}",
                                 leadingIcon: IconConstants.smallDeparture,
+                                iconColor: iconColor,
                               ),
                               const SizedBox(height: 40),
                               _InfoSection(
@@ -255,6 +268,7 @@ class _JPlanViewState extends State<JPlanView> {
                                 label:
                                     "${flightEntity?.arrivalDateTime.formatDateWithWeekdayKo} ${flightEntity?.arrivalDateTime.formatTime}",
                                 leadingIcon: IconConstants.smallArrival,
+                                iconColor: iconColor,
                               ),
                             ],
                           ),
@@ -503,8 +517,16 @@ class _FlightDialogHeader extends StatelessWidget {
             style: context.style.body2Normal.copyWith(color: context.color.white),
           ),
           const Spacer(),
-          AppIconButton(assetPath: IconConstants.pencil, onTap: onEdit),
-          AppIconButton(assetPath: IconConstants.close, color: context.color.white, onTap: onClose),
+          AppIconButton(
+            assetPath: IconConstants.delete,
+            color: context.color.white,
+            onTap: onEdit,
+          ),
+          AppIconButton(
+            assetPath: IconConstants.close,
+            color: context.color.white,
+            onTap: onClose,
+          ),
         ],
       ),
     );

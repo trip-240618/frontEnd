@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RouteHelper {
@@ -14,4 +15,15 @@ class RouteHelper {
     Get.until((route) => Get.currentRoute == routeName);
     Future.microtask(() => Get.back(result: result));
   }
+
+  /// 모든 팝업(다이얼로그/바텀시트/스낵바 등) 닫기
+  ///
+  /// showGeneralDialog, Get.dialog 섞여 있어도 동작.
+  static void closeAllOverlays() {
+    final navigator = Get.key.currentState;
+    if (navigator == null) return;
+    navigator.popUntil((route) => route is! PopupRoute);
+  }
+
+  ///   /// 모든 팝업(다이얼로그/바텀시트/스낵바 등) 닫기
 }

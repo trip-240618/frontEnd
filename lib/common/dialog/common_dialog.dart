@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/common/button/app_button.dart';
 import 'package:tripStory/common/dialog/base_dialog.dart';
+import 'package:tripStory/core/enum/button_type.dart';
 import 'package:tripStory/util/font.dart';
 
 class CommonDialog extends StatelessWidget {
@@ -45,14 +46,19 @@ class CommonDialog extends StatelessWidget {
       actions: [
         Row(
           children: [
-            AppButton(
-              label: "취소",
-              onPressed: () => Get.back(),
+            Expanded(
+              child: AppButton(
+                label: "취소",
+                level: ButtonLevel.secondary,
+                onPressed: () => Get.back(),
+              ),
             ),
             const SizedBox(width: 12),
-            AppButton(
-              label: confirmText,
-              onPressed: onConfirm,
+            Expanded(
+              child: AppButton(
+                label: confirmText,
+                onPressed: onConfirm,
+              ),
             ),
           ],
         )
