@@ -175,6 +175,7 @@ class FlightSearchController extends GetxController {
         _flightSearchState = state.copyWith(
           flightSearchStatus: FlightSearchStatus.empty,
         );
+        RouteHelper.closeAllOverlays();
         update();
       },
       (flightEntity) {

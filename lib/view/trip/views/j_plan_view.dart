@@ -202,84 +202,11 @@ class _JPlanViewState extends State<JPlanView> {
       barrierLabel: "항공권",
       barrierDismissible: true,
       pageBuilder: (context, animation1, animation2) {
-        const double dialogBodyHeight = 508;
-
-        return Material(
-          color: Colors.transparent,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _FlightDialogHeader(
-                    onEdit: onEditPressed,
-                    onClose: () => Get.back(),
-                  ),
-                  // 본문 영역
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: dialogBodyHeight,
-                      maxWidth: context.screenWidth,
-                    ),
-                    child: Stack(
-                      children: [
-                        SvgIcon(
-                          assetPath: IconConstants.verticalTicket,
-                          width: double.infinity,
-                          height: double.infinity,
-                          fit: BoxFit.fill,
-                        ),
-                        Positioned.fill(
-                          top: 32,
-                          left: 24,
-                          right: 24,
-                          bottom: 32,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _InfoSection(
-                                caption: "항공편명",
-                                label: "${flightEntity?.airlineCode} (${flightEntity?.airlineNumber})",
-                                leadingIcon: IconConstants.plane,
-                                iconColor: iconColor,
-                              ),
-                              const SizedBox(height: 8),
-                              _InfoSection(
-                                caption: "출발 공항",
-                                label: "${flightEntity?.departureAirportKr ?? ""} (${flightEntity?.departureAirport})",
-                              ),
-                              const SizedBox(height: 8),
-                              _InfoSection(
-                                caption: "출발 일정",
-                                label:
-                                    "${flightEntity?.departureDateTime.formatDateWithWeekdayKo} ${flightEntity?.departureDateTime.formatTime}",
-                                leadingIcon: IconConstants.smallDeparture,
-                                iconColor: iconColor,
-                              ),
-                              const SizedBox(height: 40),
-                              _InfoSection(
-                                caption: "도착 공항",
-                                label: "${flightEntity?.arrivalAirportKr ?? ""} (${flightEntity?.arrivalAirport})",
-                              ),
-                              const SizedBox(height: 8),
-                              _InfoSection(
-                                caption: "도착 일정",
-                                label:
-                                    "${flightEntity?.arrivalDateTime.formatDateWithWeekdayKo} ${flightEntity?.arrivalDateTime.formatTime}",
-                                leadingIcon: IconConstants.smallArrival,
-                                iconColor: iconColor,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        return _FlightDialogContent(
+          flightEntity: flightEntity,
+          iconColor: iconColor,
+          onEditPressed: onEditPressed,
+          onClosePressed: () => Get.back(),
         );
       },
     );
@@ -528,6 +455,104 @@ class _FlightDialogHeader extends StatelessWidget {
             onTap: onClose,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _FlightDialogContent extends StatelessWidget {
+  final FlightEntity? flightEntity;
+  final Color iconColor;
+  final VoidCallback onEditPressed;
+  final VoidCallback onClosePressed;
+
+  const _FlightDialogContent({
+    required this.flightEntity,
+    required this.iconColor,
+    required this.onEditPressed,
+    required this.onClosePressed,
+  });
+
+  static const double _dialogBodyHeight = 508;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _FlightDialogHeader(
+                onEdit: onEditPressed,
+                onClose: onClosePressed,
+              ),
+              // 본문
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: _dialogBodyHeight,
+                  maxWidth: context.screenWidth,
+                ),
+                child: Stack(
+                  children: [
+                    SvgIcon(
+                      assetPath: IconConstants.verticalTicket,
+                      width: double.infinity,
+                      height: double.infinity,
+                      fit: BoxFit.fill,
+                    ),
+                    Positioned.fill(
+                      top: 32,
+                      left: 24,
+                      right: 24,
+                      bottom: 32,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _InfoSection(
+                            caption: "항공편명",
+                            label: "${flightEntity?.airlineCode ?? ""} (${flightEntity?.airlineNumber ?? ""})",
+                            leadingIcon: IconConstants.plane,
+                            iconColor: iconColor,
+                          ),
+                          const SizedBox(height: 8),
+                          _InfoSection(
+                            caption: "출발 공항",
+                            label:
+                                "${flightEntity?.departureAirportKr ?? ""} (${flightEntity?.departureAirport ?? ""})",
+                          ),
+                          const SizedBox(height: 8),
+                          _InfoSection(
+                            caption: "출발 일정",
+                            label:
+                                "${flightEntity?.departureDateTime.formatDateWithWeekdayKo ?? ""} ${flightEntity?.departureDateTime.formatTime ?? ""}",
+                            leadingIcon: IconConstants.smallDeparture,
+                            iconColor: iconColor,
+                          ),
+                          const SizedBox(height: 40),
+                          _InfoSection(
+                            caption: "도착 공항",
+                            label: "${flightEntity?.arrivalAirportKr ?? ""} (${flightEntity?.arrivalAirport ?? ""})",
+                          ),
+                          const SizedBox(height: 8),
+                          _InfoSection(
+                            caption: "도착 일정",
+                            label:
+                                "${flightEntity?.arrivalDateTime.formatDateWithWeekdayKo ?? ""} ${flightEntity?.arrivalDateTime.formatTime ?? ""}",
+                            leadingIcon: IconConstants.smallArrival,
+                            iconColor: iconColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
