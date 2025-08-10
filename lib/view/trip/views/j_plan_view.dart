@@ -77,6 +77,9 @@ class _JPlanViewState extends State<JPlanView> {
                             AppIconButton(
                               assetPath: IconConstants.plane,
                               onTap: () => controller.onFlightPressed(),
+                              color: controller.state.isFlightEmpty
+                                  ? context.color.gray700
+                                  : controller.tripRoomInfo?.labelColor.toColor(),
                             ),
                             const SizedBox(
                               width: 4,

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class FlightEntity extends Equatable {
-  int? id;
+  int? flightId;
   final String airlineCode;
   final int airlineNumber;
   final DateTime departureDateTime;
@@ -12,7 +12,7 @@ class FlightEntity extends Equatable {
   String? arrivalAirportKr;
 
   FlightEntity({
-    this.id,
+    this.flightId,
     required this.airlineCode,
     required this.airlineNumber,
     required this.departureDateTime,
@@ -25,7 +25,7 @@ class FlightEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
+        flightId,
         airlineCode,
         airlineNumber,
         departureDateTime,

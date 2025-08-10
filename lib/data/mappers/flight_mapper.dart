@@ -5,7 +5,7 @@ import 'package:tripStory/domain/entities/flight_entity.dart';
 class FlightMapper {
   static FlightEntity toEntity(FlightResponse response) {
     return FlightEntity(
-      id: response.flightId,
+      flightId: response.flightId,
       airlineCode: response.airlineCode,
       airlineNumber: response.airlineNumber,
       departureDateTime: DateTime.parse(response.departureDate),
@@ -19,7 +19,7 @@ class FlightMapper {
 
   static FlightRequest toRequest(FlightEntity entity) {
     return FlightRequest(
-      flightId: entity.id,
+      flightId: entity.flightId,
       airlineCode: entity.airlineCode,
       airlineNumber: entity.airlineNumber,
       departureDate: entity.departureDateTime.toString(),

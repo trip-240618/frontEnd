@@ -10,7 +10,7 @@ abstract class FlightDataSource {
   factory FlightDataSource(Dio dio, {String baseUrl}) = _FlightDataSource;
 
   @GET("/search")
-  Future<FlightResponse> fetchFlight({
+  Future<FlightResponse> fetchSearchFlight({
     @Query("flightNumber") required int flightNumber,
     @Query("carrierCode") required String carrierCode,
     @Query("departureDate") required String departureDate,
@@ -20,5 +20,16 @@ abstract class FlightDataSource {
   Future<FlightResponse> postCreateFlight({
     @Path("tripId") required int tripId,
     @Body() required FlightRequest request,
+  });
+
+  @GET("/trip/{tripId}/list")
+  Future<List<FlightResponse>> fetchFlight({
+    @Path("tripId") required int tripId,
+  });
+
+  @DELETE("/trip/{tripId}/delete")
+  Future<void> deleteFlight({
+    @Path("tripId") required int tripId,
+    @Query("flightId") required int flightId,
   });
 }
