@@ -76,9 +76,8 @@ class CommonTextField extends StatelessWidget {
           ),
           if (trailing != null) ...[
             Padding(
-              padding: EdgeInsets.only(
-                left: 10,
-                right: 16,
+              padding: EdgeInsets.symmetric(
+                horizontal: 10,
               ),
               child: trailing!,
             ),

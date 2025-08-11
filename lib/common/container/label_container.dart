@@ -6,12 +6,14 @@ class LabelContainer extends StatelessWidget {
   final String label;
   final String? leadingIcon;
   final Color? iconColor;
+  final Color? backgroundColor;
 
   const LabelContainer({
     super.key,
     required this.label,
     this.leadingIcon,
     this.iconColor,
+    this.backgroundColor,
   });
 
   @override
@@ -19,7 +21,7 @@ class LabelContainer extends StatelessWidget {
     return Container(
       height: 52,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: backgroundColor ?? Colors.white,
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
           width: 1,

@@ -22,4 +22,5 @@ class Routes {
   static const tripJPlanSwap = "/trip-plan-swap";
   static const searchFlight = "/search-flight";
   static const createFlight = "/create-flight";
+  static const tripRoomSetting = "/trip-room/setting";
 }

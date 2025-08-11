@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
+import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/trip_main_state.dart';
 
@@ -22,4 +23,6 @@ class TripMainController extends GetxController {
     );
     update();
   }
+
+  void onRoomSettingPressed() => Get.toNamed(Routes.tripRoomSetting);
 }
