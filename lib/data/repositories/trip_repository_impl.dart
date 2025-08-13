@@ -3,9 +3,9 @@ import 'package:tripStory/core/constants/network_constants.dart';
 import 'package:tripStory/core/errors/failure.dart';
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
+import 'package:tripStory/data/mappers/j_plan_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_create_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_mapper.dart';
-import 'package:tripStory/data/mappers/j_plan_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_create_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_mapper.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
@@ -13,10 +13,10 @@ import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
 import 'package:tripStory/data/network/socket_service.dart';
+import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/scrap_create_entity.dart';
 import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
 import 'package:tripStory/domain/entities/scrap_entity.dart';
-import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_create_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/repositories/trip_repository.dart';
@@ -80,6 +80,24 @@ class TripRepositoryImpl implements TripRepository {
     try {
       final response = await _tripDataSource.postCreateTrip(tripRoomCreateRequest);
       final entity = TripRoomCreateMapper.toEntity(response);
+      return Right(entity);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<TripRoomEntity> putModifyTripRoom({
+    required int tripId,
+    required TripRoomEntity tripRoomEntity,
+  }) async {
+    try {
+      final request = TripRoomMapper.toUpdateRequest(tripRoomEntity);
+      final result = await _tripDataSource.putModifyTrip(
+        tripId,
+        request,
+      );
+      final entity = TripRoomMapper.toEntity(result);
       return Right(entity);
     } catch (e) {
       return Left(ServerFailure(e.toString()));

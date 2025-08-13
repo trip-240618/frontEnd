@@ -151,7 +151,7 @@ class _TripRoomSettingViewState extends State<TripRoomSettingView> {
           return BottomButton(
             text: "수정 완료",
             enabled: _controller.state.isValid,
-            onTap: () => {},
+            onTap: () => controller.onSettingSavePressed(),
           );
         },
       ),

@@ -225,6 +225,36 @@ class _TripDataSource implements TripDataSource {
   }
 
   @override
+  Future<TripRoomResponse> putModifyTrip(
+    int tripId,
+    TripRoomModifyRequest request,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'tripId': tripId};
+    final _headers = <String, dynamic>{};
+    final _data = request;
+    final _options = _setStreamType<TripRoomResponse>(
+      Options(method: 'PUT', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/modify',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late TripRoomResponse _value;
+    try {
+      _value = TripRoomResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<List<ScrapResponse>> fetchScraps(int tripId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

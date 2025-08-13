@@ -6,6 +6,7 @@ import 'package:tripStory/data/datasources/local/share_preferences_token_storage
 import 'package:tripStory/data/datasources/local/token_storage.dart';
 import 'package:tripStory/data/datasources/remote/country_data_source.dart';
 import 'package:tripStory/data/datasources/remote/file_data_source.dart';
+import 'package:tripStory/data/datasources/remote/file_upload_data_source.dart';
 import 'package:tripStory/data/datasources/remote/flight_data_source.dart';
 import 'package:tripStory/data/datasources/remote/notice_data_source.dart';
 import 'package:tripStory/data/datasources/remote/notification_data_source.dart';
@@ -15,6 +16,7 @@ import 'package:tripStory/data/datasources/remote/trip_location_data_source.dart
 import 'package:tripStory/data/datasources/remote/user_data_source.dart';
 import 'package:tripStory/data/network/dio_client.dart';
 import 'package:tripStory/data/network/socket_service.dart';
+import 'package:tripStory/data/network/upload_dio_client.dart';
 import 'package:tripStory/data/repositories/auth_repository_impl.dart';
 import 'package:tripStory/data/repositories/country_repository_impl.dart';
 import 'package:tripStory/data/repositories/file_repository_impl.dart';
@@ -56,6 +58,7 @@ class AppBinding extends Bindings {
     Get.put<SocketService>(SocketService(Get.find<SessionService>()), permanent: true);
     // DioClient
     Get.put<DioClient>(DioClient(sessionService: Get.find<SessionService>()), permanent: true);
+    Get.put<UploaderDioClient>(UploaderDioClient(), permanent: true);
     Get.put<Dio>(Get.find<DioClient>().dio, permanent: true);
 
     // cache
@@ -71,6 +74,7 @@ class AppBinding extends Bindings {
     Get.lazyPut<NoticeDataSource>(() => NoticeDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<TripLocationDataSource>(() => TripLocationDataSource(Get.find<Dio>()), fenix: true);
     Get.lazyPut<FlightDataSource>(() => FlightDataSource(Get.find<Dio>()), fenix: true);
+    Get.lazyPut<FileUploadDataSource>(() => FileUploadDataSource(Get.find<UploaderDioClient>().dio), fenix: true);
 
     // Repository
     Get.lazyPut<UserRepository>(() => UserRepositoryImpl(Get.find<UserDataSource>()), fenix: true);
@@ -80,7 +84,12 @@ class AppBinding extends Bindings {
               Get.find<SocketService>(),
             ),
         fenix: true);
-    Get.lazyPut<FileRepository>(() => FileRepositoryImpl(Get.find<FileDataSource>()), fenix: true);
+    Get.lazyPut<FileRepository>(
+        () => FileRepositoryImpl(
+              Get.find<FileDataSource>(),
+              Get.find<FileUploadDataSource>(),
+            ),
+        fenix: true);
     Get.lazyPut<NotificationRepository>(() => NotificationRepositoryImpl(Get.find<NotificationDataSource>()),
         fenix: true);
     Get.lazyPut<AuthRepository>(() => AuthRepositoryImpl(Get.find<OauthDataSource>()), fenix: true);

@@ -87,12 +87,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     );
   }
 
-  /// side Effect
-  Future<void> onComingTripPressed() async {
-    _getComingTrips();
-  }
-
-  Future<void> onLastTripPressed() async {
+  Future<void> _getLastTrips() async {
     final result = await _fetchLastTrips.call(NoParams());
     result.fold((error) {}, (rooms) {
       tripRoomsState = tripRoomsState.copyWith(
@@ -104,7 +99,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     });
   }
 
-  Future<void> onBookMarkTripPressed() async {
+  Future<void> _getBookMarkTrips() async {
     final result = await _fetchBookmarkedTrips.call(NoParams());
     result.fold((error) {}, (rooms) {
       tripRoomsState = tripRoomsState.copyWith(
@@ -114,6 +109,33 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
       );
       update();
     });
+  }
+
+  Future<void> _refreshRoom() async {
+    switch (tripRoomsState.tripRoomType) {
+      case TripRoomType.coming:
+        await _getComingTrips();
+        break;
+      case TripRoomType.lastTrip:
+        await _getLastTrips();
+        break;
+      case TripRoomType.bookmarked:
+        await _getBookMarkTrips();
+        break;
+    }
+  }
+
+  /// side Effect
+  Future<void> onComingTripPressed() async {
+    _getComingTrips();
+  }
+
+  Future<void> onLastTripPressed() async {
+    _getLastTrips();
+  }
+
+  Future<void> onBookMarkTripPressed() async {
+    _getBookMarkTrips();
   }
 
   Future<void> onBookmarkIconPressed(
@@ -140,8 +162,6 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     );
   }
 
-  Future<void> init(int tripId) async {}
-
   Future<void> onRoomPressed(int tripId) async {
     final result = await _fetchEnterRoomUsecase(tripId);
     result.fold(
@@ -149,7 +169,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
       (room) {
         _tripRoomService.setTripRoom(room);
         Get.toNamed(Routes.tripRoom, arguments: tripId)?.then((v) async {
-          // await notis.getNotificationCount();
+          _refreshRoom();
         });
       },
     );

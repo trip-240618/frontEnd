@@ -1,5 +1,7 @@
+import 'package:tripStory/data/models/request/trip_room_modify_request.dart';
 import 'package:tripStory/data/models/response/trip_room_response.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
+import 'package:tripStory/util/extension/date_extension.dart';
 
 class TripRoomMapper {
   static TripRoomEntity toEntity(TripRoomResponse response) {
@@ -23,6 +25,16 @@ class TripRoomMapper {
                 leader: member.leader,
               ))
           .toList(),
+    );
+  }
+
+  static TripRoomModifyRequest toUpdateRequest(TripRoomEntity entity) {
+    return TripRoomModifyRequest(
+      name: entity.name,
+      thumbnail: entity.thumbnail,
+      labelColor: entity.labelColor,
+      startDate: entity.startDate.formatYMDWithHyphen(),
+      endDate: entity.endDate.formatYMDWithHyphen(),
     );
   }
 }

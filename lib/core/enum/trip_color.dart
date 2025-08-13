@@ -18,4 +18,15 @@ enum TripColor {
         return const Color(0xFF83CF75);
     }
   }
+
+  factory TripColor.fromHex(String hex) {
+    var s = hex.trim();
+    if (s.startsWith("0x") || s.startsWith("0X")) s = s.substring(2);
+
+    final parsed = int.tryParse(s, radix: 16);
+
+    return TripColor.values.firstWhere(
+      (color) => color.color.toARGB32() == parsed,
+    );
+  }
 }
