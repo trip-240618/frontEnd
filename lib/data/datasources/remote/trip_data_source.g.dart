@@ -255,6 +255,25 @@ class _TripDataSource implements TripDataSource {
   }
 
   @override
+  Future<void> deleteTripRoom(int planId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'tripId': planId};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<void>(
+      Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/delete',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
   Future<List<ScrapResponse>> fetchScraps(int tripId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

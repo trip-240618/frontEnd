@@ -66,8 +66,7 @@ class CommonDialog extends StatelessWidget {
     );
   }
 
-  static void show(
-    BuildContext context, {
+  static void show({
     required String title,
     String? message,
     required String confirmText,

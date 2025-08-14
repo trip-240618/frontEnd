@@ -4,7 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/core/enum/trip_color.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
+import 'package:tripStory/domain/usecases/delete_trip_room_usecase.dart';
 import 'package:tripStory/domain/usecases/trip_room_modify_usecase.dart';
+import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/util/extension/color_extension.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/trip_room_setting_state.dart';
@@ -12,10 +14,12 @@ import 'package:tripStory/view/trip/models/trip_room_setting_state.dart';
 class TripRoomSettingController extends GetxController {
   final TripRoomService _tripRoomService;
   final TripRoomModifyUsecase _tripRoomModifyUsecase;
+  final DeleteTripRoomUsecase _deleteTripRoomUsecase;
 
   TripRoomSettingController(
     this._tripRoomService,
     this._tripRoomModifyUsecase,
+    this._deleteTripRoomUsecase,
   );
 
   final ImagePicker _picker = ImagePicker();
@@ -66,6 +70,17 @@ class TripRoomSettingController extends GetxController {
       selectedColor: selectedColor,
     );
     update();
+  }
+
+  Future<void> onRoomDeletePressed() async {
+    final result = await _deleteTripRoomUsecase.call(tripRoomInfo?.id ?? 0);
+
+    result.fold(
+      (failure) {},
+      (success) {
+        Get.until((route) => route.settings.name == Routes.rooms);
+      },
+    );
   }
 
   Future<void> onSettingSavePressed() async {

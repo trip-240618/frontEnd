@@ -5,9 +5,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/common/appbar/app_appbar.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
 import 'package:tripStory/common/button/color_select_button.dart';
+import 'package:tripStory/common/button/icon_button.dart';
 import 'package:tripStory/common/button/picture_image_button.dart';
 import 'package:tripStory/common/container/label_container.dart';
-import 'package:tripStory/common/icon/svg_icon.dart';
+import 'package:tripStory/common/dialog/common_dialog.dart';
 import 'package:tripStory/common/text/edit/edit_text_form_field.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/enum/text_edit_type.dart';
@@ -41,9 +42,11 @@ class _TripRoomSettingViewState extends State<TripRoomSettingView> {
       appBar: AppAppbar(
         text: "여행방 설정",
         backgroundColor: context.color.gray50,
-        actionWidget: SvgIcon(
+        actionWidget: AppIconButton(
           assetPath: IconConstants.delete,
-          color: context.color.gray900,
+          onTap: () => showDeleteRoomDialog(
+            onConfirm: () => _controller.onRoomDeletePressed(),
+          ),
         ),
       ),
       body: GetBuilder<TripRoomSettingController>(
@@ -155,6 +158,17 @@ class _TripRoomSettingViewState extends State<TripRoomSettingView> {
           );
         },
       ),
+    );
+  }
+
+  void showDeleteRoomDialog({
+    required VoidCallback onConfirm,
+  }) {
+    CommonDialog.show(
+      title: "여행방을 삭제하시겠습니까?",
+      message: "삭제 후 복구는 어렵습니다",
+      confirmText: "확인",
+      onConfirm: onConfirm,
     );
   }
 

@@ -27,6 +27,10 @@ abstract class TripRepository {
     required int tripId,
   });
 
+  ResultFuture<void> deleteTripRoom({
+    required int tripId,
+  });
+
   ResultFuture<TripRoomEntity> putModifyTripRoom({
     required int tripId,
     required TripRoomEntity tripRoomEntity,

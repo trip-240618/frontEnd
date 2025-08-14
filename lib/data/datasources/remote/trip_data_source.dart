@@ -53,6 +53,11 @@ abstract class TripDataSource {
     @Body() TripRoomModifyRequest request,
   );
 
+  @DELETE("/delete")
+  Future<void> deleteTripRoom(
+    @Query("tripId") int planId,
+  );
+
   @GET("/{tripId}/scrap/list")
   Future<List<ScrapResponse>> fetchScraps(
     @Path("tripId") int tripId,

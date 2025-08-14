@@ -133,7 +133,6 @@ class _EditProfileViewState extends State<EditProfileView> {
           text: "저장하기",
           enabled: controller.state.isNicknameValid,
           onTap: () => _showConfirmDialog(
-            context,
             () => controller.onSaveProfilePressed(),
           ),
         ),
@@ -142,11 +141,9 @@ class _EditProfileViewState extends State<EditProfileView> {
   }
 
   void _showConfirmDialog(
-    BuildContext context,
     VoidCallback onConfirmPressed,
   ) {
     CommonDialog.show(
-      context,
       title: "프로필을 수정하시겠습니까?",
       confirmText: "확인",
       onConfirm: onConfirmPressed,
