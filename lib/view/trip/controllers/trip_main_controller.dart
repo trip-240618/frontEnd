@@ -39,4 +39,6 @@ class TripMainController extends GetxController {
   }
 
   void onRoomSettingPressed() => Get.toNamed(Routes.tripRoomSetting);
+
+  void onMemberPressed() => Get.toNamed(Routes.tripRoomMember);
 }

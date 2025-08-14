@@ -41,6 +41,7 @@ import 'package:tripStory/view/trip/bindings/location_search_binding.dart';
 import 'package:tripStory/view/trip/bindings/scrap_create_binding.dart';
 import 'package:tripStory/view/trip/bindings/scraps_binding.dart';
 import 'package:tripStory/view/trip/bindings/trip_main_binding.dart';
+import 'package:tripStory/view/trip/bindings/trip_room_member_binding.dart';
 import 'package:tripStory/view/trip/bindings/trip_room_setting_binding.dart';
 import 'package:tripStory/view/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/view/trip/models/flight_create_param.dart';
@@ -53,6 +54,7 @@ import 'package:tripStory/view/trip/views/j_plan_edit_view.dart';
 import 'package:tripStory/view/trip/views/j_plan_swap_view.dart';
 import 'package:tripStory/view/trip/views/location_search_view.dart';
 import 'package:tripStory/view/trip/views/trip_main_view.dart';
+import 'package:tripStory/view/trip/views/trip_room_member_view.dart';
 import 'package:tripStory/view/trip/views/trip_room_setting_view.dart';
 
 class RouterInfo {
@@ -229,6 +231,11 @@ class RouterInfo {
       name: Routes.tripRoomSetting,
       page: () => const TripRoomSettingView(),
       binding: TripRoomSettingBinding(),
+    ),
+    GetPage(
+      name: Routes.tripRoomMember,
+      page: () => const TripRoomMemberView(),
+      binding: TripRoomMemberBinding(),
     ),
   ];
 }

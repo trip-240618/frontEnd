@@ -44,7 +44,7 @@ class _TripMainViewState extends State<TripMainView> {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: TabUser(
-                    onPressed: () {},
+                    onPressed: () => controller.onMemberPressed(),
                     memberCount: controller.tripRoomInfo?.memberCount ?? 1,
                   ),
                 ),
