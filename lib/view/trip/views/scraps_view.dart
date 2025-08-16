@@ -155,7 +155,6 @@ class ScrapsView extends StatelessWidget {
                                       assetPath: IconConstants.delete,
                                       color: context.color.gray900,
                                       onTap: () => _showScrapDeleteDialog(
-                                        context,
                                         () => controller.onDeleteScrapPressed(scrap.id),
                                       ),
                                     ),
@@ -178,11 +177,9 @@ class ScrapsView extends StatelessWidget {
 }
 
 void _showScrapDeleteDialog(
-  BuildContext context,
   VoidCallback onConfirmPressed,
 ) {
   CommonDialog.show(
-    context,
     title: "스크랩을 삭제하시겠습니까?",
     message: "스크랩 삭제 후 복구는 어렵습니다",
     confirmText: "확인",
