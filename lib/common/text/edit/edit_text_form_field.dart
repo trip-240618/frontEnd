@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tripStory/common/button/base/base_button.dart';
+import 'package:tripStory/common/button/box/box_button.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/common/text/common_text_form_field.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
@@ -81,9 +82,9 @@ class _TrailingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (editType) {
       case TextEditType.button:
-        return _CapsuleButton(
+        return BoxButton(
           label: buttonText ?? "",
-          onTap: onTrailingPressed,
+          onPressed: onTrailingPressed ?? () {},
         );
 
       case TextEditType.cancel:
@@ -128,39 +129,6 @@ class _IconTrailing extends StatelessWidget {
           child: SvgIcon(
             assetPath: assetPath,
             color: context.color.gray900,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _CapsuleButton extends StatelessWidget {
-  final String label;
-  final VoidCallback? onTap;
-
-  const _CapsuleButton({
-    required this.label,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BaseButton(
-      onTap: onTap,
-      borderRadius: 8,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          color: context.color.gray900,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: context.color.white,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
           ),
         ),
       ),

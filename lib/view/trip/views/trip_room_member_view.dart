@@ -22,7 +22,7 @@ class TripRoomMemberView extends StatelessWidget {
       appBar: AppAppbar(
         text: "여행방 멤버",
         backgroundColor: context.color.gray50,
-        actionWidget: controller.isRoomLeader
+        actionWidget: !controller.isRoomLeader
             ? null
             : BoxButton(
                 label: "여행방 나가기",

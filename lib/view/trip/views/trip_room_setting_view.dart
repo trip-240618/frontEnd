@@ -79,7 +79,7 @@ class _TripRoomSettingViewState extends State<TripRoomSettingView> {
                           LengthLimitingTextInputFormatter(15),
                         ],
                         onChanged: (text) => controller.onTripRoomNameChanged(text),
-                        editType: TextEditType.edit,
+                        editType: TextEditType.button,
                         countText: "${controller.state.tripRoomLength}/15",
                       ),
                     ],
