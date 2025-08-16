@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tripStory/common/button/app_button.dart';
 import 'package:tripStory/core/enum/button_type.dart';
-import 'package:tripStory/util/color.dart';
 
 class BottomButton extends StatelessWidget {
   final String text;
   final bool enabled;
   final ButtonLevel buttonType;
-  final Color? backgroundColor;
   final VoidCallback onTap;
   final Widget? trailingIcon;
 
@@ -17,7 +15,6 @@ class BottomButton extends StatelessWidget {
     required this.onTap,
     this.enabled = true,
     this.buttonType = ButtonLevel.primary,
-    this.backgroundColor = gray900,
     this.trailingIcon,
   });
 

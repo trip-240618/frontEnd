@@ -37,7 +37,6 @@ class _JPlanSwapViewState extends State<JPlanSwapView> {
     return WillPopScope(
       onWillPop: () async {
         backDialog(
-          context,
           () => controller.onBackButtonPressed(),
         );
         return false;
@@ -45,7 +44,6 @@ class _JPlanSwapViewState extends State<JPlanSwapView> {
       child: Scaffold(
         appBar: AppAppbar(
           onTap: () => backDialog(
-            context,
             () => controller.onBackButtonPressed(),
           ),
         ),
@@ -107,11 +105,9 @@ class _JPlanSwapViewState extends State<JPlanSwapView> {
   }
 
   void backDialog(
-    BuildContext context,
     VoidCallback onConfirm,
   ) {
     CommonDialog.show(
-      context,
       title: "순서 변경을 종료하시겠습니까?",
       confirmText: "확인",
       onConfirm: onConfirm,

@@ -5,6 +5,7 @@ import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/core/cache/custom_cache_manager.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
+import 'package:tripStory/util/extension/image_extension.dart';
 
 class CachedImage extends StatelessWidget {
   final String imageUrl;
@@ -39,8 +40,13 @@ class CachedImage extends StatelessWidget {
       );
     }
     return CachedNetworkImage(
+      fadeInDuration: Duration.zero,
+      placeholderFadeInDuration: Duration.zero,
       imageUrl: resolveImageUrl(imageUrl),
       cacheManager: Get.find<CustomCacheManager>(),
+      memCacheWidth: width.cacheSize(context),
+      memCacheHeight: height.cacheSize(context),
+      useOldImageOnUrlChange: true,
       placeholder: (context, url) => SizedBox(
         width: width,
         height: height,

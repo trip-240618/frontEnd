@@ -86,7 +86,6 @@ class UserDeleteView extends GetView<UserDeleteController> {
       bottomNavigationBar: BottomButton(
         text: "확인했어요",
         onTap: () => _showConfirmDialog(
-          context,
           () => controller.onUserDeletePressed(),
         ),
       ),
@@ -94,11 +93,9 @@ class UserDeleteView extends GetView<UserDeleteController> {
   }
 
   void _showConfirmDialog(
-    BuildContext context,
     VoidCallback onConfirmPressed,
   ) {
     CommonDialog.show(
-      context,
       title: "회원탈퇴를 하시겠어요?",
       confirmText: "탈퇴",
       onConfirm: onConfirmPressed,

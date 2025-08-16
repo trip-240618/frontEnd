@@ -11,6 +11,6 @@ class FetchPresignedUrlUsecase implements UseCase<FileEntity, FileRequest> {
 
   @override
   ResultFuture<FileEntity> call(FileRequest params) {
-    return repository.fetchFileUrls(params);
+    return repository.fetchFileUrls(prefix: "profile", count: 2);
   }
 }

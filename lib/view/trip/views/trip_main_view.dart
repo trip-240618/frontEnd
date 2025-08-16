@@ -35,6 +35,7 @@ class _TripMainViewState extends State<TripMainView> {
             roomDate:
                 "${controller.tripRoomInfo?.startDate.formatShortYMD() ?? ""} ~ ${controller.tripRoomInfo?.endDate.formatShortYMD() ?? ""}",
             tripNaviType: controller.state.selectedTripType,
+            onRoomSettingPressed: () => controller.onRoomSettingPressed(),
           ),
           body: Column(
             children: [
@@ -43,7 +44,7 @@ class _TripMainViewState extends State<TripMainView> {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: TabUser(
-                    onPressed: () {},
+                    onPressed: () => controller.onMemberPressed(),
                     memberCount: controller.tripRoomInfo?.memberCount ?? 1,
                   ),
                 ),
@@ -106,11 +107,13 @@ class _TripRoomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final TripNaviType tripNaviType;
   final String roomDate;
   final String title;
+  final VoidCallback onRoomSettingPressed;
 
   const _TripRoomAppbar({
     required this.title,
     required this.tripNaviType,
     required this.roomDate,
+    required this.onRoomSettingPressed,
   });
 
   @override
@@ -147,7 +150,7 @@ class _TripRoomAppbar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actionWidget: AppIconButton(
         assetPath: IconConstants.moreHorizon,
-        onTap: () => {},
+        onTap: onRoomSettingPressed,
       ),
     );
   }

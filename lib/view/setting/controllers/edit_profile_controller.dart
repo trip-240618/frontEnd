@@ -87,13 +87,16 @@ class EditProfileController extends GetxController {
       );
 
       await result.fold(
-        (error) async {},
+        (error) async {
+          print("eerorr");
+        },
         (urlData) async {
+          print("??? ${urlData}");
           final preSignedUrls = urlData.preSignedUrls;
 
           thumbnailUrl = UrlUtils.getBaseUrl(preSignedUrls[0]);
           originUrl = UrlUtils.getBaseUrl(preSignedUrls[1]);
-
+          print("?? ${thumbnailUrl}");
           final compressedBytes = await ImageFileUtil.compressImage(state.profileImage!);
           final originalBytes = await state.profileImage!.readAsBytes();
 
@@ -107,7 +110,7 @@ class EditProfileController extends GetxController {
         },
       );
     }
-
+    print("?? ${thumbnailUrl}");
     final modifyRequest = UserModifyRequest(
       nickname: state.nickName,
       thumbnail: thumbnailUrl,
