@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:tripStory/data/models/request/scrap_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
+import 'package:tripStory/data/models/request/scrap_create_request.dart';
+import 'package:tripStory/data/models/request/scrap_modify_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/data/models/response/plan_j_response.dart';
 import 'package:tripStory/data/models/response/scrap_detail_response.dart';
 import 'package:tripStory/data/models/response/scrap_response.dart';
-import 'package:tripStory/data/models/response/plan_j_response.dart';
 import 'package:tripStory/data/models/response/trip_room_create_response.dart';
 import 'package:tripStory/data/models/response/trip_room_response.dart';
 
@@ -41,7 +42,7 @@ abstract class TripDataSource {
     @Query("tripId") int tripId,
   );
 
-  @GET("/join")
+  @POST("/join")
   Future<TripRoomResponse> fetchJoinTrip(
     @Query("invitationCode") String invitationCode,
   );
@@ -51,10 +52,39 @@ abstract class TripDataSource {
     @Path("tripId") int tripId,
   );
 
+  @GET("/{tripId}/scrap/bookmark/list")
+  Future<List<ScrapResponse>> fetchBookmarkedScraps(
+    @Path("tripId") int tripId,
+  );
+
+  @POST("/{tripId}/scrap/bookmark/toggle")
+  Future<bool> toggleScrapBookmark(
+    @Path("tripId") int tripId,
+    @Query("scrapId") int scrapId,
+  );
+
   @POST("/{tripId}/scrap/create")
   Future<ScrapDetailResponse> createScrap(
     @Path("tripId") int tripId,
     @Body() ScrapCreateRequest request,
+  );
+
+  @PUT("/{tripId}/scrap/modify")
+  Future<ScrapDetailResponse> updateScrap(
+    @Path("tripId") int tripId,
+    @Body() ScrapModifyRequest request,
+  );
+
+  @DELETE("/{tripId}/scrap/delete")
+  Future<void> deleteScrap(
+    @Path("tripId") int tripId,
+    @Query("scrapId") int scrapId,
+  );
+
+  @GET("/{tripId}/scrap/detail/{scrapId}")
+  Future<ScrapDetailResponse> fetchScrapDetail(
+    @Path("tripId") int tripId,
+    @Path("scrapId") int scrapId,
   );
 
   @GET("/{tripId}/plan/j/list")

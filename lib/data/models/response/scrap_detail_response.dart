@@ -18,8 +18,7 @@ abstract class ScrapDetailResponse with _$ScrapDetailResponse {
     required List<ScrapImages> imageDtos,
   }) = _ScrapDetailResponse;
 
-  factory ScrapDetailResponse.fromJson(Map<String, dynamic> json) =>
-      _$ScrapDetailResponseFromJson(json);
+  factory ScrapDetailResponse.fromJson(Map<String, dynamic> json) => _$ScrapDetailResponseFromJson(json);
 }
 
 @freezed
@@ -29,6 +28,5 @@ abstract class ScrapImages with _$ScrapImages {
     required String imageUrl,
   }) = _ScrapImages;
 
-  factory ScrapImages.fromJson(Map<String, dynamic> json) =>
-      _$ScrapImagesFromJson(json);
+  factory ScrapImages.fromJson(Map<String, dynamic> json) => _$ScrapImagesFromJson(json);
 }

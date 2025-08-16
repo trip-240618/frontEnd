@@ -19,6 +19,5 @@ abstract class ScrapDetailEntity with _$ScrapDetailEntity {
     required List<ScrapImages> imageDtos,
   }) = _ScrapDetailEntity;
 
-  factory ScrapDetailEntity.fromJson(Map<String, dynamic> json) =>
-      _$ScrapDetailEntityFromJson(json);
+  factory ScrapDetailEntity.fromJson(Map<String, dynamic> json) => _$ScrapDetailEntityFromJson(json);
 }
