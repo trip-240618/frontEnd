@@ -90,12 +90,10 @@ class _ProfileAddViewState extends State<ProfileAddView> {
                   contentPadding: const EdgeInsets.all(16),
                   onChanged: (text) => controller.onTextChanged(text),
                   inputFormatters: [LengthLimitingTextInputFormatter(8)],
-                  trailing: Obx(
-                    () => Text(
-                      "${_nickNameCon.text.length}/8",
-                      style: context.style.caption2.copyWith(
-                        color: context.color.gray400,
-                      ),
+                  trailing: Text(
+                    "${_nickNameCon.text.length}/8",
+                    style: context.style.caption2.copyWith(
+                      color: context.color.gray400,
                     ),
                   ),
                 ),

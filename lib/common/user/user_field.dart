@@ -39,7 +39,7 @@ class UserField extends StatelessWidget {
                   size: 24,
                   thumbnailImage: thumbnailImage,
                 ),
-                if (isLeader) ...[
+                if (isLeader)
                   Positioned(
                     bottom: 0,
                     right: 0,
@@ -47,7 +47,6 @@ class UserField extends StatelessWidget {
                       assetPath: IconConstants.leader,
                     ),
                   ),
-                ]
               ],
             ),
           ),
@@ -67,7 +66,7 @@ class UserField extends StatelessWidget {
             style: context.style.body2Normal,
           ),
           Spacer(),
-          if (isLeader && !isMe) ...[
+          if (!isLeader && !isMe) ...[
             BoxButton(
               label: "내보내기",
               onPressed: onTrailingPressed,

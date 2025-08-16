@@ -1,3 +1,4 @@
+import 'package:tripStory/core/enum/trip_type.dart';
 import 'package:tripStory/data/models/request/trip_room_modify_request.dart';
 import 'package:tripStory/data/models/response/trip_room_response.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
@@ -8,7 +9,7 @@ class TripRoomMapper {
     return TripRoomEntity(
       id: response.id,
       name: response.name,
-      type: response.type,
+      type: TripType.fromType(response.type),
       startDate: DateTime.parse(response.startDate),
       endDate: DateTime.parse(response.endDate),
       country: response.country,

@@ -128,6 +128,40 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
+  ResultFuture<void> deleteLeaveTripRoom({
+    required String tripType,
+    required int tripId,
+  }) async {
+    try {
+      await _tripDataSource.deleteLeaveTripRoom(
+        tripType,
+        tripId,
+      );
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> deleteKickMember({
+    required int tripId,
+    required String tripType,
+    required String uuid,
+  }) async {
+    try {
+      await _tripDataSource.deleteKickMember(
+        tripId,
+        tripType,
+        uuid,
+      );
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
   ResultFuture<TripRoomEntity> fetchJoinTrip({
     required String invitationCode,
   }) async {

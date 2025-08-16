@@ -40,10 +40,13 @@ class CachedImage extends StatelessWidget {
       );
     }
     return CachedNetworkImage(
+      fadeInDuration: Duration.zero,
+      placeholderFadeInDuration: Duration.zero,
       imageUrl: resolveImageUrl(imageUrl),
       cacheManager: Get.find<CustomCacheManager>(),
       memCacheWidth: width.cacheSize(context),
       memCacheHeight: height.cacheSize(context),
+      useOldImageOnUrlChange: true,
       placeholder: (context, url) => SizedBox(
         width: width,
         height: height,

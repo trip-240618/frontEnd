@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/core/enum/trip_type.dart';
 
 part 'trip_room_entity.freezed.dart';
 
@@ -10,7 +11,7 @@ abstract class TripRoomEntity with _$TripRoomEntity {
   const factory TripRoomEntity({
     required int id,
     required String name,
-    required String type,
+    required TripType type,
     required DateTime startDate,
     required DateTime endDate,
     required String country,

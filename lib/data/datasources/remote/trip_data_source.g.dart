@@ -204,7 +204,7 @@ class _TripDataSource implements TripDataSource {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<TripRoomResponse>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
+      Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
             '/join',
@@ -255,9 +255,9 @@ class _TripDataSource implements TripDataSource {
   }
 
   @override
-  Future<void> deleteTripRoom(int planId) async {
+  Future<void> deleteTripRoom(int tripId) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'tripId': planId};
+    final queryParameters = <String, dynamic>{r'tripId': tripId};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<void>(
@@ -265,6 +265,55 @@ class _TripDataSource implements TripDataSource {
           .compose(
             _dio.options,
             '/delete',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
+  Future<void> deleteLeaveTripRoom(String tripType, int tripId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'tripType': tripType,
+      r'tripId': tripId,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<void>(
+      Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/leave',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
+  Future<void> deleteKickMember(
+    int tripId,
+    String tripType,
+    String uuid,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'tripId': tripId,
+      r'tripType': tripType,
+      r'uuid': uuid,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<void>(
+      Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/kick',
             queryParameters: queryParameters,
             data: _data,
           )

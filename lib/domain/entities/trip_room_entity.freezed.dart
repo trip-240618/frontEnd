@@ -17,7 +17,7 @@ T _$identity<T>(T value) => value;
 mixin _$TripRoomEntity {
   int get id;
   String get name;
-  String get type;
+  TripType get type;
   DateTime get startDate;
   DateTime get endDate;
   String get country;
@@ -91,7 +91,7 @@ abstract mixin class $TripRoomEntityCopyWith<$Res> {
   $Res call(
       {int id,
       String name,
-      String type,
+      TripType type,
       DateTime startDate,
       DateTime endDate,
       String country,
@@ -141,7 +141,7 @@ class _$TripRoomEntityCopyWithImpl<$Res>
       type: null == type
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
-              as String,
+              as TripType,
       startDate: null == startDate
           ? _self.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
@@ -206,7 +206,7 @@ class _TripRoomEntity extends TripRoomEntity {
   @override
   final String name;
   @override
-  final String type;
+  final TripType type;
   @override
   final DateTime startDate;
   @override
@@ -296,7 +296,7 @@ abstract mixin class _$TripRoomEntityCopyWith<$Res>
   $Res call(
       {int id,
       String name,
-      String type,
+      TripType type,
       DateTime startDate,
       DateTime endDate,
       String country,
@@ -346,7 +346,7 @@ class __$TripRoomEntityCopyWithImpl<$Res>
       type: null == type
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
-              as String,
+              as TripType,
       startDate: null == startDate
           ? _self.startDate
           : startDate // ignore: cast_nullable_to_non_nullable

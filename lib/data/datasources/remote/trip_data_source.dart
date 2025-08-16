@@ -42,7 +42,7 @@ abstract class TripDataSource {
     @Query("tripId") int tripId,
   );
 
-  @GET("/join")
+  @POST("/join")
   Future<TripRoomResponse> fetchJoinTrip(
     @Query("invitationCode") String invitationCode,
   );
@@ -55,7 +55,20 @@ abstract class TripDataSource {
 
   @DELETE("/delete")
   Future<void> deleteTripRoom(
-    @Query("tripId") int planId,
+    @Query("tripId") int tripId,
+  );
+
+  @DELETE("/leave")
+  Future<void> deleteLeaveTripRoom(
+    @Query("tripType") String tripType,
+    @Query("tripId") int tripId,
+  );
+
+  @DELETE("/kick")
+  Future<void> deleteKickMember(
+    @Query("tripId") int tripId,
+    @Query("tripType") String tripType,
+    @Query("uuid") String uuid,
   );
 
   @GET("/{tripId}/scrap/list")
