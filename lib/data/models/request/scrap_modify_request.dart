@@ -11,7 +11,7 @@ abstract class ScrapModifyRequest with _$ScrapModifyRequest {
     required String content,
     required bool hasImage,
     required String color,
-    List<String>? photoList,
+    List<ScrapPhotoList>? photoList,
   }) = _ScrapModifyRequest;
 
   factory ScrapModifyRequest.fromJson(Map<String, dynamic> json) => _$ScrapModifyRequestFromJson(json);

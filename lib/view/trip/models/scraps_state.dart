@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:get/get.dart';
 import 'package:tripStory/domain/entities/scrap_entity.dart';
 
 part 'scraps_state.freezed.dart';
@@ -12,9 +13,12 @@ abstract class ScrapsState with _$ScrapsState {
   const factory ScrapsState({
     @Default(ScrapsStatus.initial) ScrapsStatus status,
     @Default([]) List<ScrapEntity> scraps,
+    @Default(false) bool showBookmarkedOnly,
   }) = _ScrapsState;
 
   bool get isEmpty => scraps.isEmpty;
 
   int get length => scraps.length;
+
+  ScrapEntity? findScrap(int scrapId) => scraps.firstWhereOrNull((scrap) => scrap.id == scrapId);
 }

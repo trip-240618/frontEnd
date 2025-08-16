@@ -7,6 +7,7 @@ import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/scrap_create_entity.dart';
 import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
 import 'package:tripStory/domain/entities/scrap_entity.dart';
+import 'package:tripStory/domain/entities/scrap_update_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_create_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 
@@ -56,9 +57,33 @@ abstract class TripRepository {
     required int tripId,
   });
 
+  ResultFuture<List<ScrapEntity>> fetchBookmarkedScraps({
+    required int tripId,
+  });
+
+  ResultFuture<bool> toggleScrapBookmark({
+    required int tripId,
+    required int scrapId,
+  });
+
   ResultFuture<ScrapDetailEntity> createScrap({
     required int tripId,
     required ScrapCreateEntity scrapCreateEntity,
+  });
+
+  ResultFuture<ScrapDetailEntity> updateScrap({
+    required int tripId,
+    required ScrapUpdateEntity scrapUpdateEntity,
+  });
+
+  ResultFuture<void> deleteScrap({
+    required int tripId,
+    required int scrapId,
+  });
+
+  ResultFuture<ScrapDetailEntity> fetchScrapDetail({
+    required int tripId,
+    required int scrapId,
   });
 
   ResultFuture<List<JPlanEntity>> fetchJPlan({

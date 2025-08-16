@@ -8,8 +8,7 @@ import 'package:tripStory/util/one_time_event.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/scrap_create_state.dart';
 
-class ScrapCreateController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class ScrapCreateController extends GetxController with GetSingleTickerProviderStateMixin {
   final TripRoomService _tripRoomService;
   final ScrapCreateUseCase _scrapCreateUseCase;
 
@@ -22,7 +21,6 @@ class ScrapCreateController extends GetxController
   ScrapCreateState get state => scrapCreateState;
 
   Future<void> onSavePressed() async {
-    print('tttt');
     scrapCreateState = state.copyWith(
       showLoading: OneTimeEvent(true),
     );
@@ -37,11 +35,15 @@ class ScrapCreateController extends GetxController
     );
 
     final tripId = tripRoomInfo?.id;
-    if (tripId == null) {
-      return;
-    }
 
-    final result = await _scrapCreateUseCase(Tuple2(tripId, entity));
+    if (tripId == null) return;
+
+    final result = await _scrapCreateUseCase(
+      Tuple2(
+        tripId,
+        entity,
+      ),
+    );
 
     result.fold(
       (failure) {
