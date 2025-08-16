@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tripStory/common/button/base/base_button.dart';
 import 'package:tripStory/core/enum/trip_color.dart';
-import 'package:tripStory/util/color.dart';
+import 'package:tripStory/util/extension/context_extension.dart';
 
 class ColorSelectButton extends StatelessWidget {
   final TripColor selectedColor;
@@ -16,7 +17,7 @@ class ColorSelectButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 24,
+      height: 28,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.zero,
@@ -26,15 +27,21 @@ class ColorSelectButton extends StatelessWidget {
           final tripColor = TripColor.values[index];
           final isSelected = tripColor == selectedColor;
 
-          return GestureDetector(
+          return BaseButton(
+            borderRadius: 4,
             onTap: () => onSelected(tripColor),
             child: Container(
-              width: 24,
-              height: 24,
+              width: 28,
+              height: 28,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: tripColor.color,
-                border: isSelected ? Border.all(color: gray900, width: 2) : null,
+                border: isSelected
+                    ? Border.all(
+                        color: context.color.gray900,
+                        width: 2,
+                      )
+                    : null,
               ),
               child: isSelected
                   ? SvgPicture.asset(

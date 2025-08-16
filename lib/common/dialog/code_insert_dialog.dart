@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/common/button/bottom_button.dart';
+import 'package:tripStory/common/button/app_button.dart';
 import 'package:tripStory/common/button/icon_button.dart';
 import 'package:tripStory/common/dialog/base_dialog.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/common/text/common_text_form_field.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/constants/regex_constants.dart';
+import 'package:tripStory/core/enum/button_type.dart';
 import 'package:tripStory/util/extension/context_extension.dart';
 import 'package:tripStory/util/upper_case.dart';
 
@@ -38,28 +39,6 @@ class _CodeInsertDialogState extends State<CodeInsertDialog> {
 
   bool isRegCheck = false;
   bool isEmptyRoom = false;
-
-  // Future<void> _handleSubmit() async {
-  //   ts.selectTripList.clear();
-  //   setState(() => isFirstCheck = true);
-  //
-  //   if (con.text.length == 8 && regex.hasMatch(con.text)) {
-  //     isRegCheck = true;
-  //     final data = await ms.tripJoin(con.text);
-  //     if (data.isEmpty) {
-  //       isValue = false;
-  //     } else {
-  //       await ts.getSelectTrip(data['id']);
-  //       Get.back(); // 다이얼로그 닫기
-  //       widget.onComplete(); // 외부 콜백
-  //       Get.to(() => BottomNavigator());
-  //       return;
-  //     }
-  //   } else {
-  //     isRegCheck = false;
-  //   }
-  //   setState(() {});
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -131,17 +110,20 @@ class _CodeInsertDialogState extends State<CodeInsertDialog> {
         ],
       ),
       actions: [
-        BottomButton(
-          text: "연결하기",
-          enabled: isRegCheck,
-          onTap: () async {
-            final result = await widget.onConfirmPressed(_invitedCodeCon.text);
-            if (!result) {
-              setState(() {
-                isEmptyRoom = true;
-              });
-            }
-          },
+        SizedBox(
+          width: double.infinity,
+          child: AppButton(
+            label: "연결하기",
+            level: ButtonLevel.secondary,
+            onPressed: () async {
+              final result = await widget.onConfirmPressed(_invitedCodeCon.text);
+              if (!result) {
+                setState(() {
+                  isEmptyRoom = true;
+                });
+              }
+            },
+          ),
         ),
       ],
     );

@@ -40,7 +40,6 @@ class MyPageSettingView extends StatelessWidget {
                 _SettingUserSection(
                   onDeletedPressed: () => controller.onUserDeletePressed(),
                   onLogOutPressed: () => showLogOutDialog(
-                    context,
                     () => controller.onLogOutPressed(),
                   ),
                 ),
@@ -74,11 +73,9 @@ class MyPageSettingView extends StatelessWidget {
   }
 
   void showLogOutDialog(
-    BuildContext context,
     VoidCallback onConfirmPressed,
   ) {
     CommonDialog.show(
-      context,
       title: "로그아웃을 하시겠어요?",
       confirmText: "확인",
       onConfirm: onConfirmPressed,

@@ -34,16 +34,17 @@ class BaseImageButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 98,
-      height: 98,
+      height: 92,
       child: Stack(
+        alignment: Alignment.center,
         children: [
           BaseButton(
             onTap: onPressed,
             child: _buildImageContent(context),
           ),
           Positioned(
-            right: positioned ?? 0,
-            bottom: positioned ?? 0,
+            right: 0,
+            bottom: 0,
             child: iconWidget,
           ),
         ],

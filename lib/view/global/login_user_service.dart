@@ -9,6 +9,8 @@ class LoginUserService extends GetxService {
 
   bool get isLoggedIn => _user != null && _user?.type == UserType.login;
 
+  String get myUuid => _user?.uuid ?? "";
+
   void setUser(UserEntity user) {
     _user = user;
   }

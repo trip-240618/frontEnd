@@ -90,11 +90,75 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
+  ResultFuture<TripRoomEntity> putModifyTripRoom({
+    required int tripId,
+    required TripRoomEntity tripRoomEntity,
+  }) async {
+    try {
+      final request = TripRoomMapper.toUpdateRequest(tripRoomEntity);
+      final result = await _tripDataSource.putModifyTrip(
+        tripId,
+        request,
+      );
+      final entity = TripRoomMapper.toEntity(result);
+      return Right(entity);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
   ResultFuture<TripRoomEntity> getEnterTrip({required int tripId}) async {
     try {
       final result = await _tripDataSource.getEnterTrip(tripId);
       final entity = TripRoomMapper.toEntity(result);
       return Right(entity);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> deleteTripRoom({
+    required int tripId,
+  }) async {
+    try {
+      await _tripDataSource.deleteTripRoom(tripId);
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> deleteLeaveTripRoom({
+    required String tripType,
+    required int tripId,
+  }) async {
+    try {
+      await _tripDataSource.deleteLeaveTripRoom(
+        tripType,
+        tripId,
+      );
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> deleteKickMember({
+    required int tripId,
+    required String tripType,
+    required String uuid,
+  }) async {
+    try {
+      await _tripDataSource.deleteKickMember(
+        tripId,
+        tripType,
+        uuid,
+      );
+      return Right(null);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }

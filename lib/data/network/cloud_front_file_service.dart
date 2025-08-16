@@ -22,7 +22,6 @@ class CloudFrontHttpFileService extends HttpFileService {
     request.headers.addAll(updatedHeaders);
 
     final streamedResponse = await request.send();
-
     return HttpGetResponse(streamedResponse);
   }
 }

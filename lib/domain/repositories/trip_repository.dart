@@ -28,6 +28,27 @@ abstract class TripRepository {
     required int tripId,
   });
 
+  ResultFuture<void> deleteTripRoom({
+    required int tripId,
+  });
+
+  ResultFuture<void> deleteLeaveTripRoom({
+    required String tripType,
+    required int tripId,
+  });
+
+  @override
+  ResultFuture<void> deleteKickMember({
+    required int tripId,
+    required String tripType,
+    required String uuid,
+  });
+
+  ResultFuture<TripRoomEntity> putModifyTripRoom({
+    required int tripId,
+    required TripRoomEntity tripRoomEntity,
+  });
+
   ResultFuture<TripRoomEntity> fetchJoinTrip({
     required String invitationCode,
   });

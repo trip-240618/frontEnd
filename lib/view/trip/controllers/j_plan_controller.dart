@@ -19,6 +19,7 @@ import 'package:tripStory/domain/usecases/j_plan_listen_socket_usecase.dart';
 import 'package:tripStory/domain/usecases/j_plan_swap_register_usecase.dart';
 import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
 import 'package:tripStory/router/routes.dart';
+import 'package:tripStory/util/helper/route_helper.dart';
 import 'package:tripStory/util/one_time_event.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/j_plan_edit_param.dart';
@@ -263,9 +264,33 @@ class JPlanController extends GetxController {
     update();
   }
 
-  void onFlightPressed() => Get.toNamed(Routes.searchFlight)?.then((result) {
-        print("value?? ${result}");
+  void onFlightPressed() => Get.toNamed(Routes.searchFlight)?.then((flight) {
+        if (flight != null) {
+          _jPlanState = state.copyWith(
+            flightEntity: flight,
+          );
+          update();
+        }
       });
+
+  Future<void> onFlightDeletedPressed() async {
+    final params = Tuple2(
+      tripRoomInfo?.id ?? 0,
+      state.flightEntity?.flightId ?? 0,
+    );
+    final result = await _deleteFlightUsecase.call(params);
+
+    result.fold(
+      (failure) {},
+      (success) {
+        _jPlanState = state.copyWith(
+          flightEntity: null,
+        );
+        update();
+        RouteHelper.closeAllOverlays();
+      },
+    );
+  }
 
   Future<void> onPlanSwapPressed() async {
     final tripId = tripRoomInfo?.id;

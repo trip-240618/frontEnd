@@ -5,6 +5,7 @@ import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_flight_result_usecase.dart';
 import 'package:tripStory/router/routes.dart';
 import 'package:tripStory/util/extension/date_extension.dart';
+import 'package:tripStory/util/helper/route_helper.dart';
 import 'package:tripStory/view/modules/trip_room_service.dart';
 import 'package:tripStory/view/trip/models/flight_create_param.dart';
 import 'package:tripStory/view/trip/models/flight_search_state.dart';
@@ -157,6 +158,11 @@ class FlightSearchController extends GetxController {
   }
 
   Future<void> onBottomPressed() async {
+    _flightSearchState = state.copyWith(
+      flightSearchStatus: FlightSearchStatus.loading,
+    );
+    update();
+
     final params = Tuple3(
       int.parse(state.airLineNumber),
       state.selectedAirLine?.code ?? "",
@@ -169,6 +175,7 @@ class FlightSearchController extends GetxController {
         _flightSearchState = state.copyWith(
           flightSearchStatus: FlightSearchStatus.empty,
         );
+        RouteHelper.closeAllOverlays();
         update();
       },
       (flightEntity) {
@@ -177,7 +184,7 @@ class FlightSearchController extends GetxController {
         );
         update();
 
-        Get.toNamed(
+        RouteHelper.closeOverlaysAndToNamed(
           Routes.createFlight,
           arguments: FlightCreateParam(
             flightEntity: flightEntity,
