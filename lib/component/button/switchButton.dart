@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../util/color.dart';
-
+import 'package:tripStory/core/util/color.dart';
 
 class SwitchButton extends StatefulWidget {
   final bool value;
   final VoidCallback onTap;
 
-  const SwitchButton({Key? key, required this.onTap, required this.value})
-      : super(key: key);
+  const SwitchButton({Key? key, required this.onTap, required this.value}) : super(key: key);
 
   @override
   _SwitchButtonState createState() => _SwitchButtonState();
@@ -33,8 +31,7 @@ class _SwitchButtonState extends State<SwitchButton> {
             ),
             child: AnimatedAlign(
               duration: animationDuration,
-              alignment:
-              widget.value ? Alignment.centerRight : Alignment.centerLeft,
+              alignment: widget.value ? Alignment.centerRight : Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
                 child: Stack(

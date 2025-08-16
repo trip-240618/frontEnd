@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 import 'package:tripStory/component/bottomContainer.dart';
 import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/mainState.dart';
-import 'package:tripStory/util/color.dart';
-import 'package:tripStory/util/font.dart';
+import 'package:tripStory/core/util/color.dart';
+import 'package:tripStory/core/util/font.dart';
 
 void bottomModel(BuildContext context) {
   final ms = Get.put(MainState());

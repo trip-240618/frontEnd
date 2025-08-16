@@ -37,8 +37,8 @@ import 'package:tripStory/domain/repositories/notice_repository.dart';
 import 'package:tripStory/domain/repositories/notification_repository.dart';
 import 'package:tripStory/domain/repositories/trip_repository.dart';
 import 'package:tripStory/domain/repositories/user_repository.dart';
-import 'package:tripStory/view/global/login_user_service.dart';
-import 'package:tripStory/view/modules/trip_room_service.dart';
+import 'package:tripStory/presentation/global/login_user_service.dart';
+import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
 
 class AppBinding extends Bindings {
   @override

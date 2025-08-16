@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../../util/font.dart';
+import 'package:tripStory/core/util/font.dart';
 
 class SettingArrowRow extends StatelessWidget {
   final String title;
@@ -10,7 +10,8 @@ class SettingArrowRow extends StatelessWidget {
 
   const SettingArrowRow({
     required this.title,
-    required this.onTap,});
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {

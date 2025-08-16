@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
-import '../../util/color.dart';
-import '../../util/font.dart';
+import 'package:tripStory/core/util/color.dart';
 
 class LoadingWidget extends StatefulWidget {
   const LoadingWidget({super.key});
@@ -29,8 +27,9 @@ showLoading(BuildContext context) {
     barrierDismissible: false,
     builder: (ctx) {
       return WillPopScope(
-        onWillPop: () async =>false,
-        child: Center(child: LoadingAnimationWidget.hexagonDots(
+        onWillPop: () async => false,
+        child: Center(
+            child: LoadingAnimationWidget.hexagonDots(
           color: Colors.white,
           size: 50,
         )),
@@ -39,10 +38,11 @@ showLoading(BuildContext context) {
     context: context,
   );
 }
+
 void getShowLoading() {
   Get.dialog(
     WillPopScope(
-      onWillPop: () async =>false,
+      onWillPop: () async => false,
       child: Center(
         child: LoadingAnimationWidget.hexagonDots(
           color: Colors.white,
@@ -53,4 +53,3 @@ void getShowLoading() {
     barrierDismissible: false, // 다이얼로그 외부 터치 방지
   );
 }
-

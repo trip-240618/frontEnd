@@ -1,5 +1,5 @@
 import 'package:tripStory/data/datasources/local/token_storage.dart';
-import 'package:tripStory/view/global/login_user_service.dart';
+import 'package:tripStory/presentation/global/login_user_service.dart';
 
 class SessionService {
   final TokenStorage _tokenStorage;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/util/extension/context_extension.dart';
+import 'package:tripStory/core/util/extension/context_extension.dart';
 
 class EmptyScreen extends StatelessWidget {
   final String content;

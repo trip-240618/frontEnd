@@ -1,6 +1,6 @@
+import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/data/models/response/notice_list_response.dart';
 import 'package:tripStory/domain/entities/notice_list_entity.dart';
-import 'package:tripStory/util/extension/string_extension.dart';
 
 class NoticeListMapper {
   static NoticeListEntity toEntity(NoticeListResponse response) {

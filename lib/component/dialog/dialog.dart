@@ -13,11 +13,10 @@ import 'package:tripStory/controller/jPlanState.dart';
 import 'package:tripStory/controller/mainState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
-import 'package:tripStory/util/color.dart';
-import 'package:tripStory/util/font.dart';
-import 'package:tripStory/util/upper_case.dart';
-import 'package:tripStory/view/trip/bottomNavigator.dart';
-import 'package:tripStory/view/trip/tripPlan/typeJ/addPlan/flight_edit.dart';
+import 'package:tripStory/core/util/color.dart';
+import 'package:tripStory/core/util/font.dart';
+import 'package:tripStory/core/util/upper_case.dart';
+import 'package:tripStory/presentation/trip/bottomNavigator.dart';
 
 /// 메세지만 있는 확인용 다이얼로그
 showConfirmTapDialog(BuildContext context) {
@@ -523,7 +522,7 @@ FlightDialog(BuildContext context, VoidCallback onTap) {
                         GestureDetector(
                           onTap: () {
                             Get.back();
-                            Get.to(() => FlightEdit());
+                            // Get.to(() => FlightEdit());
                           },
                           child: SvgPicture.asset(
                             'assets/icon/pencil.svg',

@@ -14,9 +14,9 @@ import 'package:tripStory/app/api/historyApi.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/data/network/dio_client.dart';
-import 'package:tripStory/view/trip/tripHistory/album/modal/albumModel.dart';
-import 'package:tripStory/view/trip/tripHistory/history/model/detailItem.dart';
-import 'package:tripStory/view/trip/tripHistory/history/tripHistoryAdd.dart';
+import 'package:tripStory/presentation/trip/tripHistory/album/modal/albumModel.dart';
+import 'package:tripStory/presentation/trip/tripHistory/history/model/detailItem.dart';
+import 'package:tripStory/presentation/trip/tripHistory/history/tripHistoryAdd.dart';
 
 import 'MapState.dart';
 

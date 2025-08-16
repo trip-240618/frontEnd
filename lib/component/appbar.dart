@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/util/color.dart';
-
-import '../util/font.dart';
+import 'package:tripStory/core/util/color.dart';
+import 'package:tripStory/core/util/font.dart';
 
 /// 뒤로가는 앱바
 class BackAppBar extends StatelessWidget implements PreferredSizeWidget {

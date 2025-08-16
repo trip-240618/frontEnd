@@ -1,13 +1,12 @@
 import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/controller/notificationState.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/controller/userState.dart';
-import 'package:tripStory/view/trip/bottomNavigator.dart';
-import 'package:tripStory/view/trip/tripHistory/notification/noti_history_detail.dart';
-
+import 'package:tripStory/presentation/trip/bottomNavigator.dart';
 
 class FCM {
   final us = Get.put(UserState());
@@ -31,6 +30,7 @@ class FCM {
     //
     terminateNotification();
   }
+
   ///버튼 눌렀을 때 포그라운드
   foregroundNotification() {
     const String darwinNotificationCategoryPlain = 'trips';
@@ -67,12 +67,11 @@ class FCM {
     );
 
     ///IOS 알림
-    const DarwinNotificationDetails iosNotificationDetails =
-    DarwinNotificationDetails(
+    const DarwinNotificationDetails iosNotificationDetails = DarwinNotificationDetails(
       categoryIdentifier: darwinNotificationCategoryPlain,
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      if(!us.notiDuplicationList.contains(message.messageId)){
+      if (!us.notiDuplicationList.contains(message.messageId)) {
         us.notiDuplicationList.add(message.messageId);
         flutterLocalNotificationsPlugin.show(
             message.hashCode,
@@ -85,8 +84,7 @@ class FCM {
                   channelDescription: channel.description,
                   icon: '@mipmap/ic_launcher',
                 ),
-                iOS: iosNotificationDetails
-            ),
+                iOS: iosNotificationDetails),
             payload: '${message.data}');
       }
     });
@@ -94,17 +92,17 @@ class FCM {
 
   backgroundNotification() async {
     FirebaseMessaging.onMessageOpenedApp.listen(
-          (message) async {
-          Uri uri = Uri.parse(message.data['destination']);
-          String? tripId = uri.queryParameters['tripId'];
-          String? historyId = uri.queryParameters['historyId'];
-          if(historyId!=null){
-            await notis.getNotificationDetail(int.parse(tripId!), int.parse(historyId!));
-            Get.to(()=>NotiHistoryDetail(tripId: int.parse(tripId),historyId: int.parse(historyId),));
-          }else{
-            await ts.getSelectTrip(int.parse(tripId!));
-            Get.to(()=>BottomNavigator());
-          }
+      (message) async {
+        Uri uri = Uri.parse(message.data['destination']);
+        String? tripId = uri.queryParameters['tripId'];
+        String? historyId = uri.queryParameters['historyId'];
+        if (historyId != null) {
+          await notis.getNotificationDetail(int.parse(tripId!), int.parse(historyId!));
+          // Get.to(()=>NotiHistoryDetail(tripId: int.parse(tripId),historyId: int.parse(historyId),));
+        } else {
+          await ts.getSelectTrip(int.parse(tripId!));
+          Get.to(() => BottomNavigator());
+        }
       },
     );
   }
@@ -115,12 +113,12 @@ class FCM {
       Uri uri = Uri.parse(message.data['destination']);
       String? tripId = uri.queryParameters['tripId'];
       String? historyId = uri.queryParameters['historyId'];
-      if(historyId!=null){
+      if (historyId != null) {
         await notis.getNotificationDetail(int.parse(tripId!), int.parse(historyId!));
-        Get.to(()=>NotiHistoryDetail(tripId: int.parse(tripId),historyId: int.parse(historyId),));
-      }else{
+        // Get.to(()=>NotiHistoryDetail(tripId: int.parse(tripId),historyId: int.parse(historyId),));
+      } else {
         await ts.getSelectTrip(int.parse(tripId!));
-        Get.to(()=>BottomNavigator());
+        Get.to(() => BottomNavigator());
       }
     }
   }

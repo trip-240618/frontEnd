@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tripStory/util/font.dart';
+import 'package:tripStory/core/util/font.dart';
 
 class CircleBadge extends StatelessWidget {
   final String text;

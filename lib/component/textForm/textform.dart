@@ -3,9 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/controller/tripState.dart';
-
-import '../../util/color.dart';
-import '../../util/font.dart';
+import 'package:tripStory/core/util/color.dart';
+import 'package:tripStory/core/util/font.dart';
 
 /// 텍스트 필드
 class TextFormFieldComponent extends StatelessWidget {

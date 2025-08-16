@@ -6,11 +6,11 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/app/api/jPlanApi.dart';
 import 'package:tripStory/controller/tripState.dart';
+import 'package:tripStory/core/util/custom_marker.dart';
 
 import '../app/api/flightApi.dart';
 import '../app/permission/permission.dart';
 import '../data/network/dio_client.dart';
-import '../util/custom_marker.dart';
 
 class JPlanState extends GetxController {
   final dio = Get.find<DioClient>();
