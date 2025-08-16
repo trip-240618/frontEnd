@@ -18,6 +18,7 @@ class CommonDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Divider(
+      height: 0,
       thickness: thickness,
       color: color ?? context.color.gray200,
       indent: indent,

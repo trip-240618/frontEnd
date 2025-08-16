@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:tripStory/data/models/request/scrap_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
+import 'package:tripStory/data/models/request/scrap_create_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/data/models/request/trip_room_modify_request.dart';
+import 'package:tripStory/data/models/response/plan_j_response.dart';
 import 'package:tripStory/data/models/response/scrap_detail_response.dart';
 import 'package:tripStory/data/models/response/scrap_response.dart';
-import 'package:tripStory/data/models/response/plan_j_response.dart';
 import 'package:tripStory/data/models/response/trip_room_create_response.dart';
 import 'package:tripStory/data/models/response/trip_room_response.dart';
 
@@ -41,9 +42,33 @@ abstract class TripDataSource {
     @Query("tripId") int tripId,
   );
 
-  @GET("/join")
+  @POST("/join")
   Future<TripRoomResponse> fetchJoinTrip(
     @Query("invitationCode") String invitationCode,
+  );
+
+  @PUT("/modify")
+  Future<TripRoomResponse> putModifyTrip(
+    @Query("tripId") int tripId,
+    @Body() TripRoomModifyRequest request,
+  );
+
+  @DELETE("/delete")
+  Future<void> deleteTripRoom(
+    @Query("tripId") int tripId,
+  );
+
+  @DELETE("/leave")
+  Future<void> deleteLeaveTripRoom(
+    @Query("tripType") String tripType,
+    @Query("tripId") int tripId,
+  );
+
+  @DELETE("/kick")
+  Future<void> deleteKickMember(
+    @Query("tripId") int tripId,
+    @Query("tripType") String tripType,
+    @Query("uuid") String uuid,
   );
 
   @GET("/{tripId}/scrap/list")

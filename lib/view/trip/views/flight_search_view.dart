@@ -5,6 +5,7 @@ import 'package:tripStory/common/bottom/base_bottom_sheet.dart';
 import 'package:tripStory/common/bottom/select_day_bottom_sheet.dart';
 import 'package:tripStory/common/button/bottom_button.dart';
 import 'package:tripStory/common/button/tile/leading_icon_tile_button.dart';
+import 'package:tripStory/common/dialog/loading_dialog.dart';
 import 'package:tripStory/common/icon/svg_icon.dart';
 import 'package:tripStory/common/text/input/error_text_form_field.dart';
 import 'package:tripStory/common/text/input/leading_icon_text_form_field.dart';
@@ -55,7 +56,11 @@ class _FlightSearchViewState extends State<FlightSearchView> {
       child: GetBuilder<FlightSearchController>(
         builder: (controller) {
           final state = controller.state;
-
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (state.flightSearchStatus == FlightSearchStatus.loading) {
+              showLoadingDialog();
+            }
+          });
           return Scaffold(
             appBar: AppAppbar(
               text: "항공사 조회",
@@ -181,6 +186,10 @@ class _FlightSearchViewState extends State<FlightSearchView> {
       heightRatio: 0.7,
       _FlightSearchContent(),
     );
+  }
+
+  void showLoadingDialog() {
+    LoadingDialog.show();
   }
 }
 

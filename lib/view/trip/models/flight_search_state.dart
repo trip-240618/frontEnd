@@ -7,6 +7,7 @@ enum FlightSearchStatus {
   initial,
   empty,
   success,
+  loading,
 }
 
 @freezed

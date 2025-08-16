@@ -3,10 +3,10 @@ import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/scrap_create_entity.dart';
 import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
 import 'package:tripStory/domain/entities/scrap_entity.dart';
-import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_create_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 
@@ -25,6 +25,27 @@ abstract class TripRepository {
 
   ResultFuture<TripRoomEntity> getEnterTrip({
     required int tripId,
+  });
+
+  ResultFuture<void> deleteTripRoom({
+    required int tripId,
+  });
+
+  ResultFuture<void> deleteLeaveTripRoom({
+    required String tripType,
+    required int tripId,
+  });
+
+  @override
+  ResultFuture<void> deleteKickMember({
+    required int tripId,
+    required String tripType,
+    required String uuid,
+  });
+
+  ResultFuture<TripRoomEntity> putModifyTripRoom({
+    required int tripId,
+    required TripRoomEntity tripRoomEntity,
   });
 
   ResultFuture<TripRoomEntity> fetchJoinTrip({

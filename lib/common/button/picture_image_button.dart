@@ -7,12 +7,14 @@ import 'package:tripStory/core/constants/icon_constants.dart';
 
 class PictureImageButton extends StatelessWidget {
   final XFile? pickedImage;
+  final String? url;
   final VoidCallback? onPressed;
 
   const PictureImageButton({
     super.key,
     this.onPressed,
     this.pickedImage,
+    this.url,
   });
 
   @override
@@ -21,6 +23,7 @@ class PictureImageButton extends StatelessWidget {
       onPressed: onPressed,
       pickedImage: pickedImage,
       positioned: 10,
+      url: url,
       iconWidget: BaseButton(
         borderRadius: 100,
         onTap: onPressed,

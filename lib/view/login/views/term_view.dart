@@ -94,13 +94,13 @@ class TermView extends StatelessWidget {
                   onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/marketing"),
                 ),
                 Spacer(),
-                BottomButton(
-                  text: "다음",
-                  enabled: controller.state.isAllTerms,
-                  onTap: () => controller.onConfirmPressed(),
-                ),
               ],
             ),
+          ),
+          bottomNavigationBar: BottomButton(
+            text: "다음",
+            enabled: controller.state.isAllTerms,
+            onTap: () => controller.onConfirmPressed(),
           ),
         );
       },
