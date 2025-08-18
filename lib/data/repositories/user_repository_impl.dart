@@ -14,9 +14,20 @@ class UserRepositoryImpl implements UserRepository {
   UserRepositoryImpl(this._userDataSource);
 
   @override
-  ResultFuture<UserEntity> putUserRegister(RegisterRequest request) async {
+  ResultFuture<UserEntity> putUserRegister({
+    required String nickname,
+    String? thumbnail,
+    String? profileImg,
+    required bool isMarketing,
+  }) async {
     try {
-      final result = await _userDataSource.putUserRegister(request);
+      final registerRequest = RegisterRequest(
+        nickname: nickname,
+        thumbnail: thumbnail,
+        profileImg: profileImg,
+        marketing: isMarketing,
+      );
+      final result = await _userDataSource.putUserRegister(registerRequest);
       final entities = UserMapper.toEntity(result);
       return Right(entities);
     } catch (e) {

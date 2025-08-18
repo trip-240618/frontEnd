@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/enum/trip_type.dart';
-import 'package:tripStory/core/util/color.dart';
+import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
@@ -78,12 +78,13 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
           resizeToAvoidBottomInset: false,
           appBar: AppAppbar(
             text: "여행방 만들기",
+            backgroundColor: context.color.gray50,
             onTap: () => controller.onBackPressed(),
           ),
           body: Column(
             children: [
               Container(
-                color: gray50,
+                color: context.color.gray50,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                   child: Column(

@@ -4,11 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/core/constants/regex_constants.dart';
 import 'package:tripStory/core/router/routes.dart';
-import 'package:tripStory/core/util/helper/file_upload_helper.dart';
 import 'package:tripStory/core/util/image_file_util.dart';
-import 'package:tripStory/core/util/url_utils.dart';
-import 'package:tripStory/data/models/request/file_request.dart';
-import 'package:tripStory/data/models/request/register_request.dart';
 import 'package:tripStory/domain/usecases/register_user_usecase.dart';
 import 'package:tripStory/presentation/login/models/profile_add_state.dart';
 
@@ -55,43 +51,24 @@ class ProfileAddController extends GetxController with GetSingleTickerProviderSt
   Future<void> onNextPressed(
     bool isMarketing,
   ) async {
-    String thumbnailUrl = "";
-    String originUrl = "";
+    List<int>? thumbnailBytes;
+    List<int>? profileBytes;
+
     if (state.profileImage != null) {
-      final result = await _fetchPresignedUrlUsecase.call(
-        FileRequest(prefix: "profile", photoCnt: 2),
-      );
-
-      await result.fold(
-        (error) async {},
-        (urlData) async {
-          final preSignedUrls = urlData.preSignedUrls;
-
-          thumbnailUrl = UrlUtils.getBaseUrl(preSignedUrls[0]);
-          originUrl = UrlUtils.getBaseUrl(preSignedUrls[1]);
-
-          final compressedBytes = await ImageFileUtil.compressImage(state.profileImage!);
-          final originalBytes = await state.profileImage!.readAsBytes();
-
-          await Future.wait([
-            FileUploadHelper.putUploadImage(url: preSignedUrls[0], fileBytes: compressedBytes),
-            FileUploadHelper.putUploadImage(
-              url: preSignedUrls[1],
-              fileBytes: originalBytes,
-            ),
-          ]);
-        },
-      );
+      final bytes = await state.profileImage?.readAsBytes();
+      final compressByte = await ImageFileUtil.compressBytes(bytes!);
+      profileBytes = bytes;
+      thumbnailBytes = compressByte;
     }
 
-    final registerRequest = RegisterRequest(
+    final registerUserParams = RegisterUserParams(
       nickname: state.nickName,
-      marketing: isMarketing,
-      profileImg: originUrl,
-      thumbnail: thumbnailUrl,
+      profileBytes: profileBytes,
+      thumbnailBytes: thumbnailBytes,
+      isMarketing: isMarketing,
     );
 
-    final result = await _registerUserUsecase(registerRequest);
+    final result = await _registerUserUsecase.call(registerUserParams);
 
     result.fold(
       (error) {},
