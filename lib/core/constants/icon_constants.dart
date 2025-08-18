@@ -49,6 +49,10 @@ class IconConstants {
   static const String smallClear = "$_iconSmall/small_clear.svg";
   static const String leader = "$_iconSmall/owner.svg";
   static const String meMark = "$_iconSmall/me_mark.svg";
+  static const String bookmarkOn = "$_iconSmall/bookmark_on.svg";
+  static const String bookmarkOff = "$_iconSmall/bookmark_off.svg";
+  static const String smallRoundCheckOn = "$_iconSmall/round_check_on.svg";
+  static const String smallRoundCheckOff = "$_iconSmall/round_check_off.svg";
 
   // tag
   static const String tagUser = "$_icon/small_user.svg";

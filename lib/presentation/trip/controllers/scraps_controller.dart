@@ -50,8 +50,7 @@ class ScrapsController extends GetxController {
     final tripId = tripRoomInfo?.id;
     if (tripId == null) return;
 
-    final result =
-        state.showBookmarkedOnly ? await _fetchBookmarkedScrapsUseCase(tripId) : await _fetchScrapsUseCase(tripId);
+    final result = state.isBookmarked ? await _fetchBookmarkedScrapsUseCase(tripId) : await _fetchScrapsUseCase(tripId);
     result.fold(
       (error) {
         _scrapsState = state.copyWith(status: ScrapsStatus.failure);
@@ -69,7 +68,7 @@ class ScrapsController extends GetxController {
     if (state.status == ScrapsStatus.loading) {
       return;
     }
-    _scrapsState = state.copyWith(showBookmarkedOnly: !state.showBookmarkedOnly, status: ScrapsStatus.loading);
+    _scrapsState = state.copyWith(isBookmarked: !state.isBookmarked, status: ScrapsStatus.loading);
     update();
     await loadScraps();
   }
