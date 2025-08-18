@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:tripStory/core/enum/file_prefix_type.dart';
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
@@ -38,7 +39,7 @@ class TripRoomModifyUsecase implements UseCase<TripRoomEntity, ModifyTripRoomPar
     }
 
     final preUrl = await fileRepository.fetchFileUrls(
-      prefix: "profile",
+      prefix: FilePrefixType.profile.name,
       count: 1,
     );
 

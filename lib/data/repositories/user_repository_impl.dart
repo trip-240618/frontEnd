@@ -46,11 +46,20 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  ResultFuture<UserEntity> putUserModify(
-    UserModifyRequest request,
-  ) async {
+  ResultFuture<UserEntity> putUserModify({
+    required String nickname,
+    required String memo,
+    String? thumbnail,
+    String? profileImg,
+  }) async {
     try {
-      final result = await _userDataSource.putUserModify(request);
+      final userModifyRequest = UserModifyRequest(
+        nickname: nickname,
+        memo: memo,
+        thumbnail: thumbnail,
+        profileImg: profileImg,
+      );
+      final result = await _userDataSource.putUserModify(userModifyRequest);
       final entities = UserMapper.toEntity(result);
       return Right(entities);
     } catch (e) {

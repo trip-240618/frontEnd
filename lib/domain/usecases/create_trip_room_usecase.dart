@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:tripStory/core/enum/file_prefix_type.dart';
 import 'package:tripStory/core/enum/trip_type.dart';
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/core/util/extension/either_extension.dart';
@@ -42,7 +43,7 @@ class CreateTripRoomUseCase implements UseCase<TripRoomCreateEntity, CreateTripR
 
     if (params.thumbnailBytes != null) {
       final preUrl = await _fileRepository.fetchFileUrls(
-        prefix: "profile",
+        prefix: FilePrefixType.profile.name,
         count: 1,
       );
       final preFail = preUrl.leftOrNull();
