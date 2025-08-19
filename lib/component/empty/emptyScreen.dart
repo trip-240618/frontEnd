@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 
 class EmptyScreen extends StatelessWidget {
@@ -13,19 +12,13 @@ class EmptyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: Get.width,
-      height: Get.height * 0.6,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            content,
-            style: context.style.heading1.copyWith(color: context.color.gray400),
-            textAlign: TextAlign.center,
-          ),
-        ],
+    return Expanded(
+      child: Center(
+        child: Text(
+          content,
+          style: context.style.heading1.copyWith(color: context.color.gray400),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

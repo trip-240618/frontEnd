@@ -6,6 +6,7 @@ import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
+import 'package:tripStory/core/util/helper/quill_helper.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/divider/common_divider.dart';
@@ -27,13 +28,8 @@ class ScrapsView extends StatelessWidget {
           if (status == ScrapsStatus.initial) {
             return const SizedBox.shrink();
           }
-          if (status == ScrapsStatus.empty) {
-            return const EmptyScreen(
-              content: "여행에 필요한 정보를\n스크랩 해보세요 :)",
-            );
-          }
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            padding: EdgeInsets.only(left: 20, right: 20, top: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -51,41 +47,45 @@ class ScrapsView extends StatelessWidget {
                     )
                   ],
                 ),
-
-                ///북마크 자리
                 const SizedBox(
                   height: 12,
                 ),
-                Expanded(
-                  child: MasonryGridView.count(
-                    physics: const ClampingScrollPhysics(),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    itemCount: controller.state.length,
-                    itemBuilder: (context, index) {
-                      final scrap = controller.state.scraps[index];
-
-                      return _ScrapCard(
-                        dateText: scrap.createDate.formatYMDWithDot(),
-                        cardColor: scrap.color.toColor(),
-                        hasImage: scrap.hasImage,
-                        title: scrap.title,
-                        previewText: controller.jsonToPlainText(scrap.preview),
-                        nickname: scrap.nickname,
-                        isBookmarked: scrap.bookmark,
-                        isMine: controller.isMine(scrap),
-                        onTap: () {
-                          // 수정/뷰어 페이지 라우팅
-                        },
-                        onBookmarkTap: () => controller.onBookmarkScrapPressed(scrap.id),
-                        onDeleteTap: () => _showScrapDeleteDialog(
-                          () => controller.onDeleteScrapPressed(scrap.id),
-                        ),
-                      );
-                    },
+                if (status == ScrapsStatus.empty)
+                  EmptyScreen(
+                    content: "여행에 필요한 정보를\n스크랩 해보세요 :)",
                   ),
-                ),
+                if (status == ScrapsStatus.success)
+                  Expanded(
+                    child: MasonryGridView.count(
+                      physics: const ClampingScrollPhysics(),
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      padding: EdgeInsets.only(bottom: 60),
+                      itemCount: controller.state.length,
+                      itemBuilder: (context, index) {
+                        final scrap = controller.state.scraps[index];
+
+                        return _ScrapCard(
+                          dateText: scrap.createDate.formatYMDWithDot(),
+                          cardColor: scrap.color.toColor(),
+                          hasImage: scrap.hasImage,
+                          title: scrap.title,
+                          previewText: QuillHelper.quillDeltaToText(scrap.preview),
+                          nickname: scrap.nickname,
+                          isBookmarked: scrap.bookmark,
+                          isMine: controller.isMine(scrap),
+                          onTap: () {
+                            // 수정/뷰어 페이지 라우팅
+                          },
+                          onBookmarkTap: () => controller.onBookmarkScrapPressed(scrap.id),
+                          onDeleteTap: () => _showScrapDeleteDialog(
+                            () => controller.onDeleteScrapPressed(scrap.id),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
               ],
             ),
           );
