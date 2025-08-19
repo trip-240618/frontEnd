@@ -1,3 +1,5 @@
+## 트립스토리 - 리팩토링 진행중
+
 <img src="https://github.com/user-attachments/assets/37770302-aa61-4121-addc-3066043b45e9" width="100%">
 
 # ✈️ 트립스토리 - 여행 계획 & 기록 앱
