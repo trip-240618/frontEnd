@@ -14,9 +14,20 @@ class UserRepositoryImpl implements UserRepository {
   UserRepositoryImpl(this._userDataSource);
 
   @override
-  ResultFuture<UserEntity> putUserRegister(RegisterRequest request) async {
+  ResultFuture<UserEntity> putUserRegister({
+    required String nickname,
+    String? thumbnail,
+    String? profileImg,
+    required bool isMarketing,
+  }) async {
     try {
-      final result = await _userDataSource.putUserRegister(request);
+      final registerRequest = RegisterRequest(
+        nickname: nickname,
+        thumbnail: thumbnail,
+        profileImg: profileImg,
+        marketing: isMarketing,
+      );
+      final result = await _userDataSource.putUserRegister(registerRequest);
       final entities = UserMapper.toEntity(result);
       return Right(entities);
     } catch (e) {
@@ -46,11 +57,20 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  ResultFuture<UserEntity> putUserModify(
-    UserModifyRequest request,
-  ) async {
+  ResultFuture<UserEntity> putUserModify({
+    required String nickname,
+    required String memo,
+    String? thumbnail,
+    String? profileImg,
+  }) async {
     try {
-      final result = await _userDataSource.putUserModify(request);
+      final userModifyRequest = UserModifyRequest(
+        nickname: nickname,
+        memo: memo,
+        thumbnail: thumbnail,
+        profileImg: profileImg,
+      );
+      final result = await _userDataSource.putUserModify(userModifyRequest);
       final entities = UserMapper.toEntity(result);
       return Right(entities);
     } catch (e) {

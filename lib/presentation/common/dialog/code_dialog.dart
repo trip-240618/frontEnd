@@ -49,9 +49,11 @@ class InviteCodeDialog extends StatelessWidget {
               type: LinkButtonType.send,
             ),
             const SizedBox(width: 12),
-            AppButton(
-              label: "여행방 이동",
-              onPressed: onConfirmPressed,
+            Expanded(
+              child: AppButton(
+                label: "여행방 이동",
+                onPressed: onConfirmPressed,
+              ),
             ),
           ],
         )
@@ -66,6 +68,7 @@ class InviteCodeDialog extends StatelessWidget {
     required VoidCallback onConfirmPressed,
   }) {
     Get.dialog(
+      barrierDismissible: false,
       InviteCodeDialog(
         inviteCode: inviteCode,
         onSendPressed: onSendPressed,

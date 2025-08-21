@@ -1,0 +1,1 @@
+enum FilePrefixType { profile, history }

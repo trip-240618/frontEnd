@@ -77,10 +77,25 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
-  ResultFuture<TripRoomCreateEntity> postCreateTrip(
-    TripRoomCreateRequest tripRoomCreateRequest,
-  ) async {
+  ResultFuture<TripRoomCreateEntity> postCreateTrip({
+    required String name,
+    required String tripType,
+    required String startDate,
+    required String endDate,
+    required String color,
+    required String country,
+    String? thumbnail,
+  }) async {
     try {
+      final tripRoomCreateRequest = TripRoomCreateRequest(
+        name: name,
+        type: tripType,
+        startDate: startDate,
+        endDate: endDate,
+        country: country,
+        thumbnail: thumbnail,
+        labelColor: color,
+      );
       final response = await _tripDataSource.postCreateTrip(tripRoomCreateRequest);
       final entity = TripRoomCreateMapper.toEntity(response);
       return Right(entity);

@@ -1,18 +1,22 @@
 import 'package:tripStory/core/network/typedefs.dart';
-import 'package:tripStory/data/models/request/register_request.dart';
-import 'package:tripStory/data/models/request/user_modify_request.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 
 abstract class UserRepository {
-  ResultFuture<UserEntity> putUserRegister(
-    RegisterRequest request,
-  );
+  ResultFuture<UserEntity> putUserRegister({
+    required String nickname,
+    String? thumbnail,
+    String? profileImg,
+    required bool isMarketing,
+  });
 
   ResultFuture<UserEntity> fetchUserInfo();
 
   ResultFuture<void> deleteUser();
 
-  ResultFuture<UserEntity> putUserModify(
-    UserModifyRequest request,
-  );
+  ResultFuture<UserEntity> putUserModify({
+    required String nickname,
+    required String memo,
+    String? thumbnail,
+    String? profileImg,
+  });
 }

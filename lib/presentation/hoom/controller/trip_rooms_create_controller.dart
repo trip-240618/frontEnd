@@ -8,30 +8,22 @@ import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/core/util/extension/color_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/helper/country_flag_helper.dart';
-import 'package:tripStory/core/util/helper/file_upload_helper.dart';
 import 'package:tripStory/core/util/image_file_util.dart';
 import 'package:tripStory/core/util/one_time_event.dart';
-import 'package:tripStory/core/util/url_utils.dart';
-import 'package:tripStory/data/models/request/file_request.dart';
-import 'package:tripStory/data/models/request/trip_room_create_request.dart';
 import 'package:tripStory/domain/usecases/create_trip_room_usecase.dart';
-import 'package:tripStory/domain/usecases/fetch_presigned_url_usecase.dart';
 import 'package:tripStory/presentation/hoom/model/trip_room_create_state.dart';
 import 'package:tripStory/presentation/trip/bottomNavigator.dart';
 
 class TripRoomsCreateController extends GetxController with GetSingleTickerProviderStateMixin {
   final CreateTripRoomUseCase _createTripRoomUseCase;
-  final FetchPresignedUrlUsecase _fetchPresignedUrlUsecase;
 
   final ImagePicker _picker = ImagePicker();
-  int? tripRoomId;
   TripRoomCreateState tripRoomCreateState = TripRoomCreateState();
 
   TripRoomCreateState get state => tripRoomCreateState;
 
   TripRoomsCreateController(
     this._createTripRoomUseCase,
-    this._fetchPresignedUrlUsecase,
   );
 
   Future<void> precacheFlags(BuildContext context) async {
@@ -123,48 +115,36 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
     );
     update();
 
-    String thumbnailUrl = "";
-    if (state.roomImage != null) {
-      final result = await _fetchPresignedUrlUsecase.call(
-        FileRequest(prefix: "profile", photoCnt: 1),
-      );
+    List<int>? thumbBytes;
 
-      await result.fold(
-        (error) async {},
-        (urlData) async {
-          final preSignedUrl = urlData.preSignedUrls.first;
-          thumbnailUrl = UrlUtils.getBaseUrl(preSignedUrl);
-          final compressedBytes = await ImageFileUtil.compressImage(state.roomImage!);
-          await FileUploadHelper.putUploadImage(
-            url: preSignedUrl,
-            fileBytes: compressedBytes,
-          );
-          await ImageFileUtil.deleteFile(state.roomImage!);
-        },
-      );
+    if (state.roomImage != null) {
+      final bytes = await state.roomImage?.readAsBytes();
+      final compressByte = await ImageFileUtil.compressBytes(bytes!);
+      thumbBytes = compressByte;
     }
-    final tripRoomCreateRequest = TripRoomCreateRequest(
+
+    final createTripRoomParams = CreateTripRoomParams(
       name: state.title,
-      type: state.type?.name ?? "j",
+      tripType: state.type ?? TripType.j,
       startDate: state.tripDate.first.formatYMDWithHyphen(),
       endDate: state.tripDate.last.formatYMDWithHyphen(),
       country: state.tripDestination,
-      thumbnail: thumbnailUrl,
-      labelColor: state.getColor.toJson(),
+      thumbnailBytes: thumbBytes,
+      color: state.getColor.toJson(),
     );
-    final createResult = await _createTripRoomUseCase.call(tripRoomCreateRequest);
+
+    final createResult = await _createTripRoomUseCase.call(createTripRoomParams);
 
     createResult.fold((error) {
       Get.back();
     }, (createResult) {
-      Get.back();
-      tripRoomId = createResult.tripId;
       tripRoomCreateState = state.copyWith(
         showLoading: OneTimeEvent(false),
         showCodeDialog: OneTimeEvent(
           createResult.invitationCode,
         ),
       );
+      if (state.roomImage != null) ImageFileUtil.deleteFile(state.roomImage!);
       update();
     });
   }
