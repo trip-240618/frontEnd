@@ -55,5 +55,6 @@ class IconConstants {
 
   // default
   static const String makerImage = "$_icon/marker.png";
+  static const String planMarker = "$_icon/mapMarker.svg";
   static const String verticalTicket = "$_icon/vertical_ticket_box.svg";
 }

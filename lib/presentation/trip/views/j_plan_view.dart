@@ -106,7 +106,6 @@ class _JPlanViewState extends State<JPlanView> {
                           child: ListView.builder(
                             controller: controller.listController,
                             physics: const ClampingScrollPhysics(),
-                            shrinkWrap: true,
                             padding: const EdgeInsets.only(
                               bottom: 40,
                             ),

@@ -4,6 +4,8 @@ part 'j_plan_entity.freezed.dart';
 
 @freezed
 abstract class JPlanEntity with _$JPlanEntity {
+  const JPlanEntity._();
+
   const factory JPlanEntity({
     required int planId,
     required int dayAfterStart,
@@ -16,4 +18,6 @@ abstract class JPlanEntity with _$JPlanEntity {
     double? longitude,
     required bool locker,
   }) = _JPlanEntity;
+
+  bool get hasLocation => latitude != 0.0 && longitude != 0.0;
 }

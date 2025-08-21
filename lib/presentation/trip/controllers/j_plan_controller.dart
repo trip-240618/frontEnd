@@ -21,10 +21,12 @@ import 'package:tripStory/domain/usecases/j_plan_disconnect_socket_usecase.dart'
 import 'package:tripStory/domain/usecases/j_plan_listen_socket_usecase.dart';
 import 'package:tripStory/domain/usecases/j_plan_swap_register_usecase.dart';
 import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
+import 'package:tripStory/presentation/global/marker_service.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_state.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_swap_param.dart';
+import 'package:tripStory/presentation/trip/widgets/j_plan_map_marker.dart';
 
 class JPlanController extends GetxController {
   final TripRoomService _tripRoomService;
@@ -37,6 +39,7 @@ class JPlanController extends GetxController {
   final JPlanDisconnectSocketUsecase _disconnectSocketUsecase;
   final FetchFlightUsecase _fetchFlightUsecase;
   final DeleteFlightUsecase _deleteFlightUsecase;
+  final MarkerIconService _markerIconService;
 
   JPlanController(
     this._tripRoomService,
@@ -49,6 +52,7 @@ class JPlanController extends GetxController {
     this._disconnectSocketUsecase,
     this._fetchFlightUsecase,
     this._deleteFlightUsecase,
+    this._markerIconService,
   );
 
   TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
@@ -92,12 +96,16 @@ class JPlanController extends GetxController {
     );
 
     final result = await _fetchJPlanUsecase.call(params);
-
     result.fold(
       (failure) {},
-      (plans) {
+      (plans) async {
         _jPlanState = state.copyWith(
           plans: plans,
+        );
+        final markers = await _createMarker(plans: plans);
+        _jPlanState = state.copyWith(
+          plans: plans,
+          markers: markers,
         );
         update();
       },
@@ -173,32 +181,88 @@ class JPlanController extends GetxController {
     );
   }
 
-  void _planAdd(
-    JPlanEntity plan,
+  int _findInsertIndex(
+    List<JPlanEntity> plans,
+    JPlanEntity newPlan,
   ) {
+    int left = 0;
+    int right = plans.length;
+
+    while (left < right) {
+      int mid = (left + right) ~/ 2;
+      if (plans[mid].startTime.compareTo(newPlan.startTime) <= 0) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+    return left;
+  }
+
+  Future<void> _planAdd(JPlanEntity plan) async {
     if (plan.dayAfterStart != state.selectedDay) return;
 
-    final updatedPlans = [...state.plans, plan];
+    final insertIndex = _findInsertIndex(state.plans, plan);
+    final updatedPlans = [...state.plans];
+    final updatedMarkers = <Marker>{...state.markers};
+    updatedPlans.insert(insertIndex, plan);
 
-    updatedPlans.sort((firstPlan, secondPlan) => firstPlan.startTime.compareTo(secondPlan.startTime));
+    if (!plan.hasLocation) {}
+    // 받아온 plan보다 startDate가 높은것의 마커를 제거
+    _removeMarkersFromIndex(
+      startIndex: insertIndex,
+      plans: state.plans,
+      markers: updatedMarkers,
+    );
+
+    // 마커 번호가 밀려서 제거한 후 다시 그림
+    final newMarkers = await _createMarker(
+      plans: updatedPlans,
+      startIndex: insertIndex,
+    );
+
+    updatedMarkers.addAll(newMarkers);
 
     _jPlanState = state.copyWith(
       plans: updatedPlans,
+      markers: updatedMarkers,
     );
 
     update();
   }
 
-  void _planDelete(
+  Future<void> _planDelete(
     int planId,
     int dayAfterStart,
-  ) {
+  ) async {
     if (dayAfterStart != state.selectedDay) return;
 
-    _jPlanState = state.copyWith(
-      plans: state.plans.where((p) => p.planId != planId).toList(),
+    final deleteIndex = state.plans.indexWhere((p) => p.planId == planId);
+    final updatedPlans = [...state.plans]..removeAt(deleteIndex);
+    final updatedMarkers = <Marker>{...state.markers};
+    final removedPlan = state.plans[deleteIndex];
+
+    // 해당 플랜 제거
+    _removeMarker(removedPlan, updatedMarkers);
+
+    // 제거후 해당플랜보다 뒤에 플랜들 한단계씩 땡김
+    _removeMarkersFromIndex(
+      startIndex: deleteIndex,
+      plans: state.plans,
+      markers: updatedMarkers,
     );
 
+    final newMarkers = await _createMarker(
+      plans: updatedPlans,
+      startIndex: deleteIndex,
+    );
+
+    updatedMarkers.addAll(newMarkers);
+
+    _jPlanState = state.copyWith(
+      plans: updatedPlans,
+      markers: updatedMarkers,
+    );
     update();
   }
 
@@ -234,6 +298,65 @@ class JPlanController extends GetxController {
       plans: plans,
     );
     update();
+  }
+
+  /// 마커 관련 로직
+  Future<Set<Marker>> _createMarker({
+    required List<JPlanEntity> plans,
+    int startIndex = 0,
+  }) async {
+    final futures = <Future<Marker>>[];
+
+    int markerIndex = plans.take(startIndex).where((plan) => plan.hasLocation).length + 1;
+
+    for (int i = startIndex; i < plans.length; i++) {
+      final plan = plans[i];
+      if (!plan.hasLocation) continue;
+
+      futures.add(
+        _buildMarker(
+          plan: plan,
+          index: markerIndex,
+        ),
+      );
+      markerIndex++;
+    }
+
+    return (await Future.wait(futures)).toSet();
+  }
+
+  Future<Marker> _buildMarker({
+    required JPlanEntity plan,
+    required int index,
+  }) async {
+    final cacheKey = "${tripRoomInfo?.id}_${plan.dayAfterStart}_${plan.planId}";
+    final icon = await _markerIconService.renderIconWithBuilder(
+      cacheKey: cacheKey,
+      widget: () => JPlanMapMarker(index: index),
+    );
+    return Marker(
+      markerId: MarkerId(cacheKey),
+      position: LatLng(plan.latitude ?? 0.0, plan.longitude ?? 0.0),
+      icon: icon,
+    );
+  }
+
+  void _removeMarker(JPlanEntity plan, Set<Marker> markers) {
+    if (!plan.hasLocation) return;
+
+    final cacheKey = "${tripRoomInfo?.id}_${plan.dayAfterStart}_${plan.planId}";
+    _markerIconService.removeCache(cacheKey);
+    markers.removeWhere((marker) => marker.markerId.value == cacheKey);
+  }
+
+  void _removeMarkersFromIndex({
+    required int startIndex,
+    required List<JPlanEntity> plans,
+    required Set<Marker> markers,
+  }) {
+    for (int i = startIndex; i < plans.length; i++) {
+      _removeMarker(plans[i], markers);
+    }
   }
 
   /// sideEffect

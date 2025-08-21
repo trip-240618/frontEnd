@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/component/history/customMarker.dart';
 import 'package:tripStory/controller/MapState.dart';
+
 import 'color.dart';
 import 'font.dart';
 
@@ -145,7 +146,7 @@ Future<BitmapDescriptor> getCustomIcon2(int index) async {
           ),
           Align(
               alignment: Alignment.topCenter,
-              child: SvgPicture.asset('assets/icon/mapmarker.svg', width: 80, height: 80, fit: BoxFit.cover)),
+              child: SvgPicture.asset('assets/icon/mapMarker.svg', width: 80, height: 80, fit: BoxFit.cover)),
         ],
       ),
     ),
