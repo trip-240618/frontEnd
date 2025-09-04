@@ -260,7 +260,10 @@ class JPlanController extends GetxController {
   }
 
   Future<void> _planModify(JPlanEntity modifyPlan) async {
-    if (modifyPlan.dayAfterStart != state.selectedDay) return;
+    if (modifyPlan.dayAfterStart != state.selectedDay) {
+      _planDelete(modifyPlan.planId, state.selectedDay);
+      return;
+    }
     final modifyIndex = state.plans.indexWhere((plan) => plan.planId == modifyPlan.planId);
     final currentPlan = state.plans[modifyIndex];
     final timeChange = currentPlan.startTime != modifyPlan.startTime;
