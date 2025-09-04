@@ -102,9 +102,6 @@ class JPlanController extends GetxController {
     result.fold(
       (failure) {},
       (plans) async {
-        _jPlanState = state.copyWith(
-          plans: plans,
-        );
         final (makers, polylines) = await _buildMarkersAndPolyLines(plans: plans);
         _jPlanState = state.copyWith(
           plans: plans,
@@ -455,12 +452,11 @@ class JPlanController extends GetxController {
     update();
   }
 
-  void onDayPressed(
+  Future<void> onDayPressed(
     int index,
     DateTime? selectedDate,
-  ) {
+  ) async {
     double scrollOffset = dayItemWidth * index;
-
     dayScrollController.animateTo(
       scrollOffset,
       duration: Duration(milliseconds: 300),
@@ -470,7 +466,8 @@ class JPlanController extends GetxController {
       selectedDayIndex: index,
       selectedDate: selectedDate,
     );
-    update();
+
+    await _getJPlanData();
   }
 
   void onFlightPressed() => Get.toNamed(Routes.searchFlight)?.then((flight) {
