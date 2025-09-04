@@ -120,9 +120,7 @@ class _JPlanViewState extends State<JPlanView> {
                                     title: plan.title,
                                     memo: plan.memo,
                                     labelColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.white,
-                                    onTap: () {
-                                      // todo: 좌표있으면 해당 지도위치로 이동하는 함수
-                                    },
+                                    onTap: () => controller.onPlanPressed(plan.latitude ?? 0.0, plan.longitude ?? 0.0),
                                     trailing: MultiPopUpMenu(
                                       icon: IconConstants.smallVertical,
                                       items: [

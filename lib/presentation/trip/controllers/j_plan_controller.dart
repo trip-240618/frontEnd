@@ -69,6 +69,7 @@ class JPlanController extends GetxController {
   final minHeight = 154.0;
   final maxHeight = 300.0;
   double dayItemWidth = 48;
+  double itemHeight = 58;
   Polyline? _cachedPolyline;
   final Map<String, Marker> _markerCache = {};
   final Map<String, int> _markerIndices = {};
@@ -417,7 +418,10 @@ class JPlanController extends GetxController {
       markerId: MarkerId(cacheKey),
       position: newPosition,
       icon: icon,
-      onTap: () async => _mapCameraMove(newPosition),
+      onTap: () async {
+        _mapCameraMove(newPosition);
+        _scrollToList(plan.planId);
+      },
     );
 
     _markerCache[cacheKey] = marker;
@@ -440,6 +444,23 @@ class JPlanController extends GetxController {
       zoom: 14,
     );
     await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  }
+
+  void _scrollToList(int planId) {
+    final index = state.plans.indexWhere((plan) => plan.planId == planId);
+
+    final viewportHeight = listController.position.viewportDimension;
+    final targetOffset = (itemHeight * index) - (viewportHeight / 2) + (itemHeight / 2);
+    final maxScrollExtent = listController.position.maxScrollExtent;
+    final minScrollExtent = listController.position.minScrollExtent;
+
+    final clampedOffset = targetOffset.clamp(minScrollExtent, maxScrollExtent);
+
+    listController.animateTo(
+      clampedOffset,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   /// sideEffect
@@ -512,7 +533,11 @@ class JPlanController extends GetxController {
     Get.toNamed(
       Routes.tripJPlanAdd,
       arguments: state.selectedDate,
-    );
+    )?.then((latLng) {
+      if (latLng is LatLng) {
+        _mapCameraMove(latLng);
+      }
+    });
   }
 
   void onEditPlanPressed(JPlanEntity jPlan) {
@@ -522,6 +547,14 @@ class JPlanController extends GetxController {
         selectedDate: state.selectedDate ?? DateTime.now(),
         jPlan: jPlan,
       ),
+    );
+  }
+
+  void onPlanPressed(double latitude, double longitude) {
+    if (latitude == 0.0 && longitude == 0.0) return;
+
+    _mapCameraMove(
+      LatLng(latitude, longitude),
     );
   }
 

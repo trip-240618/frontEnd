@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
@@ -29,6 +30,7 @@ class JPlanCreateController extends GetxController {
       longitude: state.searchLongitude,
       locker: false,
     );
+
     final params = Tuple2(
       tripRoomInfo?.id ?? 0,
       tripRoomCreateRequest,
@@ -39,7 +41,11 @@ class JPlanCreateController extends GetxController {
     result.fold(
       (failure) {},
       (success) {
-        Get.back();
+        if (state.searchLatitude != 0.0 || state.searchLongitude != 0.0) {
+          Get.back(result: LatLng(state.searchLatitude, state.searchLongitude));
+        } else {
+          Get.back();
+        }
       },
     );
   }
