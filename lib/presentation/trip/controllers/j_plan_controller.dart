@@ -69,6 +69,9 @@ class JPlanController extends GetxController {
   final minHeight = 154.0;
   final maxHeight = 300.0;
   double dayItemWidth = 48;
+  Polyline? _cachedPolyline;
+  final Map<String, Marker> _markerCache = {};
+  final Map<String, int> _markerIndices = {};
 
   @override
   void onInit() {
@@ -102,10 +105,11 @@ class JPlanController extends GetxController {
         _jPlanState = state.copyWith(
           plans: plans,
         );
-        final markers = await _createMarker(plans: plans);
+        final (makers, polylines) = await _buildMarkersAndPolyLines(plans: plans);
         _jPlanState = state.copyWith(
           plans: plans,
-          markers: markers,
+          markers: makers,
+          polylines: polylines,
         );
         update();
       },
@@ -205,27 +209,26 @@ class JPlanController extends GetxController {
     final insertIndex = _findInsertIndex(state.plans, plan);
     final updatedPlans = [...state.plans];
     final updatedMarkers = <Marker>{...state.markers};
+    final updatedPolyLines = <Polyline>{...state.polylines};
     updatedPlans.insert(insertIndex, plan);
 
-    if (!plan.hasLocation) {}
-    // 받아온 plan보다 startDate가 높은것의 마커를 제거
-    _removeMarkersFromIndex(
-      startIndex: insertIndex,
-      plans: state.plans,
-      markers: updatedMarkers,
-    );
+    if (!plan.hasLocation) {
+      _jPlanState = state.copyWith(plans: updatedPlans);
+      update();
+      return;
+    }
 
-    // 마커 번호가 밀려서 제거한 후 다시 그림
-    final newMarkers = await _createMarker(
+    final (newMarkers, newPolylines) = await _buildMarkersAndPolyLines(
       plans: updatedPlans,
-      startIndex: insertIndex,
     );
 
     updatedMarkers.addAll(newMarkers);
+    updatedPolyLines.addAll(newPolylines);
 
     _jPlanState = state.copyWith(
       plans: updatedPlans,
       markers: updatedMarkers,
+      polylines: updatedPolyLines,
     );
 
     update();
@@ -237,36 +240,42 @@ class JPlanController extends GetxController {
   ) async {
     if (dayAfterStart != state.selectedDay) return;
 
-    final deleteIndex = state.plans.indexWhere((p) => p.planId == planId);
-    final updatedPlans = [...state.plans]..removeAt(deleteIndex);
-    final updatedMarkers = <Marker>{...state.markers};
+    final deleteIndex = state.plans.indexWhere((plan) => plan.planId == planId);
     final removedPlan = state.plans[deleteIndex];
+    final updatedPlans = [...state.plans]..removeAt(deleteIndex);
 
-    // 해당 플랜 제거
-    _removeMarker(removedPlan, updatedMarkers);
+    final removedCacheKey = "${tripRoomInfo?.id}_${removedPlan.dayAfterStart}_${removedPlan.planId}";
+    _removeMarker(removedCacheKey);
 
-    // 제거후 해당플랜보다 뒤에 플랜들 한단계씩 땡김
-    _removeMarkersFromIndex(
-      startIndex: deleteIndex,
-      plans: state.plans,
-      markers: updatedMarkers,
-    );
-
-    final newMarkers = await _createMarker(
+    final (newMarkers, newPolylines) = await _buildMarkersAndPolyLines(
       plans: updatedPlans,
-      startIndex: deleteIndex,
     );
-
-    updatedMarkers.addAll(newMarkers);
 
     _jPlanState = state.copyWith(
       plans: updatedPlans,
-      markers: updatedMarkers,
+      markers: newMarkers,
+      polylines: newPolylines,
     );
     update();
   }
 
-  void _planModify(JPlanEntity plan) {}
+  Future<void> _planModify(JPlanEntity modifyPlan) async {
+    if (modifyPlan.dayAfterStart != state.selectedDay) return;
+    final modifyIndex = state.plans.indexWhere((plan) => plan.planId == modifyPlan.planId);
+    final updatePlans = [...state.plans];
+    updatePlans[modifyIndex] = modifyPlan;
+
+    final (markers, polylines) = await _buildMarkersAndPolyLines(
+      plans: updatePlans,
+    );
+
+    _jPlanState = state.copyWith(
+      plans: updatePlans,
+      markers: markers,
+      polylines: polylines,
+    );
+    update();
+  }
 
   void _planRegister() {
     final swapParams = state.plans.map(JPlanSwapParam.fromEntity).toList();
@@ -301,62 +310,124 @@ class JPlanController extends GetxController {
   }
 
   /// 마커 관련 로직
-  Future<Set<Marker>> _createMarker({
+  Future<(Set<Marker>, Set<Polyline>)> _buildMarkersAndPolyLines({
     required List<JPlanEntity> plans,
-    int startIndex = 0,
   }) async {
-    final futures = <Future<Marker>>[];
+    final markerFutures = <Future<Marker>>[];
+    final List<LatLng> polyLineLatLng = [];
+    int markerIndex = 1;
 
-    int markerIndex = plans.take(startIndex).where((plan) => plan.hasLocation).length + 1;
-
-    for (int i = startIndex; i < plans.length; i++) {
-      final plan = plans[i];
+    for (final plan in plans) {
       if (!plan.hasLocation) continue;
 
-      futures.add(
-        _buildMarker(
+      markerFutures.add(
+        _createdMarker(
           plan: plan,
           index: markerIndex,
         ),
       );
+
+      polyLineLatLng.add(LatLng(plan.latitude ?? 0.0, plan.longitude ?? 0.0));
       markerIndex++;
     }
 
-    return (await Future.wait(futures)).toSet();
+    final markers = (await Future.wait(markerFutures)).toSet();
+    final polyLines = _createPolyline(polyLineLatLng);
+
+    return (markers, polyLines);
   }
 
-  Future<Marker> _buildMarker({
+  Set<Polyline> _createPolyline(List<LatLng> points) {
+    if (points.length < 2) {
+      _cachedPolyline = null;
+      return {};
+    }
+
+    final polylineId = PolylineId("trip_${tripRoomInfo?.id}_day_${state.selectedDay}");
+
+    final polyline = _cachedPolyline?.copyWith(pointsParam: points) ??
+        Polyline(
+          polylineId: polylineId,
+          points: points,
+          color: Color(0xFF4C90FF),
+          width: 3,
+        );
+
+    _cachedPolyline = polyline;
+
+    return {polyline};
+  }
+
+  Future<Marker> _createdMarker({
     required JPlanEntity plan,
     required int index,
   }) async {
     final cacheKey = "${tripRoomInfo?.id}_${plan.dayAfterStart}_${plan.planId}";
+    final existingMarker = _markerCache[cacheKey];
+    final currentIndex = _markerIndices[cacheKey];
+    final newPosition = LatLng(plan.latitude ?? 0.0, plan.longitude ?? 0.0);
+
+    if (existingMarker != null) {
+      final positionChanged = existingMarker.position != newPosition;
+      final indexChanged = currentIndex != index;
+
+      if (!positionChanged && !indexChanged) {
+        return existingMarker;
+      }
+
+      Marker updatedMarker = existingMarker;
+
+      if (indexChanged) {
+        _markerIconService.removeCache(cacheKey);
+
+        final icon = await _markerIconService.renderIconWithBuilder(
+          cacheKey: cacheKey,
+          widget: () => JPlanMapMarker(index: index),
+        );
+        updatedMarker = updatedMarker.copyWith(iconParam: icon);
+        _markerIndices[cacheKey] = index;
+      }
+
+      if (positionChanged) {
+        updatedMarker = updatedMarker.copyWith(positionParam: newPosition);
+      }
+
+      _markerCache[cacheKey] = updatedMarker;
+      return updatedMarker;
+    }
+
     final icon = await _markerIconService.renderIconWithBuilder(
       cacheKey: cacheKey,
       widget: () => JPlanMapMarker(index: index),
     );
-    return Marker(
+
+    final marker = Marker(
       markerId: MarkerId(cacheKey),
-      position: LatLng(plan.latitude ?? 0.0, plan.longitude ?? 0.0),
+      position: newPosition,
       icon: icon,
+      onTap: () async => _mapCameraMove(newPosition),
     );
+
+    _markerCache[cacheKey] = marker;
+    _markerIndices[cacheKey] = index;
+
+    return marker;
   }
 
-  void _removeMarker(JPlanEntity plan, Set<Marker> markers) {
-    if (!plan.hasLocation) return;
-
-    final cacheKey = "${tripRoomInfo?.id}_${plan.dayAfterStart}_${plan.planId}";
-    _markerIconService.removeCache(cacheKey);
-    markers.removeWhere((marker) => marker.markerId.value == cacheKey);
+  void _removeMarker(String markerKey) {
+    final removedCacheKey = markerKey;
+    _markerCache.remove(removedCacheKey);
+    _markerIndices.remove(removedCacheKey);
+    _markerIconService.removeCache(removedCacheKey);
   }
 
-  void _removeMarkersFromIndex({
-    required int startIndex,
-    required List<JPlanEntity> plans,
-    required Set<Marker> markers,
-  }) {
-    for (int i = startIndex; i < plans.length; i++) {
-      _removeMarker(plans[i], markers);
-    }
+  Future<void> _mapCameraMove(LatLng movePosition) async {
+    final controller = await mapController.future;
+    final cameraPosition = CameraPosition(
+      target: movePosition,
+      zoom: 14,
+    );
+    await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
   /// sideEffect

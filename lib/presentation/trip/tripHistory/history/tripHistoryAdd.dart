@@ -257,6 +257,7 @@ class _TripHistoryAddPageState extends State<TripHistoryAddPage> {
                                     if (newIndex > oldIndex) {
                                       newIndex -= 1;
                                     }
+
                                     final item = hs.selectAlbumList.removeAt(oldIndex);
                                     hs.selectAlbumList.insert(newIndex, item);
                                   },
