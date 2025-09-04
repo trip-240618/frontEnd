@@ -262,18 +262,30 @@ class JPlanController extends GetxController {
   Future<void> _planModify(JPlanEntity modifyPlan) async {
     if (modifyPlan.dayAfterStart != state.selectedDay) return;
     final modifyIndex = state.plans.indexWhere((plan) => plan.planId == modifyPlan.planId);
+    final currentPlan = state.plans[modifyIndex];
+    final timeChange = currentPlan.startTime != modifyPlan.startTime;
+    final locationChange = currentPlan.latitude != modifyPlan.latitude || currentPlan.longitude != modifyPlan.longitude;
     final updatePlans = [...state.plans];
     updatePlans[modifyIndex] = modifyPlan;
 
-    final (markers, polylines) = await _buildMarkersAndPolyLines(
-      plans: updatePlans,
-    );
+    if (timeChange || locationChange) {
+      if (timeChange) updatePlans.sort((plan1, plan2) => plan1.startTime.compareTo(plan2.startTime));
 
-    _jPlanState = state.copyWith(
-      plans: updatePlans,
-      markers: markers,
-      polylines: polylines,
-    );
+      final (markers, polylines) = await _buildMarkersAndPolyLines(
+        plans: updatePlans,
+      );
+
+      _jPlanState = state.copyWith(
+        plans: updatePlans,
+        markers: markers,
+        polylines: polylines,
+      );
+    } else {
+      _jPlanState = state.copyWith(
+        plans: updatePlans,
+      );
+    }
+
     update();
   }
 
@@ -535,10 +547,19 @@ class JPlanController extends GetxController {
   Future<void> onMoveToLockerPressed(
     JPlanEntity plan,
   ) async {
-    final params = Tuple2(
-      tripRoomInfo?.id ?? 0,
-      plan,
+    final params = MoveJPlanLockerParams(
+      tripId: tripRoomInfo?.id ?? 0,
+      planId: plan.planId,
+      dayAfterStart: plan.dayAfterStart,
+      orderByDate: plan.orderByDate,
+      startTime: plan.startTime,
+      title: plan.title,
+      place: plan.place,
+      memo: plan.memo,
+      latitude: plan.latitude,
+      longitude: plan.longitude,
     );
+
     await _moveJPlanLockerUsecase.call(params);
   }
 

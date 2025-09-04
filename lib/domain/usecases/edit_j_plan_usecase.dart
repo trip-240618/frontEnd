@@ -1,11 +1,8 @@
-import 'package:dartz/dartz.dart';
 import 'package:tripStory/core/network/typedefs.dart';
-import 'package:tripStory/data/mappers/j_plan_mapper.dart';
 import 'package:tripStory/domain/base/usecase.dart';
-import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/repositories/trip_repository.dart';
 
-class MoveJPlanLockerParams {
+class EditJPlanParams {
   final int tripId;
   final int planId;
   final int dayAfterStart;
@@ -16,8 +13,9 @@ class MoveJPlanLockerParams {
   final String? memo;
   final double? latitude;
   final double? longitude;
+  final bool locker;
 
-  const MoveJPlanLockerParams({
+  const EditJPlanParams({
     required this.tripId,
     required this.planId,
     required this.dayAfterStart,
@@ -28,16 +26,17 @@ class MoveJPlanLockerParams {
     this.memo,
     this.latitude,
     this.longitude,
+    required this.locker,
   });
 }
 
-class MoveJPlanLockerUsecase implements UseCase<void, MoveJPlanLockerParams> {
+class EditJPlanUsecase implements UseCase<void, EditJPlanParams> {
   final TripRepository repository;
 
-  MoveJPlanLockerUsecase(this.repository);
+  EditJPlanUsecase(this.repository);
 
   @override
-  ResultFuture<void> call(MoveJPlanLockerParams params) async {
+  ResultFuture<void> call(EditJPlanParams params) async {
     return repository.putModifyJPlan(
       tripId: params.tripId,
       planId: params.planId,
@@ -49,7 +48,7 @@ class MoveJPlanLockerUsecase implements UseCase<void, MoveJPlanLockerParams> {
       memo: params.memo,
       latitude: params.latitude,
       longitude: params.longitude,
-      locker: true,
+      locker: params.locker,
     );
   }
 }

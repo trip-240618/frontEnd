@@ -21,7 +21,10 @@ class JPlanEditView extends StatelessWidget {
       bottomButtonText: "수정",
       selectedDate: params.selectedDate,
       jPlanEntity: params.jPlan,
-      onBottomButtonPressed: (state) => controller.onEditSavePressed(state),
+      onBottomButtonPressed: (state) => controller.onEditSavePressed(
+        params.jPlan?.planId,
+        state,
+      ),
     );
   }
 }

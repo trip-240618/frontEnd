@@ -8,7 +8,7 @@ abstract class PlanJModifyRequest with _$PlanJModifyRequest {
   const factory PlanJModifyRequest({
     required int planId,
     required int dayAfterStart,
-    required int orderByDate,
+    int? orderByDate,
     required String startTime,
     required String title,
     String? place,
