@@ -11,12 +11,17 @@ import 'package:tripStory/domain/usecases/j_plan_disconnect_socket_usecase.dart'
 import 'package:tripStory/domain/usecases/j_plan_listen_socket_usecase.dart';
 import 'package:tripStory/domain/usecases/j_plan_swap_register_usecase.dart';
 import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
+import 'package:tripStory/presentation/global/marker_service.dart';
 import 'package:tripStory/presentation/trip/controllers/j_plan_controller.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
 
 class JPlanBinding extends Bindings {
   @override
   void dependencies() {
+    Get.put<MarkerIconService>(
+      MarkerIconService(),
+      permanent: true,
+    );
     Get.lazyPut(() => FetchJPlanUsecase(Get.find<TripRepository>()));
     Get.lazyPut(() => DeleteJPlanUsecase(Get.find<TripRepository>()));
     Get.lazyPut(() => MoveJPlanLockerUsecase(Get.find<TripRepository>()));
@@ -39,6 +44,7 @@ class JPlanBinding extends Bindings {
         Get.find<JPlanDisconnectSocketUsecase>(),
         Get.find<FetchFlightUsecase>(),
         Get.find<DeleteFlightUsecase>(),
+        Get.find<MarkerIconService>(),
       ),
     );
   }

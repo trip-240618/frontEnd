@@ -8,13 +8,13 @@ abstract class PlanJModifyRequest with _$PlanJModifyRequest {
   const factory PlanJModifyRequest({
     required int planId,
     required int dayAfterStart,
-    required int orderByDate,
+    int? orderByDate,
     required String startTime,
     required String title,
-    required String place,
-    required String memo,
-    required double latitude,
-    required double longitude,
+    String? place,
+    String? memo,
+    double? latitude,
+    double? longitude,
     required bool locker,
   }) = _PlanJModifyRequest;
 

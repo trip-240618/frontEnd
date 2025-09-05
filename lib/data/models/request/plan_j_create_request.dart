@@ -11,8 +11,8 @@ abstract class PlanJCreateRequest with _$PlanJCreateRequest {
     required String title,
     required String place,
     required String memo,
-    required double latitude,
-    required double longitude,
+    double? latitude,
+    double? longitude,
     required bool locker,
   }) = _PlanJCreateRequest;
 

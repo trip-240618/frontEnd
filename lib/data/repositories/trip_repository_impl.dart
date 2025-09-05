@@ -337,9 +337,31 @@ class TripRepositoryImpl implements TripRepository {
   @override
   ResultFuture<void> putModifyJPlan({
     required int tripId,
-    required PlanJModifyRequest request,
+    required int planId,
+    required int dayAfterStart,
+    int? orderByDate,
+    required String startTime,
+    required String title,
+    String? place,
+    String? memo,
+    double? latitude,
+    double? longitude,
+    required bool locker,
   }) async {
     try {
+      final request = PlanJModifyRequest(
+        planId: planId,
+        dayAfterStart: dayAfterStart,
+        orderByDate: orderByDate,
+        startTime: startTime,
+        title: title,
+        place: place,
+        memo: memo,
+        latitude: latitude,
+        longitude: longitude,
+        locker: locker,
+      );
+
       await _tripDataSource.putModifyJPlan(tripId, request);
       return Right(null);
     } catch (e) {

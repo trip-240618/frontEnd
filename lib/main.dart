@@ -10,6 +10,7 @@ import 'package:tripStory/core/Injection/app_binding.dart';
 import 'package:tripStory/core/constants/app_constants.dart';
 import 'package:tripStory/core/router/router_info.dart';
 import 'package:tripStory/core/theme/app_theme.dart';
+import 'package:tripStory/presentation/global/global_context.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'tripStory',
+      navigatorKey: GlobalContext.navigatorKey,
       supportedLocales: [
         Locale('ko', 'KR'),
       ],

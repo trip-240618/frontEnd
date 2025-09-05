@@ -21,10 +21,12 @@ import 'package:tripStory/domain/usecases/j_plan_disconnect_socket_usecase.dart'
 import 'package:tripStory/domain/usecases/j_plan_listen_socket_usecase.dart';
 import 'package:tripStory/domain/usecases/j_plan_swap_register_usecase.dart';
 import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
+import 'package:tripStory/presentation/global/marker_service.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_state.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_swap_param.dart';
+import 'package:tripStory/presentation/trip/widgets/j_plan_map_marker.dart';
 
 class JPlanController extends GetxController {
   final TripRoomService _tripRoomService;
@@ -37,6 +39,7 @@ class JPlanController extends GetxController {
   final JPlanDisconnectSocketUsecase _disconnectSocketUsecase;
   final FetchFlightUsecase _fetchFlightUsecase;
   final DeleteFlightUsecase _deleteFlightUsecase;
+  final MarkerIconService _markerIconService;
 
   JPlanController(
     this._tripRoomService,
@@ -49,6 +52,7 @@ class JPlanController extends GetxController {
     this._disconnectSocketUsecase,
     this._fetchFlightUsecase,
     this._deleteFlightUsecase,
+    this._markerIconService,
   );
 
   TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
@@ -65,6 +69,10 @@ class JPlanController extends GetxController {
   final minHeight = 154.0;
   final maxHeight = 300.0;
   double dayItemWidth = 48;
+  double itemHeight = 58;
+  Polyline? _cachedPolyline;
+  final Map<String, Marker> _markerCache = {};
+  final Map<String, int> _markerIndices = {};
 
   @override
   void onInit() {
@@ -92,12 +100,14 @@ class JPlanController extends GetxController {
     );
 
     final result = await _fetchJPlanUsecase.call(params);
-
     result.fold(
       (failure) {},
-      (plans) {
+      (plans) async {
+        final (makers, polylines) = await _buildMarkersAndPolyLines(plans: plans);
         _jPlanState = state.copyWith(
           plans: plans,
+          markers: makers,
+          polylines: polylines,
         );
         update();
       },
@@ -173,36 +183,112 @@ class JPlanController extends GetxController {
     );
   }
 
-  void _planAdd(
-    JPlanEntity plan,
+  int _findInsertIndex(
+    List<JPlanEntity> plans,
+    JPlanEntity newPlan,
   ) {
+    int left = 0;
+    int right = plans.length;
+
+    while (left < right) {
+      int mid = (left + right) ~/ 2;
+      if (plans[mid].startTime.compareTo(newPlan.startTime) <= 0) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+    return left;
+  }
+
+  Future<void> _planAdd(JPlanEntity plan) async {
     if (plan.dayAfterStart != state.selectedDay) return;
 
-    final updatedPlans = [...state.plans, plan];
+    final insertIndex = _findInsertIndex(state.plans, plan);
+    final updatedPlans = [...state.plans];
+    final updatedMarkers = <Marker>{...state.markers};
+    final updatedPolyLines = <Polyline>{...state.polylines};
+    updatedPlans.insert(insertIndex, plan);
 
-    updatedPlans.sort((firstPlan, secondPlan) => firstPlan.startTime.compareTo(secondPlan.startTime));
+    if (!plan.hasLocation) {
+      _jPlanState = state.copyWith(plans: updatedPlans);
+      update();
+      return;
+    }
 
-    _jPlanState = state.copyWith(
+    final (newMarkers, newPolylines) = await _buildMarkersAndPolyLines(
       plans: updatedPlans,
     );
 
-    update();
-  }
-
-  void _planDelete(
-    int planId,
-    int dayAfterStart,
-  ) {
-    if (dayAfterStart != state.selectedDay) return;
+    updatedMarkers.addAll(newMarkers);
+    updatedPolyLines.addAll(newPolylines);
 
     _jPlanState = state.copyWith(
-      plans: state.plans.where((p) => p.planId != planId).toList(),
+      plans: updatedPlans,
+      markers: updatedMarkers,
+      polylines: updatedPolyLines,
     );
 
     update();
   }
 
-  void _planModify(JPlanEntity plan) {}
+  Future<void> _planDelete(
+    int planId,
+    int dayAfterStart,
+  ) async {
+    if (dayAfterStart != state.selectedDay) return;
+
+    final deleteIndex = state.plans.indexWhere((plan) => plan.planId == planId);
+    final removedPlan = state.plans[deleteIndex];
+    final updatedPlans = [...state.plans]..removeAt(deleteIndex);
+
+    final removedCacheKey = "${tripRoomInfo?.id}_${removedPlan.dayAfterStart}_${removedPlan.planId}";
+    _removeMarker(removedCacheKey);
+
+    final (newMarkers, newPolylines) = await _buildMarkersAndPolyLines(
+      plans: updatedPlans,
+    );
+
+    _jPlanState = state.copyWith(
+      plans: updatedPlans,
+      markers: newMarkers,
+      polylines: newPolylines,
+    );
+    update();
+  }
+
+  Future<void> _planModify(JPlanEntity modifyPlan) async {
+    if (modifyPlan.dayAfterStart != state.selectedDay) {
+      _planDelete(modifyPlan.planId, state.selectedDay);
+      return;
+    }
+    final modifyIndex = state.plans.indexWhere((plan) => plan.planId == modifyPlan.planId);
+    final currentPlan = state.plans[modifyIndex];
+    final timeChange = currentPlan.startTime != modifyPlan.startTime;
+    final locationChange = currentPlan.latitude != modifyPlan.latitude || currentPlan.longitude != modifyPlan.longitude;
+    final updatePlans = [...state.plans];
+    updatePlans[modifyIndex] = modifyPlan;
+
+    if (timeChange || locationChange) {
+      if (timeChange) updatePlans.sort((plan1, plan2) => plan1.startTime.compareTo(plan2.startTime));
+
+      final (markers, polylines) = await _buildMarkersAndPolyLines(
+        plans: updatePlans,
+      );
+
+      _jPlanState = state.copyWith(
+        plans: updatePlans,
+        markers: markers,
+        polylines: polylines,
+      );
+    } else {
+      _jPlanState = state.copyWith(
+        plans: updatePlans,
+      );
+    }
+
+    update();
+  }
 
   void _planRegister() {
     final swapParams = state.plans.map(JPlanSwapParam.fromEntity).toList();
@@ -236,6 +322,147 @@ class JPlanController extends GetxController {
     update();
   }
 
+  /// 마커 관련 로직
+  Future<(Set<Marker>, Set<Polyline>)> _buildMarkersAndPolyLines({
+    required List<JPlanEntity> plans,
+  }) async {
+    final markerFutures = <Future<Marker>>[];
+    final List<LatLng> polyLineLatLng = [];
+    int markerIndex = 1;
+
+    for (final plan in plans) {
+      if (!plan.hasLocation) continue;
+
+      markerFutures.add(
+        _createdMarker(
+          plan: plan,
+          index: markerIndex,
+        ),
+      );
+
+      polyLineLatLng.add(LatLng(plan.latitude ?? 0.0, plan.longitude ?? 0.0));
+      markerIndex++;
+    }
+
+    final markers = (await Future.wait(markerFutures)).toSet();
+    final polyLines = _createPolyline(polyLineLatLng);
+
+    return (markers, polyLines);
+  }
+
+  Set<Polyline> _createPolyline(List<LatLng> points) {
+    if (points.length < 2) {
+      _cachedPolyline = null;
+      return {};
+    }
+
+    final polylineId = PolylineId("trip_${tripRoomInfo?.id}_day_${state.selectedDay}");
+
+    final polyline = _cachedPolyline?.copyWith(pointsParam: points) ??
+        Polyline(
+          polylineId: polylineId,
+          points: points,
+          color: Color(0xFF4C90FF),
+          width: 3,
+        );
+
+    _cachedPolyline = polyline;
+
+    return {polyline};
+  }
+
+  Future<Marker> _createdMarker({
+    required JPlanEntity plan,
+    required int index,
+  }) async {
+    final cacheKey = "${tripRoomInfo?.id}_${plan.dayAfterStart}_${plan.planId}";
+    final existingMarker = _markerCache[cacheKey];
+    final currentIndex = _markerIndices[cacheKey];
+    final newPosition = LatLng(plan.latitude ?? 0.0, plan.longitude ?? 0.0);
+
+    if (existingMarker != null) {
+      final positionChanged = existingMarker.position != newPosition;
+      final indexChanged = currentIndex != index;
+
+      if (!positionChanged && !indexChanged) {
+        return existingMarker;
+      }
+
+      Marker updatedMarker = existingMarker;
+
+      if (indexChanged) {
+        _markerIconService.removeCache(cacheKey);
+
+        final icon = await _markerIconService.renderIconWithBuilder(
+          cacheKey: cacheKey,
+          widget: () => JPlanMapMarker(index: index),
+        );
+        updatedMarker = updatedMarker.copyWith(iconParam: icon);
+        _markerIndices[cacheKey] = index;
+      }
+
+      if (positionChanged) {
+        updatedMarker = updatedMarker.copyWith(positionParam: newPosition);
+      }
+
+      _markerCache[cacheKey] = updatedMarker;
+      return updatedMarker;
+    }
+
+    final icon = await _markerIconService.renderIconWithBuilder(
+      cacheKey: cacheKey,
+      widget: () => JPlanMapMarker(index: index),
+    );
+
+    final marker = Marker(
+      markerId: MarkerId(cacheKey),
+      position: newPosition,
+      icon: icon,
+      onTap: () async {
+        _mapCameraMove(newPosition);
+        _scrollToList(plan.planId);
+      },
+    );
+
+    _markerCache[cacheKey] = marker;
+    _markerIndices[cacheKey] = index;
+
+    return marker;
+  }
+
+  void _removeMarker(String markerKey) {
+    final removedCacheKey = markerKey;
+    _markerCache.remove(removedCacheKey);
+    _markerIndices.remove(removedCacheKey);
+    _markerIconService.removeCache(removedCacheKey);
+  }
+
+  Future<void> _mapCameraMove(LatLng movePosition) async {
+    final controller = await mapController.future;
+    final cameraPosition = CameraPosition(
+      target: movePosition,
+      zoom: 14,
+    );
+    await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  }
+
+  void _scrollToList(int planId) {
+    final index = state.plans.indexWhere((plan) => plan.planId == planId);
+
+    final viewportHeight = listController.position.viewportDimension;
+    final targetOffset = (itemHeight * index) - (viewportHeight / 2) + (itemHeight / 2);
+    final maxScrollExtent = listController.position.maxScrollExtent;
+    final minScrollExtent = listController.position.minScrollExtent;
+
+    final clampedOffset = targetOffset.clamp(minScrollExtent, maxScrollExtent);
+
+    listController.animateTo(
+      clampedOffset,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
   /// sideEffect
   void onMapDrag(double detail) {
     double nextHeight = state.googleMapHeight + detail;
@@ -246,12 +473,11 @@ class JPlanController extends GetxController {
     update();
   }
 
-  void onDayPressed(
+  Future<void> onDayPressed(
     int index,
     DateTime? selectedDate,
-  ) {
+  ) async {
     double scrollOffset = dayItemWidth * index;
-
     dayScrollController.animateTo(
       scrollOffset,
       duration: Duration(milliseconds: 300),
@@ -261,7 +487,8 @@ class JPlanController extends GetxController {
       selectedDayIndex: index,
       selectedDate: selectedDate,
     );
-    update();
+
+    await _getJPlanData();
   }
 
   void onFlightPressed() => Get.toNamed(Routes.searchFlight)?.then((flight) {
@@ -306,7 +533,11 @@ class JPlanController extends GetxController {
     Get.toNamed(
       Routes.tripJPlanAdd,
       arguments: state.selectedDate,
-    );
+    )?.then((latLng) {
+      if (latLng is LatLng) {
+        _mapCameraMove(latLng);
+      }
+    });
   }
 
   void onEditPlanPressed(JPlanEntity jPlan) {
@@ -316,6 +547,14 @@ class JPlanController extends GetxController {
         selectedDate: state.selectedDate ?? DateTime.now(),
         jPlan: jPlan,
       ),
+    );
+  }
+
+  void onPlanPressed(double latitude, double longitude) {
+    if (latitude == 0.0 && longitude == 0.0) return;
+
+    _mapCameraMove(
+      LatLng(latitude, longitude),
     );
   }
 
@@ -341,10 +580,19 @@ class JPlanController extends GetxController {
   Future<void> onMoveToLockerPressed(
     JPlanEntity plan,
   ) async {
-    final params = Tuple2(
-      tripRoomInfo?.id ?? 0,
-      plan,
+    final params = MoveJPlanLockerParams(
+      tripId: tripRoomInfo?.id ?? 0,
+      planId: plan.planId,
+      dayAfterStart: plan.dayAfterStart,
+      orderByDate: plan.orderByDate,
+      startTime: plan.startTime,
+      title: plan.title,
+      place: plan.place,
+      memo: plan.memo,
+      latitude: plan.latitude,
+      longitude: plan.longitude,
     );
+
     await _moveJPlanLockerUsecase.call(params);
   }
 
