@@ -3,6 +3,7 @@ import 'package:tripStory/core/constants/network_constants.dart';
 import 'package:tripStory/core/errors/failure.dart';
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
+import 'package:tripStory/data/mappers/histories_mapper.dart';
 import 'package:tripStory/data/mappers/j_plan_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_create_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_detail_mapper.dart';
@@ -15,6 +16,7 @@ import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
 import 'package:tripStory/data/network/socket_service.dart';
+import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/scrap_create_entity.dart';
 import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
@@ -405,6 +407,19 @@ class TripRepositoryImpl implements TripRepository {
     try {
       await _tripDataSource.fetchRegisterFinishJPlan(tripId, day);
       return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<HistoriesEntity>> fetchHistories({
+    required int tripId,
+  }) async {
+    try {
+      final result = await _tripDataSource.fetchHistoryList(tripId);
+      final entities = HistoriesMapper.fromResponseList(result);
+      return Right(entities);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
