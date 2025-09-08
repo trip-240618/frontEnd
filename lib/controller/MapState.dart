@@ -142,7 +142,7 @@ class MapState extends GetxController {
   Future<void> removeMarker(String url) async {
     items.removeWhere((item) => item.thumbnailUrl == url);
     manager.setItems(items);
-    manager.updateMap(); // 명시적으로 지도 업데이트 호출
+    manager.updateMap();
   }
 
   /// 현재 내 위치로 카메라 lat,lng 초기화

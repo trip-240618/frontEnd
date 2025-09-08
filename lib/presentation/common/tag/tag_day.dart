@@ -1,15 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 
-class TabDay extends StatelessWidget {
-  final String label;
-  final Color color;
+enum TagDayType {
+  dDay,
+  day,
+  duringTrip,
+}
 
-  const TabDay({
+class TagDay extends StatelessWidget {
+  final int day;
+  final Color color;
+  final TagDayType dayType;
+
+  const TagDay({
     super.key,
-    required this.label,
+    required this.day,
     required this.color,
+    required this.dayType,
   });
+
+  String get _label {
+    switch (dayType) {
+      case TagDayType.dDay:
+        return "D-$day";
+      case TagDayType.day:
+        return "Day $day";
+      case TagDayType.duringTrip:
+        return "여행중";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +40,7 @@ class TabDay extends StatelessWidget {
         borderRadius: BorderRadius.circular(100),
       ),
       child: Text(
-        label,
+        _label,
         style: context.style.label1Normal.copyWith(
           color: color,
         ),
