@@ -33,6 +33,7 @@ import 'package:tripStory/presentation/splash/binding/splash_binding.dart';
 import 'package:tripStory/presentation/splash/views/splash_view.dart';
 import 'package:tripStory/presentation/trip/bindings/flight_create_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/flight_search_binding.dart';
+import 'package:tripStory/presentation/trip/bindings/history_main_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_add_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_edit_binding.dart';
@@ -165,6 +166,7 @@ class RouterInfo {
         TripMainBinding(),
         JPlanBinding(),
         ScrapsBinding(),
+        HistoryMainBinding(),
       ],
     ),
     GetPage(

@@ -19,12 +19,12 @@ import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/button/link_button.dart';
 import 'package:tripStory/presentation/common/button/popup_list.dart';
 import 'package:tripStory/presentation/common/button/tab/tab_box.dart';
-import 'package:tripStory/presentation/common/button/tab/tab_day.dart';
 import 'package:tripStory/presentation/common/button/tab/tab_user.dart';
 import 'package:tripStory/presentation/common/dialog/code_insert_dialog.dart';
 import 'package:tripStory/presentation/common/image/round_thumbnail_image.dart';
 import 'package:tripStory/presentation/common/model/popup_item_model.dart';
 import 'package:tripStory/presentation/common/snack_bar.dart';
+import 'package:tripStory/presentation/common/tag/tag_day.dart';
 import 'package:tripStory/presentation/hoom/controller/rooms_controller.dart';
 import 'package:tripStory/presentation/hoom/enum/trip_rooms_type.dart';
 import 'package:tripStory/presentation/hoom/model/trip_rooms_state.dart';
@@ -278,7 +278,11 @@ class _TripRoomTile extends StatelessWidget {
 
       case TripRoomType.coming:
       case TripRoomType.bookmarked:
-        leading = TabDay(label: tripRoom.dDay < 1 ? "여행중" : "D-${tripRoom.dDay}", color: labelColor);
+        leading = TagDay(
+          day: tripRoom.dDay,
+          color: labelColor,
+          dayType: tripRoom.dDay < 1 ? TagDayType.duringTrip : TagDayType.dDay,
+        );
         trailing = _buildTrailingWidget(
           prefixIcon: GestureDetector(
             behavior: HitTestBehavior.opaque,

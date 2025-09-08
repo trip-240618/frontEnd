@@ -27,6 +27,7 @@ class AppTheme {
     yellow: Color(0xFFFFCC00),
     green: Color(0xFF27AE60),
     blue: Color(0xFF4C90FF),
+    charcoal: Color(0xff262626),
     gray900: Color(0xFF212121),
     gray800: Color(0xFF424242),
     gray700: Color(0xFF616161),
