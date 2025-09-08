@@ -6,6 +6,7 @@ import 'package:tripStory/core/util/bottomSheetHeader.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
+import 'package:tripStory/presentation/common/button/base/base_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/tag/tag_day.dart';
@@ -116,37 +117,37 @@ class _HistorySearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onSearchBarPressed,
-      child: Container(
-        height: 52,
-        decoration: BoxDecoration(
-          color: context.color.gray50,
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(color: context.color.gray200),
-          boxShadow: [
-            BoxShadow(
-              color: context.color.charcoal.withValues(alpha: 0.1),
-              offset: Offset(0, 1),
-              blurRadius: 2,
-            ),
-            BoxShadow(
-              color: context.color.charcoal.withValues(alpha: 0.09),
-              offset: Offset(0, 3),
-              blurRadius: 3,
-            ),
-            BoxShadow(
-              color: context.color.charcoal.withValues(alpha: 0.05),
-              offset: Offset(0, 7),
-              blurRadius: 4,
-            ),
-            BoxShadow(
-              color: context.color.charcoal.withValues(alpha: 0.01),
-              offset: Offset(0, 13),
-              blurRadius: 5,
-            ),
-          ],
-        ),
+    return Container(
+      height: 52,
+      decoration: BoxDecoration(
+        color: context.color.gray50,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: context.color.gray200),
+        boxShadow: [
+          BoxShadow(
+            color: context.color.charcoal.withValues(alpha: 0.1),
+            offset: Offset(0, 1),
+            blurRadius: 2,
+          ),
+          BoxShadow(
+            color: context.color.charcoal.withValues(alpha: 0.09),
+            offset: Offset(0, 3),
+            blurRadius: 3,
+          ),
+          BoxShadow(
+            color: context.color.charcoal.withValues(alpha: 0.05),
+            offset: Offset(0, 7),
+            blurRadius: 4,
+          ),
+          BoxShadow(
+            color: context.color.charcoal.withValues(alpha: 0.01),
+            offset: Offset(0, 13),
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: BaseButton(
+        onTap: onSearchBarPressed,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Row(
