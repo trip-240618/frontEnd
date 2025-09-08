@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/bottomSheetHeader.dart';
-import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
+import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/tag/tag_day.dart';
@@ -72,6 +72,7 @@ class _HistoryMainViewState extends State<HistoryMainView> {
                         ),
                         _BottomSheetContent(
                           labelColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
+                          histories: state.histories,
                         ),
                       ],
                     );
@@ -224,10 +225,12 @@ class _BottomSheetHeader extends StatelessWidget {
 }
 
 class _BottomSheetContent extends StatelessWidget {
+  final List<HistoriesEntity> histories;
   final Color labelColor;
 
   const _BottomSheetContent({
     required this.labelColor,
+    required this.histories,
   });
 
   @override
@@ -236,22 +239,28 @@ class _BottomSheetContent extends StatelessWidget {
       padding: EdgeInsets.zero,
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
-          childCount: 3,
+          childCount: histories.length,
           (context, index) {
+            final history = histories[index].historyList;
+            final photoDate = histories[index].photoDate;
+
             return Column(
               children: [
                 Container(
                   width: Get.width,
-                  height: 222,
+                  height: history.isEmpty ? 60 : 222,
                   decoration: BoxDecoration(
                     color: context.color.white,
                     border: Border(
-                      top: BorderSide(color: gray200, width: 0.5),
-                      bottom: BorderSide(color: gray200, width: 0.5),
+                      top: BorderSide(color: context.color.gray200, width: 0.5),
+                      bottom: BorderSide(color: context.color.gray200, width: 0.5),
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 16),
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      top: 16,
+                    ),
                     child: Column(
                       children: [
                         GestureDetector(
@@ -277,7 +286,7 @@ class _BottomSheetContent extends StatelessWidget {
                                     width: 6,
                                   ),
                                   Text(
-                                    "2024.05.10",
+                                    photoDate,
                                     style: context.style.caption1,
                                   ),
                                   Spacer(),
@@ -290,7 +299,7 @@ class _BottomSheetContent extends StatelessWidget {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        "3",
+                                        "${history.length}",
                                         style: context.style.caption1.copyWith(
                                           color: context.color.white,
                                         ),
@@ -307,7 +316,7 @@ class _BottomSheetContent extends StatelessWidget {
                         ),
                         Expanded(
                           child: ListView.builder(
-                              itemCount: 3,
+                              itemCount: history.length,
                               scrollDirection: Axis.horizontal,
                               addRepaintBoundaries: false,
                               addAutomaticKeepAlives: false,

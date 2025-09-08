@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart' as cluster;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tripStory/core/util/extension/date_extension.dart';
+import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_histories_usecase.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
@@ -48,11 +50,38 @@ class HistoryMainController extends GetxController {
 
     result.fold(
       (failure) {},
-      (histories) {
+      (data) {
+        final histories = _fillPhotoDates(data);
         _historyMainState = state.copyWith(
           histories: histories,
         );
         update();
+      },
+    );
+  }
+
+  List<HistoriesEntity> _fillPhotoDates(List<HistoriesEntity> histories) {
+    final startDate = tripRoomInfo?.startDate;
+    final endDate = tripRoomInfo?.endDate;
+
+    if (startDate == null || endDate == null) {
+      return histories;
+    }
+
+    final historyMap = {
+      for (var history in histories) history.photoDate: history,
+    };
+
+    return List.generate(
+      endDate.difference(startDate).inDays + 1,
+      (index) {
+        final currentDate = startDate.add(Duration(days: index)).formatYMDWithDot();
+
+        return historyMap[currentDate] ??
+            HistoriesEntity(
+              photoDate: currentDate,
+              historyList: [],
+            );
       },
     );
   }
