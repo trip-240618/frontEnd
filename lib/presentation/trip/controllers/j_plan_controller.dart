@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tripStory/core/router/routes.dart';
@@ -21,6 +20,7 @@ import 'package:tripStory/domain/usecases/j_plan_disconnect_socket_usecase.dart'
 import 'package:tripStory/domain/usecases/j_plan_listen_socket_usecase.dart';
 import 'package:tripStory/domain/usecases/j_plan_swap_register_usecase.dart';
 import 'package:tripStory/domain/usecases/move_j_plan_locker_usecase.dart';
+import 'package:tripStory/presentation/global/location_service.dart';
 import 'package:tripStory/presentation/global/marker_service.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_edit_param.dart';
@@ -115,13 +115,7 @@ class JPlanController extends GetxController {
   }
 
   Future<void> _getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      return;
-    }
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    final position = await LocationService().getCurrentLocation();
     _jPlanState = state.copyWith(
       mapLatitude: position.latitude,
       mapLongitude: position.longitude,

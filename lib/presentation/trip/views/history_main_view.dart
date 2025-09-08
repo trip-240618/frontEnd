@@ -10,9 +10,12 @@ import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/tag/tag_day.dart';
 import 'package:tripStory/presentation/trip/controllers/history_main_controller.dart';
+import 'package:tripStory/presentation/trip/models/history_main_state.dart';
 
 class HistoryMainView extends StatefulWidget {
-  const HistoryMainView({super.key});
+  const HistoryMainView({
+    super.key,
+  });
 
   @override
   State<HistoryMainView> createState() => _HistoryMainViewState();
@@ -27,20 +30,26 @@ class _HistoryMainViewState extends State<HistoryMainView> {
 
         return Stack(
           children: [
-            GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(state.currentLatitude, state.currentLongitude),
-                zoom: 14.4746,
+            Visibility(
+              visible: state.historyStatus == HistoryStatus.success,
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                    state.currentLatitude,
+                    state.currentLongitude,
+                  ),
+                  zoom: 14.4746,
+                ),
+                markers: state.markers.toSet(),
+                // onCameraMove: maps.manager.onCameraMove,
+                // onCameraIdle: maps.manager.updateMap,
+                onMapCreated: (GoogleMapController mapController) {
+                  if (!controller.mapController.isCompleted) {
+                    controller.mapController.complete(mapController);
+                    controller.manager?.setMapId(mapController.mapId);
+                  }
+                },
               ),
-              markers: state.markers.toSet(),
-              // onCameraMove: maps.manager.onCameraMove,
-              // onCameraIdle: maps.manager.updateMap,
-              onMapCreated: (GoogleMapController mapController) {
-                if (!controller.mapController.isCompleted) {
-                  controller.mapController.complete(mapController);
-                  controller.manager?.setMapId(mapController.mapId);
-                }
-              },
             ),
             Align(
               alignment: Alignment.bottomCenter,

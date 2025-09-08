@@ -8,6 +8,7 @@ import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_histories_usecase.dart';
+import 'package:tripStory/presentation/global/location_service.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
 import 'package:tripStory/presentation/trip/models/history_main_state.dart';
 
@@ -34,13 +35,31 @@ class HistoryMainController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _getHistoryData();
+    _initializeData();
     // manager = cluster.ClusterManager(
     //   items,
     //   _updateMarkers,
     //   markerBuilder: _markerBuilder,
     //   levels: [1, 4.25, 6.75, 10.0, 11.5, 13.0, 14.5, 16.0, 16.5, 18.0],
     // );
+  }
+
+  Future<void> _initializeData() async {
+    await Future.wait([
+      _getCurrentLocation(),
+      _getHistoryData(),
+    ]);
+  }
+
+  Future<void> _getCurrentLocation() async {
+    final position = await LocationService().getCurrentLocation();
+    _historyMainState = state.copyWith(
+      currentLatitude: position.latitude,
+      currentLongitude: position.longitude,
+      historyStatus: HistoryStatus.success,
+    );
+
+    update();
   }
 
   Future<void> _getHistoryData() async {

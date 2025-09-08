@@ -5,6 +5,8 @@ import 'package:tripStory/domain/entities/histories_entity.dart';
 
 part 'history_main_state.freezed.dart';
 
+enum HistoryStatus { initial, loading, success, failure }
+
 @freezed
 abstract class HistoryMainState with _$HistoryMainState {
   const HistoryMainState._();
@@ -14,6 +16,7 @@ abstract class HistoryMainState with _$HistoryMainState {
     @Default(0.0) double currentLongitude,
     @Default({}) Set<Marker> markers,
     @Default([]) List<HistoriesEntity> histories,
+    @Default(HistoryStatus.initial) HistoryStatus historyStatus,
   }) = _HistoryMainState;
 }
 
