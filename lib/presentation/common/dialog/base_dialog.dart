@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tripStory/core/enum/button_type.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 
 class BaseDialog extends StatelessWidget {
@@ -20,7 +22,10 @@ class BaseDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       contentPadding: contentPadding,
       insetPadding: EdgeInsets.symmetric(horizontal: 20),
-      content: SizedBox(width: context.screenWidth, child: content),
+      content: SizedBox(
+        width: context.screenWidth,
+        child: content,
+      ),
       actions: actions,
     );
   }

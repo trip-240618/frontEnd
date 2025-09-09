@@ -73,7 +73,7 @@ class TripRoomMemberView extends StatelessWidget {
   void showKickDialog({
     required VoidCallback onConfirm,
   }) {
-    CommonDialog.show(
+    CommonDialog.showConfirmCancel(
       title: "여행방 맴버를 내보내시겠습니까?",
       confirmText: "확인",
       onConfirm: onConfirm,
@@ -83,7 +83,7 @@ class TripRoomMemberView extends StatelessWidget {
   void showRoomLeaveDialog({
     required VoidCallback onConfirm,
   }) {
-    CommonDialog.show(
+    CommonDialog.showConfirmCancel(
       title: "여행방을 나가시겠습니까?",
       confirmText: "확인",
       onConfirm: onConfirm,

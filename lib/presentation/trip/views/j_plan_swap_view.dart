@@ -107,7 +107,7 @@ class _JPlanSwapViewState extends State<JPlanSwapView> {
   void backDialog(
     VoidCallback onConfirm,
   ) {
-    CommonDialog.show(
+    CommonDialog.showConfirmCancel(
       title: "순서 변경을 종료하시겠습니까?",
       confirmText: "확인",
       onConfirm: onConfirm,

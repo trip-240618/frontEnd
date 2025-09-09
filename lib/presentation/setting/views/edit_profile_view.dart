@@ -143,7 +143,7 @@ class _EditProfileViewState extends State<EditProfileView> {
   void _showConfirmDialog(
     VoidCallback onConfirmPressed,
   ) {
-    CommonDialog.show(
+    CommonDialog.showConfirmCancel(
       title: "프로필을 수정하시겠습니까?",
       confirmText: "확인",
       onConfirm: onConfirmPressed,

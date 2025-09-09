@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart' as cluster;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tripStory/core/permission/permission_state.dart';
+import 'package:tripStory/core/util/one_time_event.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
 
 part 'history_main_state.freezed.dart';
@@ -17,6 +19,7 @@ abstract class HistoryMainState with _$HistoryMainState {
     @Default({}) Set<Marker> markers,
     @Default([]) List<HistoriesEntity> histories,
     @Default(HistoryStatus.initial) HistoryStatus historyStatus,
+    OneTimeEvent<bool>? showPhotoPermissionDialog,
   }) = _HistoryMainState;
 }
 

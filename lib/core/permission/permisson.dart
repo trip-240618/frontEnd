@@ -1,4 +1,5 @@
 import 'package:permission_handler/permission_handler.dart';
+import 'package:photo_manager/photo_manager.dart' as photo;
 import 'package:tripStory/core/permission/permission_state.dart';
 import 'package:tripStory/core/permission/permission_type.dart';
 
@@ -20,6 +21,11 @@ Future<PermissionState> getPermissionStatus(
     case PermissionType.microphone:
       permission = Permission.microphone;
       break;
+    case PermissionType.photoManager:
+      final result = await photo.PhotoManager.requestPermissionExtend();
+      if (result.isAuth) return PermissionState.granted;
+
+      return PermissionState.denied;
   }
 
   final status = await permission.status;

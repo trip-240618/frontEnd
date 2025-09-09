@@ -75,7 +75,7 @@ class MyPageSettingView extends StatelessWidget {
   void showLogOutDialog(
     VoidCallback onConfirmPressed,
   ) {
-    CommonDialog.show(
+    CommonDialog.showConfirmCancel(
       title: "로그아웃을 하시겠어요?",
       confirmText: "확인",
       onConfirm: onConfirmPressed,

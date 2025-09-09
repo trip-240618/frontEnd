@@ -95,7 +95,7 @@ class UserDeleteView extends GetView<UserDeleteController> {
   void _showConfirmDialog(
     VoidCallback onConfirmPressed,
   ) {
-    CommonDialog.show(
+    CommonDialog.showConfirmCancel(
       title: "회원탈퇴를 하시겠어요?",
       confirmText: "탈퇴",
       onConfirm: onConfirmPressed,

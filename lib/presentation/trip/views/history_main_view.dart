@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:photo_manager/photo_manager.dart' as photo;
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/bottomSheetHeader.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
@@ -8,6 +9,7 @@ import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/presentation/common/button/base/base_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
+import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/tag/tag_day.dart';
 import 'package:tripStory/presentation/trip/controllers/history_main_controller.dart';
@@ -28,7 +30,12 @@ class _HistoryMainViewState extends State<HistoryMainView> {
     return GetBuilder<HistoryMainController>(
       builder: (controller) {
         final state = controller.state;
-
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final showPermissionDialog = state.showPhotoPermissionDialog?.consume();
+          if (showPermissionDialog != null) {
+            _showPhotoPermissionDialog();
+          }
+        });
         return Stack(
           children: [
             Visibility(
@@ -79,6 +86,7 @@ class _HistoryMainViewState extends State<HistoryMainView> {
                       slivers: [
                         _BottomSheetHeader(
                           tripRoomName: controller.tripRoomInfo?.name ?? "",
+                          onPhotoPressed: () => controller.onPhotoPressed(),
                         ),
                         _BottomSheetContent(
                           labelColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
@@ -101,6 +109,16 @@ class _HistoryMainViewState extends State<HistoryMainView> {
             ),
           ],
         );
+      },
+    );
+  }
+
+  void _showPhotoPermissionDialog() {
+    CommonDialog.showConfirm(
+      title: "권한을 설정해주시기 바랍니다",
+      onConfirm: () {
+        photo.PhotoManager.openSetting();
+        Get.back();
       },
     );
   }
@@ -174,9 +192,11 @@ class _HistorySearchBar extends StatelessWidget {
 
 class _BottomSheetHeader extends StatelessWidget {
   final String tripRoomName;
+  final VoidCallback onPhotoPressed;
 
   const _BottomSheetHeader({
     required this.tripRoomName,
+    required this.onPhotoPressed,
   });
 
   @override
@@ -221,7 +241,7 @@ class _BottomSheetHeader extends StatelessWidget {
                     ),
                     AppIconButton(
                       assetPath: IconConstants.roundPlus,
-                      onTap: () {},
+                      onTap: onPhotoPressed,
                     ),
                   ],
                 ),

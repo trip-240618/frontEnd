@@ -48,6 +48,7 @@ import 'package:tripStory/presentation/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/presentation/trip/models/flight_create_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_swap_param.dart';
+import 'package:tripStory/presentation/trip/views/album_view.dart';
 import 'package:tripStory/presentation/trip/views/flight_create_view.dart';
 import 'package:tripStory/presentation/trip/views/flight_search_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_create_view.dart';
@@ -237,6 +238,11 @@ class RouterInfo {
     GetPage(
       name: Routes.tripRoomMember,
       page: () => const TripRoomMemberView(),
+      binding: TripRoomMemberBinding(),
+    ),
+    GetPage(
+      name: Routes.album,
+      page: () => const AlbumView(),
       binding: TripRoomMemberBinding(),
     ),
   ];

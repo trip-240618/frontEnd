@@ -24,4 +24,5 @@ class Routes {
   static const createFlight = "/create-flight";
   static const tripRoomSetting = "/trip-room/setting";
   static const tripRoomMember = "/trip-room/member";
+  static const album = "/album";
 }

@@ -179,7 +179,7 @@ class ScrapsView extends StatelessWidget {
 void _showScrapDeleteDialog(
   VoidCallback onConfirmPressed,
 ) {
-  CommonDialog.show(
+  CommonDialog.showConfirmCancel(
     title: "스크랩을 삭제하시겠습니까?",
     message: "스크랩 삭제 후 복구는 어렵습니다",
     confirmText: "확인",
