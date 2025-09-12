@@ -159,12 +159,3 @@ class CommonDialog extends StatelessWidget {
     );
   }
 }
-
-class _DialogActions extends StatelessWidget {
-  const _DialogActions();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}

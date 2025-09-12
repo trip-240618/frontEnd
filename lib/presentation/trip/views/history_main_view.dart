@@ -10,6 +10,7 @@ import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/presentation/common/button/base/base_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
+import 'package:tripStory/presentation/common/dialog/day_select_dialog.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/tag/tag_day.dart';
 import 'package:tripStory/presentation/trip/controllers/history_main_controller.dart';
@@ -32,8 +33,18 @@ class _HistoryMainViewState extends State<HistoryMainView> {
         final state = controller.state;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           final showPermissionDialog = state.showPhotoPermissionDialog?.consume();
+          final showDayDialog = state.showDaySelectedDialog?.consume();
           if (showPermissionDialog != null) {
             _showPhotoPermissionDialog();
+          }
+
+          if (showDayDialog != null) {
+            _showDaySelectDialog(
+              controller.tripRoomInfo?.startDate,
+              controller.tripRoomInfo?.endDate,
+              controller.onSelectedDayPressed,
+              controller.onSelectedDayDialogConfirmPressed,
+            );
           }
         });
         return Stack(
@@ -86,6 +97,7 @@ class _HistoryMainViewState extends State<HistoryMainView> {
                       slivers: [
                         _BottomSheetHeader(
                           tripRoomName: controller.tripRoomInfo?.name ?? "",
+                          onHomePressed: () => {},
                           onPhotoPressed: () => controller.onPhotoPressed(),
                         ),
                         _BottomSheetContent(
@@ -120,6 +132,25 @@ class _HistoryMainViewState extends State<HistoryMainView> {
         photo.PhotoManager.openSetting();
         Get.back();
       },
+    );
+  }
+
+  void _showDaySelectDialog(
+    DateTime? startDate,
+    DateTime? endDate,
+    final void Function(DateTime selectedDate) onChanged,
+    final VoidCallback onConfirmPressed,
+  ) {
+    if (startDate == null || endDate == null) {
+      return;
+    }
+
+    DaySelectDialog.show(
+      title: "날짜 선택",
+      startDate: startDate,
+      endDate: endDate,
+      onChanged: onChanged,
+      onConfirmPressed: onConfirmPressed,
     );
   }
 }
@@ -192,10 +223,12 @@ class _HistorySearchBar extends StatelessWidget {
 
 class _BottomSheetHeader extends StatelessWidget {
   final String tripRoomName;
+  final VoidCallback onHomePressed;
   final VoidCallback onPhotoPressed;
 
   const _BottomSheetHeader({
     required this.tripRoomName,
+    required this.onHomePressed,
     required this.onPhotoPressed,
   });
 
@@ -233,7 +266,7 @@ class _BottomSheetHeader extends StatelessWidget {
                   children: [
                     AppIconButton(
                       assetPath: IconConstants.home,
-                      onTap: () {},
+                      onTap: onHomePressed,
                     ),
                     Text(
                       tripRoomName,

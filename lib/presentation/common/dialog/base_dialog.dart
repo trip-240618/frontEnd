@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:tripStory/core/enum/button_type.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 
 class BaseDialog extends StatelessWidget {
