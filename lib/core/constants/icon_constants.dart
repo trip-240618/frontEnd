@@ -31,6 +31,7 @@ class IconConstants {
   static const String delete = "$_iconNormal/delete.svg";
   static const String chain = "$_iconNormal/chain.svg";
   static const String send = "$_iconNormal/send.svg";
+  static const String underArrow = "$_iconNormal/down_arrow.svg";
 
   // small
   static const String date = "$_iconSmall/date.svg";

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/core/util/color.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
+import 'package:tripStory/core/util/helper/text_span_helper.dart';
+import 'package:tripStory/presentation/common/appbar/base_appbar.dart';
+import 'package:tripStory/presentation/common/button/icon_button.dart';
+import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 
 class AlbumView extends StatefulWidget {
   const AlbumView({
@@ -38,50 +41,10 @@ class _AlbumViewState extends State<AlbumView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        leadingWidth: 0,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: GestureDetector(
-            onTap: () {
-              // Get.to(() => AlbumListPage(), transition: Transition.downToUp);
-            },
-            child: Row(
-              children: [
-                InkWell(
-                  borderRadius: BorderRadius.circular(100),
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    child: SvgPicture.asset(
-                      'assets/icon/left_arrow.svg',
-                    ),
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  "최근 앨범",
-                  style: context.style.headline3,
-                ),
-                const SizedBox(width: 5),
-                SvgPicture.asset(
-                  'assets/icon/underArrow.svg',
-                  colorFilter: ColorFilter.mode(
-                    gray900,
-                    BlendMode.srcIn,
-                  ),
-                ),
-                Spacer(),
-              ],
-            ),
-          ),
-        ),
+      appBar: _AlbumAppbar(
+        title: "최근 엘범",
+        selectedCount: 1,
+        onTitlePressed: () {},
       ),
       // body: Stack(
       //   children: [
@@ -399,4 +362,70 @@ class _AlbumViewState extends State<AlbumView> {
       //           ))),
     );
   }
+}
+
+class _AlbumAppbar extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+  final int selectedCount;
+  final VoidCallback onTitlePressed;
+
+  const _AlbumAppbar({
+    required this.title,
+    required this.selectedCount,
+    required this.onTitlePressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BaseAppbar(
+      color: context.color.white,
+      leadingWidget: AppIconButton(
+        assetPath: IconConstants.leftArrow,
+        onTap: () => Get.back(),
+      ),
+      titleWidget: GestureDetector(
+        onTap: onTitlePressed,
+        behavior: HitTestBehavior.opaque,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 8,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                style: context.style.body1Normal,
+              ),
+              SvgIcon(
+                assetPath: IconConstants.underArrow,
+              ),
+            ],
+          ),
+        ),
+      ),
+      actionWidget: Text.rich(
+        TextSpanHelper.toSplitText(
+          text: "$selectedCount/50",
+          delimiter: "/",
+          firstStyle: selectedCount == 0
+              ? context.style.caption1.copyWith(
+                  color: context.color.gray400,
+                )
+              : context.style.caption1.copyWith(
+                  color: context.color.gray900,
+                ),
+          secondStyle: context.style.caption1.copyWith(
+            color: context.color.gray400,
+          ),
+          delimiterStyle: context.style.caption1.copyWith(
+            color: context.color.gray400,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(44);
 }
