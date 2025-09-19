@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
-import 'package:tripStory/presentation/common/button/bottom_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/toast/custom_toast.dart';
 import 'package:tripStory/presentation/trip/controllers/j_plan_swap_controller.dart';

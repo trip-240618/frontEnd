@@ -22,7 +22,7 @@ import 'package:tripStory/presentation/common/button/tab/tab_box.dart';
 import 'package:tripStory/presentation/common/button/tab/tab_user.dart';
 import 'package:tripStory/presentation/common/dialog/code_insert_dialog.dart';
 import 'package:tripStory/presentation/common/image/round_thumbnail_image.dart';
-import 'package:tripStory/presentation/common/model/popup_item_model.dart';
+import 'package:tripStory/presentation/common/popup/popup_item_model.dart';
 import 'package:tripStory/presentation/common/snack_bar.dart';
 import 'package:tripStory/presentation/common/tag/tag_day.dart';
 import 'package:tripStory/presentation/hoom/controller/rooms_controller.dart';

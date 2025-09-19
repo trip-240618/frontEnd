@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
-import 'package:tripStory/presentation/common/button/bottom_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 
 class RegisterSuccessView extends StatefulWidget {

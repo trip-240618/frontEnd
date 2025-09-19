@@ -9,7 +9,7 @@ import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/bottom/trip_search_bottom_sheet.dart';
-import 'package:tripStory/presentation/common/button/bottom_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/color_select_button.dart';
 import 'package:tripStory/presentation/common/button/outline/outline_button.dart';
 import 'package:tripStory/presentation/common/button/picture_image_button.dart';

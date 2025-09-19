@@ -31,6 +31,7 @@ import 'package:tripStory/presentation/setting/views/notices_list_view.dart';
 import 'package:tripStory/presentation/setting/views/user_delete_view.dart';
 import 'package:tripStory/presentation/splash/binding/splash_binding.dart';
 import 'package:tripStory/presentation/splash/views/splash_view.dart';
+import 'package:tripStory/presentation/trip/bindings/album_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/flight_create_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/flight_search_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/history_main_binding.dart';
@@ -243,7 +244,7 @@ class RouterInfo {
     GetPage(
       name: Routes.album,
       page: () => const AlbumView(),
-      binding: TripRoomMemberBinding(),
+      binding: AlbumBinding(),
     ),
   ];
 }

@@ -8,7 +8,7 @@ import 'package:tripStory/domain/entities/air_line_entity.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/bottom/base_bottom_sheet.dart';
 import 'package:tripStory/presentation/common/bottom/select_day_bottom_sheet.dart';
-import 'package:tripStory/presentation/common/button/bottom_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/tile/leading_icon_tile_button.dart';
 import 'package:tripStory/presentation/common/dialog/loading_dialog.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
