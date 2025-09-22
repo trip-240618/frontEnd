@@ -6,11 +6,13 @@ import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/helper/text_span_helper.dart';
 import 'package:tripStory/presentation/common/appbar/base_appbar.dart';
+import 'package:tripStory/presentation/common/bottom/base_bottom_sheet.dart';
 import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/icon/round_icon.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/trip/controllers/album_controller.dart';
+import 'package:tripStory/presentation/trip/models/album_state.dart';
 
 class AlbumView extends StatelessWidget {
   const AlbumView({
@@ -25,7 +27,11 @@ class AlbumView extends StatelessWidget {
         appBar: _AlbumAppbar(
           title: state.selectedAlbum?.name ?? "",
           selectedCount: state.selectedImageLength,
-          onTitlePressed: () {},
+          onTitlePressed: () => onAlbumSelectPressed(
+            context,
+            albums: state.albums,
+            onAlbumPressed: (selectAlbum) => controller.onAlbumPressed(selectAlbum),
+          ),
         ),
         body: Stack(
           children: [
@@ -40,10 +46,9 @@ class AlbumView extends StatelessWidget {
                 mainAxisSpacing: 3,
                 childAspectRatio: 1,
               ),
-              shrinkWrap: true,
-              itemCount: state.selectedAlbum?.images.length,
+              itemCount: (state.selectedAlbum?.images.length ?? 0) + 1기,
               itemBuilder: (context, index) {
-                final image = index == 0 ? null : state.selectedAlbum?.images[index];
+                final image = index == 0 ? null : state.selectedAlbum?.images[index - 1];
 
                 return switch (index) {
                   0 => _CameraSection(onCameraPressed: () {}),
@@ -68,6 +73,21 @@ class AlbumView extends StatelessWidget {
         ),
       );
     });
+  }
+
+  void onAlbumSelectPressed(
+    BuildContext context, {
+    required List<Album> albums,
+    required Function(Album) onAlbumPressed,
+  }) {
+    BaseBottomSheet.show(
+      context,
+      _AlbumSelectView(
+        albums: albums,
+        onAlbumPressed: onAlbumPressed,
+      ),
+      heightRatio: 0.8,
+    );
   }
 }
 
@@ -342,6 +362,99 @@ class _AssetImage extends StatelessWidget {
       thumbnailFormat: ThumbnailFormat.png,
       image,
       fit: BoxFit.cover,
+    );
+  }
+}
+
+class _AlbumSelectView extends StatelessWidget {
+  final List<Album> albums;
+  final Function(Album) onAlbumPressed;
+
+  const _AlbumSelectView({
+    required this.albums,
+    required this.onAlbumPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 17,
+        right: 17,
+        top: 34,
+      ),
+      child: GridView.builder(
+        physics: const ClampingScrollPhysics(),
+        cacheExtent: 5000,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 27,
+          mainAxisSpacing: 34,
+          childAspectRatio: 0.713,
+        ),
+        itemCount: albums.length,
+        itemBuilder: (context, index) {
+          final album = albums[index];
+          return GestureDetector(
+            onTap: () => onAlbumPressed(album),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Container(
+                          width: Get.width,
+                          decoration: BoxDecoration(
+                            color: context.color.white,
+                            borderRadius: BorderRadius.circular(6),
+                            boxShadow: [
+                              BoxShadow(
+                                color: context.color.gray400,
+                                offset: Offset(0, 4),
+                                blurRadius: 5.3,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: _AssetImage(
+                            image: album.images.first,
+                            thumbnailSize: ThumbnailSize.square(700),
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  album.name,
+                  style: context.style.heading2.copyWith(
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  "${album.images.length}",
+                  style: context.style.label1Normal.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: context.color.gray700,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

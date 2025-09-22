@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:tripStory/core/util/debounce.dart';
+import 'package:tripStory/core/util/helper/route_helper.dart';
 import 'package:tripStory/presentation/trip/models/album_state.dart';
 
 class AlbumController extends GetxController {
@@ -77,7 +78,6 @@ class AlbumController extends GetxController {
   void _setupScrollListener() {
     albumScrollController.addListener(() {
       if (!_albumState.isScroll) {
-        print("스크롤중");
         _albumState = state.copyWith(
           isScroll: true,
         );
@@ -85,7 +85,6 @@ class AlbumController extends GetxController {
       }
 
       _debounce(() {
-        print("스크롤 종료");
         _albumState = state.copyWith(
           isScroll: false,
         );
@@ -131,6 +130,14 @@ class AlbumController extends GetxController {
     _albumState = state.copyWith(
       selectedImages: selected,
     );
+    update();
+  }
+
+  void onAlbumPressed(Album selectAlbum) {
+    _albumState = state.copyWith(
+      selectedAlbum: selectAlbum,
+    );
+    RouteHelper.closeAllOverlays();
     update();
   }
 
