@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
@@ -9,6 +10,7 @@ import 'package:tripStory/presentation/common/appbar/base_appbar.dart';
 import 'package:tripStory/presentation/common/bottom/base_bottom_sheet.dart';
 import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
+import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/icon/round_icon.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/trip/controllers/album_controller.dart';
@@ -23,6 +25,15 @@ class AlbumView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AlbumController>(builder: (controller) {
       final state = controller.state;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final showCameraPermissionDialogOpen = state.showCameraPermissionDialog?.consume() ?? false;
+
+        if (showCameraPermissionDialogOpen) {
+          showCameraPermissionDialog();
+        }
+      });
+
       return Scaffold(
         appBar: _AlbumAppbar(
           title: state.selectedAlbum?.name ?? "",
@@ -51,7 +62,9 @@ class AlbumView extends StatelessWidget {
                 final image = index == 0 ? null : state.selectedAlbum?.images[index - 1];
 
                 return switch (index) {
-                  0 => _CameraSection(onCameraPressed: () {}),
+                  0 => _CameraSection(
+                      onCameraPressed: () => controller.onCameraPressed(),
+                    ),
                   _ => _AlbumImageSection(
                       isScroll: state.isScroll,
                       image: image,
@@ -87,6 +100,14 @@ class AlbumView extends StatelessWidget {
         onAlbumPressed: onAlbumPressed,
       ),
       heightRatio: 0.8,
+    );
+  }
+
+  void showCameraPermissionDialog() {
+    CommonDialog.showConfirm(
+      title: "권한을 설정해주시기 바랍니다",
+      confirmText: "확인",
+      onConfirm: () => openAppSettings(),
     );
   }
 }

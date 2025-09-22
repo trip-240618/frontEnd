@@ -28,7 +28,11 @@ Future<PermissionState> getPermissionStatus(
       return PermissionState.denied;
   }
 
-  final status = await permission.status;
+  var status = await permission.status;
+
+  if (status.isDenied) {
+    status = await permission.request();
+  }
 
   if (status.isGranted) return PermissionState.granted;
   if (status.isDenied) return PermissionState.denied;

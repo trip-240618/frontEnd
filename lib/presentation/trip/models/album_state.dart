@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:tripStory/core/util/one_time_event.dart';
 
 part 'album_state.freezed.dart';
 
@@ -12,6 +13,7 @@ abstract class AlbumState with _$AlbumState {
     @Default([]) List<Album> albums,
     @Default([]) List<AssetEntity> selectedImages,
     @Default(false) bool isScroll,
+    OneTimeEvent<bool>? showCameraPermissionDialog,
   }) = _AlbumState;
 
   int get selectedImageLength => selectedImages.length;

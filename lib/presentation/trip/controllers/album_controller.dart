@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:tripStory/core/permission/permission_state.dart' as per;
+import 'package:tripStory/core/permission/permission_type.dart';
+import 'package:tripStory/core/permission/permisson.dart';
 import 'package:tripStory/core/util/debounce.dart';
 import 'package:tripStory/core/util/helper/route_helper.dart';
+import 'package:tripStory/core/util/one_time_event.dart';
 import 'package:tripStory/presentation/trip/models/album_state.dart';
 
 class AlbumController extends GetxController {
@@ -14,6 +19,7 @@ class AlbumController extends GetxController {
 
   ScrollController albumScrollController = ScrollController();
   final Debounce _debounce = Debounce(delay: Duration(milliseconds: 200));
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void onInit() {
@@ -106,6 +112,40 @@ class AlbumController extends GetxController {
 
     _albumState = state.copyWith(
       selectedImages: currentSelectedImages,
+    );
+    update();
+  }
+
+  Future<void> onCameraPressed() async {
+    final status = await getPermissionStatus(PermissionType.camera);
+
+    if (status != per.PermissionState.granted) {
+      _showCameraPermissionDialog();
+      return;
+    }
+    await _cameraSave();
+  }
+
+  void _showCameraPermissionDialog() {
+    _albumState = state.copyWith(
+      showCameraPermissionDialog: OneTimeEvent(true),
+    );
+    update();
+  }
+
+  Future<void> _cameraSave() async {
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile == null) return;
+
+    final AssetEntity? assetEntity = await PhotoManager.editor.saveImageWithPath(
+      pickedFile.path,
+      title: pickedFile.name,
+    );
+    if (assetEntity == null) return;
+
+    final selected = [...state.selectedImages, assetEntity];
+    _albumState = state.copyWith(
+      selectedImages: selected,
     );
     update();
   }
