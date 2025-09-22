@@ -46,7 +46,7 @@ class AlbumView extends StatelessWidget {
                 mainAxisSpacing: 3,
                 childAspectRatio: 1,
               ),
-              itemCount: (state.selectedAlbum?.images.length ?? 0) + 1기,
+              itemCount: (state.selectedAlbum?.images.length ?? 0) + 1,
               itemBuilder: (context, index) {
                 final image = index == 0 ? null : state.selectedAlbum?.images[index - 1];
 
