@@ -30,7 +30,7 @@ class AlbumView extends StatelessWidget {
         body: Stack(
           children: [
             GridView.builder(
-              // controller: scrollController,
+              controller: controller.albumScrollController,
               physics: const ClampingScrollPhysics(),
               addAutomaticKeepAlives: false,
               cacheExtent: 5000,
@@ -48,7 +48,7 @@ class AlbumView extends StatelessWidget {
                 return switch (index) {
                   0 => _CameraSection(onCameraPressed: () {}),
                   _ => _AlbumImageSection(
-                      isScroll: true,
+                      isScroll: state.isScroll,
                       image: image,
                       isSelected: state.isImageSelected(image?.id ?? ""),
                       onImagePressed: () => controller.onImageSelectedPressed(image),
@@ -193,7 +193,7 @@ class _AlbumImageSection extends StatelessWidget {
           children: [
             _AssetImage(
               image: image!,
-              thumbnailSize: ThumbnailSize.square(isScroll ? 500 : 25),
+              thumbnailSize: ThumbnailSize.square(isScroll ? 25 : 500),
             ),
             Positioned(
               top: 8,

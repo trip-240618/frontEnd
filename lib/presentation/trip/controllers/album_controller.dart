@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:tripStory/core/util/debounce.dart';
 import 'package:tripStory/presentation/trip/models/album_state.dart';
 
 class AlbumController extends GetxController {
@@ -9,6 +11,9 @@ class AlbumController extends GetxController {
 
   final int maxPhotoLength = 10;
 
+  ScrollController albumScrollController = ScrollController();
+  final Debounce _debounce = Debounce(delay: Duration(milliseconds: 200));
+
   @override
   void onInit() {
     super.onInit();
@@ -17,6 +22,7 @@ class AlbumController extends GetxController {
 
   Future<void> _init() async {
     await getAlbums();
+    _setupScrollListener();
   }
 
   Future<void> getAlbums() async {
@@ -68,6 +74,26 @@ class AlbumController extends GetxController {
     update();
   }
 
+  void _setupScrollListener() {
+    albumScrollController.addListener(() {
+      if (!_albumState.isScroll) {
+        print("스크롤중");
+        _albumState = state.copyWith(
+          isScroll: true,
+        );
+        update();
+      }
+
+      _debounce(() {
+        print("스크롤 종료");
+        _albumState = state.copyWith(
+          isScroll: false,
+        );
+        update();
+      });
+    });
+  }
+
   void onImageSelectedPressed(AssetEntity image) {
     final currentSelectedImages = [...state.selectedImages];
     final index = currentSelectedImages.indexWhere((asset) => image.id == asset.id);
@@ -106,5 +132,12 @@ class AlbumController extends GetxController {
       selectedImages: selected,
     );
     update();
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    _debounce.cancel();
+    albumScrollController.dispose();
   }
 }

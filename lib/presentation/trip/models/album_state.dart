@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -13,6 +11,7 @@ abstract class AlbumState with _$AlbumState {
     Album? selectedAlbum,
     @Default([]) List<Album> albums,
     @Default([]) List<AssetEntity> selectedImages,
+    @Default(false) bool isScroll,
   }) = _AlbumState;
 
   int get selectedImageLength => selectedImages.length;
