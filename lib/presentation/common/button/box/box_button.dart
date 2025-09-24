@@ -6,6 +6,8 @@ class BoxButton extends StatelessWidget {
   final String label;
   final Color? color;
   final bool enabled;
+  final double? borderRadius;
+  final double? height;
   final VoidCallback onPressed;
 
   const BoxButton({
@@ -14,20 +16,25 @@ class BoxButton extends StatelessWidget {
     required this.onPressed,
     this.enabled = true,
     this.color,
+    this.borderRadius,
+    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     return BaseButton(
       onTap: onPressed,
-      borderRadius: 8,
+      borderRadius: borderRadius ?? 8,
       backgroundColor: color ?? (enabled ? context.color.gray900 : context.color.gray300),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        child: Text(
-          label,
-          style: context.style.label1Normal.copyWith(
-            color: enabled ? context.color.white : context.color.gray400,
+        height: height,
+        child: Center(
+          child: Text(
+            label,
+            style: context.style.label1Normal.copyWith(
+              color: enabled ? context.color.white : context.color.gray400,
+            ),
           ),
         ),
       ),

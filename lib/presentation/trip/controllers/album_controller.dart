@@ -5,6 +5,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:tripStory/core/permission/permission_state.dart' as per;
 import 'package:tripStory/core/permission/permission_type.dart';
 import 'package:tripStory/core/permission/permisson.dart';
+import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/core/util/debounce.dart';
 import 'package:tripStory/core/util/helper/route_helper.dart';
 import 'package:tripStory/core/util/one_time_event.dart';
@@ -179,6 +180,10 @@ class AlbumController extends GetxController {
     );
     RouteHelper.closeAllOverlays();
     update();
+  }
+
+  void onImageSavePressed() {
+    Get.toNamed(Routes.historyCreate, arguments: state.selectedImages);
   }
 
   @override

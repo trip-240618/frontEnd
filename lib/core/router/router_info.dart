@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:get/get.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/presentation/hoom/bindings/notification_list_binding.dart';
 import 'package:tripStory/presentation/hoom/bindings/rooms_binding.dart';
@@ -34,6 +35,7 @@ import 'package:tripStory/presentation/splash/views/splash_view.dart';
 import 'package:tripStory/presentation/trip/bindings/album_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/flight_create_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/flight_search_binding.dart';
+import 'package:tripStory/presentation/trip/bindings/history_create_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/history_main_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_add_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_binding.dart';
@@ -52,6 +54,7 @@ import 'package:tripStory/presentation/trip/models/j_plan_swap_param.dart';
 import 'package:tripStory/presentation/trip/views/album_view.dart';
 import 'package:tripStory/presentation/trip/views/flight_create_view.dart';
 import 'package:tripStory/presentation/trip/views/flight_search_view.dart';
+import 'package:tripStory/presentation/trip/views/history_create_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_create_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_edit_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_swap_view.dart';
@@ -245,6 +248,17 @@ class RouterInfo {
       name: Routes.album,
       page: () => const AlbumView(),
       binding: AlbumBinding(),
+    ),
+    GetPage(
+      name: Routes.historyCreate,
+      page: () {
+        final args = Get.arguments;
+        if (args is! List<AssetEntity>) {
+          throw ArgumentError('error');
+        }
+        return HistoryCreateView(images: args);
+      },
+      binding: HistoryCreateBinding(),
     ),
   ];
 }
