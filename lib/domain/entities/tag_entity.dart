@@ -6,7 +6,7 @@ part 'tag_entity.g.dart';
 @freezed
 abstract class TagEntity with _$TagEntity {
   const factory TagEntity({
-    required int id,
+    int? id,
     required String tagColor,
     required String tagName,
   }) = _TagEntity;

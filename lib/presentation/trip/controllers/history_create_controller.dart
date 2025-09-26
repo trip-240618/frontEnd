@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:tripStory/domain/entities/tag_entity.dart';
 import 'package:tripStory/presentation/trip/models/history_create_state.dart';
 
 class HistoryCreateController extends GetxController {
@@ -34,6 +35,16 @@ class HistoryCreateController extends GetxController {
         memo: text,
       ),
     );
+  }
+
+  void onTagSavePressed(List<TagEntity> tags) {
+    print("tag?? ${tags}");
+    _updateCurrentItem(
+      (item) => item.copyWith(
+        tags: tags,
+      ),
+    );
+    update();
   }
 
   void _currentMemoChange(String memo) => memoCon.text = memo;

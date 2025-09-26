@@ -18,6 +18,9 @@ class EditTextFormField extends StatelessWidget {
   final String? buttonText;
   final List<TextInputFormatter>? inputFormatters;
   final void Function(String)? onChanged;
+  final ValueChanged<String>? onSubmit;
+  final FocusNode? focusNode;
+  final bool? isFocusOnTapOutside;
 
   const EditTextFormField({
     super.key,
@@ -29,16 +32,22 @@ class EditTextFormField extends StatelessWidget {
     this.buttonText,
     this.inputFormatters,
     this.onChanged,
+    this.onSubmit,
+    this.focusNode,
+    this.isFocusOnTapOutside,
   });
 
   @override
   Widget build(BuildContext context) {
     return CommonTextField(
       controller: controller,
+      isFocusOnTapOutside: isFocusOnTapOutside,
       hintText: hintText,
       maxLines: 1,
       onChanged: onChanged,
+      focusNode: focusNode,
       inputFormatters: inputFormatters,
+      onFieldSubmitted: onSubmit,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

@@ -8,7 +8,7 @@ class BottomButton extends StatelessWidget {
   final ButtonLevel buttonType;
   final VoidCallback onTap;
   final Widget? trailingIcon;
-
+  final EdgeInsetsGeometry? padding;
   const BottomButton({
     super.key,
     required this.text,
@@ -16,17 +16,19 @@ class BottomButton extends StatelessWidget {
     this.enabled = true,
     this.buttonType = ButtonLevel.primary,
     this.trailingIcon,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 10,
-        bottom: 42,
-      ),
+      padding: padding ??
+          const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 10,
+            bottom: 42,
+          ),
       child: AppButton(
         label: text,
         onPressed: onTap,
