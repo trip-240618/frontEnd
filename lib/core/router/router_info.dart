@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:get/get.dart';
-import 'package:photo_manager/photo_manager.dart';
 import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/presentation/hoom/bindings/notification_list_binding.dart';
 import 'package:tripStory/presentation/hoom/bindings/rooms_binding.dart';

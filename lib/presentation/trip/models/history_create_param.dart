@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:tripStory/domain/entities/flight_entity.dart';
 
 part 'history_create_param.freezed.dart';
 
