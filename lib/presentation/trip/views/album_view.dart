@@ -17,8 +17,11 @@ import 'package:tripStory/presentation/trip/controllers/album_controller.dart';
 import 'package:tripStory/presentation/trip/models/album_state.dart';
 
 class AlbumView extends StatelessWidget {
+  final DateTime selectedDateTime;
+
   const AlbumView({
     super.key,
+    required this.selectedDateTime,
   });
 
   @override
@@ -80,7 +83,7 @@ class AlbumView extends StatelessWidget {
                 selectedImages: state.selectedImages,
                 onImageReorder: (oldIndex, newIndex) => controller.reorderSelectedImages(oldIndex, newIndex),
                 onImageDeletedPressed: (index) => controller.onImageSelectedDeletePressed(index),
-                onSavePressed: () => controller.onImageSavePressed(),
+                onSavePressed: () => controller.onImageSavePressed(selectedDateTime),
               ),
             ),
           ],

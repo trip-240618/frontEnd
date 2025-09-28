@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:tripStory/data/models/request/history_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
@@ -160,5 +161,11 @@ abstract class TripDataSource {
   @GET("/{tripId}/history/list")
   Future<List<HistoriesResponse>> fetchHistoryList(
     @Path("tripId") int tripId,
+  );
+
+  @POST("/{tripId}/history/create/many")
+  Future<List<HistoriesResponse>> postCreateManyHistory(
+    @Path("tripId") int tripId,
+    @Body() HistoryCreateRequest request,
   );
 }

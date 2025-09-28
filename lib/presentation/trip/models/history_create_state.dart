@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:tripStory/core/util/one_time_event.dart';
 import 'package:tripStory/domain/entities/tag_entity.dart';
 
 part 'history_create_state.freezed.dart';
@@ -10,6 +11,7 @@ abstract class HistoryCreateState with _$HistoryCreateState {
 
   const factory HistoryCreateState({
     @Default([]) List<HistoryItem> historyItems,
+    OneTimeEvent<bool>? showMaxUploadDialog,
   }) = _HistoryCreateState;
 
   int get historyLength => historyItems.length;

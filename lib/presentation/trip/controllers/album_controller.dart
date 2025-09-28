@@ -10,6 +10,7 @@ import 'package:tripStory/core/util/debounce.dart';
 import 'package:tripStory/core/util/helper/route_helper.dart';
 import 'package:tripStory/core/util/one_time_event.dart';
 import 'package:tripStory/presentation/trip/models/album_state.dart';
+import 'package:tripStory/presentation/trip/models/history_create_param.dart';
 
 class AlbumController extends GetxController {
   AlbumState _albumState = AlbumState();
@@ -182,8 +183,12 @@ class AlbumController extends GetxController {
     update();
   }
 
-  void onImageSavePressed() {
-    Get.toNamed(Routes.historyCreate, arguments: state.selectedImages);
+  void onImageSavePressed(DateTime photoDate) {
+    Get.toNamed(Routes.historyCreate,
+        arguments: HistoryCreateParam(
+          images: state.selectedImages,
+          photoDate: photoDate,
+        ));
   }
 
   @override

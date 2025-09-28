@@ -6,7 +6,7 @@ part 'tag_response.g.dart';
 @freezed
 abstract class TagResponse with _$TagResponse {
   const factory TagResponse({
-    required int id,
+    int? id,
     required String tagColor,
     required String tagName,
   }) = _TagResponse;

@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:tripStory/core/util/extension/date_extension.dart';
+import 'package:tripStory/core/util/one_time_event.dart';
+import 'package:tripStory/domain/entities/histories_create_entity.dart';
 import 'package:tripStory/domain/entities/tag_entity.dart';
+import 'package:tripStory/domain/entities/trip_room_entity.dart';
+import 'package:tripStory/domain/usecases/create_histories_upload_usecase.dart';
+import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
 import 'package:tripStory/presentation/trip/models/history_create_state.dart';
 
 class HistoryCreateController extends GetxController {
+  final TripRoomService _tripRoomService;
+  final CreateHistoriesUploadUsecase _createHistoriesUploadUsecase;
+
+  HistoryCreateController(
+    this._tripRoomService,
+    this._createHistoriesUploadUsecase,
+  );
+
+  TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
   HistoryCreateState _historyCreateState = HistoryCreateState();
   final TextEditingController memoCon = TextEditingController();
 
@@ -38,7 +53,6 @@ class HistoryCreateController extends GetxController {
   }
 
   void onTagSavePressed(List<TagEntity> tags) {
-    print("tag?? ${tags}");
     _updateCurrentItem(
       (item) => item.copyWith(
         tags: tags,
@@ -108,6 +122,47 @@ class HistoryCreateController extends GetxController {
 
     _pageMove(newIndex);
     _currentMemoChange(items[newIndex].memo);
+  }
+
+  Future<void> onHistoryUploadPressed(DateTime photoDate) async {
+    final uploadItems = await Future.wait(
+      List.generate(state.historyLength, (index) async {
+        final imageInfo = state.historyItems[index];
+        final bytes = await imageInfo.image.originBytes;
+        if (bytes == null) return null;
+
+        return HistoryUploadWithFile(
+          historyItem: HistoryUploadEntity(
+            latitude: imageInfo.image.latitude,
+            longitude: imageInfo.image.longitude,
+            memo: imageInfo.memo,
+            tags: imageInfo.tags,
+            photoDate: photoDate.formatYMDWithHyphen(),
+          ),
+          fileBytes: bytes,
+        );
+      }),
+    );
+
+    final params = CreateHistoriesUploadParams(
+      tripId: tripRoomInfo?.id ?? 0,
+      items: uploadItems.whereType<HistoryUploadWithFile>().toList(),
+    );
+
+    final result = await _createHistoriesUploadUsecase(params);
+
+    result.fold(
+      (error) {
+        _historyCreateState = state.copyWith(
+          showMaxUploadDialog: OneTimeEvent(true),
+        );
+        update();
+      },
+      (_) {
+        print("성공");
+        update();
+      },
+    );
   }
 
   @override

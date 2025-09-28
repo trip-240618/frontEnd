@@ -49,6 +49,7 @@ import 'package:tripStory/presentation/trip/bindings/trip_room_member_binding.da
 import 'package:tripStory/presentation/trip/bindings/trip_room_setting_binding.dart';
 import 'package:tripStory/presentation/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/presentation/trip/models/flight_create_param.dart';
+import 'package:tripStory/presentation/trip/models/history_create_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_swap_param.dart';
 import 'package:tripStory/presentation/trip/views/album_view.dart';
@@ -246,17 +247,27 @@ class RouterInfo {
     ),
     GetPage(
       name: Routes.album,
-      page: () => const AlbumView(),
+      page: () {
+        final args = Get.arguments;
+        if (args is! DateTime) {
+          throw ArgumentError('error');
+        }
+        return AlbumView(
+          selectedDateTime: args,
+        );
+      },
       binding: AlbumBinding(),
     ),
     GetPage(
       name: Routes.historyCreate,
       page: () {
         final args = Get.arguments;
-        if (args is! List<AssetEntity>) {
+        if (args is! HistoryCreateParam) {
           throw ArgumentError('error');
         }
-        return HistoryCreateView(images: args);
+        return HistoryCreateView(
+          historyCreateParam: args,
+        );
       },
       binding: HistoryCreateBinding(),
     ),

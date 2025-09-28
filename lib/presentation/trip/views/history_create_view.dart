@@ -17,19 +17,21 @@ import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/box/box_button.dart';
 import 'package:tripStory/presentation/common/button/color_select_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
+import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/icon/round_icon.dart';
 import 'package:tripStory/presentation/common/tag/tag.dart';
 import 'package:tripStory/presentation/common/text/area/text_area_form_field.dart';
 import 'package:tripStory/presentation/common/text/edit/edit_text_form_field.dart';
 import 'package:tripStory/presentation/trip/controllers/history_create_controller.dart';
+import 'package:tripStory/presentation/trip/models/history_create_param.dart';
 import 'package:tripStory/presentation/trip/models/history_create_state.dart';
 
 class HistoryCreateView extends StatefulWidget {
-  final List<AssetEntity> images;
+  final HistoryCreateParam historyCreateParam;
 
   const HistoryCreateView({
     super.key,
-    required this.images,
+    required this.historyCreateParam,
   });
 
   @override
@@ -42,7 +44,7 @@ class _HistoryCreateViewState extends State<HistoryCreateView> {
   @override
   void initState() {
     super.initState();
-    controller.init(widget.images);
+    controller.init(widget.historyCreateParam.images);
   }
 
   @override
@@ -52,6 +54,14 @@ class _HistoryCreateViewState extends State<HistoryCreateView> {
       child: GetBuilder<HistoryCreateController>(
         builder: (controller) {
           final state = controller.state;
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final showMaxUploadDialog = state.showMaxUploadDialog?.consume() ?? false;
+
+            if (showMaxUploadDialog) {
+              showMaxDialog();
+            }
+          });
 
           return Scaffold(
             appBar: AppAppbar(
@@ -123,7 +133,9 @@ class _HistoryCreateViewState extends State<HistoryCreateView> {
                 number: state.historyLength,
                 backgroundColor: context.color.white,
               ),
-              onTap: () {},
+              onTap: () => controller.onHistoryUploadPressed(
+                widget.historyCreateParam.photoDate ?? DateTime.now(),
+              ),
             ),
             // bottomNavigationBar: Padding(
             //   padding: const EdgeInsets.only(bottom: 44, left: 20, right: 20),
@@ -199,6 +211,13 @@ class _HistoryCreateViewState extends State<HistoryCreateView> {
         onSavePressed: (tags) => onSavePressed(tags),
       ),
       heightRatio: 0.65,
+    );
+  }
+
+  void showMaxDialog() {
+    CommonDialog.showConfirm(
+      title: "사진은 최대 50장까지 등록할 수 있습니다",
+      onConfirm: () => Get.back(),
     );
   }
 }
