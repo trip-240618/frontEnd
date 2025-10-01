@@ -9,7 +9,7 @@ import 'package:tripStory/domain/usecases/fetch_enter_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_join_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_last_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/update_bookmark_usecase.dart';
-import 'package:tripStory/presentation/common/model/popup_item_model.dart';
+import 'package:tripStory/presentation/common/popup/popup_item_model.dart';
 import 'package:tripStory/presentation/hoom/enum/trip_rooms_type.dart';
 import 'package:tripStory/presentation/hoom/model/trip_rooms_state.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';

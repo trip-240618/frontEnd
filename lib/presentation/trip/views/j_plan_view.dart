@@ -176,7 +176,7 @@ class _JPlanViewState extends State<JPlanView> {
   void showFlightDeletedDialog({
     required VoidCallback onConfirmPressed,
   }) {
-    CommonDialog.show(
+    CommonDialog.showConfirmCancel(
       title: "항공편을 삭제하시겠습니까?",
       confirmText: "확인",
       onConfirm: () => onConfirmPressed(),

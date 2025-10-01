@@ -5,7 +5,7 @@ import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/button/base/base_tile_button.dart';
-import 'package:tripStory/presentation/common/button/bottom_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/tile/date_time_tile_button.dart';
 import 'package:tripStory/presentation/common/button/tile/deleted_tile_button.dart';
 import 'package:tripStory/presentation/trip/controllers/flight_create_controller.dart';

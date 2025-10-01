@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/component/container/circle_badge.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
-import 'package:tripStory/presentation/common/button/bottom_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/picture_image_button.dart';
 import 'package:tripStory/presentation/common/text/input/error_text_form_field.dart';
 import 'package:tripStory/presentation/login/controller/profile_add_controller.dart';

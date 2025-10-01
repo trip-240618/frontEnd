@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart' as cluster;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tripStory/core/permission/permission_state.dart';
+import 'package:tripStory/core/permission/permission_type.dart';
+import 'package:tripStory/core/permission/permisson.dart';
+import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
+import 'package:tripStory/core/util/helper/route_helper.dart';
+import 'package:tripStory/core/util/one_time_event.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_histories_usecase.dart';
@@ -103,5 +109,41 @@ class HistoryMainController extends GetxController {
             );
       },
     );
+  }
+
+  Future<void> onPhotoPressed() async {
+    final status = await getPermissionStatus(PermissionType.photoManager);
+
+    if (status == PermissionState.granted) {
+      _historyMainState = state.copyWith(
+        showDaySelectedDialog: OneTimeEvent(true),
+      );
+      update();
+    } else {
+      _historyMainState = state.copyWith(
+        showPhotoPermissionDialog: OneTimeEvent(true),
+      );
+      update();
+    }
+  }
+
+  void onSelectedDayPressed(DateTime selectedDay) {
+    _historyMainState = state.copyWith(
+      selectedDay: selectedDay,
+    );
+    update();
+  }
+
+  void onSelectedDayDialogConfirmPressed() {
+    if (state.selectedDay == null) return;
+
+    RouteHelper.closeOverlaysAndToNamed(
+      Routes.album,
+    );
+
+    _historyMainState = state.copyWith(
+      selectedDay: null,
+    );
+    update();
   }
 }

@@ -7,7 +7,7 @@ import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/button/base/base_tile_button.dart';
-import 'package:tripStory/presentation/common/button/bottom_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/login/controller/term_controller.dart';
 

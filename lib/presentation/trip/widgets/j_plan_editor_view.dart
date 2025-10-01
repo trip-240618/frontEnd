@@ -15,7 +15,7 @@ import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/bottom/select_day_bottom_sheet.dart';
 import 'package:tripStory/presentation/common/bottom/time_picker_bottom_sheet.dart';
 import 'package:tripStory/presentation/common/button/base/base_tile_button.dart';
-import 'package:tripStory/presentation/common/button/bottom_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/tile/deleted_tile_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/text/area/text_area_form_field.dart';

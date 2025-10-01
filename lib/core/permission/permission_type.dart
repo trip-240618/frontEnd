@@ -3,4 +3,5 @@ enum PermissionType {
   notification,
   camera,
   microphone,
+  photoManager,
 }

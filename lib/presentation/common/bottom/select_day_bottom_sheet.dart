@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
-import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/presentation/common/bottom/base_bottom_sheet.dart';
+import 'package:tripStory/presentation/common/selected_day_content.dart';
 
 class SelectDayBottomSheet extends StatefulWidget {
   final String title;
@@ -50,77 +50,22 @@ class SelectDayBottomSheet extends StatefulWidget {
 }
 
 class _SelectDayBottomSheetState extends State<SelectDayBottomSheet> {
-  late final List<DateTime> dateList;
-  late DateTime? selectedDateInternal;
-
-  @override
-  void initState() {
-    super.initState();
-    final start = widget.startDate;
-    final end = widget.endDate;
-
-    dateList = List.generate(
-      end.difference(start).inDays + 1,
-      (index) => start.add(Duration(days: index)),
-    );
-
-    selectedDateInternal = widget.selectedDate;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       height: context.screenHeight * 0.5,
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 34),
-          Text(
-            widget.title,
-            style: context.style.headline3.copyWith(
-              color: context.color.gray800,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Expanded(
-            child: ListView.builder(
-              itemCount: dateList.length,
-              itemBuilder: (context, index) {
-                final date = dateList[index];
-
-                return RadioListTile<DateTime>(
-                  title: Text(
-                    date.formatDateWithWeekdayKo,
-                    style: context.style.body1Normal,
-                  ),
-                  value: date,
-                  groupValue: selectedDateInternal,
-                  controlAffinity: ListTileControlAffinity.leading,
-                  contentPadding: EdgeInsets.zero,
-                  fillColor: WidgetStateProperty.resolveWith(
-                    (states) => !states.contains(WidgetState.selected)
-                        ? context.color.gray400.withValues(alpha: .32)
-                        : context.color.gray900,
-                  ),
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        selectedDateInternal = value;
-                      });
-                      widget.onChanged(value);
-                    }
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+      child: SelectedDayContent(
+        title: widget.title,
+        startDate: widget.startDate,
+        endDate: widget.endDate,
+        selectedDate: widget.selectedDate,
+        onChanged: widget.onChanged,
       ),
     );
   }
