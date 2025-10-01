@@ -80,6 +80,7 @@ class HistoryMainController extends GetxController {
         _historyMainState = state.copyWith(
           histories: histories,
         );
+
         update();
       },
     );
@@ -100,7 +101,7 @@ class HistoryMainController extends GetxController {
     return List.generate(
       endDate.difference(startDate).inDays + 1,
       (index) {
-        final currentDate = startDate.add(Duration(days: index)).formatYMDWithDot();
+        final currentDate = startDate.add(Duration(days: index)).formatYMDWithHyphen();
 
         return historyMap[currentDate] ??
             HistoriesEntity(

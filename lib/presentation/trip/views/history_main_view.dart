@@ -12,9 +12,12 @@ import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/dialog/day_select_dialog.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
+import 'package:tripStory/presentation/common/image/round_thumbnail_image.dart';
 import 'package:tripStory/presentation/common/tag/tag_day.dart';
+import 'package:tripStory/presentation/common/user/user_profile.dart';
 import 'package:tripStory/presentation/trip/controllers/history_main_controller.dart';
 import 'package:tripStory/presentation/trip/models/history_main_state.dart';
+import 'package:tripStory/presentation/trip/widgets/history_image_tile.dart';
 
 class HistoryMainView extends StatefulWidget {
   const HistoryMainView({
@@ -320,198 +323,40 @@ class _BottomSheetContent extends StatelessWidget {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(
+                    padding: EdgeInsets.only(
                       left: 20,
                       top: 16,
+                      bottom: history.isEmpty ? 0 : 16,
                     ),
                     child: Column(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            // if (hs.historyList[index]['historyList'].length != 0) {
-                            //   Get.to(() => TripHistoryList(isAdd: false, index: index));
-                            // }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 20),
-                              child: Row(
-                                children: [
-                                  TagDay(
-                                    day: index + 1,
-                                    color: labelColor,
-                                    dayType: TagDayType.day,
-                                  ),
-                                  const SizedBox(
-                                    width: 6,
-                                  ),
-                                  Text(
-                                    photoDate,
-                                    style: context.style.caption1,
-                                  ),
-                                  Spacer(),
-                                  Container(
-                                    width: 20,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                      color: context.color.gray400,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "${history.length}",
-                                        style: context.style.caption1.copyWith(
-                                          color: context.color.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                        _HistoryItemHeader(
+                          day: index + 1,
+                          labelColor: labelColor,
+                          photoDate: photoDate,
+                          historyCount: history.length,
                         ),
                         const SizedBox(
                           height: 16,
                         ),
                         Expanded(
-                          child: ListView.builder(
-                              itemCount: history.length,
-                              scrollDirection: Axis.horizontal,
-                              addRepaintBoundaries: false,
-                              addAutomaticKeepAlives: false,
-                              itemBuilder: (context, idx) {
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        // Get.to(() => TripHistoryDetailPage(
-                                        //       selectedIdx: idx,
-                                        //       dayIdx: index,
-                                        //       historyId: hs.historyList[index]['historyList'][idx]
-                                        //           ['id'],
-                                        //     ));
-                                      },
-                                      child: Container(
-                                        width: 120,
-                                        child: Stack(
-                                          children: [
-                                            // Positioned(
-                                            //   child: hs.historyList[index]['historyList'][idx]
-                                            //               ['thumbnail'] ==
-                                            //           ''
-                                            //       ? DefaultProfileScreen(context)
-                                            //       : CachedNetworkImage(
-                                            //           maxHeightDiskCache: 350,
-                                            //           maxWidthDiskCache: 350,
-                                            //           imageUrl:
-                                            //               '${hs.historyList[index]['historyList'][idx]['thumbnail']}',
-                                            //           imageBuilder: (context, imageProvider) =>
-                                            //               Container(
-                                            //             decoration: BoxDecoration(
-                                            //               borderRadius: BorderRadius.circular(4),
-                                            //               image: DecorationImage(
-                                            //                   image: imageProvider,
-                                            //                   fit: BoxFit.cover),
-                                            //             ),
-                                            //           ),
-                                            //           errorWidget: (context, url, error) =>
-                                            //               DefaultProfileScreen(context),
-                                            //         ),
-                                            // ),
-                                            Positioned(
-                                              bottom: 0,
-                                              left: 0,
-                                              right: 0,
-                                              child: Container(
-                                                height: 150,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(4),
-                                                  gradient: LinearGradient(
-                                                    begin: Alignment.topCenter,
-                                                    end: Alignment.bottomCenter,
-                                                    colors: [
-                                                      Colors.transparent,
-                                                      Color(0xff212121).withOpacity(0.5),
-                                                    ],
-                                                    stops: [0.54, 1],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            // Positioned(
-                                            //   top: 8,
-                                            //   right: 8,
-                                            //   child: Container(
-                                            //     width: 20,
-                                            //     height: 20,
-                                            //     child: hs.historyList[index]['historyList'][idx]
-                                            //                 ['profileImage'] ==
-                                            //             ''
-                                            //         ? DefaultProfileScreen(context)
-                                            //         : CachedNetworkImage(
-                                            //             imageUrl:
-                                            //                 '${hs.historyList[index]['historyList'][idx]['profileImage']}',
-                                            //             imageBuilder: (context, imageProvider) =>
-                                            //                 Container(
-                                            //               decoration: BoxDecoration(
-                                            //                 borderRadius: BorderRadius.circular(4),
-                                            //                 image: DecorationImage(
-                                            //                     image: imageProvider,
-                                            //                     fit: BoxFit.fill),
-                                            //               ),
-                                            //             ),
-                                            //             errorWidget: (context, url, error) =>
-                                            //                 DefaultProfileScreen(context),
-                                            //           ),
-                                            //   ),
-                                            // ),
-                                            // Positioned(
-                                            //   left: 8,
-                                            //   bottom: 8,
-                                            //   child: Row(
-                                            //     children: [
-                                            //       SvgPicture.asset('assets/icon/smallheart.svg'),
-                                            //       const SizedBox(
-                                            //         width: 3,
-                                            //       ),
-                                            //       Text(
-                                            //         '${hs.historyList[index]['historyList'][idx]['likeCnt']}',
-                                            //         style: f12whitew500,
-                                            //       ),
-                                            //       const SizedBox(
-                                            //         width: 8,
-                                            //       ),
-                                            //       SvgPicture.asset('assets/icon/smallComment.svg'),
-                                            //       const SizedBox(
-                                            //         width: 3,
-                                            //       ),
-                                            //       Text(
-                                            //         '${hs.historyList[index]['historyList'][idx]['replyCnt']}',
-                                            //         style: f12whitew500,
-                                            //       ),
-                                            //     ],
-                                            //   ),
-                                            // )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8)
-                                  ],
-                                );
-                              }),
+                          child: ListView.separated(
+                            itemCount: history.length,
+                            scrollDirection: Axis.horizontal,
+                            addRepaintBoundaries: false,
+                            addAutomaticKeepAlives: false,
+                            itemBuilder: (context, index) {
+                              final historyEntity = history[index];
+                              return HistoryImageTile(
+                                thumbnail: historyEntity.thumbnail,
+                                userThumbnail: historyEntity.profileImage ?? "",
+                                likeCount: historyEntity.likeCnt ?? 0,
+                                replyCount: historyEntity.replyCnt ?? 0,
+                              );
+                            },
+                            separatorBuilder: (context, index) => const SizedBox(width: 8),
+                          ),
                         ),
-                        // hs.historyList[index]['historyList'].length == 0
-                        //     ? const SizedBox()
-                        //     : const SizedBox(
-                        //   height: 16,
-                        // ),
                       ],
                     ),
                   ),
@@ -519,6 +364,67 @@ class _BottomSheetContent extends StatelessWidget {
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _HistoryItemHeader extends StatelessWidget {
+  final int day;
+  final Color labelColor;
+  final String photoDate;
+  final int historyCount;
+
+  const _HistoryItemHeader({
+    required this.day,
+    required this.labelColor,
+    required this.photoDate,
+    required this.historyCount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // if (hs.historyList[index]['historyList'].length != 0) {
+        //   Get.to(() => TripHistoryList(isAdd: false, index: index));
+        // }
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(right: 20),
+        child: Row(
+          children: [
+            TagDay(
+              day: day,
+              color: labelColor,
+              dayType: TagDayType.day,
+            ),
+            const SizedBox(
+              width: 6,
+            ),
+            Text(
+              photoDate,
+              style: context.style.caption1,
+            ),
+            Spacer(),
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                color: historyCount == 0 ? context.color.gray400 : context.color.blue,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  "$historyCount",
+                  style: context.style.caption1.copyWith(
+                    color: context.color.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
