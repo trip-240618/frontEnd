@@ -12,12 +12,10 @@ import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/dialog/day_select_dialog.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
-import 'package:tripStory/presentation/common/image/round_thumbnail_image.dart';
-import 'package:tripStory/presentation/common/tag/tag_day.dart';
-import 'package:tripStory/presentation/common/user/user_profile.dart';
 import 'package:tripStory/presentation/trip/controllers/history_main_controller.dart';
 import 'package:tripStory/presentation/trip/models/history_main_state.dart';
 import 'package:tripStory/presentation/trip/widgets/history_image_tile.dart';
+import 'package:tripStory/presentation/trip/widgets/history_item_header.dart';
 
 class HistoryMainView extends StatefulWidget {
   const HistoryMainView({
@@ -106,6 +104,7 @@ class _HistoryMainViewState extends State<HistoryMainView> {
                         _BottomSheetContent(
                           labelColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
                           histories: state.histories,
+                          onHeaderPressed: (index) => controller.onHistoryItemHeaderPressed(index),
                         ),
                       ],
                     );
@@ -293,10 +292,12 @@ class _BottomSheetHeader extends StatelessWidget {
 class _BottomSheetContent extends StatelessWidget {
   final List<HistoriesEntity> histories;
   final Color labelColor;
+  final Function(int) onHeaderPressed;
 
   const _BottomSheetContent({
     required this.labelColor,
     required this.histories,
+    required this.onHeaderPressed,
   });
 
   @override
@@ -308,7 +309,7 @@ class _BottomSheetContent extends StatelessWidget {
           childCount: histories.length,
           (context, index) {
             final history = histories[index].historyList;
-            final photoDate = histories[index].photoDate;
+            final photoDate = histories[index].displayPhotoDate;
 
             return Column(
               children: [
@@ -330,11 +331,15 @@ class _BottomSheetContent extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        _HistoryItemHeader(
-                          day: index + 1,
-                          labelColor: labelColor,
-                          photoDate: photoDate,
-                          historyCount: history.length,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: HistoryItemHeader(
+                            day: index + 1,
+                            labelColor: labelColor,
+                            photoDate: photoDate,
+                            historyCount: history.length,
+                            onHeaderPressed: history.isEmpty ? null : () => onHeaderPressed(index),
+                          ),
                         ),
                         const SizedBox(
                           height: 16,
@@ -364,67 +369,6 @@ class _BottomSheetContent extends StatelessWidget {
               ],
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-class _HistoryItemHeader extends StatelessWidget {
-  final int day;
-  final Color labelColor;
-  final String photoDate;
-  final int historyCount;
-
-  const _HistoryItemHeader({
-    required this.day,
-    required this.labelColor,
-    required this.photoDate,
-    required this.historyCount,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // if (hs.historyList[index]['historyList'].length != 0) {
-        //   Get.to(() => TripHistoryList(isAdd: false, index: index));
-        // }
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(right: 20),
-        child: Row(
-          children: [
-            TagDay(
-              day: day,
-              color: labelColor,
-              dayType: TagDayType.day,
-            ),
-            const SizedBox(
-              width: 6,
-            ),
-            Text(
-              photoDate,
-              style: context.style.caption1,
-            ),
-            Spacer(),
-            Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                color: historyCount == 0 ? context.color.gray400 : context.color.blue,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  "$historyCount",
-                  style: context.style.caption1.copyWith(
-                    color: context.color.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

@@ -10,6 +10,7 @@ class HistoryImageTile extends StatelessWidget {
   final String userThumbnail;
   final int likeCount;
   final int replyCount;
+  final VoidCallback? onImagePressed;
 
   const HistoryImageTile({
     super.key,
@@ -17,19 +18,13 @@ class HistoryImageTile extends StatelessWidget {
     required this.userThumbnail,
     required this.likeCount,
     required this.replyCount,
+    this.onImagePressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // Get.to(() => TripHistoryDetailPage(
-        //       selectedIdx: idx,
-        //       dayIdx: index,
-        //       historyId: hs.historyList[index]['historyList'][idx]
-        //           ['id'],
-        //     ));
-      },
+      onTap: onImagePressed,
       child: SizedBox(
         width: 120,
         height: 150,

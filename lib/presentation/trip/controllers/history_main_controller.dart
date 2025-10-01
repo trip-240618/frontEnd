@@ -148,4 +148,13 @@ class HistoryMainController extends GetxController {
     );
     update();
   }
+
+  void onHistoryItemHeaderPressed(int index) {
+    if (state.histories[index].historyList.isEmpty) return;
+
+    Get.toNamed(
+      Routes.historyList,
+      arguments: DateTime.parse(state.histories[index].photoDate),
+    );
+  }
 }

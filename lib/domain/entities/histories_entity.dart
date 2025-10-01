@@ -6,12 +6,16 @@ part 'histories_entity.g.dart';
 
 @freezed
 abstract class HistoriesEntity with _$HistoriesEntity {
+  const HistoriesEntity._();
+
   const factory HistoriesEntity({
     required String photoDate,
     required List<HistoryEntity> historyList,
   }) = _HistoriesEntity;
 
   factory HistoriesEntity.fromJson(Map<String, dynamic> json) => _$HistoriesEntityFromJson(json);
+
+  String get displayPhotoDate => photoDate.replaceAll("-", ".");
 }
 
 @freezed
