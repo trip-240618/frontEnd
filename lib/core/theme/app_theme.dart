@@ -41,6 +41,7 @@ class AppTheme {
     neutral100: Color(0xFFF4F4F4),
     neutral300: Color(0xFFCCCCCC),
     errorColor: Color(0xFFFF565C),
+    shadow: Color(0xFFD4D4D4),
   );
 
   static final _baseTextStyle = TextStyle(

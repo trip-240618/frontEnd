@@ -25,5 +25,5 @@ class Routes {
   static const tripRoomSetting = "/trip-room/setting";
   static const tripRoomMember = "/trip-room/member";
   static const album = "/album";
-  static const albumSelect = "/albumSelect";
+  static const historyCreate = "/history_create";
 }

@@ -139,6 +139,7 @@ class HistoryMainController extends GetxController {
 
     RouteHelper.closeOverlaysAndToNamed(
       Routes.album,
+      arguments: state.selectedDay,
     );
 
     _historyMainState = state.copyWith(

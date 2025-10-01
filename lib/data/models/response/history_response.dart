@@ -20,8 +20,13 @@ abstract class HistoryResponse with _$HistoryResponse {
     int? likeCnt,
     int? replyCnt,
     String? photoDate,
-    List<TagResponse>? tags,
+    @JsonKey(fromJson: _tagsFromJson) List<TagResponse>? tags,
   }) = _HistoryResponse;
 
   factory HistoryResponse.fromJson(Map<String, dynamic> json) => _$HistoryResponseFromJson(json);
+}
+
+List<TagResponse>? _tagsFromJson(List<dynamic>? json) {
+  if (json == null) return null;
+  return json.where((item) => item != null).map((item) => TagResponse.fromJson(item as Map<String, dynamic>)).toList();
 }

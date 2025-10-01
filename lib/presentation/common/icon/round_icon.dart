@@ -19,14 +19,17 @@ class RoundIcon extends StatelessWidget {
     required String assetPath,
     Color? backgroundColor,
     Color? iconColor,
+    double? size,
   }) {
     return RoundIcon._(
       key: key,
       backgroundColor: backgroundColor,
-      size: 20,
+      size: size ?? 20,
       child: SvgIcon(
         assetPath: assetPath,
         color: iconColor,
+        height: size,
+        width: size,
       ),
     );
   }

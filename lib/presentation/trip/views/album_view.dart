@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/helper/text_span_helper.dart';
+import 'package:tripStory/presentation/common/album/album_image.dart';
 import 'package:tripStory/presentation/common/appbar/base_appbar.dart';
 import 'package:tripStory/presentation/common/bottom/base_bottom_sheet.dart';
 import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
@@ -17,8 +17,11 @@ import 'package:tripStory/presentation/trip/controllers/album_controller.dart';
 import 'package:tripStory/presentation/trip/models/album_state.dart';
 
 class AlbumView extends StatelessWidget {
+  final DateTime selectedDateTime;
+
   const AlbumView({
     super.key,
+    required this.selectedDateTime,
   });
 
   @override
@@ -80,6 +83,7 @@ class AlbumView extends StatelessWidget {
                 selectedImages: state.selectedImages,
                 onImageReorder: (oldIndex, newIndex) => controller.reorderSelectedImages(oldIndex, newIndex),
                 onImageDeletedPressed: (index) => controller.onImageSelectedDeletePressed(index),
+                onSavePressed: () => controller.onImageSavePressed(selectedDateTime),
               ),
             ),
           ],
@@ -222,29 +226,28 @@ class _AlbumImageSection extends StatelessWidget {
 
     return GestureDetector(
       onTap: onImagePressed,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected ? context.color.gray900 : Colors.transparent,
-            width: isSelected ? 4 : 0,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          AlbumImage(
+            image: image!,
+            thumbnailSize: ThumbnailSize.square(isScroll ? 25 : 500),
+            fit: BoxFit.cover,
           ),
-        ),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            _AssetImage(
-              image: image!,
-              thumbnailSize: ThumbnailSize.square(isScroll ? 25 : 500),
-            ),
+          if (isSelected)
             Positioned(
-              top: 8,
-              right: 8,
-              child: SvgIcon(
-                assetPath: isSelected ? IconConstants.smallRoundCheck : IconConstants.smallRoundOff,
+              child: Container(
+                color: context.color.gray900.withValues(alpha: 0.6),
               ),
             ),
-          ],
-        ),
+          Positioned(
+            top: 8,
+            right: 8,
+            child: SvgIcon(
+              assetPath: isSelected ? IconConstants.smallRoundCheck : IconConstants.smallRoundOff,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -254,11 +257,13 @@ class _AlbumBottom extends StatelessWidget {
   final List selectedImages;
   final ReorderCallback onImageReorder;
   final Function(int) onImageDeletedPressed;
+  final VoidCallback onSavePressed;
 
   const _AlbumBottom({
     required this.selectedImages,
     required this.onImageReorder,
     required this.onImageDeletedPressed,
+    required this.onSavePressed,
   });
 
   @override
@@ -312,10 +317,11 @@ class _AlbumBottom extends StatelessWidget {
                                     bottom: 0,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(4),
-                                      child: _AssetImage(
+                                      child: AlbumImage(
                                         image: image,
                                         width: 64,
                                         height: 64,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
@@ -326,7 +332,6 @@ class _AlbumBottom extends StatelessWidget {
                                       onTap: () => onImageDeletedPressed(index),
                                       child: RoundIcon.icon(
                                         assetPath: IconConstants.smallClear,
-                                        iconColor: context.color.gray900,
                                         backgroundColor: context.color.white,
                                       ),
                                     ),
@@ -348,41 +353,12 @@ class _AlbumBottom extends StatelessWidget {
                         number: selectedImages.length,
                         backgroundColor: context.color.white,
                       ),
-                      onTap: () {},
+                      onTap: onSavePressed,
                     ),
                   ),
                 ],
               ),
             ),
-    );
-  }
-}
-
-class _AssetImage extends StatelessWidget {
-  final AssetEntity image;
-  final double? width;
-  final double? height;
-  final ThumbnailSize? thumbnailSize;
-
-  const _AssetImage({
-    required this.image,
-    this.width,
-    this.height,
-    this.thumbnailSize,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AssetEntityImage(
-      gaplessPlayback: true,
-      filterQuality: FilterQuality.high,
-      isOriginal: false,
-      width: width,
-      height: height,
-      thumbnailSize: thumbnailSize ?? ThumbnailSize.square(500),
-      thumbnailFormat: ThumbnailFormat.png,
-      image,
-      fit: BoxFit.cover,
     );
   }
 }
@@ -445,7 +421,7 @@ class _AlbumSelectView extends StatelessWidget {
                         padding: const EdgeInsets.all(6.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(6),
-                          child: _AssetImage(
+                          child: AlbumImage(
                             image: album.images.first,
                             thumbnailSize: ThumbnailSize.square(700),
                             width: double.infinity,

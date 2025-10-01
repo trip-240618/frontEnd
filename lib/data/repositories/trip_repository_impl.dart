@@ -16,6 +16,7 @@ import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
 import 'package:tripStory/data/network/socket_service.dart';
+import 'package:tripStory/domain/entities/histories_create_entity.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/scrap_create_entity.dart';
@@ -421,6 +422,28 @@ class TripRepositoryImpl implements TripRepository {
       final entities = HistoriesMapper.fromResponseList(result);
       return Right(entities);
     } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<HistoriesEntity>> postCreateManyHistory({
+    required HistoriesCreateEntity historiesCreateEntity,
+  }) async {
+    try {
+      final requestBody = HistoriesMapper.toRequest(
+        historiesCreateEntity.historyItems,
+      );
+
+      final result = await _tripDataSource.postCreateManyHistory(
+        historiesCreateEntity.tripId,
+        requestBody,
+      );
+      print("??1111");
+      final entities = HistoriesMapper.fromResponseList(result);
+      return Right(entities);
+    } catch (e) {
+      print("?? ${e}");
       return Left(ServerFailure(e.toString()));
     }
   }

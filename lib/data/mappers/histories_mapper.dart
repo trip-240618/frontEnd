@@ -1,6 +1,8 @@
+import 'package:tripStory/data/models/request/history_create_request.dart';
 import 'package:tripStory/data/models/response/histories_response.dart';
 import 'package:tripStory/data/models/response/history_response.dart';
 import 'package:tripStory/data/models/response/tag_response.dart';
+import 'package:tripStory/domain/entities/histories_create_entity.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/domain/entities/tag_entity.dart';
 
@@ -9,6 +11,28 @@ class HistoriesMapper {
     return HistoriesEntity(
       photoDate: response.photoDate,
       historyList: response.historyList.map(_mapHistoryResponse).toList(),
+    );
+  }
+
+  static HistoryCreateRequest toRequest(List<HistoryUploadEntity> entities) {
+    final histories = entities
+        .map((history) => HistoryCreateItem(
+              thumbnail: history.thumbnail ?? "",
+              imageUrl: history.imageUrl ?? "",
+              latitude: history.latitude,
+              longitude: history.longitude,
+              photoDate: history.photoDate,
+              tags: history.tags
+                  ?.map((tag) => TagResponse(
+                        tagName: tag.tagName,
+                        tagColor: tag.tagColor,
+                      ))
+                  .toList(),
+            ))
+        .toList();
+
+    return HistoryCreateRequest(
+      historyCreateRequestDtos: histories,
     );
   }
 
@@ -27,7 +51,7 @@ class HistoriesMapper {
       likeCnt: response.likeCnt,
       replyCnt: response.replyCnt,
       photoDate: response.photoDate,
-      tags: response.tags?.map(_mapTagResponse).toList(),
+      tags: response.tags?.whereType<TagResponse>().map(_mapTagResponse).toList(),
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
+import 'package:tripStory/domain/entities/histories_create_entity.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/scrap_create_entity.dart';
@@ -139,5 +140,9 @@ abstract class TripRepository {
 
   ResultFuture<List<HistoriesEntity>> fetchHistories({
     required int tripId,
+  });
+
+  ResultFuture<List<HistoriesEntity>> postCreateManyHistory({
+    required HistoriesCreateEntity historiesCreateEntity,
   });
 }
