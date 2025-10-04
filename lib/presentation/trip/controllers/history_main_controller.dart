@@ -80,6 +80,7 @@ class HistoryMainController extends GetxController {
         _historyMainState = state.copyWith(
           histories: histories,
         );
+
         update();
       },
     );
@@ -100,7 +101,7 @@ class HistoryMainController extends GetxController {
     return List.generate(
       endDate.difference(startDate).inDays + 1,
       (index) {
-        final currentDate = startDate.add(Duration(days: index)).formatYMDWithDot();
+        final currentDate = startDate.add(Duration(days: index)).formatYMDWithHyphen();
 
         return historyMap[currentDate] ??
             HistoriesEntity(
@@ -146,5 +147,14 @@ class HistoryMainController extends GetxController {
       selectedDay: null,
     );
     update();
+  }
+
+  void onHistoryItemHeaderPressed(int index) {
+    if (state.histories[index].historyList.isEmpty) return;
+
+    Get.toNamed(
+      Routes.historyList,
+      arguments: DateTime.parse(state.histories[index].photoDate),
+    );
   }
 }
