@@ -51,10 +51,8 @@ class HistoryMainController extends GetxController {
   }
 
   Future<void> _initializeData() async {
-    await Future.wait([
-      _getCurrentLocation(),
-      _getHistoryData(),
-    ]);
+    await _getHistoryData();
+    _getCurrentLocation();
   }
 
   Future<void> _getCurrentLocation() async {

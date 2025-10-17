@@ -2,13 +2,21 @@ import 'package:geolocator/geolocator.dart';
 
 class LocationService {
   static final LocationService _instance = LocationService._internal();
+
   factory LocationService() => _instance;
+
   LocationService._internal();
 
   Position? _cachedPosition;
 
   Future<Position> getCurrentLocation() async {
-    if (_cachedPosition != null) return _cachedPosition!;
+    Position? lastKnown = await Geolocator.getLastKnownPosition();
+    print("??11 ${lastKnown}");
+    if (lastKnown != null) {
+      print("??2322 ${lastKnown}");
+      _cachedPosition = lastKnown;
+      return lastKnown;
+    }
 
     LocationPermission permission = await Geolocator.checkPermission();
 
@@ -19,7 +27,7 @@ class LocationService {
       }
     }
     _cachedPosition = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+      desiredAccuracy: LocationAccuracy.medium,
     );
     return _cachedPosition!;
   }
