@@ -19,6 +19,7 @@ class ColorSelectButton extends StatelessWidget {
     return SizedBox(
       height: 28,
       child: ListView.separated(
+        shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.zero,
         itemCount: TripColor.values.length,

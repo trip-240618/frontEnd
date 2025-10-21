@@ -65,13 +65,13 @@ class ScrapsController extends GetxController {
     );
   }
 
-  Future<void> onBookmarkFilterPressed() async {
+  void onBookmarkFilterPressed() {
     if (state.status == ScrapsStatus.loading) {
       return;
     }
     _scrapsState = state.copyWith(showBookmarkedOnly: !state.showBookmarkedOnly, status: ScrapsStatus.loading);
     update();
-    await loadScraps();
+    loadScraps();
   }
 
   Future<void> onDeleteScrapPressed(int scrapId) async {

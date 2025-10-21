@@ -9,8 +9,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tripStory/component/appbar.dart';
-import 'package:tripStory/core/util/color.dart';
-import 'package:tripStory/core/util/font.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
+import 'package:tripStory/core/util/extension/context_extension.dart';
+import 'package:tripStory/presentation/common/button/color_select_button.dart';
+import 'package:tripStory/presentation/common/button/icon_button.dart';
+import 'package:tripStory/presentation/common/divider/common_divider.dart';
+import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/trip/controllers/scrap_create_controller.dart';
 
 class AddScrapPage extends StatefulWidget {
@@ -21,14 +25,13 @@ class AddScrapPage extends StatefulWidget {
 }
 
 class _AddScrapPageState extends State<AddScrapPage> {
-  // final ss = Get.put(ScrapState());
   final _scrapCreateController = Get.find<ScrapCreateController>();
   TextEditingController titleCon = TextEditingController();
-  QuillController _controller = QuillController.basic();
+  final QuillController _controller = QuillController.basic();
   final ScrollController _scrollController = ScrollController();
-  final FocusNode _focusNode = FocusNode();
-  List colorList = [whiteColor, pastelBlue, mainRed, yellowColor, greenColor];
-  int selectedColor = 0;
+  final FocusNode _titleFocusNode = FocusNode();
+  final _quillFocusNode = FocusNode();
+  bool showColorPicker = false;
   XFile? pickedImage;
   FToast fToast = FToast();
 
@@ -36,20 +39,24 @@ class _AddScrapPageState extends State<AddScrapPage> {
   void initState() {
     fToast = FToast();
     fToast.init(context);
-    _focusNode.addListener(() {
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _titleFocusNode.requestFocus();
+    });
+
+    _controller.document.changes.listen((event) {
       setState(() {});
-      if (_focusNode.hasFocus) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent * 2,
-            duration: Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-          );
-        });
+    });
+
+    _titleFocusNode.addListener(() {
+      if (!_titleFocusNode.hasFocus && !_quillFocusNode.hasFocus) {
+        _titleFocusNode.requestFocus();
       }
     });
-    _controller.addListener(() {
-      setState(() {});
+    _quillFocusNode.addListener(() {
+      if (!_quillFocusNode.hasFocus && !_titleFocusNode.hasFocus) {
+        _titleFocusNode.requestFocus();
+      }
     });
     super.initState();
   }
@@ -71,7 +78,7 @@ class _AddScrapPageState extends State<AddScrapPage> {
         controller.replaceText(index, 0, BlockEmbed.image(imageUrl), null);
       },
       onImageInsertedCallback: (imageUrl) async {
-        debugPrint('✅ 이미지 삽입 완료: $imageUrl');
+        debugPrint('이미지 삽입 완료: $imageUrl');
       },
     );
 
@@ -120,264 +127,235 @@ class _AddScrapPageState extends State<AddScrapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ScrapCreateController>(builder: (_scrapCreateController) {
-      return GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-          setState(() {});
-        },
-        child: Scaffold(
-          backgroundColor: gray50,
-          resizeToAvoidBottomInset: false,
-          appBar: TrailingBackAppBar(
-            text: '스크랩',
-            backTap: () async {
-              // if (ss.addImgUrl.isNotEmpty)
-              //   await ss.removeImage(ss.addImgUrl.value);
-              Get.back();
-            },
-            svgPicture: SvgPicture.asset(
-              'assets/icon/save.svg',
-              fit: BoxFit.none,
+    final plain = _controller.document.toPlainText().trimRight();
+    final displayLength = plain.length;
+    return GetBuilder<ScrapCreateController>(builder: (controller) {
+      final state = controller.state;
+      return Stack(
+        children: [
+          Scaffold(
+            backgroundColor: context.color.white,
+            resizeToAvoidBottomInset: false,
+            appBar: TrailingBackAppBar(
+              text: '스크랩',
+              backTap: () async {
+                // if (ss.addImgUrl.isNotEmpty)
+                //   await ss.removeImage(ss.addImgUrl.value);
+                Get.back();
+              },
+              svgPicture: SvgPicture.asset(
+                'assets/icon/save.svg',
+                fit: BoxFit.none,
+              ),
+              trailingTap: () {
+                scrapSave();
+              },
             ),
-            trailingTap: () {
-              scrapSave();
-              // scrapSave().then((_) async {
-              //   await ss.getScrapList();
-              //   Get.back();
-              // });
-            },
-          ),
-          body: SingleChildScrollView(
-            controller: _scrollController,
-            child: Padding(
+            body: Padding(
               padding: const EdgeInsets.only(top: 15, left: 20, right: 20, bottom: 35),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    controller: titleCon,
-                    style: f16gray800w700,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.zero,
-                      hintText: '제목을 입력해주세요',
-                      hintStyle: f16gray300w700,
-                      border: InputBorder.none,
-                      isDense: true,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      controller: titleCon,
+                      style: context.style.body1Normal.copyWith(fontWeight: FontWeight.w700),
+                      focusNode: _titleFocusNode,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.zero,
+                        hintText: '제목을 입력해주세요',
+                        hintStyle: context.style.body1Normal.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: context.color.gray300,
+                        ),
+                        border: InputBorder.none,
+                        isDense: true,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(width: 1, color: gray200),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: Get.height * 0.6,
-                            child: QuillEditor(
-                              controller: _controller,
-                              focusNode: _focusNode,
-                              scrollController: ScrollController(),
-                              config: QuillEditorConfig(
-                                scrollable: true,
-                                padding: const EdgeInsets.all(8),
-                                autoFocus: false,
-                                // readOnly: false,
-                                expands: false,
-                                showCursor: true,
-                                enableInteractiveSelection: true,
-                                // magnifierConfiguration: const TextMagnifierConfiguration(
-                                //   shouldDisplayHandlesInMagnifier: true,
-                                // ),
-                                customStyles: DefaultStyles(),
-                                embedBuilders: kIsWeb
-                                    ? FlutterQuillEmbeds.editorWebBuilders()
-                                    : FlutterQuillEmbeds.editorBuilders(
-                                        imageEmbedConfig: QuillEditorImageEmbedConfig(
-                                          onImageClicked: (node) {
-                                            _controller.updateSelection(
-                                              TextSelection(
-                                                baseOffset: node.length,
-                                                extentOffset: node.length,
-                                              ),
-                                              ChangeSource.local,
-                                            );
-                                          },
+                    const SizedBox(height: 10),
+                    CommonDivider(),
+                    const SizedBox(height: 16),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: Get.height * 0.6,
+                      ),
+                      child: QuillEditor(
+                        controller: _controller,
+                        focusNode: _quillFocusNode,
+                        scrollController: ScrollController(),
+                        config: QuillEditorConfig(
+                          scrollable: false,
+                          expands: false,
+                          autoFocus: false,
+                          showCursor: true,
+                          enableInteractiveSelection: true,
+                          customStyles: DefaultStyles(),
+                          embedBuilders: kIsWeb
+                              ? FlutterQuillEmbeds.editorWebBuilders()
+                              : FlutterQuillEmbeds.editorBuilders(
+                                  imageEmbedConfig: QuillEditorImageEmbedConfig(
+                                    onImageClicked: (node) {
+                                      _controller.updateSelection(
+                                        TextSelection(
+                                          baseOffset: node.length,
+                                          extentOffset: node.length,
                                         ),
-                                      ),
-                              ),
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              InkWell(
-                                borderRadius: BorderRadius.circular(100),
-                                onTap: () async {
-                                  if (isImageIncluded()) {
-                                    fToast.showToast(
-                                      child: Container(
-                                        width: Get.width,
-                                        height: 58,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xff212121).withOpacity(0.7), // 반투명한 배경
-                                          borderRadius: BorderRadius.circular(8),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Color(0x1A000000),
-                                              offset: Offset(0, 4),
-                                              blurRadius: 9,
-                                            ),
-                                            BoxShadow(
-                                              color: Color(0x17000000),
-                                              offset: Offset(0, 16),
-                                              blurRadius: 16,
-                                            ),
-                                            BoxShadow(
-                                              color: Color(0x0D000000),
-                                              offset: Offset(0, 36),
-                                              blurRadius: 21,
-                                            ),
-                                            BoxShadow(
-                                              color: Color(0x03000000),
-                                              offset: Offset(0, 63),
-                                              blurRadius: 25,
-                                            ),
-                                            BoxShadow(
-                                              color: Color(0x00000000),
-                                              offset: Offset(0, 99),
-                                              blurRadius: 28,
-                                            ),
-                                          ],
-                                        ),
-                                        child: Center(
-                                            child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              '기존 이미지 삭제 후 업로드 가능합니다.',
-                                              style: f12whitew500,
-                                            ),
-                                          ],
-                                        )),
-                                      ),
-                                      gravity: ToastGravity.TOP,
-                                      toastDuration: Duration(seconds: 2),
-                                    );
-                                  } else {
-                                    // pickedImage = await ss.getSingleImage(
-                                    //     ImageSource.gallery,
-                                    //     context,
-                                    //     pickedImage);
-                                    // if (pickedImage != null) {
-                                    //   await ss.scrapFileUpload(pickedImage!);
-                                    // }
-                                    onCustomInsertImagePressed(context, _controller);
-                                  }
-                                },
-                                child: Container(
-                                  width: 24,
-                                  height: 24,
-                                  child: SvgPicture.asset('assets/icon/normalImage.svg',
-                                      fit: BoxFit.none, colorFilter: ColorFilter.mode(gray900, BlendMode.srcIn)),
+                                        ChangeSource.local,
+                                      );
+                                    },
+                                  ),
                                 ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 80),
+                  ],
+                ),
+              ),
+            ),
+            bottomSheet: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                AnimatedPadding(
+                  duration: const Duration(milliseconds: 20),
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: context.color.white,
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(0, -3),
+                          blurRadius: 6,
+                          spreadRadius: 0,
+                          color: Color(0x1AD4D4D4),
+                        ),
+                        BoxShadow(
+                          offset: Offset(0, -10),
+                          blurRadius: 10,
+                          spreadRadius: 0,
+                          color: Color(0x17D4D4D4),
+                        ),
+                        BoxShadow(
+                          offset: Offset(0, -23),
+                          blurRadius: 14,
+                          spreadRadius: 0,
+                          color: Color(0x0DD4D4D4),
+                        ),
+                        BoxShadow(
+                          offset: Offset(0, -40),
+                          blurRadius: 16,
+                          spreadRadius: 0,
+                          color: Color(0x03D4D4D4),
+                        ),
+                        BoxShadow(
+                          offset: Offset(0, -63),
+                          blurRadius: 18,
+                          spreadRadius: 0,
+                          color: Color(0x00D4D4D4),
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    child: Row(
+                      children: [
+                        AppIconButton(
+                          assetPath: IconConstants.photo,
+                          color: context.color.gray900,
+                          onTap: () {
+                            onCustomInsertImagePressed(context, _controller);
+                          },
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              showColorPicker = !showColorPicker;
+                            });
+                          },
+                          child: Stack(
+                            children: [
+                              SvgIcon(
+                                fit: BoxFit.fitWidth,
+                                assetPath: IconConstants.dropper,
                               ),
-                              Spacer(),
-                              Text(
-                                '${_controller.document.length}',
-                                style: f11Gray800w600,
-                              ),
-                              Text(
-                                '/1000',
-                                style: f11Gray400w600,
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: state.getColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        Spacer(),
+                        Text('$displayLength', style: context.style.caption1),
+                        Text(
+                          '/1000',
+                          style: context.style.caption1.copyWith(color: context.color.gray400),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '태그 컬러',
-                        style: f12gray600w600,
-                      ),
-                      const SizedBox(
-                        height: 2,
-                      ),
-                      Container(
-                        width: Get.width,
-                        height: 44,
-                        child: ListView.builder(
-                          itemCount: 5,
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      selectedColor = index;
-                                      setState(() {});
-                                    },
-                                    child: selectedColor == index
-                                        ? Container(
-                                            width: 24,
-                                            height: 24,
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(color: gray900, width: 2),
-                                                color: colorList[index]),
-                                            child: SvgPicture.asset(
-                                              'assets/icon/checkIcon.svg',
-                                              fit: BoxFit.none,
-                                            ),
-                                          )
-                                        : Container(
-                                            width: 24,
-                                            height: 24,
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: colorList[index],
-                                                border:
-                                                    colorList[index] == whiteColor ? Border.all(color: gray200) : null),
-                                          ),
-                                  ),
-                                  const SizedBox(width: 12)
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                          height: _focusNode.hasFocus
-                              ? isImageIncluded()
-                                  ? MediaQuery.of(context).viewInsets.bottom + 100
-                                  : MediaQuery.of(context).viewInsets.bottom + 25
-                              : 0),
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ),
+          if (showColorPicker)
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    showColorPicker = false;
+                  });
+                },
+                child: Container(
+                  color: Colors.black.withOpacity(0.3),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        bottom: 48 + MediaQuery.of(context).viewInsets.bottom + 24,
+                        left: 20,
+                        right: 20,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: context.color.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 10,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                            child: ColorSelectButton(
+                              selectedColor: controller.state.selectedColor,
+                              onSelected: (tripColor) {
+                                controller.onColorPressed(tripColor);
+                                setState(() {
+                                  showColorPicker = false;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
       );
     });
   }
