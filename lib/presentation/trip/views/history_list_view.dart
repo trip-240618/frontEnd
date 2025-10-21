@@ -63,13 +63,7 @@ class _HistoryListViewState extends State<HistoryListView> {
                         userThumbnail: history?.profileImage ?? "",
                         likeCount: history?.likeCnt ?? 0,
                         replyCount: history?.replyCnt ?? 0,
-                        onImagePressed: () {
-                          // Get.to(() => TripHistoryDetailPage(
-                          //       selectedIdx: index,
-                          //       dayIdx: widget.index!,
-                          //       historyId: hs.historyList[widget.index!]['historyList'][index]['id'],
-                          //     ));
-                        },
+                        onImagePressed: () => controller.onNavigateToDetailPressed(),
                       );
                     },
                   ),

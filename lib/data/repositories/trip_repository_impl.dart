@@ -427,6 +427,23 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
+  ResultFuture<HistoryEntity> fetchHistoryDetail({
+    required int tripId,
+    required int historyId,
+  }) async {
+    try {
+      final result = await _tripDataSource.fetchHistoryDetail(
+        tripId,
+        historyId,
+      );
+      final entity = HistoriesMapper.fromHistoryResponse(result);
+      return Right(entity);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
   ResultFuture<List<HistoriesEntity>> postCreateManyHistory({
     required HistoriesCreateEntity historiesCreateEntity,
   }) async {
@@ -439,11 +456,10 @@ class TripRepositoryImpl implements TripRepository {
         historiesCreateEntity.tripId,
         requestBody,
       );
-      print("??1111");
+
       final entities = HistoriesMapper.fromResponseList(result);
       return Right(entities);
     } catch (e) {
-      print("?? ${e}");
       return Left(ServerFailure(e.toString()));
     }
   }

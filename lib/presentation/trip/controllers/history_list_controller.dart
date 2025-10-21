@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
@@ -48,5 +49,9 @@ class HistoryListController extends GetxController {
         update();
       },
     );
+  }
+
+  void onNavigateToDetailPressed() {
+    Get.toNamed(Routes.historyDetail);
   }
 }

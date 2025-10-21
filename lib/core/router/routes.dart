@@ -27,4 +27,5 @@ class Routes {
   static const album = "/album";
   static const historyCreate = "/history_create";
   static const historyList = "/history_list";
+  static const historyDetail = "/history_detail";
 }

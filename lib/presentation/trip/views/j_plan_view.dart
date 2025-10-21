@@ -325,7 +325,15 @@ class _MapSection extends StatelessWidget {
     return GetBuilder<JPlanController>(
       builder: (controller) {
         if (controller.state.jPlanStatus == JPlanStatus.initial) {
-          return const SizedBox.shrink();
+          return SizedBox(
+            width: Get.width,
+            height: controller.state.googleMapHeight,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: context.color.gray400,
+              ),
+            ),
+          );
         }
         return Column(
           children: [

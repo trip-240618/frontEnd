@@ -35,6 +35,7 @@ import 'package:tripStory/presentation/trip/bindings/album_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/flight_create_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/flight_search_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/history_create_binding.dart';
+import 'package:tripStory/presentation/trip/bindings/history_detail_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/history_list_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/history_main_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_add_binding.dart';
@@ -56,6 +57,7 @@ import 'package:tripStory/presentation/trip/views/album_view.dart';
 import 'package:tripStory/presentation/trip/views/flight_create_view.dart';
 import 'package:tripStory/presentation/trip/views/flight_search_view.dart';
 import 'package:tripStory/presentation/trip/views/history_create_view.dart';
+import 'package:tripStory/presentation/trip/views/history_detail_view.dart';
 import 'package:tripStory/presentation/trip/views/history_list_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_create_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_edit_view.dart';
@@ -284,6 +286,11 @@ class RouterInfo {
         );
       },
       binding: HistoryListBinding(),
+    ),
+    GetPage(
+      name: Routes.historyDetail,
+      page: () => const HistoryDetailView(),
+      binding: HistoryDetailBinding(),
     ),
   ];
 }
