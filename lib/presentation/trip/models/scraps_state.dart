@@ -13,7 +13,7 @@ abstract class ScrapsState with _$ScrapsState {
   const factory ScrapsState({
     @Default(ScrapsStatus.initial) ScrapsStatus status,
     @Default([]) List<ScrapEntity> scraps,
-    @Default(false) bool showBookmarkedOnly,
+    @Default(false) bool isBookmarked,
   }) = _ScrapsState;
 
   bool get isEmpty => scraps.isEmpty;
