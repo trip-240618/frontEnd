@@ -9,6 +9,7 @@ import 'package:tripStory/presentation/common/button/tab/tab_user.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_main_controller.dart';
 import 'package:tripStory/presentation/trip/models/trip_main_state.dart';
+import 'package:tripStory/presentation/trip/views/history_main_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_view.dart';
 import 'package:tripStory/presentation/trip/views/locker_view.dart';
 
@@ -39,13 +40,16 @@ class _TripMainViewState extends State<TripMainView> {
           ),
           body: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 2, right: 20),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: TabUser(
-                    onPressed: () => controller.onMemberPressed(),
-                    memberCount: controller.tripRoomInfo?.memberCount ?? 1,
+              Visibility(
+                visible: controller.state.selectedTripType != TripNaviType.history,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 2, right: 20),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: TabUser(
+                      onPressed: () => controller.onMemberPressed(),
+                      memberCount: controller.tripRoomInfo?.memberCount ?? 1,
+                    ),
                   ),
                 ),
               ),
@@ -55,7 +59,7 @@ class _TripMainViewState extends State<TripMainView> {
                   children: [
                     JPlanView(),
                     LockerView(),
-                    Text("3"),
+                    HistoryMainView(),
                   ],
                 ),
               ),

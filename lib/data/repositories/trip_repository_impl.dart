@@ -3,6 +3,7 @@ import 'package:tripStory/core/constants/network_constants.dart';
 import 'package:tripStory/core/errors/failure.dart';
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
+import 'package:tripStory/data/mappers/histories_mapper.dart';
 import 'package:tripStory/data/mappers/j_plan_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_create_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_detail_mapper.dart';
@@ -15,6 +16,8 @@ import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
 import 'package:tripStory/data/network/socket_service.dart';
+import 'package:tripStory/domain/entities/histories_create_entity.dart';
+import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/scrap_create_entity.dart';
 import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
@@ -77,10 +80,25 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
-  ResultFuture<TripRoomCreateEntity> postCreateTrip(
-    TripRoomCreateRequest tripRoomCreateRequest,
-  ) async {
+  ResultFuture<TripRoomCreateEntity> postCreateTrip({
+    required String name,
+    required String tripType,
+    required String startDate,
+    required String endDate,
+    required String color,
+    required String country,
+    String? thumbnail,
+  }) async {
     try {
+      final tripRoomCreateRequest = TripRoomCreateRequest(
+        name: name,
+        type: tripType,
+        startDate: startDate,
+        endDate: endDate,
+        country: country,
+        thumbnail: thumbnail,
+        labelColor: color,
+      );
       final response = await _tripDataSource.postCreateTrip(tripRoomCreateRequest);
       final entity = TripRoomCreateMapper.toEntity(response);
       return Right(entity);
@@ -322,9 +340,31 @@ class TripRepositoryImpl implements TripRepository {
   @override
   ResultFuture<void> putModifyJPlan({
     required int tripId,
-    required PlanJModifyRequest request,
+    required int planId,
+    required int dayAfterStart,
+    int? orderByDate,
+    required String startTime,
+    required String title,
+    String? place,
+    String? memo,
+    double? latitude,
+    double? longitude,
+    required bool locker,
   }) async {
     try {
+      final request = PlanJModifyRequest(
+        planId: planId,
+        dayAfterStart: dayAfterStart,
+        orderByDate: orderByDate,
+        startTime: startTime,
+        title: title,
+        place: place,
+        memo: memo,
+        latitude: latitude,
+        longitude: longitude,
+        locker: locker,
+      );
+
       await _tripDataSource.putModifyJPlan(tripId, request);
       return Right(null);
     } catch (e) {
@@ -368,6 +408,57 @@ class TripRepositoryImpl implements TripRepository {
     try {
       await _tripDataSource.fetchRegisterFinishJPlan(tripId, day);
       return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<HistoriesEntity>> fetchHistories({
+    required int tripId,
+  }) async {
+    try {
+      final result = await _tripDataSource.fetchHistoryList(tripId);
+      final entities = HistoriesMapper.fromResponseList(result);
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<HistoryEntity> fetchHistoryDetail({
+    required int tripId,
+    required int historyId,
+  }) async {
+    try {
+      final result = await _tripDataSource.fetchHistoryDetail(
+        tripId,
+        historyId,
+      );
+      final entity = HistoriesMapper.fromHistoryResponse(result);
+      return Right(entity);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<HistoriesEntity>> postCreateManyHistory({
+    required HistoriesCreateEntity historiesCreateEntity,
+  }) async {
+    try {
+      final requestBody = HistoriesMapper.toRequest(
+        historiesCreateEntity.historyItems,
+      );
+
+      final result = await _tripDataSource.postCreateManyHistory(
+        historiesCreateEntity.tripId,
+        requestBody,
+      );
+
+      final entities = HistoriesMapper.fromResponseList(result);
+      return Right(entities);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }

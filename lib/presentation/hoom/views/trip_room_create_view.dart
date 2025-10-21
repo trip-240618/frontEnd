@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tripStory/component/dialog/loading.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/enum/trip_type.dart';
-import 'package:tripStory/core/util/color.dart';
+import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/bottom/trip_search_bottom_sheet.dart';
-import 'package:tripStory/presentation/common/button/bottom_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/color_select_button.dart';
 import 'package:tripStory/presentation/common/button/outline/outline_button.dart';
 import 'package:tripStory/presentation/common/button/picture_image_button.dart';
 import 'package:tripStory/presentation/common/button/tile/leading_icon_tile_button.dart';
 import 'package:tripStory/presentation/common/dialog/code_dialog.dart';
+import 'package:tripStory/presentation/common/dialog/loading_dialog.dart';
 import 'package:tripStory/presentation/common/text/common_text_form_field.dart';
 import 'package:tripStory/presentation/hoom/controller/trip_rooms_create_controller.dart';
 
@@ -44,7 +44,7 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
   Widget build(BuildContext context) {
     return GetBuilder<TripRoomsCreateController>(
       builder: (controller) {
-        Future.microtask(() {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
           final state = controller.state;
           final shouldShowBottomSheet = state.showTripSearchBottomSheet?.consume() ?? false;
           final shouldShowLoading = state.showLoading?.consume() ?? false;
@@ -52,7 +52,11 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
           if (!context.mounted) return;
 
           if (shouldShowLoading) {
-            showLoading(context);
+            LoadingDialog();
+          } else {
+            if (Get.isDialogOpen ?? false) {
+              Get.back();
+            }
           }
 
           if (shouldShowBottomSheet) {
@@ -64,7 +68,9 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
           }
 
           if (inviteCode != null) {
-            showCodeDialog(context, inviteCode);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showCodeDialog(context, inviteCode);
+            });
           }
         });
         return Scaffold(
@@ -72,12 +78,13 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
           resizeToAvoidBottomInset: false,
           appBar: AppAppbar(
             text: "여행방 만들기",
+            backgroundColor: context.color.gray50,
             onTap: () => controller.onBackPressed(),
           ),
           body: Column(
             children: [
               Container(
-                color: gray50,
+                color: context.color.gray50,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                   child: Column(

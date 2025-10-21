@@ -8,6 +8,8 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color yellow;
   final Color green;
   final Color blue; // 기존 color 의 pastelBlue
+  final Color charcoal;
+  final Color shadow;
 
   final Color gray900;
   final Color gray800;
@@ -32,6 +34,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.yellow,
     required this.green,
     required this.blue,
+    required this.charcoal,
     required this.gray900,
     required this.gray800,
     required this.gray700,
@@ -45,6 +48,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.neutral100,
     required this.neutral300,
     required this.errorColor,
+    required this.shadow,
   });
 
   @override

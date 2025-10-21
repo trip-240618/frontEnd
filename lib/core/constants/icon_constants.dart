@@ -14,6 +14,7 @@ class IconConstants {
   static const String appLogo = "$_iconNormal/app_logo.svg";
   static const String defaultPerson = "$_iconNormal/default_person.svg";
   static const String plus = "$_iconNormal/plus.svg";
+  static const String roundPlus = "$_iconNormal/round_plus.svg";
   static const String pencil = "$_iconNormal/pencil.svg";
   static const String photo = "$_iconNormal/photo.svg";
   static const String smallCheck = "$_iconNormal/small_check.svg";
@@ -30,6 +31,9 @@ class IconConstants {
   static const String delete = "$_iconNormal/delete.svg";
   static const String chain = "$_iconNormal/chain.svg";
   static const String send = "$_iconNormal/send.svg";
+  static const String underArrow = "$_iconNormal/down_arrow.svg";
+  static const String camera = "$_iconNormal/camera.svg";
+  static const String declaration = "$_iconNormal/declaration.svg";
 
   // small
   static const String date = "$_iconSmall/date.svg";
@@ -53,11 +57,16 @@ class IconConstants {
   static const String bookmarkOff = "$_iconSmall/bookmark_off.svg";
   static const String smallRoundCheckOn = "$_iconSmall/round_check_on.svg";
   static const String smallRoundCheckOff = "$_iconSmall/round_check_off.svg";
+  static const String smallRoundOff = "$_iconSmall/small_round_off.svg";
+  static const String smallRoundCheck = "$_iconSmall/small_round_check.svg";
+  static const String favorite = "$_iconSmall/favorite.svg";
+  static const String comment = "$_iconSmall/comment.svg";
 
   // tag
   static const String tagUser = "$_icon/small_user.svg";
 
   // default
   static const String makerImage = "$_icon/marker.png";
+  static const String planMarker = "$_icon/mapMarker.svg";
   static const String verticalTicket = "$_icon/vertical_ticket_box.svg";
 }

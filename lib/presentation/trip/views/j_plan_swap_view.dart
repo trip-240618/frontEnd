@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
-import 'package:tripStory/presentation/common/button/bottom_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/toast/custom_toast.dart';
 import 'package:tripStory/presentation/trip/controllers/j_plan_swap_controller.dart';
@@ -107,7 +107,7 @@ class _JPlanSwapViewState extends State<JPlanSwapView> {
   void backDialog(
     VoidCallback onConfirm,
   ) {
-    CommonDialog.show(
+    CommonDialog.showConfirmCancel(
       title: "순서 변경을 종료하시겠습니까?",
       confirmText: "확인",
       onConfirm: onConfirm,

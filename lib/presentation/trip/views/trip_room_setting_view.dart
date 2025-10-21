@@ -7,7 +7,7 @@ import 'package:tripStory/core/enum/text_edit_type.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
-import 'package:tripStory/presentation/common/button/bottom_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/color_select_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/button/picture_image_button.dart';
@@ -164,7 +164,7 @@ class _TripRoomSettingViewState extends State<TripRoomSettingView> {
   void showDeleteRoomDialog({
     required VoidCallback onConfirm,
   }) {
-    CommonDialog.show(
+    CommonDialog.showConfirmCancel(
       title: "여행방을 삭제하시겠습니까?",
       message: "삭제 후 복구는 어렵습니다",
       confirmText: "확인",

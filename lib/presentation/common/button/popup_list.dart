@@ -3,7 +3,7 @@ import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/common/image/round_thumbnail_image.dart';
-import 'package:tripStory/presentation/common/model/popup_item_model.dart';
+import 'package:tripStory/presentation/common/popup/popup_item_model.dart';
 
 class PopupList extends StatelessWidget {
   final List<PopupItemModel> members;

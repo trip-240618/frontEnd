@@ -18,4 +18,25 @@ extension DateExtension on DateTime {
   String get formatTimeKo => DateFormat("a HH:mm", "ko_KR").format(this);
 
   String get formatTime => DateFormat("HH:mm").format(this);
+
+  String get timeAgo {
+    final now = this;
+    final difference = now.difference(this);
+
+    if (difference.inSeconds < 60) {
+      return "방금 전";
+    } else if (difference.inMinutes < 60) {
+      return "${difference.inMinutes}분 전";
+    } else if (difference.inHours < 24) {
+      return "${difference.inHours}시간 전";
+    } else if (difference.inDays < 7) {
+      return "${difference.inDays}일 전";
+    } else if (difference.inDays < 30) {
+      return "${(difference.inDays / 7).floor()}주 전";
+    } else if (difference.inDays < 365) {
+      return "${(difference.inDays / 30).floor()}개월 전";
+    } else {
+      return "${(difference.inDays / 365).floor()}년 전";
+    }
+  }
 }

@@ -27,7 +27,7 @@ class JPlanMapper {
       title: entity.title,
       memo: entity.memo ?? "",
       place: entity.place ?? "",
-      latitude: entity.latitude ?? 0.0,
+      latitude: entity.latitude,
       longitude: entity.longitude ?? 0.0,
       locker: entity.locker,
     );

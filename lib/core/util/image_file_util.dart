@@ -32,6 +32,20 @@ class ImageFileUtil {
     return compressedBytes;
   }
 
+  static Future<Uint8List> compressBytes(
+    Uint8List bytes, {
+    int quality = 40,
+    int minWidth = 400,
+    int minHeight = 400,
+  }) async {
+    return await FlutterImageCompress.compressWithList(
+      bytes,
+      quality: quality,
+      minWidth: minWidth,
+      minHeight: minHeight,
+    );
+  }
+
   static Future<void> deleteFile(XFile file) async {
     final filePath = File(file.path);
     if (await filePath.exists()) await filePath.delete();

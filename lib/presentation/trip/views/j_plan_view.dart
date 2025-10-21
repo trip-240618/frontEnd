@@ -7,11 +7,11 @@ import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/domain/entities/flight_entity.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
-import 'package:tripStory/presentation/common/button/tab/tab_day.dart';
 import 'package:tripStory/presentation/common/container/label_container.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/popup/pop_up_menu.dart';
+import 'package:tripStory/presentation/common/tag/tag_day.dart';
 import 'package:tripStory/presentation/common/toast/custom_toast.dart';
 import 'package:tripStory/presentation/trip/controllers/j_plan_controller.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_state.dart';
@@ -29,11 +29,6 @@ class JPlanView extends StatefulWidget {
 class _JPlanViewState extends State<JPlanView> {
   ScrollController scrollController = ScrollController();
   final controller = Get.find<JPlanController>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +61,10 @@ class _JPlanViewState extends State<JPlanView> {
                       children: [
                         Row(
                           children: [
-                            TabDay(
-                              label: "Day ${controller.state.selectedDay}",
+                            TagDay(
+                              day: controller.state.selectedDay,
                               color: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
+                              dayType: TagDayType.day,
                             ),
                             const Spacer(),
                             AppIconButton(
@@ -106,7 +102,6 @@ class _JPlanViewState extends State<JPlanView> {
                           child: ListView.builder(
                             controller: controller.listController,
                             physics: const ClampingScrollPhysics(),
-                            shrinkWrap: true,
                             padding: const EdgeInsets.only(
                               bottom: 40,
                             ),
@@ -121,9 +116,7 @@ class _JPlanViewState extends State<JPlanView> {
                                     title: plan.title,
                                     memo: plan.memo,
                                     labelColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.white,
-                                    onTap: () {
-                                      // todo: 좌표있으면 해당 지도위치로 이동하는 함수
-                                    },
+                                    onTap: () => controller.onPlanPressed(plan.latitude ?? 0.0, plan.longitude ?? 0.0),
                                     trailing: MultiPopUpMenu(
                                       icon: IconConstants.smallVertical,
                                       items: [
@@ -183,7 +176,7 @@ class _JPlanViewState extends State<JPlanView> {
   void showFlightDeletedDialog({
     required VoidCallback onConfirmPressed,
   }) {
-    CommonDialog.show(
+    CommonDialog.showConfirmCancel(
       title: "항공편을 삭제하시겠습니까?",
       confirmText: "확인",
       onConfirm: () => onConfirmPressed(),
@@ -332,7 +325,15 @@ class _MapSection extends StatelessWidget {
     return GetBuilder<JPlanController>(
       builder: (controller) {
         if (controller.state.jPlanStatus == JPlanStatus.initial) {
-          return const SizedBox.shrink();
+          return SizedBox(
+            width: Get.width,
+            height: controller.state.googleMapHeight,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: context.color.gray400,
+              ),
+            ),
+          );
         }
         return Column(
           children: [

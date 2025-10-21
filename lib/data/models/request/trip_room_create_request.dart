@@ -11,7 +11,7 @@ abstract class TripRoomCreateRequest with _$TripRoomCreateRequest {
     required String startDate,
     required String endDate,
     required String country,
-    required String thumbnail,
+    String? thumbnail,
     required String labelColor,
   }) = _TripRoomCreateRequest;
 

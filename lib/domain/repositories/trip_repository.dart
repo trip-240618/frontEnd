@@ -1,8 +1,8 @@
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
-import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
-import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/domain/entities/histories_create_entity.dart';
+import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/scrap_create_entity.dart';
 import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
@@ -20,9 +20,15 @@ abstract class TripRepository {
 
   ResultFuture<bool> updateBookmark(int tripId);
 
-  ResultFuture<TripRoomCreateEntity> postCreateTrip(
-    TripRoomCreateRequest request,
-  );
+  ResultFuture<TripRoomCreateEntity> postCreateTrip({
+    required String name,
+    required String tripType,
+    required String startDate,
+    required String endDate,
+    required String color,
+    required String country,
+    String? thumbnail,
+  });
 
   ResultFuture<TripRoomEntity> getEnterTrip({
     required int tripId,
@@ -105,7 +111,16 @@ abstract class TripRepository {
 
   ResultFuture<void> putModifyJPlan({
     required int tripId,
-    required PlanJModifyRequest request,
+    required int planId,
+    required int dayAfterStart,
+    int? orderByDate,
+    required String startTime,
+    required String title,
+    String? place,
+    String? memo,
+    double? latitude,
+    double? longitude,
+    required bool locker,
   });
 
   ResultFuture<void> putSwapJPlan({
@@ -121,5 +136,18 @@ abstract class TripRepository {
   ResultFuture<void> fetchRegisterFinishJPlan({
     required int tripId,
     required int day,
+  });
+
+  ResultFuture<List<HistoriesEntity>> fetchHistories({
+    required int tripId,
+  });
+
+  ResultFuture<HistoryEntity> fetchHistoryDetail({
+    required int tripId,
+    required int historyId,
+  });
+
+  ResultFuture<List<HistoriesEntity>> postCreateManyHistory({
+    required HistoriesCreateEntity historiesCreateEntity,
   });
 }

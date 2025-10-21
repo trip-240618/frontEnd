@@ -31,8 +31,13 @@ import 'package:tripStory/presentation/setting/views/notices_list_view.dart';
 import 'package:tripStory/presentation/setting/views/user_delete_view.dart';
 import 'package:tripStory/presentation/splash/binding/splash_binding.dart';
 import 'package:tripStory/presentation/splash/views/splash_view.dart';
+import 'package:tripStory/presentation/trip/bindings/album_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/flight_create_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/flight_search_binding.dart';
+import 'package:tripStory/presentation/trip/bindings/history_create_binding.dart';
+import 'package:tripStory/presentation/trip/bindings/history_detail_binding.dart';
+import 'package:tripStory/presentation/trip/bindings/history_list_binding.dart';
+import 'package:tripStory/presentation/trip/bindings/history_main_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_add_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_edit_binding.dart';
@@ -45,10 +50,15 @@ import 'package:tripStory/presentation/trip/bindings/trip_room_member_binding.da
 import 'package:tripStory/presentation/trip/bindings/trip_room_setting_binding.dart';
 import 'package:tripStory/presentation/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/presentation/trip/models/flight_create_param.dart';
+import 'package:tripStory/presentation/trip/models/history_create_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_swap_param.dart';
+import 'package:tripStory/presentation/trip/views/album_view.dart';
 import 'package:tripStory/presentation/trip/views/flight_create_view.dart';
 import 'package:tripStory/presentation/trip/views/flight_search_view.dart';
+import 'package:tripStory/presentation/trip/views/history_create_view.dart';
+import 'package:tripStory/presentation/trip/views/history_detail_view.dart';
+import 'package:tripStory/presentation/trip/views/history_list_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_create_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_edit_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_swap_view.dart';
@@ -165,6 +175,7 @@ class RouterInfo {
         TripMainBinding(),
         JPlanBinding(),
         ScrapsBinding(),
+        HistoryMainBinding(),
       ],
     ),
     GetPage(
@@ -236,6 +247,50 @@ class RouterInfo {
       name: Routes.tripRoomMember,
       page: () => const TripRoomMemberView(),
       binding: TripRoomMemberBinding(),
+    ),
+    GetPage(
+      name: Routes.album,
+      page: () {
+        final args = Get.arguments;
+        if (args is! DateTime) {
+          throw ArgumentError('error');
+        }
+        return AlbumView(
+          selectedDateTime: args,
+        );
+      },
+      binding: AlbumBinding(),
+    ),
+    GetPage(
+      name: Routes.historyCreate,
+      page: () {
+        final args = Get.arguments;
+        if (args is! HistoryCreateParam) {
+          throw ArgumentError('error');
+        }
+        return HistoryCreateView(
+          historyCreateParam: args,
+        );
+      },
+      binding: HistoryCreateBinding(),
+    ),
+    GetPage(
+      name: Routes.historyList,
+      page: () {
+        final args = Get.arguments;
+        if (args is! DateTime) {
+          throw ArgumentError('error');
+        }
+        return HistoryListView(
+          dateTime: args,
+        );
+      },
+      binding: HistoryListBinding(),
+    ),
+    GetPage(
+      name: Routes.historyDetail,
+      page: () => const HistoryDetailView(),
+      binding: HistoryDetailBinding(),
     ),
   ];
 }
