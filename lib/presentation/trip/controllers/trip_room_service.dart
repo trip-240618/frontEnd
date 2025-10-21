@@ -5,7 +5,7 @@ class TripRoomService extends GetxController {
   final Rxn<TripRoomEntity> tripRoom = Rxn<TripRoomEntity>();
 
   TripRoomEntity? get tripRoomEntity => tripRoom.value;
-  
+
   void removeMember(String uuid) {
     final room = tripRoom.value;
     if (room == null) return;

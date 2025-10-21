@@ -137,62 +137,6 @@ class _HistoryCreateViewState extends State<HistoryCreateView> {
                 widget.historyCreateParam.photoDate ?? DateTime.now(),
               ),
             ),
-            // bottomNavigationBar: Padding(
-            //   padding: const EdgeInsets.only(bottom: 44, left: 20, right: 20),
-            //   child: BlackCountContainer(
-            //       onTap: () async {
-            //         if (hs.selectAlbumList.length > 50 - hs.historyTotalLen.value) {
-            //           showOnlyConfirmTapDialog(context, '사진은 최대 50장까지 등록할 수 있습니다', () {
-            //             Get.back();
-            //           });
-            //         } else {
-            //           showLoading(context);
-            //           Timer.periodic(Duration(milliseconds: 500), (timer) async {
-            //             if (hs.uploadingLoading.value) {
-            //               hs.uploadingLoading.value = false;
-            //               timer.cancel();
-            //               List totalList = [];
-            //               for (int i = 0; i < hs.selectAlbumList.length; i++) {
-            //                 totalList.add({
-            //                   "thumbnail": "${hs.imgUrl[i].toString().split('?')[0]}",
-            //                   "imageUrl": "${hs.imgUrl[i].toString().split('?')[0]}",
-            //                   "latitude": hs.selectAlbumList[i].latitude,
-            //                   "longitude": hs.selectAlbumList[i].longitude,
-            //                   "photoDate": "${hs.selectedDate.value.toString().replaceAll(".", '-').split(' ')[0]}",
-            //                   "memo": "${albumTextList[i].text}",
-            //                   "tags": hs.addTagList[i].length == 0
-            //                       ? []
-            //                       : [
-            //                           for (var tag in hs.addTagList[i])
-            //                             {
-            //                               "tagColor": "${tag['color'].value.toRadixString(16).toUpperCase()}",
-            //                               "tagName": tag['name'],
-            //                             },
-            //                         ],
-            //                 });
-            //               }
-            //
-            //               DateTime startDate = DateTime.parse(ts.selectTripList[0]['startDate']);
-            //               DateTime endDate = DateTime.parse(ts.selectTripList[0]['endDate']);
-            //
-            //               /// 날짜 목록 생성
-            //               List<String> dateList = [];
-            //               for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
-            //                 dateList.add(DateFormat('yyyy-MM-dd').format(startDate.add(Duration(days: i))));
-            //               }
-            //               int index =
-            //                   dateList.indexOf(hs.selectedDate.value.toString().replaceAll(".", '-').split(' ')[0]);
-            //               await hs.addHistory(ts.selectTripList[0]['id'], totalList);
-            //               Get.back();
-            //               Get.back();
-            //               Get.off(() => TripHistoryList(index: index));
-            //             }
-            //           });
-            //         }
-            //       },
-            //       title: '업로드',
-            //       count: hs.selectAlbumList.length),
-            // ),
           );
         },
       ),

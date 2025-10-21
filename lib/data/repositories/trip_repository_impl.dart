@@ -15,6 +15,7 @@ import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
+import 'package:tripStory/data/models/response/history_response.dart';
 import 'package:tripStory/data/network/socket_service.dart';
 import 'package:tripStory/domain/entities/histories_create_entity.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
@@ -427,6 +428,23 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
+  ResultFuture<HistoryEntity> fetchHistoryDetail({
+    required int tripId,
+    required int historyId,
+  }) async {
+    try {
+      final result = await _tripDataSource.fetchHistoryDetail(
+        tripId,
+        historyId,
+      );
+      final entity = HistoriesMapper.fromHistoryResponse(result);
+      return Right(entity);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
   ResultFuture<List<HistoriesEntity>> postCreateManyHistory({
     required HistoriesCreateEntity historiesCreateEntity,
   }) async {
@@ -439,11 +457,10 @@ class TripRepositoryImpl implements TripRepository {
         historiesCreateEntity.tripId,
         requestBody,
       );
-      print("??1111");
+
       final entities = HistoriesMapper.fromResponseList(result);
       return Right(entities);
     } catch (e) {
-      print("?? ${e}");
       return Left(ServerFailure(e.toString()));
     }
   }

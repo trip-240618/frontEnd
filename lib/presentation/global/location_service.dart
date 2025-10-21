@@ -10,14 +10,6 @@ class LocationService {
   Position? _cachedPosition;
 
   Future<Position> getCurrentLocation() async {
-    Position? lastKnown = await Geolocator.getLastKnownPosition();
-    print("??11 ${lastKnown}");
-    if (lastKnown != null) {
-      print("??2322 ${lastKnown}");
-      _cachedPosition = lastKnown;
-      return lastKnown;
-    }
-
     LocationPermission permission = await Geolocator.checkPermission();
 
     if (permission == LocationPermission.denied) {
@@ -26,6 +18,14 @@ class LocationService {
         throw Exception("위치 권한이 거부되었습니다.");
       }
     }
+
+    Position? lastKnown = await Geolocator.getLastKnownPosition();
+
+    if (lastKnown != null) {
+      _cachedPosition = lastKnown;
+      return lastKnown;
+    }
+
     _cachedPosition = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.medium,
     );

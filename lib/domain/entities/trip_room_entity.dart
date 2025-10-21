@@ -23,6 +23,8 @@ abstract class TripRoomEntity with _$TripRoomEntity {
     required List<TripMemberEntity> members,
   }) = _TripRoomEntity;
 
+  int get tripId => id;
+
   int get memberCount => members.length;
 
   int get dDay => startDate.difference(DateTime.now()).inDays + 1;

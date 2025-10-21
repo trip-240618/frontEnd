@@ -20,6 +20,8 @@ abstract class HistoriesEntity with _$HistoriesEntity {
 
 @freezed
 abstract class HistoryEntity with _$HistoryEntity {
+  const HistoryEntity._();
+
   const factory HistoryEntity({
     required int id,
     required String writerUuid,
@@ -33,9 +35,11 @@ abstract class HistoryEntity with _$HistoryEntity {
     bool? like,
     int? likeCnt,
     int? replyCnt,
-    String? photoDate,
+    DateTime? photoDate,
     List<TagEntity>? tags,
   }) = _HistoryEntity;
 
   factory HistoryEntity.fromJson(Map<String, dynamic> json) => _$HistoryEntityFromJson(json);
+
+  bool isWriter(String myUuid) => writerUuid == myUuid;
 }

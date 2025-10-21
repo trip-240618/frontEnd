@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tripStory/data/models/response/tag_response.dart';
 
 part 'history_response.freezed.dart';
+
 part 'history_response.g.dart';
 
 @freezed
@@ -19,7 +20,7 @@ abstract class HistoryResponse with _$HistoryResponse {
     bool? like,
     int? likeCnt,
     int? replyCnt,
-    String? photoDate,
+    required String photoDate,
     @JsonKey(fromJson: _tagsFromJson) List<TagResponse>? tags,
   }) = _HistoryResponse;
 
