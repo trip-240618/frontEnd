@@ -6,12 +6,14 @@ class MultiPopUpMenu extends StatelessWidget {
   final List<PopupMenuAction> items;
   final String icon;
   final Color? backgroundColor;
+  final Color? iconColor;
 
   const MultiPopUpMenu({
     super.key,
     required this.items,
     required this.icon,
     this.backgroundColor,
+    this.iconColor,
   });
 
   @override
@@ -29,7 +31,10 @@ class MultiPopUpMenu extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 125),
         menuPadding: EdgeInsets.zero,
         shadowColor: context.color.black.withValues(alpha: 0.4),
-        icon: SvgIcon(assetPath: icon),
+        icon: SvgIcon(
+          assetPath: icon,
+          color: iconColor,
+        ),
         color: backgroundColor ?? context.color.gray50,
         itemBuilder: (_) => _buildMenuItems(context),
       ),

@@ -1,8 +1,4 @@
-import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/domain/entities/scrap_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
@@ -50,8 +46,25 @@ class ScrapsController extends GetxController {
     final tripId = tripRoomInfo?.id;
     if (tripId == null) return;
 
-    final result =
-        state.showBookmarkedOnly ? await _fetchBookmarkedScrapsUseCase(tripId) : await _fetchScrapsUseCase(tripId);
+    final result = await _fetchScrapsUseCase(tripId);
+    result.fold(
+      (error) {
+        _scrapsState = state.copyWith(status: ScrapsStatus.failure);
+        update();
+      },
+      (scrapsResult) {
+        _scrapsState = state.copyWith(
+            scraps: scrapsResult, status: scrapsResult.isEmpty ? ScrapsStatus.empty : ScrapsStatus.success);
+        update();
+      },
+    );
+  }
+
+  Future<void> loadBookmarkedScraps() async {
+    final tripId = tripRoomInfo?.id;
+    if (tripId == null) return;
+
+    final result = await _fetchBookmarkedScrapsUseCase(tripId);
     result.fold(
       (error) {
         _scrapsState = state.copyWith(status: ScrapsStatus.failure);
@@ -69,9 +82,10 @@ class ScrapsController extends GetxController {
     if (state.status == ScrapsStatus.loading) {
       return;
     }
-    _scrapsState = state.copyWith(showBookmarkedOnly: !state.showBookmarkedOnly, status: ScrapsStatus.loading);
+    _scrapsState = state.copyWith(isBookmarked: !state.isBookmarked, status: ScrapsStatus.loading);
     update();
     loadScraps();
+
   }
 
   Future<void> onDeleteScrapPressed(int scrapId) async {
@@ -109,15 +123,6 @@ class ScrapsController extends GetxController {
         update();
       },
     );
-  }
-
-  String jsonToPlainText(String jsonData) {
-    final myJson = jsonDecode(jsonData);
-    final controller = QuillController(
-      document: Document.fromJson(myJson),
-      selection: const TextSelection.collapsed(offset: 0),
-    );
-    return controller.document.toPlainText();
   }
 
   bool isMine(ScrapEntity scrap) {

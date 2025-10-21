@@ -6,16 +6,22 @@ part 'histories_entity.g.dart';
 
 @freezed
 abstract class HistoriesEntity with _$HistoriesEntity {
+  const HistoriesEntity._();
+
   const factory HistoriesEntity({
     required String photoDate,
     required List<HistoryEntity> historyList,
   }) = _HistoriesEntity;
 
   factory HistoriesEntity.fromJson(Map<String, dynamic> json) => _$HistoriesEntityFromJson(json);
+
+  String get displayPhotoDate => photoDate.replaceAll("-", ".");
 }
 
 @freezed
 abstract class HistoryEntity with _$HistoryEntity {
+  const HistoryEntity._();
+
   const factory HistoryEntity({
     required int id,
     required String writerUuid,
@@ -29,9 +35,11 @@ abstract class HistoryEntity with _$HistoryEntity {
     bool? like,
     int? likeCnt,
     int? replyCnt,
-    String? photoDate,
+    DateTime? photoDate,
     List<TagEntity>? tags,
   }) = _HistoryEntity;
 
   factory HistoryEntity.fromJson(Map<String, dynamic> json) => _$HistoryEntityFromJson(json);
+
+  bool isWriter(String myUuid) => writerUuid == myUuid;
 }

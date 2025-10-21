@@ -84,12 +84,12 @@ class JPlanController extends GetxController {
   }
 
   Future<void> _initializeData() async {
+    await _planSocketInit();
     await Future.wait([
-      _getCurrentLocation(),
-      _planSocketInit(),
       _getJPlanData(),
       _getFlight(),
     ]);
+    _getCurrentLocation();
   }
 
   Future<void> _getJPlanData() async {

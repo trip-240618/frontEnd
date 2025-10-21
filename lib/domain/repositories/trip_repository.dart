@@ -142,6 +142,11 @@ abstract class TripRepository {
     required int tripId,
   });
 
+  ResultFuture<HistoryEntity> fetchHistoryDetail({
+    required int tripId,
+    required int historyId,
+  });
+
   ResultFuture<List<HistoriesEntity>> postCreateManyHistory({
     required HistoriesCreateEntity historiesCreateEntity,
   });

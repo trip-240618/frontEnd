@@ -10,7 +10,7 @@ class HistoriesMapper {
   static HistoriesEntity fromResponse(HistoriesResponse response) {
     return HistoriesEntity(
       photoDate: response.photoDate,
-      historyList: response.historyList.map(_mapHistoryResponse).toList(),
+      historyList: response.historyList.map(fromHistoryResponse).toList(),
     );
   }
 
@@ -36,7 +36,7 @@ class HistoriesMapper {
     );
   }
 
-  static HistoryEntity _mapHistoryResponse(HistoryResponse response) {
+  static HistoryEntity fromHistoryResponse(HistoryResponse response) {
     return HistoryEntity(
       id: response.id,
       writerUuid: response.writerUuid,
@@ -50,7 +50,7 @@ class HistoriesMapper {
       like: response.like,
       likeCnt: response.likeCnt,
       replyCnt: response.replyCnt,
-      photoDate: response.photoDate,
+      photoDate: DateTime.parse(response.photoDate),
       tags: response.tags?.whereType<TagResponse>().map(_mapTagResponse).toList(),
     );
   }

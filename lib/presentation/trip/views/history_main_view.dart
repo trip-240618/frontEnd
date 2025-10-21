@@ -12,9 +12,10 @@ import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/dialog/day_select_dialog.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
-import 'package:tripStory/presentation/common/tag/tag_day.dart';
 import 'package:tripStory/presentation/trip/controllers/history_main_controller.dart';
 import 'package:tripStory/presentation/trip/models/history_main_state.dart';
+import 'package:tripStory/presentation/trip/widgets/history_image_tile.dart';
+import 'package:tripStory/presentation/trip/widgets/history_item_header.dart';
 
 class HistoryMainView extends StatefulWidget {
   const HistoryMainView({
@@ -103,6 +104,7 @@ class _HistoryMainViewState extends State<HistoryMainView> {
                         _BottomSheetContent(
                           labelColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
                           histories: state.histories,
+                          onHeaderPressed: (index) => controller.onHistoryItemHeaderPressed(index),
                         ),
                       ],
                     );
@@ -290,10 +292,12 @@ class _BottomSheetHeader extends StatelessWidget {
 class _BottomSheetContent extends StatelessWidget {
   final List<HistoriesEntity> histories;
   final Color labelColor;
+  final Function(int) onHeaderPressed;
 
   const _BottomSheetContent({
     required this.labelColor,
     required this.histories,
+    required this.onHeaderPressed,
   });
 
   @override
@@ -305,7 +309,7 @@ class _BottomSheetContent extends StatelessWidget {
           childCount: histories.length,
           (context, index) {
             final history = histories[index].historyList;
-            final photoDate = histories[index].photoDate;
+            final photoDate = histories[index].displayPhotoDate;
 
             return Column(
               children: [
@@ -320,198 +324,44 @@ class _BottomSheetContent extends StatelessWidget {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(
+                    padding: EdgeInsets.only(
                       left: 20,
                       top: 16,
+                      bottom: history.isEmpty ? 0 : 16,
                     ),
                     child: Column(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            // if (hs.historyList[index]['historyList'].length != 0) {
-                            //   Get.to(() => TripHistoryList(isAdd: false, index: index));
-                            // }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 20),
-                              child: Row(
-                                children: [
-                                  TagDay(
-                                    day: index + 1,
-                                    color: labelColor,
-                                    dayType: TagDayType.day,
-                                  ),
-                                  const SizedBox(
-                                    width: 6,
-                                  ),
-                                  Text(
-                                    photoDate,
-                                    style: context.style.caption1,
-                                  ),
-                                  Spacer(),
-                                  Container(
-                                    width: 20,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                      color: context.color.gray400,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "${history.length}",
-                                        style: context.style.caption1.copyWith(
-                                          color: context.color.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: HistoryItemHeader(
+                            day: index + 1,
+                            labelColor: labelColor,
+                            photoDate: photoDate,
+                            historyCount: history.length,
+                            onHeaderPressed: history.isEmpty ? null : () => onHeaderPressed(index),
                           ),
                         ),
                         const SizedBox(
                           height: 16,
                         ),
                         Expanded(
-                          child: ListView.builder(
-                              itemCount: history.length,
-                              scrollDirection: Axis.horizontal,
-                              addRepaintBoundaries: false,
-                              addAutomaticKeepAlives: false,
-                              itemBuilder: (context, idx) {
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        // Get.to(() => TripHistoryDetailPage(
-                                        //       selectedIdx: idx,
-                                        //       dayIdx: index,
-                                        //       historyId: hs.historyList[index]['historyList'][idx]
-                                        //           ['id'],
-                                        //     ));
-                                      },
-                                      child: Container(
-                                        width: 120,
-                                        child: Stack(
-                                          children: [
-                                            // Positioned(
-                                            //   child: hs.historyList[index]['historyList'][idx]
-                                            //               ['thumbnail'] ==
-                                            //           ''
-                                            //       ? DefaultProfileScreen(context)
-                                            //       : CachedNetworkImage(
-                                            //           maxHeightDiskCache: 350,
-                                            //           maxWidthDiskCache: 350,
-                                            //           imageUrl:
-                                            //               '${hs.historyList[index]['historyList'][idx]['thumbnail']}',
-                                            //           imageBuilder: (context, imageProvider) =>
-                                            //               Container(
-                                            //             decoration: BoxDecoration(
-                                            //               borderRadius: BorderRadius.circular(4),
-                                            //               image: DecorationImage(
-                                            //                   image: imageProvider,
-                                            //                   fit: BoxFit.cover),
-                                            //             ),
-                                            //           ),
-                                            //           errorWidget: (context, url, error) =>
-                                            //               DefaultProfileScreen(context),
-                                            //         ),
-                                            // ),
-                                            Positioned(
-                                              bottom: 0,
-                                              left: 0,
-                                              right: 0,
-                                              child: Container(
-                                                height: 150,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(4),
-                                                  gradient: LinearGradient(
-                                                    begin: Alignment.topCenter,
-                                                    end: Alignment.bottomCenter,
-                                                    colors: [
-                                                      Colors.transparent,
-                                                      Color(0xff212121).withOpacity(0.5),
-                                                    ],
-                                                    stops: [0.54, 1],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            // Positioned(
-                                            //   top: 8,
-                                            //   right: 8,
-                                            //   child: Container(
-                                            //     width: 20,
-                                            //     height: 20,
-                                            //     child: hs.historyList[index]['historyList'][idx]
-                                            //                 ['profileImage'] ==
-                                            //             ''
-                                            //         ? DefaultProfileScreen(context)
-                                            //         : CachedNetworkImage(
-                                            //             imageUrl:
-                                            //                 '${hs.historyList[index]['historyList'][idx]['profileImage']}',
-                                            //             imageBuilder: (context, imageProvider) =>
-                                            //                 Container(
-                                            //               decoration: BoxDecoration(
-                                            //                 borderRadius: BorderRadius.circular(4),
-                                            //                 image: DecorationImage(
-                                            //                     image: imageProvider,
-                                            //                     fit: BoxFit.fill),
-                                            //               ),
-                                            //             ),
-                                            //             errorWidget: (context, url, error) =>
-                                            //                 DefaultProfileScreen(context),
-                                            //           ),
-                                            //   ),
-                                            // ),
-                                            // Positioned(
-                                            //   left: 8,
-                                            //   bottom: 8,
-                                            //   child: Row(
-                                            //     children: [
-                                            //       SvgPicture.asset('assets/icon/smallheart.svg'),
-                                            //       const SizedBox(
-                                            //         width: 3,
-                                            //       ),
-                                            //       Text(
-                                            //         '${hs.historyList[index]['historyList'][idx]['likeCnt']}',
-                                            //         style: f12whitew500,
-                                            //       ),
-                                            //       const SizedBox(
-                                            //         width: 8,
-                                            //       ),
-                                            //       SvgPicture.asset('assets/icon/smallComment.svg'),
-                                            //       const SizedBox(
-                                            //         width: 3,
-                                            //       ),
-                                            //       Text(
-                                            //         '${hs.historyList[index]['historyList'][idx]['replyCnt']}',
-                                            //         style: f12whitew500,
-                                            //       ),
-                                            //     ],
-                                            //   ),
-                                            // )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8)
-                                  ],
-                                );
-                              }),
+                          child: ListView.separated(
+                            itemCount: history.length,
+                            scrollDirection: Axis.horizontal,
+                            addRepaintBoundaries: false,
+                            addAutomaticKeepAlives: false,
+                            itemBuilder: (context, index) {
+                              final historyEntity = history[index];
+                              return HistoryImageTile(
+                                thumbnail: historyEntity.thumbnail,
+                                userThumbnail: historyEntity.profileImage ?? "",
+                                likeCount: historyEntity.likeCnt ?? 0,
+                                replyCount: historyEntity.replyCnt ?? 0,
+                              );
+                            },
+                            separatorBuilder: (context, index) => const SizedBox(width: 8),
+                          ),
                         ),
-                        // hs.historyList[index]['historyList'].length == 0
-                        //     ? const SizedBox()
-                        //     : const SizedBox(
-                        //   height: 16,
-                        // ),
                       ],
                     ),
                   ),

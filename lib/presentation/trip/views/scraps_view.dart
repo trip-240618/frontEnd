@@ -6,8 +6,10 @@ import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
+import 'package:tripStory/core/util/helper/quill_helper.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
+import 'package:tripStory/presentation/common/divider/common_divider.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/trip/controllers/scraps_controller.dart';
 import 'package:tripStory/presentation/trip/models/scraps_state.dart';
@@ -26,7 +28,7 @@ class ScrapsView extends StatelessWidget {
             return const SizedBox.shrink();
           }
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            padding: EdgeInsets.only(left: 20, right: 20, top: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
