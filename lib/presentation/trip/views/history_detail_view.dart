@@ -24,226 +24,208 @@ class HistoryDetailView extends StatefulWidget {
 
 class _HistoryDetailViewState extends State<HistoryDetailView> {
   final PageController pageController = PageController(initialPage: 0);
-  final TextEditingController textCon = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
-
-  bool isEditing = false;
-  int? editingIdx;
-  int selectedPageIdx = 0;
-
-  @override
-  void dispose() {
-    textCon.dispose();
-    _focusNode.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        textCon.text = '';
-        isEditing = false;
-        setState(() {});
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: GetBuilder<HistoryDetailController>(
-                builder: (HistoryDetailController controller) {
-                  final state = controller.state;
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: GetBuilder<HistoryDetailController>(
+        builder: (HistoryDetailController controller) {
+          final state = controller.state;
 
-                  return PageView.builder(
-                    controller: pageController,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: state.historiesDetailLength,
-                    onPageChanged: (v) {
-                      selectedPageIdx = v;
-                    },
-                    itemBuilder: (context, pageIdx) {
-                      final historyDetailList = state.historyDetailEntities.values.toList();
-                      final historyDetail = historyDetailList[pageIdx];
-
-                      return Column(
-                        children: [
-                          Stack(
-                            children: [
-                              CachedImage(
-                                imageUrl: historyDetail.imageUrl,
-                                width: Get.width,
-                                height: Get.height * 0.6,
-                                fit: BoxFit.contain,
-                              ),
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                child: Container(
-                                  height: 120,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        context.color.black.withValues(alpha: 0.3),
-                                        context.color.black.withValues(alpha: 0.2),
-                                        context.color.black.withValues(alpha: 0.1),
-                                        Colors.transparent,
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 50,
-                                left: 20,
-                                child: AppIconButton(
-                                  assetPath: IconConstants.leftArrow,
-                                  color: context.color.white,
-                                  onTap: () => Get.back(),
-                                ),
-                              ),
-                              Positioned(
-                                top: 50,
-                                right: 20,
-                                child: MultiPopUpMenu(
-                                  icon: IconConstants.moreHorizon,
-                                  iconColor: context.color.white,
-                                  items: [
-                                    PopupMenuAction(
-                                      title: "사진 공유",
-                                      onTap: () => {},
-                                      iconPath: IconConstants.chain,
-                                    ),
-                                    if (historyDetail.isWriter(controller.myUuid))
-                                      PopupMenuAction(
-                                        title: "게시물 삭제",
-                                        onTap: () => {},
-                                        iconPath: IconConstants.delete,
-                                      ),
-                                    PopupMenuAction(
-                                      title: "게시물 신고",
-                                      onTap: () => {},
-                                      iconPath: IconConstants.declaration,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                child: Container(
-                                  height: 120,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Colors.transparent,
-                                        context.color.black.withValues(alpha: 0.1),
-                                        context.color.black.withValues(alpha: 0.2),
-                                        context.color.black.withValues(alpha: 0.3),
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 20,
-                                left: 20,
-                                right: 20,
-                                child: _ImageInfoSection(
-                                  imageUrl: historyDetail.imageUrl,
-                                  nickName: historyDetail.nickname,
-                                  photoDate: historyDetail.photoDate ?? DateTime.now(),
-                                  memo: historyDetail.memo ?? "",
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (historyDetail.tags?.isNotEmpty ?? false) _TagSection(tags: historyDetail.tags!),
-                          const SizedBox(height: 8),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: _HeartCommentSection(
-                              likeCnt: historyDetail.likeCnt ?? 0,
-                              replyCnt: historyDetail.replyCnt ?? 0,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                left: 20,
-                                right: 20,
-                                bottom: MediaQuery.of(context).viewInsets.bottom + 100,
-                              ),
-                              child: state.replies.isEmpty
-                                  ? EmptyView(
-                                      content: "등록된 댓글이 없습니다\n댓글을 등록해 주세요",
-                                    )
-                                  : ListView.separated(
-                                      controller: _scrollController,
-                                      shrinkWrap: true,
-                                      itemCount: 30,
-                                      padding: EdgeInsets.zero,
-                                      separatorBuilder: (context, index) => const SizedBox(
-                                        height: 16,
-                                      ),
-                                      itemBuilder: (context, index) {
-                                        final reply = state.replies[index];
-                                        return _ReplyItem(
-                                          profileImage: reply.profileImage,
-                                          nickName: reply.nickname,
-                                          createDate: reply.createDate.timeAgo,
-                                          content: reply.content,
-                                        );
-                                      },
-                                    ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-              child: Container(
-                color: Colors.white,
-                padding: EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 10,
-                  bottom: _focusNode.hasFocus ? 10 : 30,
-                ),
-                child: EditTextFormField(
-                  controller: textCon,
-                  focusNode: _focusNode,
-                  hintText: "댓글을 입력해주세요",
-                  editType: TextEditType.button,
-                  buttonText: "등록",
-                  onTrailingPressed: () {
-                    print("dad");
+          return Stack(
+            children: [
+              Positioned.fill(
+                child: PageView.builder(
+                  controller: pageController,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: state.historiesDetailLength,
+                  onPageChanged: (v) {
+                    // selectedPageIdx = v;
                   },
-                  onSubmit: (text) {},
+                  itemBuilder: (context, pageIdx) {
+                    final historyDetailList = state.historyDetailEntities.values.toList();
+                    final historyDetail = historyDetailList[pageIdx];
+
+                    return Column(
+                      children: [
+                        Stack(
+                          children: [
+                            CachedImage(
+                              imageUrl: historyDetail.imageUrl,
+                              width: Get.width,
+                              height: Get.height * 0.6,
+                              fit: BoxFit.contain,
+                            ),
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                height: 120,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      context.color.black.withValues(alpha: 0.3),
+                                      context.color.black.withValues(alpha: 0.2),
+                                      context.color.black.withValues(alpha: 0.1),
+                                      Colors.transparent,
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 50,
+                              left: 20,
+                              child: AppIconButton(
+                                assetPath: IconConstants.leftArrow,
+                                color: context.color.white,
+                                onTap: () => Get.back(),
+                              ),
+                            ),
+                            Positioned(
+                              top: 50,
+                              right: 20,
+                              child: MultiPopUpMenu(
+                                icon: IconConstants.moreHorizon,
+                                iconColor: context.color.white,
+                                items: [
+                                  PopupMenuAction(
+                                    title: "사진 공유",
+                                    onTap: () => {},
+                                    iconPath: IconConstants.chain,
+                                  ),
+                                  if (historyDetail.isWriter(controller.myUuid))
+                                    PopupMenuAction(
+                                      title: "게시물 삭제",
+                                      onTap: () => {},
+                                      iconPath: IconConstants.delete,
+                                    ),
+                                  PopupMenuAction(
+                                    title: "게시물 신고",
+                                    onTap: () => {},
+                                    iconPath: IconConstants.declaration,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                height: 120,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.transparent,
+                                      context.color.black.withValues(alpha: 0.1),
+                                      context.color.black.withValues(alpha: 0.2),
+                                      context.color.black.withValues(alpha: 0.3),
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 20,
+                              left: 20,
+                              right: 20,
+                              child: _ImageInfoSection(
+                                imageUrl: historyDetail.imageUrl,
+                                nickName: historyDetail.nickname,
+                                photoDate: historyDetail.photoDate ?? DateTime.now(),
+                                memo: historyDetail.memo ?? "",
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (historyDetail.tags?.isNotEmpty ?? false) _TagSection(tags: historyDetail.tags!),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: _HeartCommentSection(
+                            likeCnt: historyDetail.likeCnt ?? 0,
+                            replyCnt: historyDetail.replyCnt ?? 0,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              left: 20,
+                              right: 20,
+                              bottom: MediaQuery.of(context).viewInsets.bottom + 100,
+                            ),
+                            child: state.replies.isEmpty
+                                ? EmptyView(
+                                    content: "등록된 댓글이 없습니다\n댓글을 등록해 주세요",
+                                  )
+                                : ListView.separated(
+                                    controller: controller.scrollController,
+                                    shrinkWrap: true,
+                                    itemCount: state.replies.length,
+                                    padding: EdgeInsets.zero,
+                                    separatorBuilder: (context, index) => const SizedBox(
+                                      height: 16,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      final reply = state.replies[index];
+                                      return _ReplyItem(
+                                        profileImage: reply.profileImage,
+                                        nickName: reply.nickname,
+                                        createDate: reply.createDate.timeAgo,
+                                        content: reply.content,
+                                      );
+                                    },
+                                  ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
-            ),
-          ],
-        ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 10,
+                    bottom: _focusNode.hasFocus ? 10 : 30,
+                  ),
+                  child: EditTextFormField(
+                    controller: controller.textCon,
+                    focusNode: _focusNode,
+                    hintText: "댓글을 입력해주세요",
+                    editType: TextEditType.button,
+                    buttonText: "등록",
+                    onTrailingPressed: () => controller.onCreateReplyPressed(),
+                    onSubmit: (text) {},
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 }
 
