@@ -20,8 +20,10 @@ class CommonTextField extends StatelessWidget {
   final Color? borderColor;
   final EdgeInsets? scrollPadding;
   final int? maxLines;
+  final int? minLines;
   final bool? isFocusOnTapOutside;
   final TextInputType? keyboardType;
+  final double? maxHeight;
 
   const CommonTextField({
     super.key,
@@ -41,6 +43,8 @@ class CommonTextField extends StatelessWidget {
     this.maxLines,
     this.isFocusOnTapOutside,
     this.keyboardType,
+    this.minLines,
+    this.maxHeight,
   });
 
   @override
@@ -59,19 +63,25 @@ class CommonTextField extends StatelessWidget {
             leading!,
           ],
           Expanded(
-            child: BaseTextFormField(
-              controller: controller,
-              focusNode: focusNode,
-              hintText: hintText,
-              onChanged: onChanged,
-              inputFormatters: inputFormatters,
-              textStyle: textStyle,
-              contentPadding: contentPadding,
-              onFieldSubmitted: onFieldSubmitted,
-              scrollPadding: scrollPadding,
-              maxLines: maxLines,
-              isFocusOnTapOutside: isFocusOnTapOutside,
-              keyboardType: keyboardType,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: maxHeight ?? double.infinity,
+              ),
+              child: BaseTextFormField(
+                controller: controller,
+                focusNode: focusNode,
+                hintText: hintText,
+                onChanged: onChanged,
+                inputFormatters: inputFormatters,
+                textStyle: textStyle,
+                contentPadding: contentPadding,
+                onFieldSubmitted: onFieldSubmitted,
+                scrollPadding: scrollPadding,
+                maxLines: maxLines,
+                minLines: minLines,
+                isFocusOnTapOutside: isFocusOnTapOutside,
+                keyboardType: keyboardType,
+              ),
             ),
           ),
           if (trailing != null) ...[
