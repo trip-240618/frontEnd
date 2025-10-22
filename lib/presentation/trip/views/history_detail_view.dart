@@ -153,6 +153,8 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
                           child: _HeartCommentSection(
                             likeCnt: historyDetail.likeCnt ?? 0,
                             replyCnt: historyDetail.replyCnt ?? 0,
+                            onHeartPressed: () => controller.onHeartPressed(),
+                            like: historyDetail.like ?? false,
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -310,10 +312,14 @@ class _TagSection extends StatelessWidget {
 class _HeartCommentSection extends StatelessWidget {
   final int likeCnt;
   final int replyCnt;
+  final bool like;
+  final VoidCallback onHeartPressed;
 
   const _HeartCommentSection({
     required this.likeCnt,
     required this.replyCnt,
+    required this.onHeartPressed,
+    required this.like,
   });
 
   @override
@@ -323,8 +329,8 @@ class _HeartCommentSection extends StatelessWidget {
       children: [
         AppIconButton(
           assetPath: IconConstants.favorite,
-          color: context.color.gray300,
-          onTap: () {},
+          color: like ? context.color.gray900 : context.color.gray300,
+          onTap: onHeartPressed,
         ),
         Text(
           "$likeCnt",

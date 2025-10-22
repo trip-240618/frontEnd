@@ -190,4 +190,10 @@ abstract class TripDataSource {
     @Path("historyId") int historyId,
     @Body() HistoryReplyRequest request,
   );
+
+  @PUT("/{tripId}/history/{historyId}/like")
+  Future<bool> putHistoryToggle(
+    @Path("tripId") int tripId,
+    @Path("historyId") int historyId,
+  );
 }

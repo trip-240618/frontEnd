@@ -44,7 +44,6 @@ abstract class TripRepository {
     required int tripId,
   });
 
-  @override
   ResultFuture<void> deleteKickMember({
     required int tripId,
     required String tripType,
@@ -161,5 +160,10 @@ abstract class TripRepository {
     required int tripId,
     required int historyId,
     required String content,
+  });
+
+  ResultFuture<bool> putHistoryToggle({
+    required int tripId,
+    required int historyId,
   });
 }

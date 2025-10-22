@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
 import 'package:tripStory/component/bottomModals.dart';
-import 'package:tripStory/component/empty/emptyScreen.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
@@ -21,6 +20,7 @@ import 'package:tripStory/presentation/common/button/popup_list.dart';
 import 'package:tripStory/presentation/common/button/tab/tab_box.dart';
 import 'package:tripStory/presentation/common/button/tab/tab_user.dart';
 import 'package:tripStory/presentation/common/dialog/code_insert_dialog.dart';
+import 'package:tripStory/presentation/common/empty_view.dart';
 import 'package:tripStory/presentation/common/image/round_thumbnail_image.dart';
 import 'package:tripStory/presentation/common/popup/popup_item_model.dart';
 import 'package:tripStory/presentation/common/snack_bar.dart';
@@ -107,8 +107,11 @@ class TripRoomListView extends StatelessWidget {
                   const SizedBox(height: 32),
                   Expanded(
                     child: controller.tripRoomsState.isTripRoomEmpty
-                        ? const EmptyScreen(
+                        ? EmptyView(
                             content: "새 여행 일정을\n 트립스토리에 등록해 보세요",
+                            fontStyle: context.style.heading1.copyWith(
+                              color: context.color.gray400,
+                            ),
                           )
                         : ListView.builder(
                             shrinkWrap: true,

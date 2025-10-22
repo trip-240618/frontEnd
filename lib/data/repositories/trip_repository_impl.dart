@@ -508,4 +508,21 @@ class TripRepositoryImpl implements TripRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  ResultFuture<bool> putHistoryToggle({
+    required int tripId,
+    required int historyId,
+  }) async {
+    try {
+      final result = await _tripDataSource.putHistoryToggle(
+        tripId,
+        historyId,
+      );
+
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

@@ -5,6 +5,7 @@ import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/create_reply_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_history_detail_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_reply_usecase.dart';
+import 'package:tripStory/domain/usecases/history_heart_toggle_usecase.dart';
 import 'package:tripStory/presentation/global/login_user_service.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
 import 'package:tripStory/presentation/trip/models/history_detail_state.dart';
@@ -15,6 +16,7 @@ class HistoryDetailController extends GetxController {
   final FetchHistoryDetailUsecase _fetchHistoryDetailUsecase;
   final CreateReplyUsecase _createReplyUsecase;
   final FetchReplyUsecase _fetchReplyUsecase;
+  final HistoryHeartToggleUsecase _heartToggleUsecase;
 
   HistoryDetailController(
     this._tripRoomService,
@@ -22,6 +24,7 @@ class HistoryDetailController extends GetxController {
     this._loginUserService,
     this._createReplyUsecase,
     this._fetchReplyUsecase,
+    this._heartToggleUsecase,
   );
 
   TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
@@ -136,6 +139,40 @@ class HistoryDetailController extends GetxController {
         textCon.clear();
         update();
         _scrollToBottom();
+      },
+    );
+  }
+
+  Future<void> onHeartPressed() async {
+    final tripId = tripRoomInfo?.tripId;
+    final int historyId = 5;
+    if (tripId == null) return;
+
+    final params = HistoryHeartToggleParams(
+      tripId: tripId,
+      historyId: historyId,
+    );
+
+    final result = await _heartToggleUsecase.call(params);
+
+    result.fold(
+      (failure) {},
+      (heartResult) async {
+        final currentEntity = state.historyDetailEntities[historyId];
+        if (currentEntity != null) {
+          final currentLikeCnt = currentEntity.likeCnt ?? 0;
+
+          _historyDetailState = state.copyWith(
+            historyDetailEntities: {
+              ...state.historyDetailEntities,
+              historyId: currentEntity.copyWith(
+                likeCnt: heartResult ? currentLikeCnt + 1 : currentLikeCnt - 1,
+                like: heartResult,
+              ),
+            },
+          );
+          update();
+        }
       },
     );
   }
