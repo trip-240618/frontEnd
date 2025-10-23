@@ -22,6 +22,8 @@ abstract class HistoryDetailState with _$HistoryDetailState {
     @Default({}) Map<int, HistoryEntity> historyDetailEntities,
     @Default([]) List<HistoryReplyEntity> replies,
     @Default([]) List<int> historyIds,
+    @Default(false) bool isEditor,
+    int? editReplyId,
     OneTimeEvent<DialogInfo>? showDialog,
   }) = _HistoryDetailState;
 

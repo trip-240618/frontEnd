@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:tripStory/data/models/request/history_create_request.dart';
+import 'package:tripStory/data/models/request/history_reply_modify_request.dart';
 import 'package:tripStory/data/models/request/history_reply_request.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
@@ -207,5 +208,19 @@ abstract class TripDataSource {
   Future<void> reportHistory(
     @Path("tripId") int tripId,
     @Query("reason") String reason,
+  );
+
+  @PUT("/{tripId}/history/{historyId}/reply/modify")
+  Future<List<HistoryReplyResponse>> putReportModify(
+    @Path("tripId") int tripId,
+    @Path("historyId") int historyId,
+    @Body() HistoryReplyModifyRequest request,
+  );
+
+  @DELETE("/{tripId}/history/{historyId}/reply/delete")
+  Future<List<HistoryReplyResponse>> deleteReply(
+    @Path("tripId") int tripId,
+    @Path("historyId") int historyId,
+    @Query("replyId") int replyId,
   );
 }

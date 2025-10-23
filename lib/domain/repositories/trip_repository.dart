@@ -176,4 +176,17 @@ abstract class TripRepository {
     required int tripId,
     required String reason,
   });
+
+  ResultFuture<List<HistoryReplyEntity>> modifyReply({
+    required int tripId,
+    required int historyId,
+    required int replyId,
+    required String content,
+  });
+
+  ResultFuture<List<HistoryReplyEntity>> deleteReply({
+    required int tripId,
+    required int historyId,
+    required int replyId,
+  });
 }

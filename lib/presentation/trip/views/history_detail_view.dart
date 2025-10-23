@@ -43,210 +43,225 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: GetBuilder<HistoryDetailController>(
-        builder: (HistoryDetailController controller) {
-          final state = controller.state;
+      body: GestureDetector(
+        onTap: () => _controller.finishEditMode(),
+        child: GetBuilder<HistoryDetailController>(
+          builder: (HistoryDetailController controller) {
+            final state = controller.state;
 
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            final dialogInfo = controller.state.showDialog?.consume();
-            if (dialogInfo != null) {
-              _showDialog(
-                title: dialogInfo.title,
-                message: dialogInfo.message,
-                onConfirm: dialogInfo.onConfirm,
-              );
-            }
-          });
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final dialogInfo = controller.state.showDialog?.consume();
+              if (dialogInfo != null) {
+                _showDialog(
+                  title: dialogInfo.title,
+                  message: dialogInfo.message,
+                  onConfirm: dialogInfo.onConfirm,
+                );
+              }
+            });
 
-          return Stack(
-            children: [
-              Positioned.fill(
-                child: PageView.builder(
-                  controller: controller.pageController,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: state.historyIds.length,
-                  onPageChanged: (page) => controller.onPageIndexChanged(page),
-                  itemBuilder: (context, pageIdx) {
-                    if (state.historyDetailStatus == HistoryDetailStatus.initial) return const SizedBox();
+            return Stack(
+              children: [
+                Positioned.fill(
+                  child: PageView.builder(
+                    controller: controller.pageController,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: state.historyIds.length,
+                    onPageChanged: (page) => controller.onPageIndexChanged(page),
+                    itemBuilder: (context, pageIdx) {
+                      if (state.historyDetailStatus == HistoryDetailStatus.initial) return const SizedBox();
 
-                    final historyDetailList = state.historyDetailEntities.values.toList();
-                    final historyDetail = historyDetailList[pageIdx];
+                      final historyDetailList = state.historyDetailEntities.values.toList();
+                      final historyDetail = historyDetailList[pageIdx];
 
-                    return Column(
-                      children: [
-                        Stack(
-                          children: [
-                            CachedImage(
-                              imageUrl: historyDetail.imageUrl,
-                              width: Get.width,
-                              height: Get.height * 0.6,
-                              fit: BoxFit.contain,
-                            ),
-                            Positioned(
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              child: Container(
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      context.color.black.withValues(alpha: 0.3),
-                                      context.color.black.withValues(alpha: 0.2),
-                                      context.color.black.withValues(alpha: 0.1),
-                                      Colors.transparent,
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
+                      return Column(
+                        children: [
+                          Stack(
+                            children: [
+                              CachedImage(
+                                imageUrl: historyDetail.imageUrl,
+                                width: Get.width,
+                                height: Get.height * 0.6,
+                                fit: BoxFit.contain,
+                              ),
+                              Positioned(
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        context.color.black.withValues(alpha: 0.3),
+                                        context.color.black.withValues(alpha: 0.2),
+                                        context.color.black.withValues(alpha: 0.1),
+                                        Colors.transparent,
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              top: 50,
-                              left: 20,
-                              child: AppIconButton(
-                                assetPath: IconConstants.leftArrow,
-                                color: context.color.white,
-                                onTap: () => Get.back(),
+                              Positioned(
+                                top: 50,
+                                left: 20,
+                                child: AppIconButton(
+                                  assetPath: IconConstants.leftArrow,
+                                  color: context.color.white,
+                                  onTap: () => Get.back(),
+                                ),
                               ),
-                            ),
-                            Positioned(
-                              top: 50,
-                              right: 20,
-                              child: MultiPopUpMenu(
-                                icon: IconConstants.moreHorizon,
-                                iconColor: context.color.white,
-                                items: [
-                                  PopupMenuAction(
-                                    title: "사진 공유",
-                                    onTap: () => controller.onImageSharedPressed(),
-                                    iconPath: IconConstants.chain,
-                                  ),
-                                  if (historyDetail.isWriter(controller.myUuid))
+                              Positioned(
+                                top: 50,
+                                right: 20,
+                                child: MultiPopUpMenu(
+                                  icon: IconConstants.moreHorizon,
+                                  iconColor: context.color.white,
+                                  items: [
                                     PopupMenuAction(
-                                      title: "게시물 삭제",
-                                      onTap: () => controller.onHistoryDeletePressed(),
-                                      iconPath: IconConstants.delete,
+                                      title: "사진 공유",
+                                      onTap: () => controller.onImageSharedPressed(),
+                                      iconPath: IconConstants.chain,
                                     ),
-                                  if (!historyDetail.isWriter(controller.myUuid))
-                                    PopupMenuAction(
-                                      title: "게시물 신고",
-                                      onTap: () => controller.onHistoryReportPressed(),
-                                      iconPath: IconConstants.declaration,
-                                    ),
-                                ],
+                                    if (historyDetail.isWriter(controller.myUuid))
+                                      PopupMenuAction(
+                                        title: "게시물 삭제",
+                                        onTap: () => controller.onHistoryDeletePressed(),
+                                        iconPath: IconConstants.delete,
+                                      ),
+                                    if (!historyDetail.isWriter(controller.myUuid))
+                                      PopupMenuAction(
+                                        title: "게시물 신고",
+                                        onTap: () => controller.onHistoryReportPressed(),
+                                        iconPath: IconConstants.declaration,
+                                      ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              left: 0,
-                              right: 0,
-                              child: Container(
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.transparent,
-                                      context.color.black.withValues(alpha: 0.1),
-                                      context.color.black.withValues(alpha: 0.2),
-                                      context.color.black.withValues(alpha: 0.3),
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.transparent,
+                                        context.color.black.withValues(alpha: 0.1),
+                                        context.color.black.withValues(alpha: 0.2),
+                                        context.color.black.withValues(alpha: 0.3),
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              bottom: 20,
-                              left: 20,
-                              right: 20,
-                              child: _ImageInfoSection(
-                                imageUrl: historyDetail.profileImage ?? "",
-                                nickName: historyDetail.nickname,
-                                photoDate: historyDetail.photoDate ?? DateTime.now(),
-                                memo: historyDetail.memo ?? "",
+                              Positioned(
+                                bottom: 20,
+                                left: 20,
+                                right: 20,
+                                child: _ImageInfoSection(
+                                  imageUrl: historyDetail.profileImage ?? "",
+                                  nickName: historyDetail.nickname,
+                                  photoDate: historyDetail.photoDate ?? DateTime.now(),
+                                  memo: historyDetail.memo ?? "",
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        if (historyDetail.tags?.isNotEmpty ?? false) _TagSection(tags: historyDetail.tags!),
-                        const SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: _HeartCommentSection(
-                            likeCnt: historyDetail.likeCnt ?? 0,
-                            replyCnt: historyDetail.replyCnt ?? 0,
-                            onHeartPressed: () => controller.onHeartPressed(),
-                            like: historyDetail.like ?? false,
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: 20,
-                              right: 20,
-                              bottom: MediaQuery.of(context).viewInsets.bottom + 100,
+                          if (historyDetail.tags?.isNotEmpty ?? false) _TagSection(tags: historyDetail.tags!),
+                          const SizedBox(height: 8),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: _HeartCommentSection(
+                              likeCnt: historyDetail.likeCnt ?? 0,
+                              replyCnt: historyDetail.replyCnt ?? 0,
+                              onHeartPressed: () => controller.onHeartPressed(),
+                              like: historyDetail.like ?? false,
                             ),
-                            child: state.replies.isEmpty
-                                ? EmptyView(
-                                    content: "등록된 댓글이 없습니다\n댓글을 등록해 주세요",
-                                  )
-                                : ListView.separated(
-                                    controller: controller.scrollController,
-                                    shrinkWrap: true,
-                                    itemCount: state.replies.length,
-                                    padding: EdgeInsets.zero,
-                                    separatorBuilder: (context, index) => const SizedBox(
-                                      height: 16,
+                          ),
+                          const SizedBox(height: 12),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: 20,
+                                right: 20,
+                                bottom: MediaQuery.of(context).viewInsets.bottom + 100,
+                              ),
+                              child: state.replies.isEmpty
+                                  ? EmptyView(
+                                      content: "등록된 댓글이 없습니다\n댓글을 등록해 주세요",
+                                    )
+                                  : ListView.separated(
+                                      controller: controller.scrollController,
+                                      shrinkWrap: true,
+                                      itemCount: state.replies.length,
+                                      padding: EdgeInsets.zero,
+                                      separatorBuilder: (context, index) => const SizedBox(
+                                        height: 16,
+                                      ),
+                                      itemBuilder: (context, index) {
+                                        final reply = state.replies[index];
+                                        final replyId = reply.id;
+
+                                        return _ReplyItem(
+                                          profileImage: reply.profileImage,
+                                          nickName: reply.nickname,
+                                          createDate: reply.createDate.timeAgo,
+                                          content: reply.content,
+                                          onModifyPressed: () {
+                                            FocusScope.of(context).requestFocus(_focusNode);
+                                            controller.onModifyModePressed(
+                                              reply.content,
+                                              replyId,
+                                            );
+                                          },
+                                          onDeletePressed: () => controller.onReplyDeletePressed(replyId),
+                                          onReportPressed: () => controller.onReplyReportPressed(),
+                                        );
+                                      },
                                     ),
-                                    itemBuilder: (context, index) {
-                                      final reply = state.replies[index];
-                                      return _ReplyItem(
-                                        profileImage: reply.profileImage,
-                                        nickName: reply.nickname,
-                                        createDate: reply.createDate.timeAgo,
-                                        content: reply.content,
-                                      );
-                                    },
-                                  ),
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-                child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 10,
-                    bottom: _focusNode.hasFocus ? 10 : 30,
-                  ),
-                  child: EditTextFormField(
-                    controller: controller.textCon,
-                    focusNode: _focusNode,
-                    maxHeight: 300,
-                    maxLines: 4,
-                    hintText: "댓글을 입력해주세요",
-                    editType: TextEditType.button,
-                    buttonText: "등록",
-                    onTrailingPressed: () => controller.onCreateReplyPressed(),
-                    onSubmit: (text) => controller.onCreateReplyPressed(),
+                        ],
+                      );
+                    },
                   ),
                 ),
-              ),
-            ],
-          );
-        },
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                  child: Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      top: 10,
+                      bottom: _focusNode.hasFocus ? 10 : 30,
+                    ),
+                    child: EditTextFormField(
+                      controller: controller.textCon,
+                      focusNode: _focusNode,
+                      maxHeight: 300,
+                      maxLines: 4,
+                      hintText: "댓글을 입력해주세요",
+                      editType: TextEditType.button,
+                      buttonText: state.isEditor ? "수정" : "등록",
+                      onTrailingPressed: () =>
+                          state.isEditor ? controller.onReplyModifySendPressed() : controller.onCreateReplyPressed(),
+                      onSubmit: (text) => controller.onCreateReplyPressed(),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -395,12 +410,18 @@ class _ReplyItem extends StatelessWidget {
   final String nickName;
   final String createDate;
   final String content;
+  final VoidCallback onModifyPressed;
+  final VoidCallback onReportPressed;
+  final VoidCallback onDeletePressed;
 
   const _ReplyItem({
     required this.profileImage,
     required this.nickName,
     required this.createDate,
     required this.content,
+    required this.onModifyPressed,
+    required this.onReportPressed,
+    required this.onDeletePressed,
   });
 
   @override
@@ -433,17 +454,17 @@ class _ReplyItem extends StatelessWidget {
               items: [
                 PopupMenuAction(
                   title: "댓글 수정",
-                  onTap: () => {},
+                  onTap: onModifyPressed,
                   iconPath: IconConstants.pencil,
                 ),
                 PopupMenuAction(
                   title: "댓글 삭제",
-                  onTap: () => {},
+                  onTap: onDeletePressed,
                   iconPath: IconConstants.delete,
                 ),
                 PopupMenuAction(
                   title: "댓글 신고",
-                  onTap: () => {},
+                  onTap: onReportPressed,
                   iconPath: IconConstants.declaration,
                 ),
               ],

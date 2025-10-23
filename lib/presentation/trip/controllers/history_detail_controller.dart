@@ -8,9 +8,11 @@ import 'package:tripStory/core/util/one_time_event.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/create_reply_usecase.dart';
 import 'package:tripStory/domain/usecases/delete_history_detail_usecase.dart';
+import 'package:tripStory/domain/usecases/delete_reply_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_history_detail_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_reply_usecase.dart';
 import 'package:tripStory/domain/usecases/history_heart_toggle_usecase.dart';
+import 'package:tripStory/domain/usecases/reply_modify_usecase.dart';
 import 'package:tripStory/domain/usecases/report_history_usecase.dart';
 import 'package:tripStory/domain/usecases/share_image_usecase.dart';
 import 'package:tripStory/presentation/global/login_user_service.dart';
@@ -27,6 +29,8 @@ class HistoryDetailController extends GetxController {
   final ShareImageUsecase _shareImageUsecase;
   final DeleteHistoryDetailUsecase _deleteHistoryDetailUsecase;
   final ReportHistoryUsecase _reportHistoryUsecase;
+  final ReplyModifyUsecase _replyModifyUsecase;
+  final DeleteReplyUsecase _deleteReplyUsecase;
 
   HistoryDetailController(
     this._tripRoomService,
@@ -38,6 +42,8 @@ class HistoryDetailController extends GetxController {
     this._shareImageUsecase,
     this._deleteHistoryDetailUsecase,
     this._reportHistoryUsecase,
+    this._replyModifyUsecase,
+    this._deleteReplyUsecase,
   );
 
   TripRoomEntity? get tripRoomInfo => _tripRoomService.tripRoomEntity;
@@ -64,7 +70,10 @@ class HistoryDetailController extends GetxController {
       _getHistoryDetailData(currentHistoryId),
       _getReplyData(),
     ]);
-
+    _historyDetailState = state.copyWith(
+      historyDetailStatus: HistoryDetailStatus.success,
+    );
+    update();
     _prefetchNextPage();
   }
 
@@ -146,6 +155,58 @@ class HistoryDetailController extends GetxController {
     });
   }
 
+  Future<void> _deleteHistory() async {
+    final tripId = tripRoomInfo?.tripId;
+    if (tripId == null) return;
+
+    final params = DeleteHistoryDetailParams(
+      tripId: tripId,
+      historyId: currentHistoryId,
+    );
+
+    final result = await _deleteHistoryDetailUsecase.call(params);
+
+    result.fold(
+      (failure) => {},
+      (result) => RouteHelper.closeOverlaysAndPop(),
+    );
+  }
+
+  Future<void> _reportHistory() async {
+    final tripId = tripRoomInfo?.tripId;
+    if (tripId == null) return;
+
+    final result = await _reportHistoryUsecase.call(tripId);
+
+    result.fold(
+      (failure) {},
+      (_) {
+        _historyDetailState = state.copyWith(
+          showDialog: OneTimeEvent(
+            DialogInfo(
+              title: "신고 접수가 완료되었습니다",
+              onConfirm: () => Get.back(),
+            ),
+          ),
+        );
+        update();
+      },
+    );
+  }
+
+  void finishEditMode() {
+    if (state.isEditor) {
+      textCon.clear();
+      _historyDetailState = state.copyWith(
+        isEditor: false,
+        editReplyId: null,
+      );
+
+      update();
+    }
+  }
+
+  /// Side Effect
   void onPageIndexChanged(int page) async {
     await _getReplyData();
     _prefetchNextPage();
@@ -166,16 +227,18 @@ class HistoryDetailController extends GetxController {
     result.fold(
       (failure) {},
       (replies) async {
+        final historyDetailEntities = state.historyDetailEntities[currentHistoryId];
+        if (historyDetailEntities == null) return;
+
         _historyDetailState = state.copyWith(
           replies: replies,
           historyDetailEntities: {
             ...state.historyDetailEntities,
-            currentHistoryId: state.historyDetailEntities[currentHistoryId]!.copyWith(
+            currentHistoryId: historyDetailEntities.copyWith(
               replyCnt: replies.length,
             ),
           },
         );
-        textCon.clear();
         update();
         _scrollToBottom();
       },
@@ -230,6 +293,79 @@ class HistoryDetailController extends GetxController {
     );
   }
 
+  Future<void> onModifyModePressed(
+    String replyText,
+    int replyId,
+  ) async {
+    textCon.text = replyText;
+    _historyDetailState = state.copyWith(
+      isEditor: true,
+      editReplyId: replyId,
+    );
+    update();
+  }
+
+  Future<void> onReplyModifySendPressed() async {
+    final tripId = tripRoomInfo?.tripId;
+    final replyId = state.editReplyId;
+    if (tripId == null || replyId == null) return;
+
+    final params = ReplyModifyParams(
+      tripId: tripId,
+      historyId: currentHistoryId,
+      content: textCon.text,
+      replyId: replyId,
+    );
+
+    final result = await _replyModifyUsecase.call(params);
+
+    result.fold(
+      (failure) {},
+      (replies) {
+        textCon.clear();
+        _historyDetailState = state.copyWith(
+          replies: replies,
+        );
+        finishEditMode();
+        update();
+      },
+    );
+  }
+
+  Future<void> onReplyDeletePressed(int replyId) async {
+    final tripId = tripRoomInfo?.tripId;
+
+    if (tripId == null) return;
+
+    final params = DeleteReplyParams(
+      tripId: tripId,
+      historyId: currentHistoryId,
+      replyId: replyId,
+    );
+
+    final result = await _deleteReplyUsecase.call(params);
+
+    result.fold(
+      (failure) {},
+      (replies) {
+        textCon.clear();
+        final historyDetailEntities = state.historyDetailEntities[currentHistoryId];
+        if (historyDetailEntities == null) return;
+
+        _historyDetailState = state.copyWith(
+          replies: replies,
+          historyDetailEntities: {
+            ...state.historyDetailEntities,
+            currentHistoryId: historyDetailEntities.copyWith(
+              replyCnt: replies.length,
+            ),
+          },
+        );
+        update();
+      },
+    );
+  }
+
   void onHistoryDeletePressed() {
     _historyDetailState = state.copyWith(
       showDialog: OneTimeEvent(
@@ -241,23 +377,6 @@ class HistoryDetailController extends GetxController {
       ),
     );
     update();
-  }
-
-  Future<void> _deleteHistory() async {
-    final tripId = tripRoomInfo?.tripId;
-    if (tripId == null) return;
-
-    final params = DeleteHistoryDetailParams(
-      tripId: tripId,
-      historyId: currentHistoryId,
-    );
-
-    final result = await _deleteHistoryDetailUsecase.call(params);
-
-    result.fold(
-      (failure) => {},
-      (result) => RouteHelper.closeOverlaysAndPop(),
-    );
   }
 
   void onHistoryReportPressed() {
@@ -275,26 +394,19 @@ class HistoryDetailController extends GetxController {
     update();
   }
 
-  Future<void> _reportHistory() async {
-    final tripId = tripRoomInfo?.tripId;
-    if (tripId == null) return;
-
-    final result = await _reportHistoryUsecase.call(tripId);
-
-    result.fold(
-      (failure) {},
-      (_) {
-        _historyDetailState = state.copyWith(
-          showDialog: OneTimeEvent(
-            DialogInfo(
-              title: "신고 접수가 완료되었습니다",
-              onConfirm: () => Get.back(),
-            ),
-          ),
-        );
-        update();
-      },
+  void onReplyReportPressed() {
+    _historyDetailState = state.copyWith(
+      showDialog: OneTimeEvent(
+        DialogInfo(
+          title: "댓글을 신고하시겠습니까?",
+          onConfirm: () {
+            RouteHelper.closeAllOverlays();
+            _reportHistory();
+          },
+        ),
+      ),
     );
+    update();
   }
 
   @override

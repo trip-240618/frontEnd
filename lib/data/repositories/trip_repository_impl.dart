@@ -559,4 +559,48 @@ class TripRepositoryImpl implements TripRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  ResultFuture<List<HistoryReplyEntity>> modifyReply({
+    required int tripId,
+    required int historyId,
+    required int replyId,
+    required String content,
+  }) async {
+    try {
+      final request = ReplyMapper.toModifyRequest(
+        replyId: replyId,
+        content: content,
+      );
+
+      final result = await _tripDataSource.putReportModify(
+        tripId,
+        historyId,
+        request,
+      );
+      final entities = result.map(ReplyMapper.fromEntity).toList();
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<HistoryReplyEntity>> deleteReply({
+    required int tripId,
+    required int historyId,
+    required int replyId,
+  }) async {
+    try {
+      final result = await _tripDataSource.deleteReply(
+        tripId,
+        historyId,
+        replyId,
+      );
+      final entities = result.map(ReplyMapper.fromEntity).toList();
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }
