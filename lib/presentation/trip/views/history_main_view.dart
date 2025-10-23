@@ -105,6 +105,7 @@ class _HistoryMainViewState extends State<HistoryMainView> {
                           labelColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
                           histories: state.histories,
                           onHeaderPressed: (index) => controller.onHistoryItemHeaderPressed(index),
+                          onImagePressed: (index) => controller.onImagePressed(index),
                         ),
                       ],
                     );
@@ -293,11 +294,13 @@ class _BottomSheetContent extends StatelessWidget {
   final List<HistoriesEntity> histories;
   final Color labelColor;
   final Function(int) onHeaderPressed;
+  final Function(int) onImagePressed;
 
   const _BottomSheetContent({
     required this.labelColor,
     required this.histories,
     required this.onHeaderPressed,
+    required this.onImagePressed,
   });
 
   @override
@@ -307,9 +310,9 @@ class _BottomSheetContent extends StatelessWidget {
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           childCount: histories.length,
-          (context, index) {
-            final history = histories[index].historyList;
-            final photoDate = histories[index].displayPhotoDate;
+          (context, listIndex) {
+            final history = histories[listIndex].historyList;
+            final photoDate = histories[listIndex].displayPhotoDate;
 
             return Column(
               children: [
@@ -334,11 +337,11 @@ class _BottomSheetContent extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(right: 20),
                           child: HistoryItemHeader(
-                            day: index + 1,
+                            day: listIndex + 1,
                             labelColor: labelColor,
                             photoDate: photoDate,
                             historyCount: history.length,
-                            onHeaderPressed: history.isEmpty ? null : () => onHeaderPressed(index),
+                            onHeaderPressed: history.isEmpty ? null : () => onHeaderPressed(listIndex),
                           ),
                         ),
                         const SizedBox(
@@ -357,6 +360,7 @@ class _BottomSheetContent extends StatelessWidget {
                                 userThumbnail: historyEntity.profileImage ?? "",
                                 likeCount: historyEntity.likeCnt ?? 0,
                                 replyCount: historyEntity.replyCnt ?? 0,
+                                onImagePressed: () => onImagePressed(listIndex),
                               );
                             },
                             separatorBuilder: (context, index) => const SizedBox(width: 8),

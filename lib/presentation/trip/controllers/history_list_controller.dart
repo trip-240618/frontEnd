@@ -55,6 +55,8 @@ class HistoryListController extends GetxController {
     final targetDate = selectedDate.formatYMDWithHyphen();
     final idList = state.historyEntity?.idsForDate(targetDate) ?? [];
 
-    Get.toNamed(Routes.historyDetail, arguments: idList);
+    Get.toNamed(Routes.historyDetail, arguments: idList)?.then((_) {
+      init(selectedDate);
+    });
   }
 }

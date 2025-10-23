@@ -110,6 +110,13 @@ class HistoryMainController extends GetxController {
     );
   }
 
+  Future<void> onImagePressed(int index) async {
+    final idList = state.histories[index].historyList.map((history) => history.id).toList();
+    Get.toNamed(Routes.historyDetail, arguments: idList)?.then((_) async {
+      await _getHistoryData();
+    });
+  }
+
   Future<void> onPhotoPressed() async {
     final status = await getPermissionStatus(PermissionType.photoManager);
 
@@ -153,6 +160,8 @@ class HistoryMainController extends GetxController {
     Get.toNamed(
       Routes.historyList,
       arguments: DateTime.parse(state.histories[index].photoDate),
-    );
+    )?.then((_) async {
+      await _getHistoryData();
+    });
   }
 }

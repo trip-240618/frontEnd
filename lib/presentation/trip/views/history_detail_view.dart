@@ -72,6 +72,7 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
                       if (state.historyDetailStatus == HistoryDetailStatus.initial) return const SizedBox();
 
                       final historyDetailList = state.historyDetailEntities.values.toList();
+                      if (historyDetailList.isEmpty) return const SizedBox();
                       final historyDetail = historyDetailList[pageIdx];
 
                       return Column(
