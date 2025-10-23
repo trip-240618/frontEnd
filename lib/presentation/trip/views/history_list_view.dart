@@ -63,7 +63,7 @@ class _HistoryListViewState extends State<HistoryListView> {
                         userThumbnail: history?.profileImage ?? "",
                         likeCount: history?.likeCnt ?? 0,
                         replyCount: history?.replyCnt ?? 0,
-                        onImagePressed: () => controller.onNavigateToDetailPressed(),
+                        onImagePressed: () => controller.onNavigateToDetailPressed(widget.dateTime),
                       );
                     },
                   ),

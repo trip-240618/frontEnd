@@ -525,4 +525,38 @@ class TripRepositoryImpl implements TripRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  ResultFuture<void> deleteHistory({
+    required int tripId,
+    required int historyId,
+  }) async {
+    try {
+      final result = await _tripDataSource.deleteHistory(
+        tripId,
+        historyId,
+      );
+
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> reportHistory({
+    required int tripId,
+    required String reason,
+  }) async {
+    try {
+      final result = await _tripDataSource.reportHistory(
+        tripId,
+        "부적절한 게시글이에요",
+      );
+
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

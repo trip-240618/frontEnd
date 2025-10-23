@@ -39,4 +39,10 @@ class RouteHelper {
       preventDuplicates: preventDuplicates,
     );
   }
+
+  /// 모든 오버레이 닫고 뒤로 pop
+  static void closeOverlaysAndPop<T>({T? result}) {
+    closeAllOverlays();
+    Future.microtask(() => Get.back(result: result));
+  }
 }

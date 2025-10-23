@@ -54,11 +54,12 @@ class CreateHistoriesUploadUsecase implements UseCase<List<HistoriesEntity>, Cre
               final index = entry.key;
               final item = entry.value;
               final preSignedUrl = preUrls.preSignedUrls[index];
-              final compressedBytes = await ImageFileUtil.compressBytes(item.fileBytes);
+              // TODO : 압축할 이미지를 보내야 하는지? 그럼 presignUrl을 두개 요청 해야 함
+              // final compressedBytes = await ImageFileUtil.compressBytes(item.fileBytes);
 
               final uploadResult = await _fileRepository.uploadBytes(
                 preSignedUrl: preSignedUrl,
-                bytes: compressedBytes,
+                bytes: item.fileBytes,
               );
 
               return uploadResult.map(

@@ -166,4 +166,14 @@ abstract class TripRepository {
     required int tripId,
     required int historyId,
   });
+
+  ResultFuture<void> deleteHistory({
+    required int tripId,
+    required int historyId,
+  });
+
+  ResultFuture<void> reportHistory({
+    required int tripId,
+    required String reason,
+  });
 }

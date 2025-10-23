@@ -15,4 +15,8 @@ abstract class FileRepository {
     required List<int> bytes,
     UploadProgress? onSendProgress,
   });
+
+  ResultFuture<void> shareImage({
+    required String imageUrl,
+  });
 }

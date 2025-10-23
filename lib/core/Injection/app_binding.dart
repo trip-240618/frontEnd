@@ -14,6 +14,7 @@ import 'package:tripStory/data/datasources/remote/oauth_data_source.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
 import 'package:tripStory/data/datasources/remote/trip_location_data_source.dart';
 import 'package:tripStory/data/datasources/remote/user_data_source.dart';
+import 'package:tripStory/data/network/cloud_front_file_service.dart';
 import 'package:tripStory/data/network/dio_client.dart';
 import 'package:tripStory/data/network/socket_service.dart';
 import 'package:tripStory/data/network/upload_dio_client.dart';
@@ -56,6 +57,9 @@ class AppBinding extends Bindings {
         ),
         permanent: true);
     Get.put<SocketService>(SocketService(Get.find<SessionService>()), permanent: true);
+    Get.put<SocketService>(SocketService(Get.find<SessionService>()), permanent: true);
+    Get.put<CloudFrontHttpFileService>(CloudFrontHttpFileService(Get.find<SessionService>()), permanent: true);
+
     // DioClient
     Get.put<DioClient>(DioClient(sessionService: Get.find<SessionService>()), permanent: true);
     Get.put<UploaderDioClient>(UploaderDioClient(), permanent: true);
@@ -88,6 +92,7 @@ class AppBinding extends Bindings {
         () => FileRepositoryImpl(
               Get.find<FileDataSource>(),
               Get.find<FileUploadDataSource>(),
+              Get.find<CloudFrontHttpFileService>(),
             ),
         fenix: true);
     Get.lazyPut<NotificationRepository>(() => NotificationRepositoryImpl(Get.find<NotificationDataSource>()),

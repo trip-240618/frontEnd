@@ -16,6 +16,11 @@ abstract class HistoriesEntity with _$HistoriesEntity {
   factory HistoriesEntity.fromJson(Map<String, dynamic> json) => _$HistoriesEntityFromJson(json);
 
   String get displayPhotoDate => photoDate.replaceAll("-", ".");
+
+  List<int> idsForDate(String targetDate) {
+    if (photoDate != targetDate) return [];
+    return historyList.map((entity) => entity.id).toList();
+  }
 }
 
 @freezed

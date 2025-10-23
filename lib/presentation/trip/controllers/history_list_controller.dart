@@ -51,7 +51,10 @@ class HistoryListController extends GetxController {
     );
   }
 
-  void onNavigateToDetailPressed() {
-    Get.toNamed(Routes.historyDetail);
+  void onNavigateToDetailPressed(DateTime selectedDate) {
+    final targetDate = selectedDate.formatYMDWithHyphen();
+    final idList = state.historyEntity?.idsForDate(targetDate) ?? [];
+
+    Get.toNamed(Routes.historyDetail, arguments: idList);
   }
 }

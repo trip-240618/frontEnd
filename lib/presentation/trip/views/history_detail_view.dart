@@ -7,6 +7,7 @@ import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/domain/entities/tag_entity.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
+import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/empty_view.dart';
 import 'package:tripStory/presentation/common/image/cached_image.dart';
 import 'package:tripStory/presentation/common/popup/pop_up_menu.dart';
@@ -14,17 +15,29 @@ import 'package:tripStory/presentation/common/tag/tag.dart';
 import 'package:tripStory/presentation/common/text/edit/edit_text_form_field.dart';
 import 'package:tripStory/presentation/common/user/user_profile.dart';
 import 'package:tripStory/presentation/trip/controllers/history_detail_controller.dart';
+import 'package:tripStory/presentation/trip/models/history_detail_state.dart';
 
 class HistoryDetailView extends StatefulWidget {
-  const HistoryDetailView({super.key});
+  final List<int> historiesIds;
+
+  const HistoryDetailView({
+    super.key,
+    required this.historiesIds,
+  });
 
   @override
   State<HistoryDetailView> createState() => _HistoryDetailViewState();
 }
 
 class _HistoryDetailViewState extends State<HistoryDetailView> {
-  final PageController pageController = PageController(initialPage: 0);
   final FocusNode _focusNode = FocusNode();
+  final _controller = Get.find<HistoryDetailController>();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.init(widget.historiesIds);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,17 +47,28 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
         builder: (HistoryDetailController controller) {
           final state = controller.state;
 
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final dialogInfo = controller.state.showDialog?.consume();
+            if (dialogInfo != null) {
+              _showDialog(
+                title: dialogInfo.title,
+                message: dialogInfo.message,
+                onConfirm: dialogInfo.onConfirm,
+              );
+            }
+          });
+
           return Stack(
             children: [
               Positioned.fill(
                 child: PageView.builder(
-                  controller: pageController,
+                  controller: controller.pageController,
                   physics: const ClampingScrollPhysics(),
-                  itemCount: state.historiesDetailLength,
-                  onPageChanged: (v) {
-                    // selectedPageIdx = v;
-                  },
+                  itemCount: state.historyIds.length,
+                  onPageChanged: (page) => controller.onPageIndexChanged(page),
                   itemBuilder: (context, pageIdx) {
+                    if (state.historyDetailStatus == HistoryDetailStatus.initial) return const SizedBox();
+
                     final historyDetailList = state.historyDetailEntities.values.toList();
                     final historyDetail = historyDetailList[pageIdx];
 
@@ -96,20 +120,21 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
                                 items: [
                                   PopupMenuAction(
                                     title: "사진 공유",
-                                    onTap: () => {},
+                                    onTap: () => controller.onImageSharedPressed(),
                                     iconPath: IconConstants.chain,
                                   ),
                                   if (historyDetail.isWriter(controller.myUuid))
                                     PopupMenuAction(
                                       title: "게시물 삭제",
-                                      onTap: () => {},
+                                      onTap: () => controller.onHistoryDeletePressed(),
                                       iconPath: IconConstants.delete,
                                     ),
-                                  PopupMenuAction(
-                                    title: "게시물 신고",
-                                    onTap: () => {},
-                                    iconPath: IconConstants.declaration,
-                                  ),
+                                  if (!historyDetail.isWriter(controller.myUuid))
+                                    PopupMenuAction(
+                                      title: "게시물 신고",
+                                      onTap: () => controller.onHistoryReportPressed(),
+                                      iconPath: IconConstants.declaration,
+                                    ),
                                 ],
                               ),
                             ),
@@ -138,7 +163,7 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
                               left: 20,
                               right: 20,
                               child: _ImageInfoSection(
-                                imageUrl: historyDetail.imageUrl,
+                                imageUrl: historyDetail.profileImage ?? "",
                                 nickName: historyDetail.nickname,
                                 photoDate: historyDetail.photoDate ?? DateTime.now(),
                                 memo: historyDetail.memo ?? "",
@@ -223,6 +248,19 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
           );
         },
       ),
+    );
+  }
+
+  void _showDialog({
+    required String title,
+    String? message,
+    required VoidCallback onConfirm,
+  }) {
+    CommonDialog.showConfirmCancel(
+      title: title,
+      message: message,
+      confirmText: "확인",
+      onConfirm: onConfirm,
     );
   }
 

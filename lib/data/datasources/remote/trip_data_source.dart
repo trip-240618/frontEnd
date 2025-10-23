@@ -196,4 +196,16 @@ abstract class TripDataSource {
     @Path("tripId") int tripId,
     @Path("historyId") int historyId,
   );
+
+  @DELETE("/{tripId}/history/delete/{historyId}")
+  Future<void> deleteHistory(
+    @Path("tripId") int tripId,
+    @Path("historyId") int historyId,
+  );
+
+  @POST("/history/{historyId}/report")
+  Future<void> reportHistory(
+    @Path("tripId") int tripId,
+    @Query("reason") String reason,
+  );
 }
