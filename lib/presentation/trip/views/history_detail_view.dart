@@ -352,7 +352,7 @@ class _TagSection extends StatelessWidget {
         spacing: 12,
         children: tags.map<Widget>((tag) {
           return Padding(
-            padding: const EdgeInsets.only(top: 16, right: 16),
+            padding: const EdgeInsets.only(right: 16),
             child: Tag.hashtag(
               label: tag.tagName,
               leadingColor: tag.tagColor.toColor(),
