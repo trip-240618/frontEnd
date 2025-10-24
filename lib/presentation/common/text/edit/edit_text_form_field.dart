@@ -21,6 +21,8 @@ class EditTextFormField extends StatelessWidget {
   final ValueChanged<String>? onSubmit;
   final FocusNode? focusNode;
   final bool? isFocusOnTapOutside;
+  final double? maxHeight;
+  final int? maxLines;
 
   const EditTextFormField({
     super.key,
@@ -35,6 +37,8 @@ class EditTextFormField extends StatelessWidget {
     this.onSubmit,
     this.focusNode,
     this.isFocusOnTapOutside,
+    this.maxHeight,
+    this.maxLines,
   });
 
   @override
@@ -43,9 +47,11 @@ class EditTextFormField extends StatelessWidget {
       controller: controller,
       isFocusOnTapOutside: isFocusOnTapOutside,
       hintText: hintText,
-      maxLines: 1,
+      maxLines: maxLines ?? 1,
+      minLines: 1,
       onChanged: onChanged,
       focusNode: focusNode,
+      maxHeight: maxHeight,
       inputFormatters: inputFormatters,
       onFieldSubmitted: onSubmit,
       trailing: Row(

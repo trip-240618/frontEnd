@@ -289,7 +289,15 @@ class RouterInfo {
     ),
     GetPage(
       name: Routes.historyDetail,
-      page: () => const HistoryDetailView(),
+      page: () {
+        final args = Get.arguments;
+        if (args is! List<int>) {
+          throw ArgumentError('error');
+        }
+        return HistoryDetailView(
+          historiesIds: args,
+        );
+      },
       binding: HistoryDetailBinding(),
     ),
   ];

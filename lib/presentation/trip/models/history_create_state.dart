@@ -12,6 +12,7 @@ abstract class HistoryCreateState with _$HistoryCreateState {
   const factory HistoryCreateState({
     @Default([]) List<HistoryItem> historyItems,
     OneTimeEvent<bool>? showMaxUploadDialog,
+    OneTimeEvent<bool>? showLoadingDialog,
   }) = _HistoryCreateState;
 
   int get historyLength => historyItems.length;

@@ -18,6 +18,7 @@ import 'package:tripStory/presentation/common/button/box/box_button.dart';
 import 'package:tripStory/presentation/common/button/color_select_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
+import 'package:tripStory/presentation/common/dialog/loading_dialog.dart';
 import 'package:tripStory/presentation/common/icon/round_icon.dart';
 import 'package:tripStory/presentation/common/tag/tag.dart';
 import 'package:tripStory/presentation/common/text/area/text_area_form_field.dart';
@@ -57,9 +58,12 @@ class _HistoryCreateViewState extends State<HistoryCreateView> {
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
             final showMaxUploadDialog = state.showMaxUploadDialog?.consume() ?? false;
-
+            final showLoadingDialog = state.showLoadingDialog?.consume() ?? false;
             if (showMaxUploadDialog) {
-              showMaxDialog();
+              _showMaxDialog();
+            }
+            if (showLoadingDialog) {
+              _showLoadingDialog();
             }
           });
 
@@ -91,7 +95,7 @@ class _HistoryCreateViewState extends State<HistoryCreateView> {
                     historyItems: state.historyItems,
                     onTagDeletedPressed: (index) => controller.onTagDeletedPressed(index),
                     onPageChanged: (_) => controller.onPageChanged(),
-                    onTagAddPressed: () => showTagBottomModal(
+                    onTagAddPressed: () => _showTagBottomModal(
                       context,
                       tags: state.historyItems[controller.currentIndex].tags,
                       onSavePressed: (tags) => controller.onTagSavePressed(tags),
@@ -143,7 +147,7 @@ class _HistoryCreateViewState extends State<HistoryCreateView> {
     );
   }
 
-  void showTagBottomModal(
+  void _showTagBottomModal(
     BuildContext context, {
     required List<TagEntity> tags,
     required ValueChanged<List<TagEntity>> onSavePressed,
@@ -158,11 +162,15 @@ class _HistoryCreateViewState extends State<HistoryCreateView> {
     );
   }
 
-  void showMaxDialog() {
+  void _showMaxDialog() {
     CommonDialog.showConfirm(
       title: "사진은 최대 50장까지 등록할 수 있습니다",
       onConfirm: () => Get.back(),
     );
+  }
+
+  void _showLoadingDialog() {
+    LoadingDialog.show();
   }
 }
 

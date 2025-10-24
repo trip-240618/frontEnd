@@ -5,12 +5,14 @@ import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/data/datasources/remote/trip_data_source.dart';
 import 'package:tripStory/data/mappers/histories_mapper.dart';
 import 'package:tripStory/data/mappers/j_plan_mapper.dart';
+import 'package:tripStory/data/mappers/reply_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_create_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_detail_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_update_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_create_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_mapper.dart';
+import 'package:tripStory/data/models/request/history_reply_request.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
@@ -18,6 +20,7 @@ import 'package:tripStory/data/models/request/trip_room_create_request.dart';
 import 'package:tripStory/data/network/socket_service.dart';
 import 'package:tripStory/domain/entities/histories_create_entity.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
+import 'package:tripStory/domain/entities/history_reply_entity.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
 import 'package:tripStory/domain/entities/scrap_create_entity.dart';
 import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
@@ -458,6 +461,143 @@ class TripRepositoryImpl implements TripRepository {
       );
 
       final entities = HistoriesMapper.fromResponseList(result);
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<HistoryReplyEntity>> fetchReplies({
+    required int tripId,
+    required int historyId,
+  }) async {
+    try {
+      final result = await _tripDataSource.fetchReplies(
+        tripId,
+        historyId,
+      );
+
+      final entities = result.map(ReplyMapper.fromEntity).toList();
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<HistoryReplyEntity>> postReplyCreate({
+    required int tripId,
+    required int historyId,
+    required String content,
+  }) async {
+    try {
+      final request = HistoryReplyRequest(
+        content: content,
+      );
+
+      final result = await _tripDataSource.postReplyCreate(
+        tripId,
+        historyId,
+        request,
+      );
+
+      final entities = result.map(ReplyMapper.fromEntity).toList();
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<bool> putHistoryToggle({
+    required int tripId,
+    required int historyId,
+  }) async {
+    try {
+      final result = await _tripDataSource.putHistoryToggle(
+        tripId,
+        historyId,
+      );
+
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> deleteHistory({
+    required int tripId,
+    required int historyId,
+  }) async {
+    try {
+      final result = await _tripDataSource.deleteHistory(
+        tripId,
+        historyId,
+      );
+
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<void> reportHistory({
+    required int tripId,
+    required String reason,
+  }) async {
+    try {
+      final result = await _tripDataSource.reportHistory(
+        tripId,
+        "부적절한 게시글이에요",
+      );
+
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<HistoryReplyEntity>> modifyReply({
+    required int tripId,
+    required int historyId,
+    required int replyId,
+    required String content,
+  }) async {
+    try {
+      final request = ReplyMapper.toModifyRequest(
+        replyId: replyId,
+        content: content,
+      );
+
+      final result = await _tripDataSource.putReportModify(
+        tripId,
+        historyId,
+        request,
+      );
+      final entities = result.map(ReplyMapper.fromEntity).toList();
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<HistoryReplyEntity>> deleteReply({
+    required int tripId,
+    required int historyId,
+    required int replyId,
+  }) async {
+    try {
+      final result = await _tripDataSource.deleteReply(
+        tripId,
+        historyId,
+        replyId,
+      );
+      final entities = result.map(ReplyMapper.fromEntity).toList();
       return Right(entities);
     } catch (e) {
       return Left(ServerFailure(e.toString()));

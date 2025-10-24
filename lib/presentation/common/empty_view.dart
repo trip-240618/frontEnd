@@ -3,10 +3,12 @@ import 'package:tripStory/core/util/extension/context_extension.dart';
 
 class EmptyView extends StatelessWidget {
   final String content;
+  final TextStyle? fontStyle;
 
   const EmptyView({
     super.key,
     required this.content,
+    this.fontStyle,
   });
 
   @override
@@ -14,10 +16,11 @@ class EmptyView extends StatelessWidget {
     return Center(
       child: Text(
         content,
-        style: context.style.heading2.copyWith(
-          color: context.color.gray400,
-          fontWeight: FontWeight.w500,
-        ),
+        style: fontStyle ??
+            context.style.heading1.copyWith(
+              color: context.color.gray400,
+              fontWeight: FontWeight.w500,
+            ),
         textAlign: TextAlign.center,
       ),
     );

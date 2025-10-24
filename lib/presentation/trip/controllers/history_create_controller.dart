@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
+import 'package:tripStory/core/util/helper/route_helper.dart';
 import 'package:tripStory/core/util/one_time_event.dart';
 import 'package:tripStory/domain/entities/histories_create_entity.dart';
 import 'package:tripStory/domain/entities/tag_entity.dart';
@@ -125,6 +127,11 @@ class HistoryCreateController extends GetxController {
   }
 
   Future<void> onHistoryUploadPressed(DateTime photoDate) async {
+    _historyCreateState = state.copyWith(
+      showLoadingDialog: OneTimeEvent(true),
+    );
+    update();
+
     final uploadItems = await Future.wait(
       List.generate(state.historyLength, (index) async {
         final imageInfo = state.historyItems[index];
@@ -155,12 +162,16 @@ class HistoryCreateController extends GetxController {
       (error) {
         _historyCreateState = state.copyWith(
           showMaxUploadDialog: OneTimeEvent(true),
+          showLoadingDialog: OneTimeEvent(false),
         );
         update();
       },
       (_) {
-        print("성공");
-        update();
+        RouteHelper.popAllUntilAndToNamed(
+          Routes.tripRoom,
+          Routes.historyList,
+          arguments: photoDate,
+        );
       },
     );
   }

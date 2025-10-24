@@ -7,6 +7,7 @@ import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/domain/entities/tag_entity.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
+import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/empty_view.dart';
 import 'package:tripStory/presentation/common/image/cached_image.dart';
 import 'package:tripStory/presentation/common/popup/pop_up_menu.dart';
@@ -14,59 +15,64 @@ import 'package:tripStory/presentation/common/tag/tag.dart';
 import 'package:tripStory/presentation/common/text/edit/edit_text_form_field.dart';
 import 'package:tripStory/presentation/common/user/user_profile.dart';
 import 'package:tripStory/presentation/trip/controllers/history_detail_controller.dart';
+import 'package:tripStory/presentation/trip/models/history_detail_state.dart';
 
 class HistoryDetailView extends StatefulWidget {
-  const HistoryDetailView({super.key});
+  final List<int> historiesIds;
+
+  const HistoryDetailView({
+    super.key,
+    required this.historiesIds,
+  });
 
   @override
   State<HistoryDetailView> createState() => _HistoryDetailViewState();
 }
 
 class _HistoryDetailViewState extends State<HistoryDetailView> {
-  final PageController pageController = PageController(initialPage: 0);
-  final TextEditingController textCon = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
-
-  bool isEditing = false;
-  int? editingIdx;
-  int selectedPageIdx = 0;
+  final _controller = Get.find<HistoryDetailController>();
 
   @override
-  void dispose() {
-    textCon.dispose();
-    _focusNode.dispose();
-    _scrollController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _controller.init(widget.historiesIds);
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        textCon.text = '';
-        isEditing = false;
-        setState(() {});
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: GetBuilder<HistoryDetailController>(
-                builder: (HistoryDetailController controller) {
-                  final state = controller.state;
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: GestureDetector(
+        onTap: () => _controller.finishEditMode(),
+        child: GetBuilder<HistoryDetailController>(
+          builder: (HistoryDetailController controller) {
+            final state = controller.state;
 
-                  return PageView.builder(
-                    controller: pageController,
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final dialogInfo = controller.state.showDialog?.consume();
+              if (dialogInfo != null) {
+                _showDialog(
+                  title: dialogInfo.title,
+                  message: dialogInfo.message,
+                  onConfirm: dialogInfo.onConfirm,
+                );
+              }
+            });
+
+            return Stack(
+              children: [
+                Positioned.fill(
+                  child: PageView.builder(
+                    controller: controller.pageController,
                     physics: const ClampingScrollPhysics(),
-                    itemCount: state.historiesDetailLength,
-                    onPageChanged: (v) {
-                      selectedPageIdx = v;
-                    },
+                    itemCount: state.historyIds.length,
+                    onPageChanged: (page) => controller.onPageIndexChanged(page),
                     itemBuilder: (context, pageIdx) {
+                      if (state.historyDetailStatus == HistoryDetailStatus.initial) return const SizedBox();
+
                       final historyDetailList = state.historyDetailEntities.values.toList();
+                      if (historyDetailList.isEmpty) return const SizedBox();
                       final historyDetail = historyDetailList[pageIdx];
 
                       return Column(
@@ -117,20 +123,21 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
                                   items: [
                                     PopupMenuAction(
                                       title: "사진 공유",
-                                      onTap: () => {},
+                                      onTap: () => controller.onImageSharedPressed(),
                                       iconPath: IconConstants.chain,
                                     ),
                                     if (historyDetail.isWriter(controller.myUuid))
                                       PopupMenuAction(
                                         title: "게시물 삭제",
-                                        onTap: () => {},
+                                        onTap: () => controller.onHistoryDeletePressed(),
                                         iconPath: IconConstants.delete,
                                       ),
-                                    PopupMenuAction(
-                                      title: "게시물 신고",
-                                      onTap: () => {},
-                                      iconPath: IconConstants.declaration,
-                                    ),
+                                    if (!historyDetail.isWriter(controller.myUuid))
+                                      PopupMenuAction(
+                                        title: "게시물 신고",
+                                        onTap: () => controller.onHistoryReportPressed(),
+                                        iconPath: IconConstants.declaration,
+                                      ),
                                   ],
                                 ),
                               ),
@@ -159,7 +166,7 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
                                 left: 20,
                                 right: 20,
                                 child: _ImageInfoSection(
-                                  imageUrl: historyDetail.imageUrl,
+                                  imageUrl: historyDetail.profileImage ?? "",
                                   nickName: historyDetail.nickname,
                                   photoDate: historyDetail.photoDate ?? DateTime.now(),
                                   memo: historyDetail.memo ?? "",
@@ -174,6 +181,8 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
                             child: _HeartCommentSection(
                               likeCnt: historyDetail.likeCnt ?? 0,
                               replyCnt: historyDetail.replyCnt ?? 0,
+                              onHeartPressed: () => controller.onHeartPressed(),
+                              like: historyDetail.like ?? false,
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -189,20 +198,31 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
                                       content: "등록된 댓글이 없습니다\n댓글을 등록해 주세요",
                                     )
                                   : ListView.separated(
-                                      controller: _scrollController,
+                                      controller: controller.scrollController,
                                       shrinkWrap: true,
-                                      itemCount: 30,
+                                      itemCount: state.replies.length,
                                       padding: EdgeInsets.zero,
                                       separatorBuilder: (context, index) => const SizedBox(
                                         height: 16,
                                       ),
                                       itemBuilder: (context, index) {
                                         final reply = state.replies[index];
+                                        final replyId = reply.id;
+
                                         return _ReplyItem(
                                           profileImage: reply.profileImage,
                                           nickName: reply.nickname,
                                           createDate: reply.createDate.timeAgo,
                                           content: reply.content,
+                                          onModifyPressed: () {
+                                            FocusScope.of(context).requestFocus(_focusNode);
+                                            controller.onModifyModePressed(
+                                              reply.content,
+                                              replyId,
+                                            );
+                                          },
+                                          onDeletePressed: () => controller.onReplyDeletePressed(replyId),
+                                          onReportPressed: () => controller.onReplyReportPressed(),
                                         );
                                       },
                                     ),
@@ -211,39 +231,59 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
                         ],
                       );
                     },
-                  );
-                },
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-              child: Container(
-                color: Colors.white,
-                padding: EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 10,
-                  bottom: _focusNode.hasFocus ? 10 : 30,
+                  ),
                 ),
-                child: EditTextFormField(
-                  controller: textCon,
-                  focusNode: _focusNode,
-                  hintText: "댓글을 입력해주세요",
-                  editType: TextEditType.button,
-                  buttonText: "등록",
-                  onTrailingPressed: () {
-                    print("dad");
-                  },
-                  onSubmit: (text) {},
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                  child: Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      top: 10,
+                      bottom: _focusNode.hasFocus ? 10 : 30,
+                    ),
+                    child: EditTextFormField(
+                      controller: controller.textCon,
+                      focusNode: _focusNode,
+                      maxHeight: 300,
+                      maxLines: 4,
+                      hintText: "댓글을 입력해주세요",
+                      editType: TextEditType.button,
+                      buttonText: state.isEditor ? "수정" : "등록",
+                      onTrailingPressed: () =>
+                          state.isEditor ? controller.onReplyModifySendPressed() : controller.onCreateReplyPressed(),
+                      onSubmit: (text) => controller.onCreateReplyPressed(),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );
+  }
+
+  void _showDialog({
+    required String title,
+    String? message,
+    required VoidCallback onConfirm,
+  }) {
+    CommonDialog.showConfirmCancel(
+      title: title,
+      message: message,
+      confirmText: "확인",
+      onConfirm: onConfirm,
+    );
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 }
 
@@ -313,7 +353,7 @@ class _TagSection extends StatelessWidget {
         spacing: 12,
         children: tags.map<Widget>((tag) {
           return Padding(
-            padding: const EdgeInsets.only(top: 16, right: 16),
+            padding: const EdgeInsets.only(right: 16),
             child: Tag.hashtag(
               label: tag.tagName,
               leadingColor: tag.tagColor.toColor(),
@@ -328,10 +368,14 @@ class _TagSection extends StatelessWidget {
 class _HeartCommentSection extends StatelessWidget {
   final int likeCnt;
   final int replyCnt;
+  final bool like;
+  final VoidCallback onHeartPressed;
 
   const _HeartCommentSection({
     required this.likeCnt,
     required this.replyCnt,
+    required this.onHeartPressed,
+    required this.like,
   });
 
   @override
@@ -341,8 +385,8 @@ class _HeartCommentSection extends StatelessWidget {
       children: [
         AppIconButton(
           assetPath: IconConstants.favorite,
-          color: context.color.gray300,
-          onTap: () {},
+          color: like ? context.color.gray900 : context.color.gray300,
+          onTap: onHeartPressed,
         ),
         Text(
           "$likeCnt",
@@ -367,12 +411,18 @@ class _ReplyItem extends StatelessWidget {
   final String nickName;
   final String createDate;
   final String content;
+  final VoidCallback onModifyPressed;
+  final VoidCallback onReportPressed;
+  final VoidCallback onDeletePressed;
 
   const _ReplyItem({
     required this.profileImage,
     required this.nickName,
     required this.createDate,
     required this.content,
+    required this.onModifyPressed,
+    required this.onReportPressed,
+    required this.onDeletePressed,
   });
 
   @override
@@ -405,17 +455,17 @@ class _ReplyItem extends StatelessWidget {
               items: [
                 PopupMenuAction(
                   title: "댓글 수정",
-                  onTap: () => {},
+                  onTap: onModifyPressed,
                   iconPath: IconConstants.pencil,
                 ),
                 PopupMenuAction(
                   title: "댓글 삭제",
-                  onTap: () => {},
+                  onTap: onDeletePressed,
                   iconPath: IconConstants.delete,
                 ),
                 PopupMenuAction(
                   title: "댓글 신고",
-                  onTap: () => {},
+                  onTap: onReportPressed,
                   iconPath: IconConstants.declaration,
                 ),
               ],

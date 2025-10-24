@@ -39,4 +39,51 @@ class RouteHelper {
       preventDuplicates: preventDuplicates,
     );
   }
+
+  /// 모든 오버레이 닫고 뒤로 pop
+  static void closeOverlaysAndPop<T>({T? result}) {
+    closeAllOverlays();
+    Future.microtask(() => Get.back(result: result));
+  }
+
+  /// 특정 라우트까지 뒤로 간 다음 새로운 페이지로 이동
+  ///
+  /// 예: A → B → C 구조에서,
+  /// C에서 A까지 뒤로 간 다음 D로 이동하고 싶을 때 사용합니다.
+  ///
+  /// ```dart
+  /// RouteHelper.popUntilAndToNamed(Routes.a, Routes.d, arguments: idList);
+  /// ```
+  ///
+  static Future<T?> popAllUntilAndToNamed<T>(
+    String keepRoute,
+    String toRoute, {
+    dynamic arguments,
+  }) async {
+    return Get.offNamedUntil<T>(
+      toRoute,
+      (route) => route.settings.name == keepRoute,
+      arguments: arguments,
+    );
+  }
+
+  static Future<T?> popAllUntilAndToNamed2<T>(
+    String keepRoute,
+    String toRoute, {
+    dynamic arguments,
+    VoidCallback? onReturn,
+  }) async {
+    final result = await Get.offNamedUntil<T>(
+      toRoute,
+      (route) => route.settings.name == keepRoute,
+      arguments: arguments,
+    );
+
+    // D에서 돌아왔을 때 콜백 실행
+    if (onReturn != null) {
+      onReturn();
+    }
+
+    return result;
+  }
 }

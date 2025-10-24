@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:tripStory/core/enum/file_prefix_type.dart';
 import 'package:tripStory/core/network/typedefs.dart';
 import 'package:tripStory/core/util/extension/either_extension.dart';
-import 'package:tripStory/core/util/image_file_util.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/histories_create_entity.dart';
 import 'package:tripStory/domain/entities/histories_entity.dart';
@@ -54,11 +53,12 @@ class CreateHistoriesUploadUsecase implements UseCase<List<HistoriesEntity>, Cre
               final index = entry.key;
               final item = entry.value;
               final preSignedUrl = preUrls.preSignedUrls[index];
-              final compressedBytes = await ImageFileUtil.compressBytes(item.fileBytes);
+              // TODO : 압축할 이미지를 보내야 하는지? 그럼 presignUrl을 두개 요청 해야 함
+              // final compressedBytes = await ImageFileUtil.compressBytes(item.fileBytes);
 
               final uploadResult = await _fileRepository.uploadBytes(
                 preSignedUrl: preSignedUrl,
-                bytes: compressedBytes,
+                bytes: item.fileBytes,
               );
 
               return uploadResult.map(

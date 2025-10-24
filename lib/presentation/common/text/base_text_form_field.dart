@@ -13,6 +13,7 @@ class BaseTextFormField extends StatelessWidget {
   final TextStyle? textStyle;
   final TextInputType? keyboardType;
   final int? maxLines;
+  final int? minLines;
   final EdgeInsets? contentPadding;
   final InputBorder? enabledBorder;
   final InputBorder? focusedBorder;
@@ -30,6 +31,7 @@ class BaseTextFormField extends StatelessWidget {
     this.textStyle,
     this.keyboardType,
     this.maxLines,
+    this.minLines,
     this.contentPadding,
     this.enabledBorder,
     this.focusedBorder,
@@ -51,6 +53,7 @@ class BaseTextFormField extends StatelessWidget {
       onFieldSubmitted: onFieldSubmitted,
       keyboardType: keyboardType ?? TextInputType.text,
       maxLines: maxLines,
+      minLines: minLines,
       scrollPadding: scrollPadding ?? const EdgeInsets.all(20.0),
       onTapOutside: isFocusOnTapOutside ?? true ? (_) => FocusManager.instance.primaryFocus?.unfocus() : null,
       decoration: InputDecoration(

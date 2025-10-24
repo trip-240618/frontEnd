@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:tripStory/data/models/request/history_create_request.dart';
+import 'package:tripStory/data/models/request/history_reply_modify_request.dart';
+import 'package:tripStory/data/models/request/history_reply_request.dart';
 import 'package:tripStory/data/models/request/plan_j_create_request.dart';
 import 'package:tripStory/data/models/request/plan_j_modify_request.dart';
 import 'package:tripStory/data/models/request/plan_j_swap_request.dart';
@@ -9,6 +11,7 @@ import 'package:tripStory/data/models/request/scrap_modify_request.dart';
 import 'package:tripStory/data/models/request/trip_room_create_request.dart';
 import 'package:tripStory/data/models/request/trip_room_modify_request.dart';
 import 'package:tripStory/data/models/response/histories_response.dart';
+import 'package:tripStory/data/models/response/history_reply_response.dart';
 import 'package:tripStory/data/models/response/history_response.dart';
 import 'package:tripStory/data/models/response/plan_j_response.dart';
 import 'package:tripStory/data/models/response/scrap_detail_response.dart';
@@ -174,5 +177,50 @@ abstract class TripDataSource {
   Future<List<HistoriesResponse>> postCreateManyHistory(
     @Path("tripId") int tripId,
     @Body() HistoryCreateRequest request,
+  );
+
+  @GET("/{tripId}/history/{historyId}/reply/list")
+  Future<List<HistoryReplyResponse>> fetchReplies(
+    @Path("tripId") int tripId,
+    @Path("historyId") int historyId,
+  );
+
+  @POST("/{tripId}/history/{historyId}/reply/create")
+  Future<List<HistoryReplyResponse>> postReplyCreate(
+    @Path("tripId") int tripId,
+    @Path("historyId") int historyId,
+    @Body() HistoryReplyRequest request,
+  );
+
+  @PUT("/{tripId}/history/{historyId}/like")
+  Future<bool> putHistoryToggle(
+    @Path("tripId") int tripId,
+    @Path("historyId") int historyId,
+  );
+
+  @DELETE("/{tripId}/history/delete/{historyId}")
+  Future<void> deleteHistory(
+    @Path("tripId") int tripId,
+    @Path("historyId") int historyId,
+  );
+
+  @POST("/history/{historyId}/report")
+  Future<void> reportHistory(
+    @Path("tripId") int tripId,
+    @Query("reason") String reason,
+  );
+
+  @PUT("/{tripId}/history/{historyId}/reply/modify")
+  Future<List<HistoryReplyResponse>> putReportModify(
+    @Path("tripId") int tripId,
+    @Path("historyId") int historyId,
+    @Body() HistoryReplyModifyRequest request,
+  );
+
+  @DELETE("/{tripId}/history/{historyId}/reply/delete")
+  Future<List<HistoryReplyResponse>> deleteReply(
+    @Path("tripId") int tripId,
+    @Path("historyId") int historyId,
+    @Query("replyId") int replyId,
   );
 }
