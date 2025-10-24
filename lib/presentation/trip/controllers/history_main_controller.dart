@@ -55,6 +55,10 @@ class HistoryMainController extends GetxController {
     _getCurrentLocation();
   }
 
+  Future<void> refreshData() async {
+    await _getHistoryData();
+  }
+
   Future<void> _getCurrentLocation() async {
     final position = await LocationService().getCurrentLocation();
     _historyMainState = state.copyWith(
@@ -110,11 +114,11 @@ class HistoryMainController extends GetxController {
     );
   }
 
+  /// side Effect
+
   Future<void> onImagePressed(int index) async {
     final idList = state.histories[index].historyList.map((history) => history.id).toList();
-    Get.toNamed(Routes.historyDetail, arguments: idList)?.then((_) async {
-      await _getHistoryData();
-    });
+    Get.toNamed(Routes.historyDetail, arguments: idList);
   }
 
   Future<void> onPhotoPressed() async {
@@ -160,8 +164,6 @@ class HistoryMainController extends GetxController {
     Get.toNamed(
       Routes.historyList,
       arguments: DateTime.parse(state.histories[index].photoDate),
-    )?.then((_) async {
-      await _getHistoryData();
-    });
+    );
   }
 }

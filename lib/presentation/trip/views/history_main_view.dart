@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:photo_manager/photo_manager.dart' as photo;
 import 'package:tripStory/core/constants/icon_constants.dart';
+import 'package:tripStory/core/router/router_observer.dart';
 import 'package:tripStory/core/util/bottomSheetHeader.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
@@ -26,7 +27,20 @@ class HistoryMainView extends StatefulWidget {
   State<HistoryMainView> createState() => _HistoryMainViewState();
 }
 
-class _HistoryMainViewState extends State<HistoryMainView> {
+class _HistoryMainViewState extends State<HistoryMainView> with RouteAware {
+  final _controller = Get.find<HistoryMainController>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void didPopNext() {
+    _controller.refreshData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HistoryMainController>(
@@ -155,6 +169,12 @@ class _HistoryMainViewState extends State<HistoryMainView> {
       onChanged: onChanged,
       onConfirmPressed: onConfirmPressed,
     );
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 }
 

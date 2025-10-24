@@ -9,6 +9,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/core/Injection/app_binding.dart';
 import 'package:tripStory/core/constants/app_constants.dart';
 import 'package:tripStory/core/router/router_info.dart';
+import 'package:tripStory/core/router/router_observer.dart';
 import 'package:tripStory/core/theme/app_theme.dart';
 import 'package:tripStory/presentation/global/global_context.dart';
 
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       initialBinding: AppBinding(),
+      navigatorObservers: [routeObserver],
       initialRoute: "/",
       getPages: RouterInfo.config,
       theme: AppTheme.light,
