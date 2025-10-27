@@ -28,4 +28,6 @@ class Routes {
   static const historyCreate = "/history_create";
   static const historyList = "/history_list";
   static const historyDetail = "/history_detail";
+  static const historySearch = "/history_search";
+  static const historySearchList = "/history_search_list";
 }

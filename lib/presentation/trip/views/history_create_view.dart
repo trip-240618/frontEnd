@@ -295,61 +295,56 @@ class _ImageList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: Get.width,
-            height: 76,
-            child: ReorderableListView.builder(
-              itemCount: images.length,
-              scrollDirection: Axis.horizontal,
-              onReorder: onImageReorder,
-              proxyDecorator: (child, index, animation) {
-                return Material(
-                  color: Colors.transparent,
-                  elevation: 0,
-                  child: child,
-                );
-              },
-              itemBuilder: (context, index) {
-                final image = images[index];
-                return SizedBox(
-                  key: ValueKey(image.id),
-                  width: 78,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        bottom: 0,
-                        child: GestureDetector(
-                          onTap: () => onReorderImagePressed(index),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: AlbumImage(
-                              image: image,
-                              width: 64,
-                              height: 64,
-                              thumbnailSize: ThumbnailSize.square(500),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+      child: SizedBox(
+        width: Get.width,
+        height: 76,
+        child: ReorderableListView.builder(
+          itemCount: images.length,
+          scrollDirection: Axis.horizontal,
+          onReorder: onImageReorder,
+          proxyDecorator: (child, index, animation) {
+            return Material(
+              color: Colors.transparent,
+              elevation: 0,
+              child: child,
+            );
+          },
+          itemBuilder: (context, index) {
+            final image = images[index];
+            return SizedBox(
+              key: ValueKey(image.id),
+              width: 78,
+              child: Stack(
+                children: [
+                  Positioned(
+                    bottom: 0,
+                    child: GestureDetector(
+                      onTap: () => onReorderImagePressed(index),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: AlbumImage(
+                          image: image,
+                          width: 64,
+                          height: 64,
+                          thumbnailSize: ThumbnailSize.square(500),
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: AppIconButton(
-                          onTap: () => onReorderImageDeleted(index),
-                          assetPath: IconConstants.smallClear,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                );
-              },
-            ),
-          ),
-        ],
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: AppIconButton(
+                      onTap: () => onReorderImageDeleted(index),
+                      assetPath: IconConstants.smallClear,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -498,7 +493,7 @@ class _TagBottomModalState extends State<_TagBottomModal> {
                 }
               },
               child: Container(
-                height: 70,
+                height: 86,
                 decoration: BoxDecoration(
                   color: context.color.white,
                   boxShadow: [
@@ -534,15 +529,28 @@ class _TagBottomModalState extends State<_TagBottomModal> {
                     ),
                   ],
                 ),
-                alignment: Alignment.center,
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 12,
                   ),
-                  child: ColorSelectButton(
-                    selectedColor: _selectedTripColor,
-                    onSelected: (tripColor) => onSelectedColorPressed(tripColor),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "태그 컬러 지정",
+                        style: context.style.caption1.copyWith(
+                          color: context.color.gray600,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ColorSelectButton(
+                        selectedColor: _selectedTripColor,
+                        onSelected: (tripColor) => onSelectedColorPressed(tripColor),
+                      ),
+                    ],
                   ),
                 ),
               ),

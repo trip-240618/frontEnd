@@ -16,6 +16,7 @@ import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_histories_usecase.dart';
 import 'package:tripStory/presentation/global/location_service.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
+import 'package:tripStory/presentation/trip/models/history_detail_param.dart';
 import 'package:tripStory/presentation/trip/models/history_main_state.dart';
 
 class HistoryMainController extends GetxController {
@@ -116,9 +117,18 @@ class HistoryMainController extends GetxController {
 
   /// side Effect
 
-  Future<void> onImagePressed(int index) async {
+  void onSearchBarPressed() => Get.toNamed(Routes.historySearch);
+
+  Future<void> onImagePressed(
+    int index,
+    int selectedHistoryId,
+  ) async {
     final idList = state.histories[index].historyList.map((history) => history.id).toList();
-    Get.toNamed(Routes.historyDetail, arguments: idList);
+    final HistoryDetailParam param = HistoryDetailParam(
+      selectedHistoryId: selectedHistoryId,
+      historiesIds: idList,
+    );
+    Get.toNamed(Routes.historyDetail, arguments: param);
   }
 
   Future<void> onPhotoPressed() async {

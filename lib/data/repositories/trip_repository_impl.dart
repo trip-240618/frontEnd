@@ -10,6 +10,7 @@ import 'package:tripStory/data/mappers/scrap_create_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_detail_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_mapper.dart';
 import 'package:tripStory/data/mappers/scrap_update_mapper.dart';
+import 'package:tripStory/data/mappers/tag_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_create_mapper.dart';
 import 'package:tripStory/data/mappers/trip_room_mapper.dart';
 import 'package:tripStory/data/models/request/history_reply_request.dart';
@@ -26,6 +27,7 @@ import 'package:tripStory/domain/entities/scrap_create_entity.dart';
 import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
 import 'package:tripStory/domain/entities/scrap_entity.dart';
 import 'package:tripStory/domain/entities/scrap_update_entity.dart';
+import 'package:tripStory/domain/entities/tag_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_create_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/repositories/trip_repository.dart';
@@ -439,7 +441,7 @@ class TripRepositoryImpl implements TripRepository {
         tripId,
         historyId,
       );
-      final entity = HistoriesMapper.fromHistoryResponse(result);
+      final entity = HistoriesMapper.fromEntity(result);
       return Right(entity);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
@@ -598,6 +600,38 @@ class TripRepositoryImpl implements TripRepository {
         replyId,
       );
       final entities = result.map(ReplyMapper.fromEntity).toList();
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<TagEntity>> fetchTags({
+    required int tripId,
+  }) async {
+    try {
+      final result = await _tripDataSource.fetchTags(
+        tripId,
+      );
+      final entities = result.map(TagMapper.fromEntity).toList();
+      return Right(entities);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<HistoryEntity>> fetchSearchHistories({
+    required int tripId,
+    String? uuid,
+    String? tagName,
+    String? tagColor,
+  }) async {
+    try {
+      final result = await _tripDataSource.fetchSearchHistory(tripId, uuid, tagName, tagColor);
+
+      final entities = result.map(HistoriesMapper.fromEntity).toList();
       return Right(entities);
     } catch (e) {
       return Left(ServerFailure(e.toString()));

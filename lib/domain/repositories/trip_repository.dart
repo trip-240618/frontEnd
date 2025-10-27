@@ -9,6 +9,7 @@ import 'package:tripStory/domain/entities/scrap_create_entity.dart';
 import 'package:tripStory/domain/entities/scrap_detail_entity.dart';
 import 'package:tripStory/domain/entities/scrap_entity.dart';
 import 'package:tripStory/domain/entities/scrap_update_entity.dart';
+import 'package:tripStory/domain/entities/tag_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_create_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 
@@ -188,5 +189,16 @@ abstract class TripRepository {
     required int tripId,
     required int historyId,
     required int replyId,
+  });
+
+  ResultFuture<List<TagEntity>> fetchTags({
+    required int tripId,
+  });
+
+  ResultFuture<List<HistoryEntity>> fetchSearchHistories({
+    required int tripId,
+    String? uuid,
+    String? tagName,
+    String? tagColor,
   });
 }

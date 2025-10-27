@@ -16,6 +16,7 @@ import 'package:tripStory/data/models/response/history_response.dart';
 import 'package:tripStory/data/models/response/plan_j_response.dart';
 import 'package:tripStory/data/models/response/scrap_detail_response.dart';
 import 'package:tripStory/data/models/response/scrap_response.dart';
+import 'package:tripStory/data/models/response/tag_response.dart';
 import 'package:tripStory/data/models/response/trip_room_create_response.dart';
 import 'package:tripStory/data/models/response/trip_room_response.dart';
 
@@ -222,5 +223,18 @@ abstract class TripDataSource {
     @Path("tripId") int tripId,
     @Path("historyId") int historyId,
     @Query("replyId") int replyId,
+  );
+
+  @GET("/{tripId}/history/tags")
+  Future<List<TagResponse>> fetchTags(
+    @Path("tripId") int tripId,
+  );
+
+  @GET("/{tripId}/history/search")
+  Future<List<HistoryResponse>> fetchSearchHistory(
+    @Path("tripId") int tripId,
+    @Query("uuid") String? uuid,
+    @Query("tagName") String? tagName,
+    @Query("tagColor") String? tagColor,
   );
 }

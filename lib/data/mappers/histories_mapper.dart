@@ -10,7 +10,7 @@ class HistoriesMapper {
   static HistoriesEntity fromResponse(HistoriesResponse response) {
     return HistoriesEntity(
       photoDate: response.photoDate,
-      historyList: response.historyList.map(fromHistoryResponse).toList(),
+      historyList: response.historyList.map(fromEntity).toList(),
     );
   }
 
@@ -36,7 +36,7 @@ class HistoriesMapper {
     );
   }
 
-  static HistoryEntity fromHistoryResponse(HistoryResponse response) {
+  static HistoryEntity fromEntity(HistoryResponse response) {
     return HistoryEntity(
       id: response.id,
       writerUuid: response.writerUuid,
