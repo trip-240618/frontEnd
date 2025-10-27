@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:photo_manager/photo_manager.dart';
 
 part 'history_detail_param.freezed.dart';
 

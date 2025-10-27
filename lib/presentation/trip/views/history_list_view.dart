@@ -4,7 +4,6 @@ import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/trip/controllers/history_list_controller.dart';
 import 'package:tripStory/presentation/trip/widgets/history_image_grid.dart';
-import 'package:tripStory/presentation/trip/widgets/history_image_tile.dart';
 import 'package:tripStory/presentation/trip/widgets/history_item_header.dart';
 
 class HistoryListView extends StatefulWidget {
