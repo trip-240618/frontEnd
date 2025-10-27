@@ -15,7 +15,6 @@ import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/trip/locker/lockerTapPage.dart';
 import 'package:tripStory/presentation/trip/setting/member_list.dart';
 import 'package:tripStory/presentation/trip/setting/trip_edit_page.dart';
-import 'package:tripStory/presentation/trip/tripHistory/tripHistoryMain.dart';
 import 'package:tripStory/presentation/trip/tripPlan/typeP/pPlanPage.dart';
 
 class BottomNavigator extends StatefulWidget {
@@ -42,7 +41,7 @@ class _BottomNavigatorState extends State<BottomNavigator> with TickerProviderSt
     _widgetOptions = [
       ts.selectTripList[0]['type'] == 'J' ? PPlanPage() : PPlanPage(),
       LockerTapPage(),
-      TripHistoryMainPage()
+      // TripHistoryMainPage()
     ];
     _bottomTabController = TabController(length: 3, vsync: this, initialIndex: 0);
     super.initState();

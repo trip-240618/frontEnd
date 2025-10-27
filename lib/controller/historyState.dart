@@ -14,9 +14,10 @@ import 'package:tripStory/app/api/historyApi.dart';
 import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/controller/tripState.dart';
 import 'package:tripStory/data/network/dio_client.dart';
-import 'package:tripStory/presentation/trip/tripHistory/album/modal/albumModel.dart';
-import 'package:tripStory/presentation/trip/tripHistory/history/model/detailItem.dart';
-import 'package:tripStory/presentation/trip/tripHistory/history/tripHistoryAdd.dart';
+
+// import 'package:tripStory/presentation/trip/tripHistory/album/modal/albumModel.dart';
+// import 'package:tripStory/presentation/trip/tripHistory/history/model/detailItem.dart';
+// import 'package:tripStory/presentation/trip/tripHistory/history/tripHistoryAdd.dart';
 
 import 'MapState.dart';
 
@@ -26,7 +27,8 @@ class HistoryState extends GetxController {
   final dio = Get.find<DioClient>();
   late final apiHistoryClient = ApiHistoryClient(dio);
   late final apiFileClient = ApiFileClient(dio);
-  AlbumModel? albumModel;
+
+  // AlbumModel? albumModel;
   final ImagePicker _picker = ImagePicker();
   final RxList albums = [].obs;
 
@@ -53,7 +55,7 @@ class HistoryState extends GetxController {
 
   /// 사진 업로드 로딩
   ///댓글 리스트
-  final RxList<DetailItem> detailList = <DetailItem>[].obs;
+  // final RxList<DetailItem> detailList = <DetailItem>[].obs;
 
   /// 여행 리스트
   final RxList historyList = [].obs;
@@ -254,21 +256,21 @@ class HistoryState extends GetxController {
           ],
         )).then((paths) async {
       for (AssetPathEntity asset in paths) {
-        await asset.getAssetListRange(start: 0, end: 5000).then((images) async {
-          if (images.isNotEmpty) {
-            final album = AlbumModel(id: asset.id, name: asset.name, images: images);
-            albums.add(album);
-            if (images.length != 0) {
-              await PhotoCachingManager().requestCacheAssets(
-                assets: images,
-                option: ThumbnailOption(
-                  size: ThumbnailSize.square(25), // 요청할 썸네일 크기
-                ),
-              );
-            }
-            albums.refresh();
-          }
-        });
+        // await asset.getAssetListRange(start: 0, end: 5000).then((images) async {
+        //   if (images.isNotEmpty) {
+        //     final album = AlbumModel(id: asset.id, name: asset.name, images: images);
+        //     albums.add(album);
+        //     if (images.length != 0) {
+        //       await PhotoCachingManager().requestCacheAssets(
+        //         assets: images,
+        //         option: ThumbnailOption(
+        //           size: ThumbnailSize.square(25), // 요청할 썸네일 크기
+        //         ),
+        //       );
+        //     }
+        //     albums.refresh();
+        //   }
+        // });
       }
     });
   }
@@ -279,7 +281,7 @@ class HistoryState extends GetxController {
       AssetEntity? assetEntity = await PhotoManager.editor.saveImageWithPath(pickedFile.path, title: '');
       await addToSelectedAlbum(assetEntity!);
       historyFileUpload(selectAlbumList, context);
-      Get.to(() => TripHistoryAddPage());
+      // Get.to(() => TripHistoryAddPage());
     }
   }
 
