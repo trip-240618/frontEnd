@@ -53,6 +53,7 @@ import 'package:tripStory/presentation/trip/bindings/trip_room_setting_binding.d
 import 'package:tripStory/presentation/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/presentation/trip/models/flight_create_param.dart';
 import 'package:tripStory/presentation/trip/models/history_create_param.dart';
+import 'package:tripStory/presentation/trip/models/history_detail_param.dart';
 import 'package:tripStory/presentation/trip/models/history_search_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_swap_param.dart';
@@ -296,11 +297,11 @@ class RouterInfo {
       name: Routes.historyDetail,
       page: () {
         final args = Get.arguments;
-        if (args is! List<int>) {
+        if (args is! HistoryDetailParam) {
           throw ArgumentError('error');
         }
         return HistoryDetailView(
-          historiesIds: args,
+          param: args,
         );
       },
       binding: HistoryDetailBinding(),

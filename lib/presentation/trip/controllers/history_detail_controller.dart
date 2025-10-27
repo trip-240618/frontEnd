@@ -17,6 +17,7 @@ import 'package:tripStory/domain/usecases/report_history_usecase.dart';
 import 'package:tripStory/domain/usecases/share_image_usecase.dart';
 import 'package:tripStory/presentation/global/login_user_service.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
+import 'package:tripStory/presentation/trip/models/history_detail_param.dart';
 import 'package:tripStory/presentation/trip/models/history_detail_state.dart';
 
 class HistoryDetailController extends GetxController {
@@ -56,23 +57,28 @@ class HistoryDetailController extends GetxController {
 
   final TextEditingController textCon = TextEditingController();
   final ScrollController scrollController = ScrollController();
-  final PageController pageController = PageController(initialPage: 0);
+  late PageController pageController;
 
   int get currentHistoryId =>
       state.historyIds[pageController.hasClients ? pageController.page?.round() ?? 0 : pageController.initialPage];
 
-  Future<void> init(List<int> historiesIds) async {
+  Future<void> init(HistoryDetailParam param) async {
+    final selectedIndex = param.selectedIndex;
     _historyDetailState = state.copyWith(
-      historyIds: historiesIds,
+      historyIds: param.historiesIds,
     );
 
+    pageController = PageController(initialPage: selectedIndex);
+
     await Future.wait([
-      _getHistoryDetailData(currentHistoryId),
+      _getHistoryDetailData(param.historiesIds[selectedIndex]),
       _getReplyData(),
     ]);
+
     _historyDetailState = state.copyWith(
       historyDetailStatus: HistoryDetailStatus.success,
     );
+
     update();
     _prefetchNextPage();
   }
@@ -129,19 +135,22 @@ class HistoryDetailController extends GetxController {
 
   Future<void> _prefetchNextPage() async {
     final currentPage = pageController.hasClients ? pageController.page?.round() ?? 0 : pageController.initialPage;
+
+    final prevPage = currentPage - 1;
     final nextPage = currentPage + 1;
+
+    if (prevPage >= 0) {
+      final prevHistoryId = state.historyIds[prevPage];
+      if (!state.historyDetailEntities.containsKey(prevHistoryId)) {
+        await _getHistoryDetailData(prevHistoryId);
+      }
+    }
 
     if (nextPage < state.historyIds.length) {
       final nextHistoryId = state.historyIds[nextPage];
-
-      if (state.historyDetailEntities.containsKey(nextHistoryId)) {
-        return;
+      if (!state.historyDetailEntities.containsKey(nextHistoryId)) {
+        await _getHistoryDetailData(nextHistoryId);
       }
-
-      final tripId = tripRoomInfo?.tripId;
-      if (tripId == null) return;
-
-      await _getHistoryDetailData(nextHistoryId);
     }
   }
 

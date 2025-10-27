@@ -15,14 +15,15 @@ import 'package:tripStory/presentation/common/tag/tag.dart';
 import 'package:tripStory/presentation/common/text/edit/edit_text_form_field.dart';
 import 'package:tripStory/presentation/common/user/user_profile.dart';
 import 'package:tripStory/presentation/trip/controllers/history_detail_controller.dart';
+import 'package:tripStory/presentation/trip/models/history_detail_param.dart';
 import 'package:tripStory/presentation/trip/models/history_detail_state.dart';
 
 class HistoryDetailView extends StatefulWidget {
-  final List<int> historiesIds;
+  final HistoryDetailParam param;
 
   const HistoryDetailView({
     super.key,
-    required this.historiesIds,
+    required this.param,
   });
 
   @override
@@ -36,7 +37,7 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
   @override
   void initState() {
     super.initState();
-    _controller.init(widget.historiesIds);
+    _controller.init(widget.param);
   }
 
   @override
@@ -71,9 +72,9 @@ class _HistoryDetailViewState extends State<HistoryDetailView> {
                     itemBuilder: (context, pageIdx) {
                       if (state.historyDetailStatus == HistoryDetailStatus.initial) return const SizedBox();
 
-                      final historyDetailList = state.historyDetailEntities.values.toList();
-                      if (historyDetailList.isEmpty) return const SizedBox();
-                      final historyDetail = historyDetailList[pageIdx];
+                      final historyId = state.historyIds[pageIdx];
+                      final historyDetail = state.historyDetailEntities[historyId];
+                      if (historyDetail == null) return const SizedBox();
 
                       return Column(
                         children: [

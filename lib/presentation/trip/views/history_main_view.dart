@@ -119,7 +119,7 @@ class _HistoryMainViewState extends State<HistoryMainView> with RouteAware {
                           labelColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
                           histories: state.histories,
                           onHeaderPressed: (index) => controller.onHistoryItemHeaderPressed(index),
-                          onImagePressed: (index) => controller.onImagePressed(index),
+                          onImagePressed: (index, id) => controller.onImagePressed(index, id),
                         ),
                       ],
                     );
@@ -314,7 +314,7 @@ class _BottomSheetContent extends StatelessWidget {
   final List<HistoriesEntity> histories;
   final Color labelColor;
   final Function(int) onHeaderPressed;
-  final Function(int) onImagePressed;
+  final Function(int, int) onImagePressed;
 
   const _BottomSheetContent({
     required this.labelColor,
@@ -380,7 +380,7 @@ class _BottomSheetContent extends StatelessWidget {
                                 userThumbnail: historyEntity.profileImage ?? "",
                                 likeCount: historyEntity.likeCnt ?? 0,
                                 replyCount: historyEntity.replyCnt ?? 0,
-                                onImagePressed: () => onImagePressed(listIndex),
+                                onImagePressed: () => onImagePressed(listIndex, historyEntity.id),
                               );
                             },
                             separatorBuilder: (context, index) => const SizedBox(width: 8),
