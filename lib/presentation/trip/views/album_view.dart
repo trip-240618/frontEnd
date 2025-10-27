@@ -332,7 +332,6 @@ class _AlbumBottom extends StatelessWidget {
                                       onTap: () => onImageDeletedPressed(index),
                                       child: RoundIcon.icon(
                                         assetPath: IconConstants.smallClear,
-                                        backgroundColor: context.color.white,
                                       ),
                                     ),
                                   ),

@@ -23,6 +23,9 @@ class EditTextFormField extends StatelessWidget {
   final bool? isFocusOnTapOutside;
   final double? maxHeight;
   final int? maxLines;
+  final Widget? leadingWidget;
+  final bool? isTrailing;
+  final Color? backgroundColor;
 
   const EditTextFormField({
     super.key,
@@ -39,6 +42,9 @@ class EditTextFormField extends StatelessWidget {
     this.isFocusOnTapOutside,
     this.maxHeight,
     this.maxLines,
+    this.leadingWidget,
+    this.isTrailing = true,
+    this.backgroundColor,
   });
 
   @override
@@ -54,30 +60,34 @@ class EditTextFormField extends StatelessWidget {
       maxHeight: maxHeight,
       inputFormatters: inputFormatters,
       onFieldSubmitted: onSubmit,
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (countText != null && countText!.isNotEmpty) ...[
-            Text.rich(
-              TextSpanHelper.toSplitText(
-                text: countText ?? "",
-                delimiter: "/",
-                firstStyle: context.style.caption2.copyWith(color: context.color.gray800),
-                secondStyle: context.style.caption2.copyWith(color: context.color.gray400),
-                delimiterStyle: context.style.caption2.copyWith(
-                  color: context.color.gray400,
+      leading: leadingWidget,
+      backgroundColor: backgroundColor,
+      trailing: isTrailing ?? true
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (countText != null && countText!.isNotEmpty) ...[
+                  Text.rich(
+                    TextSpanHelper.toSplitText(
+                      text: countText ?? "",
+                      delimiter: "/",
+                      firstStyle: context.style.caption2.copyWith(color: context.color.gray800),
+                      secondStyle: context.style.caption2.copyWith(color: context.color.gray400),
+                      delimiterStyle: context.style.caption2.copyWith(
+                        color: context.color.gray400,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                ],
+                _TrailingWidget(
+                  editType: editType,
+                  onTrailingPressed: onTrailingPressed,
+                  buttonText: buttonText,
                 ),
-              ),
-            ),
-            const SizedBox(width: 4),
-          ],
-          _TrailingWidget(
-            editType: editType,
-            onTrailingPressed: onTrailingPressed,
-            buttonText: buttonText,
-          ),
-        ],
-      ),
+              ],
+            )
+          : null,
     );
   }
 }
@@ -143,7 +153,6 @@ class _IconTrailing extends StatelessWidget {
         child: Center(
           child: SvgIcon(
             assetPath: assetPath,
-            color: context.color.gray900,
           ),
         ),
       ),

@@ -132,7 +132,7 @@ class _HistoryMainViewState extends State<HistoryMainView> with RouteAware {
               left: 20,
               right: 20,
               child: _HistorySearchBar(
-                onSearchBarPressed: () {},
+                onSearchBarPressed: () => controller.onSearchBarPressed(),
                 searchBarColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
               ),
             ),

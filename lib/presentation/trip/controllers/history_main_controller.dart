@@ -116,6 +116,8 @@ class HistoryMainController extends GetxController {
 
   /// side Effect
 
+  void onSearchBarPressed() => Get.toNamed(Routes.historySearch);
+
   Future<void> onImagePressed(int index) async {
     final idList = state.histories[index].historyList.map((history) => history.id).toList();
     Get.toNamed(Routes.historyDetail, arguments: idList);

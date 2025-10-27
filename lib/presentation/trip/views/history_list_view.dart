@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/trip/controllers/history_list_controller.dart';
+import 'package:tripStory/presentation/trip/widgets/history_image_grid.dart';
 import 'package:tripStory/presentation/trip/widgets/history_image_tile.dart';
 import 'package:tripStory/presentation/trip/widgets/history_item_header.dart';
 
@@ -47,26 +48,30 @@ class _HistoryListViewState extends State<HistoryListView> {
                   height: 16,
                 ),
                 Expanded(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 12.0,
-                      mainAxisSpacing: 12.0,
-                      childAspectRatio: 0.793,
-                    ),
-                    itemCount: controller.state.historyLength,
-                    itemBuilder: (context, index) {
-                      final history = controller.state.historyEntity?.historyList[index];
-
-                      return HistoryImageTile(
-                        thumbnail: history?.thumbnail ?? "",
-                        userThumbnail: history?.profileImage ?? "",
-                        likeCount: history?.likeCnt ?? 0,
-                        replyCount: history?.replyCnt ?? 0,
-                        onImagePressed: () => controller.onNavigateToDetailPressed(widget.dateTime),
-                      );
-                    },
+                  child: HistoryImageGrid(
+                    onImagePressed: () => controller.onNavigateToDetailPressed(widget.dateTime),
+                    histories: controller.state.historyEntity?.historyList ?? [],
                   ),
+                  // GridView.builder(
+                  //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  //     crossAxisCount: 2,
+                  //     crossAxisSpacing: 12.0,
+                  //     mainAxisSpacing: 12.0,
+                  //     childAspectRatio: 0.793,
+                  //   ),
+                  //   itemCount: controller.state.historyLength,
+                  //   itemBuilder: (context, index) {
+                  //     final history = controller.state.historyEntity?.historyList[index];
+                  //
+                  //     return HistoryImageTile(
+                  //       thumbnail: history?.thumbnail ?? "",
+                  //       userThumbnail: history?.profileImage ?? "",
+                  //       likeCount: history?.likeCnt ?? 0,
+                  //       replyCount: history?.replyCnt ?? 0,
+                  //       onImagePressed: () => controller.onNavigateToDetailPressed(widget.dateTime),
+                  //     );
+                  //   },
+                  // ),
                 ),
               ],
             ),

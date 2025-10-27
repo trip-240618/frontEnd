@@ -38,6 +38,8 @@ import 'package:tripStory/presentation/trip/bindings/history_create_binding.dart
 import 'package:tripStory/presentation/trip/bindings/history_detail_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/history_list_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/history_main_binding.dart';
+import 'package:tripStory/presentation/trip/bindings/history_search_binding.dart';
+import 'package:tripStory/presentation/trip/bindings/history_search_list_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_add_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_edit_binding.dart';
@@ -51,6 +53,7 @@ import 'package:tripStory/presentation/trip/bindings/trip_room_setting_binding.d
 import 'package:tripStory/presentation/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/presentation/trip/models/flight_create_param.dart';
 import 'package:tripStory/presentation/trip/models/history_create_param.dart';
+import 'package:tripStory/presentation/trip/models/history_search_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_edit_param.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_swap_param.dart';
 import 'package:tripStory/presentation/trip/views/album_view.dart';
@@ -59,6 +62,8 @@ import 'package:tripStory/presentation/trip/views/flight_search_view.dart';
 import 'package:tripStory/presentation/trip/views/history_create_view.dart';
 import 'package:tripStory/presentation/trip/views/history_detail_view.dart';
 import 'package:tripStory/presentation/trip/views/history_list_view.dart';
+import 'package:tripStory/presentation/trip/views/history_search_list_view.dart';
+import 'package:tripStory/presentation/trip/views/history_search_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_create_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_edit_view.dart';
 import 'package:tripStory/presentation/trip/views/j_plan_swap_view.dart';
@@ -299,6 +304,24 @@ class RouterInfo {
         );
       },
       binding: HistoryDetailBinding(),
+    ),
+    GetPage(
+      name: Routes.historySearch,
+      page: () => const HistorySearchView(),
+      binding: HistorySearchBinding(),
+    ),
+    GetPage(
+      name: Routes.historySearchList,
+      page: () {
+        final args = Get.arguments;
+        if (args is! HistorySearchParam) {
+          throw ArgumentError('error');
+        }
+        return HistorySearchListView(
+          param: args,
+        );
+      },
+      binding: HistorySearchListBinding(),
     ),
   ];
 }

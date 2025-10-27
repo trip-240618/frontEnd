@@ -10,6 +10,7 @@ class HistoryItemHeader extends StatelessWidget {
   final VoidCallback? onHeaderPressed;
 
   const HistoryItemHeader({
+    super.key,
     required this.day,
     required this.labelColor,
     required this.photoDate,
