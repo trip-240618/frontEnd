@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
-import 'package:tripStory/component/bottomModals.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
@@ -13,18 +13,22 @@ import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
+import 'package:tripStory/presentation/common/bottom/base_bottom_sheet.dart';
 import 'package:tripStory/presentation/common/button/app_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/button/link_button.dart';
 import 'package:tripStory/presentation/common/button/popup_list.dart';
 import 'package:tripStory/presentation/common/button/tab/tab_box.dart';
 import 'package:tripStory/presentation/common/button/tab/tab_user.dart';
+import 'package:tripStory/presentation/common/button/tile/tile_list_button.dart';
 import 'package:tripStory/presentation/common/dialog/code_insert_dialog.dart';
 import 'package:tripStory/presentation/common/empty_view.dart';
+import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/image/round_thumbnail_image.dart';
 import 'package:tripStory/presentation/common/popup/popup_item_model.dart';
 import 'package:tripStory/presentation/common/snack_bar.dart';
 import 'package:tripStory/presentation/common/tag/tag_day.dart';
+import 'package:tripStory/presentation/common/toast/custom_toast.dart';
 import 'package:tripStory/presentation/hoom/controller/rooms_controller.dart';
 import 'package:tripStory/presentation/hoom/enum/trip_rooms_type.dart';
 import 'package:tripStory/presentation/hoom/model/trip_rooms_state.dart';
@@ -36,6 +40,13 @@ class TripRoomListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<RoomsController>(
       builder: (controller) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final name = controller.state.showToast?.consume();
+          if (name != null && context.mounted) {
+            showToast(context, name);
+          }
+        });
+
         return PopScope(
           canPop: false,
           onPopInvokedWithResult: (value, dynamic) {
@@ -131,10 +142,14 @@ class TripRoomListView extends StatelessWidget {
                                     tripRoomType: controller.tripRoomsState.tripRoomType,
                                     onTap: () => controller.onRoomPressed(tripRoom.id),
                                     onBookmarkTap: () => controller.onBookmarkIconPressed(tripRoom.id, index),
-                                    onSendTap: () => sendBottomModal(
+                                    onSendTap: () => _showShareInviteModal(
                                       context,
-                                      tripRoom.invitationCode,
-                                      tripRoom.id,
+                                      onCopyCodePressed: () =>
+                                          controller.onInviteCodeCopyPressed(tripRoom.invitationCode),
+                                      onKakaoSharePressed: () => controller.onKakaoSharePressed(
+                                        tripRoom.tripId,
+                                        tripRoom.invitationCode,
+                                      ),
                                     ),
                                     onMemberTap: (context) => _showMemberPopover(
                                       context: context,
@@ -200,6 +215,167 @@ class TripRoomListView extends StatelessWidget {
     CodeInsertDialog.show(
       context,
       onConfirmPressed,
+    );
+  }
+
+  void _showShareInviteModal(
+    BuildContext context, {
+    required VoidCallback onKakaoSharePressed,
+    required VoidCallback onCopyCodePressed,
+  }) {
+    BaseBottomSheet.show(
+      context,
+      Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 40),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
+            child: Text(
+              "초대 코드를 복사했어요",
+              style: context.style.heading1.copyWith(
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          TileListButton(
+            text: "카카오톡으로 공유하기",
+            leading: SvgIcon(assetPath: IconConstants.kakaoIcon),
+            textStyle: context.style.body1Normal.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+            showTrailing: false,
+            onTap: onKakaoSharePressed,
+          ),
+          TileListButton(
+            text: "초대 코드 복사하기",
+            textStyle: context.style.body1Normal.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+            leading: SvgIcon(
+              assetPath: IconConstants.copy,
+              color: context.color.gray900,
+              width: 28,
+            ),
+            showTrailing: false,
+            onTap: onCopyCodePressed,
+          ),
+          // GestureDetector(
+          //   onTap: () {
+          //     // ms.kakaoShare(tripId, inviteCode);
+          //   },
+          //   child: Container(
+          //     child: Padding(
+          //       padding: const EdgeInsets.symmetric(vertical: 12),
+          //       child: Row(
+          //         children: [
+          //           SvgPicture.asset('assets/icon/kakao.svg'),
+          //           const SizedBox(width: 20),
+          //           Text(
+          //             '카카오톡으로 공유하기',
+          //             style: f15gray800w600,
+          //           )
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // GestureDetector(
+          //   // onTap: () {
+          //   //   Clipboard.setData(ClipboardData(text: inviteCode));
+          //   //   fToast.showToast(
+          //   //     child: Container(
+          //   //       width: Get.width,
+          //   //       height: 58,
+          //   //       decoration: BoxDecoration(
+          //   //         color: Color(0xff212121).withOpacity(0.7), // 반투명한 배경
+          //   //         borderRadius: BorderRadius.circular(8),
+          //   //         boxShadow: [
+          //   //           BoxShadow(
+          //   //             color: Color(0x1A000000),
+          //   //             offset: Offset(0, 4),
+          //   //             blurRadius: 9,
+          //   //           ),
+          //   //           BoxShadow(
+          //   //             color: Color(0x17000000),
+          //   //             offset: Offset(0, 16),
+          //   //             blurRadius: 16,
+          //   //           ),
+          //   //           BoxShadow(
+          //   //             color: Color(0x0D000000),
+          //   //             offset: Offset(0, 36),
+          //   //             blurRadius: 21,
+          //   //           ),
+          //   //           BoxShadow(
+          //   //             color: Color(0x03000000),
+          //   //             offset: Offset(0, 63),
+          //   //             blurRadius: 25,
+          //   //           ),
+          //   //           BoxShadow(
+          //   //             color: Color(0x00000000),
+          //   //             offset: Offset(0, 99),
+          //   //             blurRadius: 28,
+          //   //           ),
+          //   //         ],
+          //   //       ),
+          //   //       child: Center(
+          //   //           child: Row(
+          //   //             mainAxisAlignment: MainAxisAlignment.center,
+          //   //             children: [
+          //   //               SvgPicture.asset('assets/icon/copy.svg',
+          //   //                   colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+          //   //               const SizedBox(
+          //   //                 width: 8,
+          //   //               ),
+          //   //               Text(
+          //   //                 '초대코드를 복사했습니다',
+          //   //                 style: f14whitew600,
+          //   //               ),
+          //   //             ],
+          //   //           )),
+          //   //     ),
+          //   //     gravity: ToastGravity.TOP,
+          //   //     toastDuration: Duration(seconds: 2),
+          //   //   );
+          //   // },
+          //   child: Container(
+          //     child: Padding(
+          //       padding: const EdgeInsets.symmetric(vertical: 12),
+          //       child: Row(
+          //         children: [
+          //           SvgPicture.asset('assets/icon/copy.svg'),
+          //           const SizedBox(width: 20),
+          //           Text(
+          //             '초대 코드 복사하기',
+          //             style: f15gray800w600,
+          //           )
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // )
+        ],
+      ),
+      heightRatio: 0.28,
+    );
+  }
+
+  void showToast(
+    BuildContext context,
+    String message,
+  ) {
+    CustomToast.show(
+      context: context,
+      message: message,
+      icon: IconConstants.copy,
+      gravity: ToastGravity.TOP,
     );
   }
 }

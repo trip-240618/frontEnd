@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/core/util/one_time_event.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/presentation/hoom/enum/trip_rooms_type.dart';
 
@@ -15,6 +16,7 @@ abstract class TripRoomsState with _$TripRoomsState {
     @Default(TripRoomsStatus.initial) TripRoomsStatus tripRoomsStatus,
     @Default([]) List<TripRoomEntity> tripRooms,
     @Default(TripRoomType.coming) TripRoomType tripRoomType,
+    OneTimeEvent<String>? showToast,
   }) = _TripRoomsState;
 
   int get tripListLength => tripRooms.length;

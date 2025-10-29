@@ -35,6 +35,7 @@ class IconConstants {
   static const String camera = "$_iconNormal/camera.svg";
   static const String dropper = "$_iconNormal/dropper.svg";
   static const String declaration = "$_iconNormal/declaration.svg";
+  static const String copy = "$_iconNormal/copy.svg";
 
   // small
   static const String date = "$_iconSmall/date.svg";
@@ -71,4 +72,5 @@ class IconConstants {
   static const String planMarker = "$_icon/mapMarker.svg";
   static const String historyMarker = "$_icon/history_marker.png";
   static const String verticalTicket = "$_icon/vertical_ticket_box.svg";
+  static const String kakaoIcon = "$_icon/kakao.svg";
 }
