@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/core/constants/regex_constants.dart';
+import 'package:tripStory/core/permission/permission_state.dart';
+import 'package:tripStory/core/permission/permission_type.dart';
+import 'package:tripStory/core/permission/permisson.dart';
 import 'package:tripStory/core/util/image_file_util.dart';
 import 'package:tripStory/domain/entities/user_entity.dart';
 import 'package:tripStory/domain/usecases/edit_user_usecase.dart';
@@ -40,15 +42,16 @@ class EditProfileController extends GetxController {
     ImageSource imageSource,
     BuildContext context,
   ) async {
-    final hasPermission = await requestCameraPermission(context);
-    if (!hasPermission) return;
+    final status = await getPermissionStatus(PermissionType.photo);
 
-    final pickedFile = await _picker.pickImage(source: imageSource);
-    if (pickedFile != null) {
-      _editProfileState = state.copyWith(
-        profileImage: XFile(pickedFile.path),
-      );
-      update();
+    if (status == PermissionState.granted) {
+      final pickedFile = await _picker.pickImage(source: imageSource);
+      if (pickedFile != null) {
+        _editProfileState = state.copyWith(
+          profileImage: XFile(pickedFile.path),
+        );
+        update();
+      }
     }
   }
 

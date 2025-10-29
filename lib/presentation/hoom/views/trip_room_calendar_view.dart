@@ -1,12 +1,12 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/component/dialog/dialog.dart';
 import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
+import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/hoom/controller/trip_room_calendar_controller.dart';
 
 class TripRoomCalendarView extends StatefulWidget {
@@ -33,11 +33,7 @@ class _TripRoomCalendarViewState extends State<TripRoomCalendarView> {
         if (showDialog == true) {
           Future.microtask(() {
             if (context.mounted) {
-              showOnlyConfirmTapDialog(
-                context,
-                "날짜를 선택해주세요",
-                () => Get.back(),
-              );
+              _showDialog();
             }
           });
         }
@@ -111,6 +107,14 @@ class _TripRoomCalendarViewState extends State<TripRoomCalendarView> {
           ),
         );
       },
+    );
+  }
+
+  void _showDialog() {
+    CommonDialog.showConfirm(
+      title: "날짜를 선택해주세요",
+      confirmText: "확인",
+      onConfirm: () => Get.back(),
     );
   }
 }

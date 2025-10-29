@@ -12,7 +12,6 @@ import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_bookmarked_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_coming_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_enter_room_usecase.dart';
-import 'package:tripStory/domain/usecases/fetch_join_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_last_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/first_enter_trip_room_usecase.dart';
 import 'package:tripStory/domain/usecases/kakao_share_usecase.dart';
@@ -27,7 +26,6 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   final FetchLastTripsUseCase _fetchLastTrips;
   final FetchBookmarkedTripsUseCase _fetchBookmarkedTrips;
   final UpdateBookmarkUseCase _bookmarkUseCase;
-  final FetchJoinRoomUsecase _fetchJoinRoomUsecase;
   final FetchEnterRoomUsecase _fetchEnterRoomUsecase;
   final TripRoomService _tripRoomService;
   final KakaoShareUsecase _kakaoShareUsecase;
@@ -39,7 +37,6 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     required FetchLastTripsUseCase fetchLastTrips,
     required FetchBookmarkedTripsUseCase fetchBookmarkedTrips,
     required UpdateBookmarkUseCase updateBookmarkUseCase,
-    required FetchJoinRoomUsecase fetchJoinRoomUsecase,
     required FetchEnterRoomUsecase fetchEnterRoomUsecase,
     required KakaoShareUsecase kakaoShareUsecase,
     required FirstEnterTripRoomUsecase firstEnterTripRoomUsecase,
@@ -47,7 +44,6 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
         _fetchLastTrips = fetchLastTrips,
         _fetchBookmarkedTrips = fetchBookmarkedTrips,
         _bookmarkUseCase = updateBookmarkUseCase,
-        _fetchJoinRoomUsecase = fetchJoinRoomUsecase,
         _fetchEnterRoomUsecase = fetchEnterRoomUsecase,
         _kakaoShareUsecase = kakaoShareUsecase,
         _firstEnterTripRoomUsecase = firstEnterTripRoomUsecase;

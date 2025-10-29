@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/component/container/circle_badge.dart';
-import 'package:tripStory/component/url_launch.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/color.dart';
+import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/font.dart';
+import 'package:tripStory/core/util/helper/url_launcher_helper.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/button/base/base_tile_button.dart';
 import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
+import 'package:tripStory/presentation/common/number_circle.dart';
 import 'package:tripStory/presentation/login/controller/term_controller.dart';
 
 class TermView extends StatelessWidget {
@@ -33,16 +34,16 @@ class TermView extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    CircleBadge(
-                      text: "1",
-                      backgroundColor: gray900,
+                    NumberCircle(
+                      count: 1,
+                      color: context.color.gray900,
                     ),
                     const SizedBox(
                       width: 10,
                     ),
-                    CircleBadge(
-                      text: "2",
-                      backgroundColor: gray200,
+                    NumberCircle(
+                      count: 2,
+                      color: context.color.gray200,
                     ),
                   ],
                 ),
@@ -60,38 +61,38 @@ class TermView extends StatelessWidget {
                   tileColor: gray50,
                   borderColor: controller.state.isAllTerms ? gray900 : null,
                   onTap: () => controller.onAllTermPressed(),
-                  onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/service"),
+                  onTrailingTap: () async => await UrlLauncherHelper.launch("https://trip-story.site/policy/service"),
                 ),
                 const SizedBox(height: 28),
                 _CheckTileButton(
                   text: "(필수) 서비스 이용약관",
                   isActive: controller.state.isServiceTerm,
                   onTap: () => controller.onServiceTermPressed(),
-                  onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/service"),
+                  onTrailingTap: () async => await UrlLauncherHelper.launch("https://trip-story.site/policy/service"),
                 ),
                 _CheckTileButton(
                   text: "(필수) 개인정보 수집 및 이용약관",
                   isActive: controller.state.isPrivateTerm,
                   onTap: () => controller.onPrivateTermPressed(),
-                  onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/privacy"),
+                  onTrailingTap: () async => await UrlLauncherHelper.launch("https://trip-story.site/policy/privacy"),
                 ),
                 _CheckTileButton(
                   text: "(필수) 위치정보 서비스 이용약관",
                   isActive: controller.state.isLocationTerm,
                   onTap: () => controller.onLocationTermPressed(),
-                  onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/location"),
+                  onTrailingTap: () async => await UrlLauncherHelper.launch("https://trip-story.site/policy/location"),
                 ),
                 _CheckTileButton(
                   text: "(필수) 제3자 정보제공 동의",
                   isActive: controller.state.isThreeTerm,
                   onTap: () => controller.onThreeTermPressed(),
-                  onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/offerl"),
+                  onTrailingTap: () async => await UrlLauncherHelper.launch("https://trip-story.site/policy/offerl"),
                 ),
                 _CheckTileButton(
                   text: "(선택) 마케팅 정보 수신 동의",
                   isActive: controller.state.isMarketingTerm,
                   onTap: () => controller.onMarketTermPressed(),
-                  onTrailingTap: () async => await urlLaunch("https://trip-story.site/policy/marketing"),
+                  onTrailingTap: () async => await UrlLauncherHelper.launch("https://trip-story.site/policy/marketing"),
                 ),
                 Spacer(),
               ],

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/core/enum/trip_color.dart';
+import 'package:tripStory/core/permission/permission_state.dart';
+import 'package:tripStory/core/permission/permission_type.dart';
+import 'package:tripStory/core/permission/permisson.dart';
 import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/core/util/extension/color_extension.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
@@ -43,16 +45,17 @@ class TripRoomSettingController extends GetxController {
     ImageSource imageSource,
     BuildContext context,
   ) async {
-    final hasPermission = await requestCameraPermission(context);
-    if (!hasPermission) return;
+    final status = await getPermissionStatus(PermissionType.photo);
 
-    final pickedFile = await _picker.pickImage(source: imageSource);
+    if (status == PermissionState.granted) {
+      final pickedFile = await _picker.pickImage(source: imageSource);
 
-    if (pickedFile != null) {
-      _roomSettingState = state.copyWith(
-        roomImage: XFile(pickedFile.path),
-      );
-      update();
+      if (pickedFile != null) {
+        _roomSettingState = state.copyWith(
+          roomImage: XFile(pickedFile.path),
+        );
+        update();
+      }
     }
   }
 

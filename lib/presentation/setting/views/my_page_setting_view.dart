@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/component/url_launch.dart';
 import 'package:tripStory/core/constants/app_constants.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
+import 'package:tripStory/core/util/helper/url_launcher_helper.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/button/tile/tile_list_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
@@ -62,7 +62,7 @@ class MyPageSettingView extends StatelessWidget {
                 ),
                 _SettingInfoSection(
                   versionText: controller.state.appVersionText,
-                  onPrivatePressed: () => urlLaunch(AppConstants.privacyPolicy),
+                  onPrivatePressed: () => UrlLauncherHelper.launch(AppConstants.privacyPolicy),
                 ),
               ],
             ),

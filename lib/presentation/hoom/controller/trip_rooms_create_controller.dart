@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/core/enum/trip_color.dart';
 import 'package:tripStory/core/enum/trip_type.dart';
+import 'package:tripStory/core/permission/permission_state.dart';
+import 'package:tripStory/core/permission/permission_type.dart';
+import 'package:tripStory/core/permission/permisson.dart';
 import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/core/util/extension/color_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
@@ -37,7 +39,6 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
   }
 
   String? _inviteCode;
-  int? _tripId;
 
   /// side Effect
   Future<void> onBackPressed() async {
@@ -48,23 +49,24 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
   }
 
   Future<void> onImagePressed(ImageSource imageSource, BuildContext context) async {
-    final hasPermission = await requestCameraPermission(context);
-    if (!hasPermission) return;
+    final status = await getPermissionStatus(PermissionType.photo);
 
-    final pickedFile = await _picker.pickImage(source: imageSource);
-    if (pickedFile == null) return;
+    if (status == PermissionState.granted) {
+      final pickedFile = await _picker.pickImage(source: imageSource);
+      if (pickedFile == null) return;
 
-    final newFile = XFile(pickedFile.path);
+      final newFile = XFile(pickedFile.path);
 
-    await ImageFileUtil.deletePreviousImage(
-      previousImage: state.roomImage,
-      newImage: newFile,
-    );
+      await ImageFileUtil.deletePreviousImage(
+        previousImage: state.roomImage,
+        newImage: newFile,
+      );
 
-    tripRoomCreateState = state.copyWith(
-      roomImage: XFile(newFile.path),
-    );
-    update();
+      tripRoomCreateState = state.copyWith(
+        roomImage: XFile(newFile.path),
+      );
+      update();
+    }
   }
 
   void onTextChanged(
@@ -148,7 +150,6 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
       Get.back();
     }, (createResult) {
       _inviteCode = createResult.invitationCode;
-      _tripId = createResult.tripId;
       tripRoomCreateState = state.copyWith(
         showLoading: OneTimeEvent(false),
         showCodeDialog: OneTimeEvent(
