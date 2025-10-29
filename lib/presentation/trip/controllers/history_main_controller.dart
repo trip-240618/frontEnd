@@ -43,8 +43,6 @@ class HistoryMainController extends GetxController {
 
   HistoryMainState get state => _historyMainState;
 
-  final Map<String, Marker> _markerCache = {};
-
   @override
   void onInit() {
     super.onInit();
