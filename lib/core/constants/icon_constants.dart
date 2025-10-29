@@ -36,7 +36,6 @@ class IconConstants {
   static const String dropper = "$_iconNormal/dropper.svg";
   static const String declaration = "$_iconNormal/declaration.svg";
 
-
   // small
   static const String date = "$_iconSmall/date.svg";
   static const String time = "$_iconSmall/time.svg";
@@ -70,5 +69,6 @@ class IconConstants {
   // default
   static const String makerImage = "$_icon/marker.png";
   static const String planMarker = "$_icon/mapMarker.svg";
+  static const String historyMarker = "$_icon/history_marker.png";
   static const String verticalTicket = "$_icon/vertical_ticket_box.svg";
 }

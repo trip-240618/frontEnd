@@ -29,7 +29,7 @@ abstract class MarkerItem with _$MarkerItem implements cluster.ClusterItem {
   const MarkerItem._();
 
   const factory MarkerItem({
-    required String index,
+    required int id,
     required double latitude,
     required double longitude,
     required String thumbnailUrl,

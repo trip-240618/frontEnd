@@ -17,7 +17,7 @@ class CustomCacheManager extends CacheManager {
           Config(
             key,
             stalePeriod: const Duration(days: 1),
-            maxNrOfCacheObjects: 10,
+            maxNrOfCacheObjects: 100,
             fileService: CloudFrontHttpFileService(sessionService),
           ),
         );

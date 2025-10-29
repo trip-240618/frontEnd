@@ -32,6 +32,7 @@ class HistoryImageTile extends StatelessWidget {
           children: [
             Positioned.fill(
               child: RoundThumbnailImage(
+                key: key,
                 imageUrl: thumbnail,
               ),
             ),

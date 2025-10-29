@@ -56,22 +56,33 @@ class MarkerIconService {
   Future<BitmapDescriptor> renderIconWithBuilder({
     required String cacheKey,
     required Widget Function() widget,
+    Size? size,
+    bool useCache = true,
   }) async {
-    final cached = _getFresh(cacheKey);
-    if (cached != null) return cached;
+    if (useCache) {
+      final cached = _getFresh(cacheKey);
+      if (cached != null) return cached;
 
-    final icon = _inFutureCache.putIfAbsent(cacheKey, () async {
+      final icon = _inFutureCache.putIfAbsent(cacheKey, () async {
+        final icon = await widget().toBitmapDescriptor(
+          logicalSize: size ?? const Size(150, 150),
+          imageSize: const Size(300, 300),
+          waitToRender: const Duration(seconds: 1),
+        );
+        return _save(cacheKey, icon);
+      });
+
+      try {
+        return await icon;
+      } finally {
+        _inFutureCache.remove(cacheKey);
+      }
+    } else {
       final icon = await widget().toBitmapDescriptor(
-        logicalSize: const Size(150, 150),
+        logicalSize: size ?? const Size(150, 150),
         imageSize: const Size(300, 300),
       );
-      return _save(cacheKey, icon);
-    });
-
-    try {
-      return await icon;
-    } finally {
-      _inFutureCache.remove(cacheKey);
+      return icon;
     }
   }
 }

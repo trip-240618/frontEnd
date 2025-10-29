@@ -75,7 +75,7 @@ Future<BitmapDescriptor> getCustomIcon(int index, String imageUrl) async {
           Positioned(
             bottom: 30,
             child: Image.asset(
-              "assets/icon/mapImage.png",
+              "assets/icon/history_marker.png",
               width: iconSize,
               height: iconSize,
               fit: BoxFit.cover,

@@ -66,24 +66,4 @@ class RouteHelper {
       arguments: arguments,
     );
   }
-
-  static Future<T?> popAllUntilAndToNamed2<T>(
-    String keepRoute,
-    String toRoute, {
-    dynamic arguments,
-    VoidCallback? onReturn,
-  }) async {
-    final result = await Get.offNamedUntil<T>(
-      toRoute,
-      (route) => route.settings.name == keepRoute,
-      arguments: arguments,
-    );
-
-    // D에서 돌아왔을 때 콜백 실행
-    if (onReturn != null) {
-      onReturn();
-    }
-
-    return result;
-  }
 }

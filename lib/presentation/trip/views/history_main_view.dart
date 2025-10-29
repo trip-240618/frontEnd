@@ -43,76 +43,98 @@ class _HistoryMainViewState extends State<HistoryMainView> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HistoryMainController>(
-      builder: (controller) {
-        final state = controller.state;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          final showPermissionDialog = state.showPhotoPermissionDialog?.consume();
-          final showDayDialog = state.showDaySelectedDialog?.consume();
-          if (showPermissionDialog != null) {
-            _showPhotoPermissionDialog();
-          }
+    return Stack(
+      children: [
+        GetBuilder<HistoryMainController>(
+          id: "dialog",
+          builder: (controller) {
+            final state = controller.state;
 
-          if (showDayDialog != null) {
-            _showDaySelectDialog(
-              controller.tripRoomInfo?.startDate,
-              controller.tripRoomInfo?.endDate,
-              controller.onSelectedDayPressed,
-              controller.onSelectedDayDialogConfirmPressed,
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final showPermissionDialog = state.showPhotoPermissionDialog?.consume();
+              final showDayDialog = state.showDaySelectedDialog?.consume();
+
+              if (showPermissionDialog != null) _showPhotoPermissionDialog();
+              if (showDayDialog != null) {
+                _showDaySelectDialog(
+                  controller.tripRoomInfo?.startDate,
+                  controller.tripRoomInfo?.endDate,
+                  controller.onSelectedDayPressed,
+                  controller.onSelectedDayDialogConfirmPressed,
+                );
+              }
+            });
+
+            return const SizedBox.shrink();
+          },
+        ),
+        GetBuilder<HistoryMainController>(
+          id: 'map',
+          builder: (controller) {
+            final state = controller.state;
+            if (state.historyStatus != HistoryStatus.success) {
+              return const SizedBox();
+            }
+
+            return GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(state.currentLatitude, state.currentLongitude),
+                zoom: 14.4746,
+              ),
+              markers: state.markers.toSet(),
+              onCameraMove: (pos) => controller.manager?.onCameraMove(pos),
+              onCameraIdle: () => controller.manager?.updateMap(),
+              onMapCreated: (mapController) {
+                if (!controller.mapController.isCompleted) {
+                  controller.mapController.complete(mapController);
+                  controller.manager?.setMapId(mapController.mapId);
+                }
+              },
             );
-          }
-        });
-        return Stack(
-          children: [
-            Visibility(
-              visible: state.historyStatus == HistoryStatus.success,
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                    state.currentLatitude,
-                    state.currentLongitude,
-                  ),
-                  zoom: 14.4746,
-                ),
-                markers: state.markers.toSet(),
-                // onCameraMove: maps.manager.onCameraMove,
-                // onCameraIdle: maps.manager.updateMap,
-                onMapCreated: (GoogleMapController mapController) {
-                  if (!controller.mapController.isCompleted) {
-                    controller.mapController.complete(mapController);
-                    controller.manager?.setMapId(mapController.mapId);
-                  }
-                },
+          },
+        ),
+        Positioned(
+          top: 60,
+          left: 20,
+          right: 20,
+          child: _HistorySearchBar(
+            onSearchBarPressed: () => _controller.onSearchBarPressed(),
+            searchBarColor: _controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+              color: context.color.white,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  color: context.color.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
-                  ),
-                ),
-                child: DraggableScrollableSheet(
-                  initialChildSize: 0.4,
-                  minChildSize: 0.1,
-                  maxChildSize: 0.75,
-                  expand: false,
-                  shouldCloseOnMinExtent: false,
-                  snap: true,
-                  controller: controller.scrollableController,
-                  snapSizes: [0.1, 0.4, 0.75],
-                  builder: (context, scrollController) {
+            child: DraggableScrollableSheet(
+              initialChildSize: 0.4,
+              minChildSize: 0.1,
+              maxChildSize: 0.75,
+              expand: false,
+              shouldCloseOnMinExtent: false,
+              snap: true,
+              controller: _controller.scrollableController,
+              snapSizes: [0.1, 0.4, 0.75],
+              builder: (context, scrollController) {
+                return GetBuilder<HistoryMainController>(
+                  id: 'list',
+                  builder: (controller) {
+                    final state = controller.state;
+
                     return CustomScrollView(
                       controller: scrollController,
                       physics: const ClampingScrollPhysics(),
                       slivers: [
                         _BottomSheetHeader(
                           tripRoomName: controller.tripRoomInfo?.name ?? "",
-                          onHomePressed: () => {},
+                          onHomePressed: () => controller.onNavigateToHome(),
                           onPhotoPressed: () => controller.onPhotoPressed(),
                         ),
                         _BottomSheetContent(
@@ -124,21 +146,12 @@ class _HistoryMainViewState extends State<HistoryMainView> with RouteAware {
                       ],
                     );
                   },
-                ),
-              ),
+                );
+              },
             ),
-            Positioned(
-              top: 60,
-              left: 20,
-              right: 20,
-              child: _HistorySearchBar(
-                onSearchBarPressed: () => controller.onSearchBarPressed(),
-                searchBarColor: controller.tripRoomInfo?.labelColor.toColor() ?? context.color.blue,
-              ),
-            ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
   }
 
@@ -158,9 +171,7 @@ class _HistoryMainViewState extends State<HistoryMainView> with RouteAware {
     final void Function(DateTime selectedDate) onChanged,
     final VoidCallback onConfirmPressed,
   ) {
-    if (startDate == null || endDate == null) {
-      return;
-    }
+    if (startDate == null || endDate == null) return;
 
     DaySelectDialog.show(
       title: "날짜 선택",
@@ -263,6 +274,7 @@ class _BottomSheetHeader extends StatelessWidget {
       delegate: CustomSliverPersistentHeaderDelegate(
         child: Container(
           decoration: BoxDecoration(
+            color: context.color.white,
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(24),
             ),
@@ -371,8 +383,8 @@ class _BottomSheetContent extends StatelessWidget {
                           child: ListView.separated(
                             itemCount: history.length,
                             scrollDirection: Axis.horizontal,
-                            addRepaintBoundaries: false,
                             addAutomaticKeepAlives: false,
+                            addRepaintBoundaries: false,
                             itemBuilder: (context, index) {
                               final historyEntity = history[index];
                               return HistoryImageTile(
