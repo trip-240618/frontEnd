@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/core/router/routes.dart';
+import 'package:tripStory/core/util/helper/route_helper.dart';
 import 'package:tripStory/core/util/one_time_event.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
@@ -79,6 +83,44 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   void onInit() {
     super.onInit();
     _getComingTrips();
+    _handleKakaoEntry();
+  }
+
+  Future<void> _handleKakaoEntry() async {
+    final url = await receiveKakaoScheme();
+    if (url != null) {
+      _enterKakaoTrip(url);
+    }
+
+    kakaoSchemeStream.listen((url) {
+      if (url != null) {
+        _enterKakaoTrip(url);
+      }
+    });
+  }
+
+  Future<void> _enterKakaoTrip(String url) async {
+    final uri = Uri.parse(url);
+
+    if (uri.host == "share") {
+      final tripId = uri.queryParameters["tripId"];
+      final inviteCode = uri.queryParameters["inviteCode"];
+
+      if (tripId != null && inviteCode != null) {
+        final result = await _fetchJoinRoomUsecase.call(inviteCode);
+
+        result.fold(
+          (error) {},
+          (_) {
+            RouteHelper.popAllUntilAndToNamed(
+              Routes.rooms,
+              Routes.tripRoom,
+              arguments: tripId,
+            );
+          },
+        );
+      }
+    }
   }
 
   Future<void> _getComingTrips() async {
@@ -164,7 +206,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   }
 
   Future<bool> onJoinCodePressed(String invitationCode) async {
-    final result = await _fetchJoinRoomUsecase(invitationCode);
+    final result = await _fetchJoinRoomUsecase.call(invitationCode);
     return result.fold(
       (error) => false,
       (tripRoom) => true,
