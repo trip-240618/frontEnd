@@ -8,27 +8,36 @@ import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/core/util/extension/color_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/helper/country_flag_helper.dart';
+import 'package:tripStory/core/util/helper/route_helper.dart';
 import 'package:tripStory/core/util/image_file_util.dart';
 import 'package:tripStory/core/util/one_time_event.dart';
 import 'package:tripStory/domain/usecases/create_trip_room_usecase.dart';
+import 'package:tripStory/domain/usecases/first_enter_trip_room_usecase.dart';
 import 'package:tripStory/presentation/hoom/model/trip_room_create_state.dart';
-import 'package:tripStory/presentation/trip/bottomNavigator.dart';
+import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
 
 class TripRoomsCreateController extends GetxController with GetSingleTickerProviderStateMixin {
   final CreateTripRoomUseCase _createTripRoomUseCase;
+  final FirstEnterTripRoomUsecase _firstEnterTripRoomUsecase;
+  final TripRoomService _tripRoomService;
+
+  TripRoomsCreateController(
+    this._createTripRoomUseCase,
+    this._firstEnterTripRoomUsecase,
+    this._tripRoomService,
+  );
 
   final ImagePicker _picker = ImagePicker();
   TripRoomCreateState tripRoomCreateState = TripRoomCreateState();
 
   TripRoomCreateState get state => tripRoomCreateState;
 
-  TripRoomsCreateController(
-    this._createTripRoomUseCase,
-  );
-
   Future<void> precacheFlags(BuildContext context) async {
     await CountryFlagHelper.precacheAllRegions(context);
   }
+
+  String? _inviteCode;
+  int? _tripId;
 
   /// side Effect
   Future<void> onBackPressed() async {
@@ -138,6 +147,8 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
     createResult.fold((error) {
       Get.back();
     }, (createResult) {
+      _inviteCode = createResult.invitationCode;
+      _tripId = createResult.tripId;
       tripRoomCreateState = state.copyWith(
         showLoading: OneTimeEvent(false),
         showCodeDialog: OneTimeEvent(
@@ -149,8 +160,21 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
     });
   }
 
-  void onNavigateToRoomPressed() async {
-    Get.back(closeOverlays: true);
-    Get.to(() => BottomNavigator());
+  /// TODO : 방생성 후 -> Join이랑 enter둘다 보내야하는지
+  Future<void> onNavigateToRoomPressed() async {
+    if (_inviteCode == null) return;
+    final result = await _firstEnterTripRoomUsecase(_inviteCode!);
+
+    result.fold(
+      (_) => {},
+      (room) {
+        _tripRoomService.setTripRoom(room);
+        RouteHelper.popAllUntilAndToNamed(
+          Routes.rooms,
+          Routes.tripRoom,
+          arguments: room.tripId,
+        );
+      },
+    );
   }
 }

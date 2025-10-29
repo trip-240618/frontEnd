@@ -6,6 +6,7 @@ import 'package:tripStory/domain/usecases/fetch_coming_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_enter_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_join_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_last_trips_usecase.dart';
+import 'package:tripStory/domain/usecases/first_enter_trip_room_usecase.dart';
 import 'package:tripStory/domain/usecases/kakao_share_usecase.dart';
 import 'package:tripStory/domain/usecases/update_bookmark_usecase.dart';
 import 'package:tripStory/presentation/hoom/controller/rooms_controller.dart';
@@ -21,6 +22,7 @@ class RoomsBinding extends Bindings {
     Get.lazyPut(() => FetchJoinRoomUsecase(Get.find<TripRepository>()));
     Get.lazyPut(() => FetchEnterRoomUsecase(Get.find<TripRepository>()));
     Get.lazyPut(() => KakaoShareUsecase(Get.find<KakaoShareService>()));
+    Get.lazyPut(() => FirstEnterTripRoomUsecase(Get.find<TripRepository>()));
 
     Get.lazyPut(() => RoomsController(
           Get.find<TripRoomService>(),
@@ -31,6 +33,7 @@ class RoomsBinding extends Bindings {
           fetchJoinRoomUsecase: Get.find(),
           fetchEnterRoomUsecase: Get.find(),
           kakaoShareUsecase: Get.find(),
+          firstEnterTripRoomUsecase: Get.find(),
         ));
   }
 }

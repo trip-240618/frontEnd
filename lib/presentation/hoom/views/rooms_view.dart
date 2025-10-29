@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
+import 'package:tripStory/core/router/router_observer.dart';
 import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
@@ -33,10 +34,28 @@ import 'package:tripStory/presentation/hoom/controller/rooms_controller.dart';
 import 'package:tripStory/presentation/hoom/enum/trip_rooms_type.dart';
 import 'package:tripStory/presentation/hoom/model/trip_rooms_state.dart';
 
-class TripRoomListView extends StatelessWidget {
+class TripRoomListView extends StatefulWidget {
   const TripRoomListView({
     super.key,
   });
+
+  @override
+  State<TripRoomListView> createState() => _TripRoomListViewState();
+}
+
+class _TripRoomListViewState extends State<TripRoomListView> with RouteAware {
+  final _controller = Get.find<RoomsController>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void didPopNext() {
+    _controller.refreshRoom();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -185,6 +204,12 @@ class TripRoomListView extends StatelessWidget {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 
   void _showMemberPopover({

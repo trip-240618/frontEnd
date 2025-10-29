@@ -14,6 +14,7 @@ import 'package:tripStory/domain/usecases/fetch_coming_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_enter_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_join_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_last_trips_usecase.dart';
+import 'package:tripStory/domain/usecases/first_enter_trip_room_usecase.dart';
 import 'package:tripStory/domain/usecases/kakao_share_usecase.dart';
 import 'package:tripStory/domain/usecases/update_bookmark_usecase.dart';
 import 'package:tripStory/presentation/common/popup/popup_item_model.dart';
@@ -30,6 +31,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   final FetchEnterRoomUsecase _fetchEnterRoomUsecase;
   final TripRoomService _tripRoomService;
   final KakaoShareUsecase _kakaoShareUsecase;
+  final FirstEnterTripRoomUsecase _firstEnterTripRoomUsecase;
 
   RoomsController(
     this._tripRoomService, {
@@ -40,13 +42,15 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     required FetchJoinRoomUsecase fetchJoinRoomUsecase,
     required FetchEnterRoomUsecase fetchEnterRoomUsecase,
     required KakaoShareUsecase kakaoShareUsecase,
+    required FirstEnterTripRoomUsecase firstEnterTripRoomUsecase,
   })  : _fetchComingTrips = fetchComingTrips,
         _fetchLastTrips = fetchLastTrips,
         _fetchBookmarkedTrips = fetchBookmarkedTrips,
         _bookmarkUseCase = updateBookmarkUseCase,
         _fetchJoinRoomUsecase = fetchJoinRoomUsecase,
         _fetchEnterRoomUsecase = fetchEnterRoomUsecase,
-        _kakaoShareUsecase = kakaoShareUsecase;
+        _kakaoShareUsecase = kakaoShareUsecase,
+        _firstEnterTripRoomUsecase = firstEnterTripRoomUsecase;
 
   TripRoomsState tripRoomsState = TripRoomsState();
 
@@ -107,11 +111,12 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
       final inviteCode = uri.queryParameters["inviteCode"];
 
       if (tripId != null && inviteCode != null) {
-        final result = await _fetchJoinRoomUsecase.call(inviteCode);
+        final result = await _firstEnterTripRoomUsecase.call(inviteCode);
 
         result.fold(
           (error) {},
-          (_) {
+          (room) {
+            _tripRoomService.setTripRoom(room);
             RouteHelper.popAllUntilAndToNamed(
               Routes.rooms,
               Routes.tripRoom,
@@ -162,7 +167,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     });
   }
 
-  Future<void> _refreshRoom() async {
+  Future<void> refreshRoom() async {
     switch (tripRoomsState.tripRoomType) {
       case TripRoomType.coming:
         await _getComingTrips();
@@ -206,11 +211,21 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   }
 
   Future<bool> onJoinCodePressed(String invitationCode) async {
-    final result = await _fetchJoinRoomUsecase.call(invitationCode);
-    return result.fold(
+    final result = await _firstEnterTripRoomUsecase.call(invitationCode);
+
+    final value = result.fold(
       (error) => false,
-      (tripRoom) => true,
+      (room) {
+        _tripRoomService.setTripRoom(room);
+        RouteHelper.popAllUntilAndToNamed(
+          Routes.rooms,
+          Routes.tripRoom,
+          arguments: room.tripId,
+        );
+        return true;
+      },
     );
+    return value;
   }
 
   Future<void> onRoomPressed(int tripId) async {
@@ -219,9 +234,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
       (failure) {},
       (room) {
         _tripRoomService.setTripRoom(room);
-        Get.toNamed(Routes.tripRoom, arguments: tripId)?.then((v) async {
-          _refreshRoom();
-        });
+        Get.toNamed(Routes.tripRoom, arguments: tripId);
       },
     );
   }

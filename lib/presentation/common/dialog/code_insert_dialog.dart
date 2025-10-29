@@ -3,10 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/constants/regex_constants.dart';
-import 'package:tripStory/core/enum/button_type.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/upper_case.dart';
-import 'package:tripStory/presentation/common/button/app_button.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/dialog/base_dialog.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
@@ -112,10 +111,11 @@ class _CodeInsertDialogState extends State<CodeInsertDialog> {
       actions: [
         SizedBox(
           width: double.infinity,
-          child: AppButton(
-            label: "연결하기",
-            level: ButtonLevel.secondary,
-            onPressed: () async {
+          child: BottomButton(
+            padding: EdgeInsets.zero,
+            text: "연결하기",
+            enabled: _invitedCodeCon.text.trim().length == 8,
+            onTap: () async {
               final result = await widget.onConfirmPressed(_invitedCodeCon.text);
               if (!result) {
                 setState(() {
