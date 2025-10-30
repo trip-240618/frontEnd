@@ -1,7 +1,6 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
@@ -77,15 +76,29 @@ class _TripRoomCalendarViewState extends State<TripRoomCalendarView> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: CalendarDatePicker2(
                       config: CalendarDatePicker2Config(
-                        dayTextStyle: f14gray800w700,
-                        selectedRangeHighlightColor: gray200,
+                        dayTextStyle: context.style.label1Normal.copyWith(
+                          color: context.color.gray800,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        selectedRangeHighlightColor: context.color.gray200,
                         dayMaxWidth: 64,
                         dayBorderRadius: BorderRadius.circular(4),
                         controlsHeight: 0,
-                        todayTextStyle: f14Whitew700,
-                        selectedDayTextStyle: f14Whitew700,
-                        controlsTextStyle: f16gray800w700,
-                        todayColor: widget.selectedColor,
+                        todayTextStyle: context.style.label1Normal.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                        selectedDayTextStyle: context.style.label1Normal.copyWith(
+                          color: context.color.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        controlsTextStyle: context.style.body1Normal.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: context.color.gray800,
+                        ),
+                        selectedDayHighlightColor: widget.selectedColor,
+
+                        /// TODO:
+                        // todayColor: widget.selectedColor,
                         hideScrollViewTopHeader: true,
                         weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"],
                         weekdayLabelTextStyle: f12gray400w500,

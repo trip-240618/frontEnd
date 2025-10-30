@@ -8,4 +8,6 @@ class AppConstants {
   static final String privacyPolicy = '$baseUrl${dotenv.env["PRIVACY_POLICY"]}';
   static final String termsOfService = '$baseUrl${dotenv.env['TERMS_POLICY']}';
   static final String socketUrl = dotenv.env["SOCKET_URL"]!;
+  static final String bundleId = "com.tripStorys.tripstorys";
+  static final String appId = "6529530493";
 }

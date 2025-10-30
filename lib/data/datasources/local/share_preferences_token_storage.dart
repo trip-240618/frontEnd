@@ -7,6 +7,7 @@ class SharedPreferencesTokenStorage implements TokenStorage {
   static const String _cfPolicyKey = "CloudFront-Policy";
   static const String _cfSignatureKey = "CloudFront-Signature";
   static const String _cfKeyPairIdKey = "CloudFront-Key-Pair-Id";
+  static const String _skippedVersionKey = "skippedVersion";
 
   @override
   Future<void> saveTokens(String accessToken, String refreshToken) async {
@@ -57,5 +58,17 @@ class SharedPreferencesTokenStorage implements TokenStorage {
       'CloudFront-Signature': prefs.getString(_cfSignatureKey) ?? "",
       'CloudFront-Key-Pair-Id': prefs.getString(_cfKeyPairIdKey) ?? "",
     };
+  }
+
+  @override
+  Future<void> saveSkippedVersion(String version) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_skippedVersionKey, version);
+  }
+
+  @override
+  Future<String?> getSkippedVersion() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_skippedVersionKey);
   }
 }

@@ -124,8 +124,10 @@ class CommonDialog extends StatelessWidget {
     String? message,
     String confirmText = "확인",
     required VoidCallback onConfirm,
+    bool? barrierDismissible,
   }) {
     Get.dialog(
+      barrierDismissible: barrierDismissible ?? true,
       CommonDialog(
         alertState: AlertViewState.confirm(
           title: title,
@@ -137,15 +139,17 @@ class CommonDialog extends StatelessWidget {
     );
   }
 
-  static void showConfirmCancel({
+  static Future<void> showConfirmCancel({
     required String title,
     String? message,
     String confirmText = "확인",
     String cancelText = "취소",
     required VoidCallback onConfirm,
     VoidCallback? onCancel,
-  }) {
+    bool? barrierDismissible,
+  }) async {
     Get.dialog(
+      barrierDismissible: barrierDismissible ?? true,
       CommonDialog(
         alertState: AlertViewState.confirmCancel(
           title: title,
