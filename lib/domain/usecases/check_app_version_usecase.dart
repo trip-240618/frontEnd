@@ -26,7 +26,7 @@ class CheckAppVersionUsecase implements UseCase<AppUpdateType, NoParams> {
       final versionResult = await repository.fetchLastVersion();
 
       return versionResult.fold(
-        (failure) => const Right(AppUpdateType.optionalUpdate),
+        (failure) => const Right(AppUpdateType.unknown),
         (versionEntity) async {
           final forceUpdateVersion = Platform.isAndroid ? versionEntity.androidVersion : versionEntity.iosVersion;
           final isForceUpdateEnabled = versionEntity.forceUpdate;

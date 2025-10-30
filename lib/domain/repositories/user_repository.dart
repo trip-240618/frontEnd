@@ -19,4 +19,8 @@ abstract class UserRepository {
     String? thumbnail,
     String? profileImg,
   });
+
+  ResultFuture<void> updateFcmToken({
+    required String fcmToken,
+  });
 }

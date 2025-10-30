@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -102,7 +103,9 @@ class SplashController extends GetxController {
   }
 
   Future<void> _getUserInfo() async {
-    final result = await autoLoginUseCase.call(NoParams());
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+
+    final result = await autoLoginUseCase.call(fcmToken ?? "");
     result.fold((error) {
       userService.clearUser();
     }, (user) {

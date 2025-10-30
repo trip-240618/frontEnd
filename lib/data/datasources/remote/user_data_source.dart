@@ -27,7 +27,7 @@ abstract class UserDataSource {
   );
 
   @PUT("/update/fcmToken")
-  Future<bool> updateBookMark(
-    @Query("fcmToken") int fcmToken,
+  Future<void> updateFcmToken(
+    @Query("fcmToken") String fcmToken,
   );
 }
