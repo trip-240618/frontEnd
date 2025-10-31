@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/text/base_text_form_field.dart';
 
@@ -45,7 +44,7 @@ class TextAreaFormField extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor ?? context.color.white,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: borderColor ?? gray200),
+        border: Border.all(color: borderColor ?? context.color.gray200),
       ),
       child: Column(
         children: [

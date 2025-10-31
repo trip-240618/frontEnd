@@ -70,32 +70,35 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   }
 
   Future<void> onGooglePressed() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final signIn = GoogleSignIn.instance;
+    await signIn.initialize();
 
-    final googleUser = await googleSignIn.signIn();
+    signIn.authenticationEvents.listen(
+      (event) async {
+        if (event is GoogleSignInAuthenticationEventSignIn) {
+          final user = event.user;
+          final fcmToken = await FirebaseMessaging.instance.getToken();
 
-    if (googleUser == null) return;
+          final userRequest = UserRequest(
+            displayName: user.displayName ?? "",
+            email: user.email,
+            id: user.id,
+            photoUrl: user.photoUrl ?? "",
+            fcmToken: fcmToken,
+          );
+          final result = await googleUsecase.call(userRequest);
 
-    // String? tokens = await FirebaseMessaging.instance.getToken();
-    String? tokens = "";
-
-    final userRequest = UserRequest(
-      displayName: googleUser.displayName ?? "",
-      email: googleUser.email,
-      id: googleUser.id,
-      photoUrl: googleUser.photoUrl ?? "",
-      fcmToken: tokens,
-    );
-
-    final result = await googleUsecase.call(userRequest);
-
-    result.fold(
-      (failure) {},
-      (user) async {
-        userService.setUser(user);
-        _handleUserType(user.type);
+          result.fold(
+            (_) {},
+            (userEntity) {
+              userService.setUser(userEntity);
+              _handleUserType(userEntity.type);
+            },
+          );
+        }
       },
     );
+    await signIn.authenticate();
   }
 
   Future<void> onApplePressed() async {

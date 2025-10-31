@@ -15,16 +15,20 @@ import 'package:tripStory/domain/entities/histories_entity.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_histories_usecase.dart';
 import 'package:tripStory/presentation/global/location_service.dart';
+import 'package:tripStory/presentation/global/marker_service.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
 import 'package:tripStory/presentation/trip/models/history_detail_param.dart';
 import 'package:tripStory/presentation/trip/models/history_main_state.dart';
+import 'package:tripStory/presentation/trip/widgets/history_map_marker.dart';
 
 class HistoryMainController extends GetxController {
   final TripRoomService _tripRoomService;
+  final MarkerIconService _markerIconService;
   final FetchHistoriesUsecase _fetchHistoriesUsecase;
 
   HistoryMainController(
     this._tripRoomService,
+    this._markerIconService,
     this._fetchHistoriesUsecase,
   );
 
@@ -43,17 +47,20 @@ class HistoryMainController extends GetxController {
   void onInit() {
     super.onInit();
     _initializeData();
-    // manager = cluster.ClusterManager(
-    //   items,
-    //   _updateMarkers,
-    //   markerBuilder: _markerBuilder,
-    //   levels: [1, 4.25, 6.75, 10.0, 11.5, 13.0, 14.5, 16.0, 16.5, 18.0],
-    // );
+    _initializeClusterManager();
   }
 
   Future<void> _initializeData() async {
     await _getHistoryData();
     _getCurrentLocation();
+  }
+
+  void _initializeClusterManager() {
+    manager = cluster.ClusterManager<MarkerItem>(
+      [],
+      _updateMarkers,
+      markerBuilder: _createClusterMarker,
+    );
   }
 
   Future<void> refreshData() async {
@@ -68,7 +75,7 @@ class HistoryMainController extends GetxController {
       historyStatus: HistoryStatus.success,
     );
 
-    update();
+    update(['map']);
   }
 
   Future<void> _getHistoryData() async {
@@ -83,8 +90,8 @@ class HistoryMainController extends GetxController {
         _historyMainState = state.copyWith(
           histories: histories,
         );
-
-        update();
+        update(['list']);
+        _updateMarkersFromHistories(data);
       },
     );
   }
@@ -106,13 +113,56 @@ class HistoryMainController extends GetxController {
       (index) {
         final currentDate = startDate.add(Duration(days: index)).formatYMDWithHyphen();
 
-        return historyMap[currentDate] ??
-            HistoriesEntity(
-              photoDate: currentDate,
-              historyList: [],
-            );
+        return historyMap[currentDate] ?? HistoriesEntity(photoDate: currentDate, historyList: []);
       },
     );
+  }
+
+  /// 마커
+  Future<Marker> _createClusterMarker(cluster.Cluster<MarkerItem> clusterItem) async {
+    final isSingle = !clusterItem.isMultiple;
+    final item = clusterItem.items.first;
+    final count = isSingle ? 1 : clusterItem.count;
+    final cacheKey = "cluster_${tripRoomInfo?.id}_${clusterItem.getId()}";
+
+    final icon = await _markerIconService.renderIconWithBuilder(
+      cacheKey: cacheKey,
+      size: Size(300, 400),
+      widget: () => HistoryMapMarker(
+        imageUrl: item.thumbnailUrl,
+        count: count,
+      ),
+    );
+
+    return Marker(
+      markerId: MarkerId(clusterItem.getId()),
+      position: clusterItem.location,
+      icon: icon,
+      onTap: () {},
+    );
+  }
+
+  void _updateMarkersFromHistories(List<HistoriesEntity> histories) {
+    final historyList = histories.expand((h) => h.historyList).toList();
+    final validHistories = historyList.where((history) => history.isValidLocation).toList();
+
+    final markerItems = validHistories
+        .map((history) => MarkerItem(
+              id: history.id,
+              latitude: history.latitude ?? 0.0,
+              longitude: history.longitude ?? 0.0,
+              thumbnailUrl: history.thumbnail,
+            ))
+        .toList();
+    manager?.setItems(markerItems);
+    manager?.updateMap();
+  }
+
+  void _updateMarkers(Set<Marker> newMarkers) {
+    _historyMainState = state.copyWith(
+      markers: newMarkers,
+    );
+    update(['map']);
   }
 
   /// side Effect
@@ -138,13 +188,12 @@ class HistoryMainController extends GetxController {
       _historyMainState = state.copyWith(
         showDaySelectedDialog: OneTimeEvent(true),
       );
-      update();
     } else {
       _historyMainState = state.copyWith(
         showPhotoPermissionDialog: OneTimeEvent(true),
       );
-      update();
     }
+    update(["dialog"]);
   }
 
   void onSelectedDayPressed(DateTime selectedDay) {
@@ -176,4 +225,6 @@ class HistoryMainController extends GetxController {
       arguments: DateTime.parse(state.histories[index].photoDate),
     );
   }
+
+  void onNavigateToHome() => Get.back();
 }

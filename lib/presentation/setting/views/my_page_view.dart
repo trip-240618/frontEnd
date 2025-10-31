@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/component/toast/toast.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
@@ -9,6 +8,7 @@ import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/button/profile_image_button.dart';
 import 'package:tripStory/presentation/common/button/tile/tile_list_button.dart';
 import 'package:tripStory/presentation/common/image/cached_image.dart';
+import 'package:tripStory/presentation/common/toast/custom_toast.dart';
 import 'package:tripStory/presentation/setting/controllers/my_page_controller.dart';
 
 class MyPageView extends StatefulWidget {
@@ -44,7 +44,7 @@ class _MyPageViewState extends State<MyPageView> {
           if (!context.mounted) return;
 
           if (showToast) {
-            showCustomToast(context, fToast!, "현재 준비 중인 기능입니다.", false);
+            _showToast(context, "현재 준비 중인 기능입니다.");
           }
         });
         return Scaffold(
@@ -251,6 +251,17 @@ class _MyPageViewState extends State<MyPageView> {
           ),
         );
       },
+    );
+  }
+
+  void _showToast(
+    BuildContext context,
+    String message,
+  ) {
+    CustomToast.show(
+      context: context,
+      message: message,
+      gravity: ToastGravity.TOP,
     );
   }
 }

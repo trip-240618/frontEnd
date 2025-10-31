@@ -24,6 +24,7 @@ class RoundThumbnailImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: CachedImage(
+        key: key,
         imageUrl: imageUrl ?? "",
         width: size,
         height: size,

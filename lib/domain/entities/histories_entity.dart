@@ -46,5 +46,7 @@ abstract class HistoryEntity with _$HistoryEntity {
 
   factory HistoryEntity.fromJson(Map<String, dynamic> json) => _$HistoryEntityFromJson(json);
 
+  bool get isValidLocation => latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0;
+
   bool isWriter(String myUuid) => writerUuid == myUuid;
 }

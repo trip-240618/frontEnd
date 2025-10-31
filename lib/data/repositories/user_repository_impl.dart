@@ -77,4 +77,16 @@ class UserRepositoryImpl implements UserRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  ResultFuture<void> updateFcmToken({
+    required String fcmToken,
+  }) async {
+    try {
+      await _userDataSource.updateFcmToken(fcmToken);
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

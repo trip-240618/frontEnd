@@ -1,13 +1,21 @@
+import 'dart:async';
+
+import 'package:dartz/dartz.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tripStory/core/router/routes.dart';
+import 'package:tripStory/core/util/helper/route_helper.dart';
+import 'package:tripStory/core/util/one_time_event.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/domain/usecases/fetch_bookmarked_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_coming_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_enter_room_usecase.dart';
-import 'package:tripStory/domain/usecases/fetch_join_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_last_trips_usecase.dart';
+import 'package:tripStory/domain/usecases/first_enter_trip_room_usecase.dart';
+import 'package:tripStory/domain/usecases/kakao_share_usecase.dart';
+import 'package:tripStory/domain/usecases/notification_listen_usecase.dart';
 import 'package:tripStory/domain/usecases/update_bookmark_usecase.dart';
 import 'package:tripStory/presentation/common/popup/popup_item_model.dart';
 import 'package:tripStory/presentation/hoom/enum/trip_rooms_type.dart';
@@ -19,9 +27,11 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   final FetchLastTripsUseCase _fetchLastTrips;
   final FetchBookmarkedTripsUseCase _fetchBookmarkedTrips;
   final UpdateBookmarkUseCase _bookmarkUseCase;
-  final FetchJoinRoomUsecase _fetchJoinRoomUsecase;
   final FetchEnterRoomUsecase _fetchEnterRoomUsecase;
   final TripRoomService _tripRoomService;
+  final KakaoShareUsecase _kakaoShareUsecase;
+  final FirstEnterTripRoomUsecase _firstEnterTripRoomUsecase;
+  final NotificationListenUsecase _listenNotificationUsecase;
 
   RoomsController(
     this._tripRoomService, {
@@ -29,16 +39,25 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     required FetchLastTripsUseCase fetchLastTrips,
     required FetchBookmarkedTripsUseCase fetchBookmarkedTrips,
     required UpdateBookmarkUseCase updateBookmarkUseCase,
-    required FetchJoinRoomUsecase fetchJoinRoomUsecase,
     required FetchEnterRoomUsecase fetchEnterRoomUsecase,
+    required KakaoShareUsecase kakaoShareUsecase,
+    required FirstEnterTripRoomUsecase firstEnterTripRoomUsecase,
+    required NotificationListenUsecase listenNotificationUsecase,
   })  : _fetchComingTrips = fetchComingTrips,
         _fetchLastTrips = fetchLastTrips,
         _fetchBookmarkedTrips = fetchBookmarkedTrips,
         _bookmarkUseCase = updateBookmarkUseCase,
-        _fetchJoinRoomUsecase = fetchJoinRoomUsecase,
-        _fetchEnterRoomUsecase = fetchEnterRoomUsecase;
+        _fetchEnterRoomUsecase = fetchEnterRoomUsecase,
+        _kakaoShareUsecase = kakaoShareUsecase,
+        _firstEnterTripRoomUsecase = firstEnterTripRoomUsecase,
+        _listenNotificationUsecase = listenNotificationUsecase;
 
   TripRoomsState tripRoomsState = TripRoomsState();
+
+  TripRoomsState get state => tripRoomsState;
+
+  StreamSubscription<Map<String, dynamic>>? _notificationSub;
+
   DateTime? _lastBackPressTime;
   int notificationCount = 0;
 
@@ -70,6 +89,58 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   void onInit() {
     super.onInit();
     _getComingTrips();
+    _handleKakaoEntry();
+    _initializeNotificationListener();
+  }
+
+  Future<void> _handleKakaoEntry() async {
+    final url = await receiveKakaoScheme();
+    if (url != null) {
+      _enterKakaoTrip(url);
+    }
+
+    kakaoSchemeStream.listen((url) {
+      if (url != null) {
+        _enterKakaoTrip(url);
+      }
+    });
+  }
+
+  Future<void> _initializeNotificationListener() async {
+    final result = await _listenNotificationUsecase.call(NoParams());
+    result.fold(
+      (failure) => print("❌ 알림 리스너 구독 실패: ${failure.message}"),
+      (stream) {
+        _notificationSub = stream.listen((data) {
+          print("🚀 알림 수신: $data");
+        });
+      },
+    );
+  }
+
+  Future<void> _enterKakaoTrip(String url) async {
+    final uri = Uri.parse(url);
+
+    if (uri.host == "share") {
+      final tripId = uri.queryParameters["tripId"];
+      final inviteCode = uri.queryParameters["inviteCode"];
+
+      if (tripId != null && inviteCode != null) {
+        final result = await _firstEnterTripRoomUsecase.call(inviteCode);
+
+        result.fold(
+          (error) {},
+          (room) {
+            _tripRoomService.setTripRoom(room);
+            RouteHelper.popAllUntilAndToNamed(
+              Routes.rooms,
+              Routes.tripRoom,
+              arguments: tripId,
+            );
+          },
+        );
+      }
+    }
   }
 
   Future<void> _getComingTrips() async {
@@ -111,7 +182,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     });
   }
 
-  Future<void> _refreshRoom() async {
+  Future<void> refreshRoom() async {
     switch (tripRoomsState.tripRoomType) {
       case TripRoomType.coming:
         await _getComingTrips();
@@ -155,11 +226,21 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   }
 
   Future<bool> onJoinCodePressed(String invitationCode) async {
-    final result = await _fetchJoinRoomUsecase(invitationCode);
-    return result.fold(
+    final result = await _firstEnterTripRoomUsecase.call(invitationCode);
+
+    final value = result.fold(
       (error) => false,
-      (tripRoom) => true,
+      (room) {
+        _tripRoomService.setTripRoom(room);
+        RouteHelper.popAllUntilAndToNamed(
+          Routes.rooms,
+          Routes.tripRoom,
+          arguments: room.tripId,
+        );
+        return true;
+      },
     );
+    return value;
   }
 
   Future<void> onRoomPressed(int tripId) async {
@@ -168,9 +249,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
       (failure) {},
       (room) {
         _tripRoomService.setTripRoom(room);
-        Get.toNamed(Routes.tripRoom, arguments: tripId)?.then((v) async {
-          _refreshRoom();
-        });
+        Get.toNamed(Routes.tripRoom, arguments: tripId);
       },
     );
   }
@@ -183,29 +262,27 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
 
   void onRoomCreatedPressed() => Get.toNamed(Routes.createRoom);
 
-  ///카카오 공유하기
-  void kakaoShare(int tripId, String inviteCode) async {
-    /// 사용자 정의 템플릿 ID
-    int templateId = 109315;
+  Future<void> onKakaoSharePressed(
+    int tripId,
+    String inviteCode,
+  ) async {
+    final result = await _kakaoShareUsecase.call(Tuple2(tripId, inviteCode));
+    result.fold(
+      (failure) {
+        tripRoomsState = tripRoomsState.copyWith(
+          tripRoomsStatus: TripRoomsStatus.failure,
+        );
+        update();
+      },
+      (_) {},
+    );
+  }
 
-    /// 카카오톡 실행 가능 여부 확인
-    bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
-    if (isKakaoTalkSharingAvailable) {
-      try {
-        Uri uri = await ShareClient.instance
-            .shareCustom(templateId: templateId, templateArgs: {'value1': '${tripId}', 'value2': inviteCode});
-        await ShareClient.instance.launchKakaoTalk(uri);
-      } catch (error) {
-        print('카카오톡 공유 실패 $error');
-      }
-    } else {
-      try {
-        Uri shareUrl = await WebSharerClient.instance
-            .makeCustomUrl(templateId: templateId, templateArgs: {'value1': '${tripId}', 'value2': inviteCode});
-        await launchBrowserTab(shareUrl, popupOpen: true);
-      } catch (error) {
-        print('카카오톡 공유 실패 $error');
-      }
-    }
+  void onInviteCodeCopyPressed(String inviteCode) {
+    Clipboard.setData(ClipboardData(text: inviteCode));
+    tripRoomsState = tripRoomsState.copyWith(
+      showToast: OneTimeEvent("초대코드를 복사했습니다"),
+    );
+    update();
   }
 }

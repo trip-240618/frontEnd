@@ -45,12 +45,10 @@ import 'package:tripStory/presentation/trip/bindings/j_plan_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_edit_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/j_plan_swap_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/location_search_binding.dart';
-import 'package:tripStory/presentation/trip/bindings/scrap_create_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/scraps_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/trip_main_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/trip_room_member_binding.dart';
 import 'package:tripStory/presentation/trip/bindings/trip_room_setting_binding.dart';
-import 'package:tripStory/presentation/trip/locker/scrap/addScrapPage.dart';
 import 'package:tripStory/presentation/trip/models/flight_create_param.dart';
 import 'package:tripStory/presentation/trip/models/history_create_param.dart';
 import 'package:tripStory/presentation/trip/models/history_detail_param.dart';
@@ -184,11 +182,11 @@ class RouterInfo {
         HistoryMainBinding(),
       ],
     ),
-    GetPage(
-      name: Routes.scrapCreate,
-      page: () => const AddScrapPage(),
-      binding: ScrapCreateBinding(),
-    ),
+    // GetPage(
+    //   name: Routes.scrapCreate,
+    //   page: () => const AddScrapPage(),
+    //   binding: ScrapCreateBinding(),
+    // ),
     GetPage(
       name: Routes.tripJPlanAdd,
       page: () {

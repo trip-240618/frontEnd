@@ -20,7 +20,7 @@ class CustomToast {
       ),
       gravity: gravity,
       toastDuration: const Duration(seconds: 2),
-      positionedToastBuilder: (context, child) {
+      positionedToastBuilder: (context, child, offset) {
         return Positioned(
           top: gravity == ToastGravity.TOP ? 100 : null,
           bottom: gravity == ToastGravity.BOTTOM ? 100 : null,

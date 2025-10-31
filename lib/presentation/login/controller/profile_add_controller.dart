@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tripStory/app/permission/permission.dart';
 import 'package:tripStory/core/constants/regex_constants.dart';
+import 'package:tripStory/core/permission/permission_state.dart';
+import 'package:tripStory/core/permission/permission_type.dart';
+import 'package:tripStory/core/permission/permisson.dart';
 import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/core/util/image_file_util.dart';
 import 'package:tripStory/domain/usecases/register_user_usecase.dart';
@@ -24,15 +26,16 @@ class ProfileAddController extends GetxController with GetSingleTickerProviderSt
     ImageSource imageSource,
     BuildContext context,
   ) async {
-    final hasPermission = await requestCameraPermission(context);
-    if (!hasPermission) return;
+    final status = await getPermissionStatus(PermissionType.photo);
 
-    final pickedFile = await _picker.pickImage(source: imageSource);
-    if (pickedFile != null) {
-      profileAddState = state.copyWith(
-        profileImage: XFile(pickedFile.path),
-      );
-      update();
+    if (status == PermissionState.granted) {
+      final pickedFile = await _picker.pickImage(source: imageSource);
+      if (pickedFile != null) {
+        profileAddState = state.copyWith(
+          profileImage: XFile(pickedFile.path),
+        );
+        update();
+      }
     }
   }
 

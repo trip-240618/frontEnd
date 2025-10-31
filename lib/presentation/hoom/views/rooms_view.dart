@@ -2,40 +2,70 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
-import 'package:tripStory/component/bottomModals.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
-import 'package:tripStory/core/util/color.dart';
+import 'package:tripStory/core/router/router_observer.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
-import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
+import 'package:tripStory/presentation/common/bottom/base_bottom_sheet.dart';
 import 'package:tripStory/presentation/common/button/app_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/button/link_button.dart';
 import 'package:tripStory/presentation/common/button/popup_list.dart';
 import 'package:tripStory/presentation/common/button/tab/tab_box.dart';
 import 'package:tripStory/presentation/common/button/tab/tab_user.dart';
+import 'package:tripStory/presentation/common/button/tile/tile_list_button.dart';
 import 'package:tripStory/presentation/common/dialog/code_insert_dialog.dart';
 import 'package:tripStory/presentation/common/empty_view.dart';
+import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/image/round_thumbnail_image.dart';
 import 'package:tripStory/presentation/common/popup/popup_item_model.dart';
 import 'package:tripStory/presentation/common/snack_bar.dart';
 import 'package:tripStory/presentation/common/tag/tag_day.dart';
+import 'package:tripStory/presentation/common/toast/custom_toast.dart';
 import 'package:tripStory/presentation/hoom/controller/rooms_controller.dart';
 import 'package:tripStory/presentation/hoom/enum/trip_rooms_type.dart';
 import 'package:tripStory/presentation/hoom/model/trip_rooms_state.dart';
 
-class TripRoomListView extends StatelessWidget {
-  const TripRoomListView({super.key});
+class TripRoomListView extends StatefulWidget {
+  const TripRoomListView({
+    super.key,
+  });
+
+  @override
+  State<TripRoomListView> createState() => _TripRoomListViewState();
+}
+
+class _TripRoomListViewState extends State<TripRoomListView> with RouteAware {
+  final _controller = Get.find<RoomsController>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void didPopNext() {
+    _controller.refreshRoom();
+  }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<RoomsController>(
       builder: (controller) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final name = controller.state.showToast?.consume();
+          if (name != null && context.mounted) {
+            showToast(context, name);
+          }
+        });
+
         return PopScope(
           canPop: false,
           onPopInvokedWithResult: (value, dynamic) {
@@ -51,7 +81,7 @@ class TripRoomListView extends StatelessWidget {
           },
           child: Scaffold(
             resizeToAvoidBottomInset: false,
-            backgroundColor: gray50,
+            backgroundColor: context.color.gray50,
             appBar: AppAppbar(
               isLeadingIcon: false,
               backgroundColor: context.color.gray50,
@@ -131,10 +161,14 @@ class TripRoomListView extends StatelessWidget {
                                     tripRoomType: controller.tripRoomsState.tripRoomType,
                                     onTap: () => controller.onRoomPressed(tripRoom.id),
                                     onBookmarkTap: () => controller.onBookmarkIconPressed(tripRoom.id, index),
-                                    onSendTap: () => sendBottomModal(
+                                    onSendTap: () => _showShareInviteModal(
                                       context,
-                                      tripRoom.invitationCode,
-                                      tripRoom.id,
+                                      onCopyCodePressed: () =>
+                                          controller.onInviteCodeCopyPressed(tripRoom.invitationCode),
+                                      onKakaoSharePressed: () => controller.onKakaoSharePressed(
+                                        tripRoom.tripId,
+                                        tripRoom.invitationCode,
+                                      ),
                                     ),
                                     onMemberTap: (context) => _showMemberPopover(
                                       context: context,
@@ -156,10 +190,9 @@ class TripRoomListView extends StatelessWidget {
                   ),
                   _TripBottomNavigation(
                     onInvitePressed: () => _showEnterCodeDialog(
-                        context: context,
-                        onConfirmPressed: (invitationCode) async {
-                          return await controller.onJoinCodePressed(invitationCode);
-                        }),
+                      context: context,
+                      onConfirmPressed: (invitationCode) => controller.onJoinCodePressed(invitationCode),
+                    ),
                     onCreatePressed: () => controller.onRoomCreatedPressed(),
                   ),
                 ],
@@ -169,6 +202,12 @@ class TripRoomListView extends StatelessWidget {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 
   void _showMemberPopover({
@@ -200,6 +239,73 @@ class TripRoomListView extends StatelessWidget {
     CodeInsertDialog.show(
       context,
       onConfirmPressed,
+    );
+  }
+
+  void _showShareInviteModal(
+    BuildContext context, {
+    required VoidCallback onKakaoSharePressed,
+    required VoidCallback onCopyCodePressed,
+  }) {
+    BaseBottomSheet.show(
+      context,
+      Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 40),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
+            child: Text(
+              "초대 코드를 복사했어요",
+              style: context.style.heading1.copyWith(
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          TileListButton(
+            text: "카카오톡으로 공유하기",
+            leading: SvgIcon(assetPath: IconConstants.kakaoIcon),
+            textStyle: context.style.body1Normal.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+            showTrailing: false,
+            onTap: onKakaoSharePressed,
+          ),
+          TileListButton(
+            text: "초대 코드 복사하기",
+            textStyle: context.style.body1Normal.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+            leading: SvgIcon(
+              assetPath: IconConstants.copy,
+              color: context.color.gray900,
+              width: 28,
+            ),
+            showTrailing: false,
+            onTap: onCopyCodePressed,
+          ),
+        ],
+      ),
+      heightRatio: 0.28,
+    );
+  }
+
+  void showToast(
+    BuildContext context,
+    String message,
+  ) {
+    CustomToast.show(
+      context: context,
+      message: message,
+      icon: IconConstants.copy,
+      gravity: ToastGravity.TOP,
     );
   }
 }
@@ -237,17 +343,17 @@ class _TripRoomTile extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            SvgPicture.asset(
-              "assets/icon/ticket.svg",
+            SvgIcon(
+              assetPath: IconConstants.ticket,
               width: Get.width,
               height: Get.height,
-              fit: BoxFit.fill,
             ),
             Positioned(
               left: 16,
               top: 8,
               right: 16,
               child: _buildHeader(
+                context,
                 labelColor,
                 dateRange,
               ),
@@ -269,13 +375,13 @@ class _TripRoomTile extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(Color labelColor, String dateRange) {
+  Widget _buildHeader(BuildContext context, Color labelColor, String dateRange) {
     late final Widget leading;
     Widget? trailing;
 
     switch (tripRoomType) {
       case TripRoomType.lastTrip:
-        leading = SvgPicture.asset("assets/icon/calender.svg");
+        leading = SvgIcon(assetPath: IconConstants.calendar);
         trailing = _buildTrailingWidget();
         break;
 
@@ -292,7 +398,10 @@ class _TripRoomTile extends StatelessWidget {
             onTap: onSendTap,
             child: Padding(
               padding: const EdgeInsets.all(6.0),
-              child: SvgPicture.asset("assets/icon/send.svg", color: gray900),
+              child: SvgIcon(
+                assetPath: IconConstants.send,
+                color: context.color.gray900,
+              ),
             ),
           ),
         );
@@ -319,8 +428,8 @@ class _TripRoomTile extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: tripRoom.bookmark
-              ? SvgPicture.asset("assets/icon/checkBookmark.svg")
-              : SvgPicture.asset("assets/icon/bookmark.svg"),
+              ? SvgIcon(assetPath: IconConstants.checkBookMark)
+              : SvgIcon(assetPath: IconConstants.bookmark),
         ),
       ),
     );
@@ -346,7 +455,13 @@ class _TripHeader extends StatelessWidget {
       children: [
         leadingWidget,
         const SizedBox(width: 6),
-        Text(dateRange, style: f12Gray800w500),
+        Text(
+          dateRange,
+          style: context.style.caption1.copyWith(
+            color: context.color.gray800,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const Spacer(),
         if (trailingWidget != null) trailingWidget!,
       ],
@@ -373,7 +488,7 @@ class _TripContent extends StatelessWidget {
           imageUrl: tripRoom.thumbnail,
         ),
         const SizedBox(width: 12),
-        _buildTripInfo(),
+        _buildTripInfo(context),
         const Spacer(),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -391,7 +506,7 @@ class _TripContent extends StatelessWidget {
     );
   }
 
-  Widget _buildTripInfo() {
+  Widget _buildTripInfo(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -407,7 +522,9 @@ class _TripContent extends StatelessWidget {
               child: Center(
                 child: Text(
                   tripRoom.type.name.toUpperCase(),
-                  style: f12Whitew700,
+                  style: context.style.caption1.copyWith(
+                    color: context.color.white,
+                  ),
                 ),
               ),
             ),
@@ -416,12 +533,19 @@ class _TripContent extends StatelessWidget {
             ),
             Text(
               tripRoom.name,
-              style: f15gray800w600,
+              style: context.style.body2Normal.copyWith(
+                color: context.color.gray800,
+              ),
             ),
           ],
         ),
         const Spacer(),
-        Text(tripRoom.country, style: f12gray600w600),
+        Text(
+          tripRoom.country,
+          style: context.style.caption1.copyWith(
+            color: context.color.gray600,
+          ),
+        ),
       ],
     );
   }

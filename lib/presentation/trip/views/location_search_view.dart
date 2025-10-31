@@ -5,8 +5,7 @@ import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/button/base/base_button.dart';
-import 'package:tripStory/presentation/common/icon/svg_icon.dart';
-import 'package:tripStory/presentation/common/text/common_text_form_field.dart';
+import 'package:tripStory/presentation/common/text/input/input_text_form_field.dart';
 import 'package:tripStory/presentation/trip/controllers/location_search_controller.dart';
 
 class LocationSearchView extends StatefulWidget {
@@ -50,18 +49,14 @@ class _LocationSearchViewState extends State<LocationSearchView> {
                 const SizedBox(
                   height: 8,
                 ),
-                CommonTextField(
+                InputTextField(
                   controller: _placeCon,
                   hintText: "여행장소를 지도에 입력해보세요",
                   backgroundColor: context.color.gray50,
                   onFieldSubmitted: (text) => controller.onSearchLocation(text),
-                  leading: GestureDetector(
-                    onTap: () => controller.onSearchLocation(_placeCon.text),
-                    child: SvgIcon(
-                      assetPath: IconConstants.search,
-                      color: controller.tripRoomInfo?.labelColor.toColor(),
-                    ),
-                  ),
+                  leadingIconColor: controller.tripRoomInfo?.labelColor.toColor(),
+                  leadingIconPath: IconConstants.search,
+                  onLeadingPressed: () => controller.onSearchLocation(_placeCon.text),
                 ),
                 Container(
                   height: context.screenHeight * 0.5,

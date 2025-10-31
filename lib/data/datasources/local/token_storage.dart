@@ -14,4 +14,8 @@ abstract class TokenStorage {
   });
 
   Future<Map<String, String>> getCloudFrontCookies();
+
+  Future<void> saveSkippedVersion(String version);
+
+  Future<String?> getSkippedVersion();
 }

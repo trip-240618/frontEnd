@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/component/empty/emptyScreen.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
@@ -10,6 +9,7 @@ import 'package:tripStory/core/util/helper/quill_helper.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
 import 'package:tripStory/presentation/common/divider/common_divider.dart';
+import 'package:tripStory/presentation/common/empty_view.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/trip/controllers/scraps_controller.dart';
 import 'package:tripStory/presentation/trip/models/scraps_state.dart';
@@ -41,7 +41,7 @@ class ScrapsView extends StatelessWidget {
                 ),
                 Expanded(
                   child: status == ScrapsStatus.empty
-                      ? const EmptyScreen(
+                      ? const EmptyView(
                           content: "여행에 필요한 정보를\n스크랩 해보세요 :)",
                         )
                       : MasonryGridView.count(

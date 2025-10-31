@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/core/enum/button_type.dart';
-import 'package:tripStory/core/util/font.dart';
+import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/button/app_button.dart';
 import 'package:tripStory/presentation/common/dialog/base_dialog.dart';
 
@@ -84,12 +84,19 @@ class CommonDialog extends StatelessWidget {
           children: [
             Text(
               alertState.title,
-              style: f18Gray800w600,
+              style: context.style.headline3.copyWith(
+                color: context.color.gray800,
+              ),
               textAlign: TextAlign.center,
             ),
             if (alertState.message != null) ...[
               const SizedBox(height: 4),
-              Text(alertState.message ?? "", style: f14Gray400w500, textAlign: TextAlign.center),
+              Text(alertState.message ?? "",
+                  style: context.style.label1Normal.copyWith(
+                    color: context.color.gray400,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center),
             ],
           ],
         ),
@@ -124,8 +131,10 @@ class CommonDialog extends StatelessWidget {
     String? message,
     String confirmText = "확인",
     required VoidCallback onConfirm,
+    bool? barrierDismissible,
   }) {
     Get.dialog(
+      barrierDismissible: barrierDismissible ?? true,
       CommonDialog(
         alertState: AlertViewState.confirm(
           title: title,
@@ -137,15 +146,17 @@ class CommonDialog extends StatelessWidget {
     );
   }
 
-  static void showConfirmCancel({
+  static Future<void> showConfirmCancel({
     required String title,
     String? message,
     String confirmText = "확인",
     String cancelText = "취소",
     required VoidCallback onConfirm,
     VoidCallback? onCancel,
-  }) {
+    bool? barrierDismissible,
+  }) async {
     Get.dialog(
+      barrierDismissible: barrierDismissible ?? true,
       CommonDialog(
         alertState: AlertViewState.confirmCancel(
           title: title,

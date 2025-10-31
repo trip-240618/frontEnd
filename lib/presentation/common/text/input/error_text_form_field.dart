@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
-import 'package:tripStory/presentation/common/text/common_text_form_field.dart';
+import 'package:tripStory/presentation/common/text/input/input_text_form_field.dart';
 
 class ErrorTextFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -11,6 +11,9 @@ class ErrorTextFormField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final List<TextInputFormatter>? inputFormatters;
   final Widget? leading;
+  final String? leadingIconPath;
+  final Color? leadingIconColor;
+
   final Widget? trailing;
   final TextStyle? textStyle;
   final EdgeInsets? contentPadding;
@@ -31,6 +34,8 @@ class ErrorTextFormField extends StatelessWidget {
     this.contentPadding,
     this.backgroundColor,
     this.keyboardType,
+    this.leadingIconPath,
+    this.leadingIconColor,
   });
 
   @override
@@ -38,13 +43,15 @@ class ErrorTextFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CommonTextField(
+        InputTextField(
           controller: controller,
           hintText: hintText,
           backgroundColor: backgroundColor,
           textStyle: textStyle,
           trailing: trailing,
           leading: leading,
+          leadingIconColor: leadingIconColor,
+          leadingIconPath: leadingIconPath,
           contentPadding: contentPadding,
           inputFormatters: inputFormatters,
           onChanged: onChanged,
@@ -55,7 +62,7 @@ class ErrorTextFormField extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16, top: 4),
             child: Text(
               errorText,
-              style: context.style.caption2.copyWith(
+              style: context.style.caption1.copyWith(
                 color: context.color.errorColor,
               ),
             ),

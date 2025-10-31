@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tripStory/component/container/circle_badge.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/picture_image_button.dart';
+import 'package:tripStory/presentation/common/number_circle.dart';
 import 'package:tripStory/presentation/common/text/input/error_text_form_field.dart';
 import 'package:tripStory/presentation/login/controller/profile_add_controller.dart';
 
@@ -39,16 +39,16 @@ class _ProfileAddViewState extends State<ProfileAddView> {
               children: [
                 Row(
                   children: [
-                    CircleBadge(
-                      text: "1",
-                      backgroundColor: context.color.gray200,
+                    NumberCircle(
+                      count: 1,
+                      color: context.color.gray200,
                     ),
                     const SizedBox(
                       width: 10,
                     ),
-                    CircleBadge(
-                      text: "2",
-                      backgroundColor: context.color.gray900,
+                    NumberCircle(
+                      count: 2,
+                      color: context.color.gray900,
                     ),
                   ],
                 ),

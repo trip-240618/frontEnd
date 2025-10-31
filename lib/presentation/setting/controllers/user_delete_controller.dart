@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:tripStory/controller/userState.dart';
 import 'package:tripStory/core/router/routes.dart';
 import 'package:tripStory/core/services/session_service.dart';
 import 'package:tripStory/domain/base/usecase.dart';
@@ -8,7 +7,6 @@ import 'package:tripStory/domain/usecases/delete_user_usecase.dart';
 class UserDeleteController extends GetxController {
   final DeleteUserUsecase _deleteUserUsecase;
   final SessionService _sessionService;
-  final us = Get.put(UserState());
 
   UserDeleteController(
     this._deleteUserUsecase,

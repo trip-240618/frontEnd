@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tripStory/core/util/font.dart';
+import 'package:tripStory/core/util/extension/context_extension.dart';
 
 class BaseTileButton extends StatelessWidget {
   final String text;
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
   final Color? tileColor;
   final Color? borderColor;
   final VoidCallback? onTap;
@@ -16,7 +16,7 @@ class BaseTileButton extends StatelessWidget {
     required this.text,
     this.tileColor,
     this.borderColor,
-    this.textStyle = f15gray800w500,
+    this.textStyle,
     this.onTap,
     this.leading,
     this.trailing,
@@ -47,7 +47,11 @@ class BaseTileButton extends StatelessWidget {
         leading: leading,
         title: Text(
           text,
-          style: textStyle,
+          style: textStyle ??
+              context.style.label1Normal.copyWith(
+                fontWeight: FontWeight.w500,
+                color: context.color.gray700,
+              ),
         ),
         trailing: trailing,
       ),
