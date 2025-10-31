@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
-import 'package:tripStory/core/util/color.dart';
-import 'package:tripStory/core/util/font.dart';
+import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/image/round_thumbnail_image.dart';
 import 'package:tripStory/presentation/common/popup/popup_item_model.dart';
 
@@ -46,7 +45,10 @@ class PopupList extends StatelessWidget {
                     Expanded(
                       child: Text(
                         member.nickname,
-                        style: f14Gray800w500,
+                        style: context.style.label1Normal.copyWith(
+                          color: context.color.gray800,
+                          fontWeight: FontWeight.w500,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -54,7 +56,7 @@ class PopupList extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              const Divider(color: gray200, height: 5),
+              Divider(color: context.color.gray200, height: 5),
             ],
           ),
         );

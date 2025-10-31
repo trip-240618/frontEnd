@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
-import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/common/button/base/base_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/login/controller/login_controller.dart';
@@ -27,13 +26,15 @@ class LoginView extends GetView<LoginController> {
           children: [
             Text(
               "이제부터\n트립스토리와\n여행을 간단하게 기록해 보세요",
-              style: f22gray900w700,
+              style: context.style.heading1,
             ),
             Spacer(),
             Center(
               child: Text(
                 "트립스토리는 간편 로그인을 지원해요",
-                style: f14gray600w500,
+                style: context.style.label1Reading.copyWith(
+                  color: context.color.gray600,
+                ),
               ),
             ),
             const SizedBox(height: 12),

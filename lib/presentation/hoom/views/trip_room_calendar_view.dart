@@ -2,7 +2,6 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
-import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
@@ -54,14 +53,16 @@ class _TripRoomCalendarViewState extends State<TripRoomCalendarView> {
                   children: [
                     Text(
                       "여행 시작일과 종료일을\n설정해 주세요",
-                      style: f20gray900w700,
+                      style: context.style.heading2,
                     ),
                     const SizedBox(
                       height: 6,
                     ),
                     Text(
                       "당일 일정도 선택 가능해요:)",
-                      style: f12Gray400w600,
+                      style: context.style.caption1.copyWith(
+                        color: context.color.gray400,
+                      ),
                     )
                   ],
                 ),
@@ -101,7 +102,9 @@ class _TripRoomCalendarViewState extends State<TripRoomCalendarView> {
                         // todayColor: widget.selectedColor,
                         hideScrollViewTopHeader: true,
                         weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"],
-                        weekdayLabelTextStyle: f12gray400w500,
+                        weekdayLabelTextStyle: context.style.caption1.copyWith(
+                          color: context.color.gray400,
+                        ),
                         calendarViewScrollPhysics: const ScrollPhysics(),
                         calendarType: CalendarDatePicker2Type.range,
                         calendarViewMode: CalendarDatePicker2Mode.scroll,

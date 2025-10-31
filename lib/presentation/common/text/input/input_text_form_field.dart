@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
+import 'package:tripStory/core/util/helper/text_span_helper.dart';
+import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/text/base_text_form_field.dart';
 
-class CommonTextField extends StatelessWidget {
+class InputTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final void Function(String)? onChanged;
   final List<TextInputFormatter>? inputFormatters;
   final ValueChanged<String>? onFieldSubmitted;
+
+  /// leading
   final Widget? leading;
+  final String? leadingIconPath;
+  final Color? leadingIconColor;
+  final VoidCallback? onLeadingPressed;
+
+  /// trailing
   final Widget? trailing;
+  final int? maxCountText;
+
   final TextStyle? textStyle;
   final EdgeInsets? contentPadding;
   final Color? backgroundColor;
@@ -25,7 +35,7 @@ class CommonTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final double? maxHeight;
 
-  const CommonTextField({
+  const InputTextField({
     super.key,
     required this.controller,
     required this.hintText,
@@ -45,22 +55,46 @@ class CommonTextField extends StatelessWidget {
     this.keyboardType,
     this.minLines,
     this.maxHeight,
+    this.maxCountText,
+    this.leadingIconPath,
+    this.leadingIconColor,
+    this.onLeadingPressed,
   });
 
   @override
   Widget build(BuildContext context) {
+    final text = controller.text;
+    final currentCount = text.length;
+
+    Widget? leadingWidget;
+    if (leading != null) {
+      leadingWidget = leading;
+    } else if (leadingIconPath != null) {
+      leadingWidget = GestureDetector(
+        onTap: onLeadingPressed,
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: SvgIcon(
+            assetPath: leadingIconPath!,
+            color: leadingIconColor ?? context.color.gray700,
+          ),
+        ),
+      );
+    }
+
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
         color: backgroundColor ?? context.color.white,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: borderColor ?? gray200),
+        border: Border.all(color: borderColor ?? context.color.gray200),
       ),
       child: Row(
         children: [
-          if (leading != null) ...[
+          if (leadingWidget != null) ...[
             const SizedBox(width: 16),
-            leading!,
+            leadingWidget,
           ],
           Expanded(
             child: ConstrainedBox(
@@ -84,12 +118,26 @@ class CommonTextField extends StatelessWidget {
               ),
             ),
           ),
-          if (trailing != null) ...[
+          if (maxCountText != null || trailing != null) ...[
             Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10,
-              ),
-              child: trailing!,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: maxCountText != null
+                  ? Text.rich(
+                      TextSpanHelper.toSplitText(
+                        text: "$currentCount/$maxCountText",
+                        delimiter: "/",
+                        firstStyle: context.style.caption2.copyWith(
+                          color: currentCount == 0 ? context.color.gray400 : context.color.gray800,
+                        ),
+                        secondStyle: context.style.caption2.copyWith(
+                          color: context.color.gray400,
+                        ),
+                        delimiterStyle: context.style.caption2.copyWith(
+                          color: context.color.gray400,
+                        ),
+                      ),
+                    )
+                  : trailing!,
             ),
           ],
         ],

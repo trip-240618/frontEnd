@@ -11,9 +11,8 @@ import 'package:tripStory/presentation/common/bottom/select_day_bottom_sheet.dar
 import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/tile/leading_icon_tile_button.dart';
 import 'package:tripStory/presentation/common/dialog/loading_dialog.dart';
-import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/text/input/error_text_form_field.dart';
-import 'package:tripStory/presentation/common/text/input/leading_icon_text_form_field.dart';
+import 'package:tripStory/presentation/common/text/input/input_text_form_field.dart';
 import 'package:tripStory/presentation/trip/controllers/flight_search_controller.dart';
 import 'package:tripStory/presentation/trip/models/flight_search_state.dart';
 
@@ -133,20 +132,14 @@ class _FlightSearchViewState extends State<FlightSearchView> {
                     ),
                     ErrorTextFormField(
                       controller: _flightNumCon,
-                      hintText: "항공사명 또는 코드를 입력해주세요",
+                      hintText: "숫자 코드를 입력해주세요",
                       errorText: "조회되지 않는 편명입니다",
                       onChanged: (text) => controller.onFlightNumberChanged(text),
                       showError: state.flightSearchStatus == FlightSearchStatus.empty,
                       keyboardType: TextInputType.number,
                       backgroundColor: context.color.gray50,
-                      leading: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: SvgIcon(
-                          assetPath: IconConstants.pencil,
-                          color: controller.tripRoomInfo?.labelColor.toColor(),
-                        ),
-                      ),
+                      leadingIconPath: IconConstants.pencil,
+                      leadingIconColor: controller.tripRoomInfo?.labelColor.toColor(),
                     ),
                   ],
                 ),
@@ -218,13 +211,13 @@ class _FlightSearchContentState extends State<_FlightSearchContent> {
           ),
           child: Column(
             children: [
-              LeadingIconTextFormField(
+              InputTextField(
                 controller: _carrierCon,
                 hintText: "항공사명 또는 코드를 입력해주세요",
                 leadingIconPath: IconConstants.search,
-                backgroundColor: context.color.gray50,
                 onChanged: (text) => controller.onAirLinesSearch(text),
-                iconColor: controller.tripRoomInfo?.labelColor.toColor(),
+                leadingIconColor: controller.tripRoomInfo?.labelColor.toColor(),
+                backgroundColor: context.color.gray50,
               ),
               const SizedBox(
                 height: 10,

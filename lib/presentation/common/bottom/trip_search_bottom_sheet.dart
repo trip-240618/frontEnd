@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/enum/trip_area_type.dart';
 import 'package:tripStory/core/enum/trip_destination_type.dart';
-import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
-import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/core/util/models/country.dart';
 import 'package:tripStory/presentation/common/bottom/base_bottom_sheet.dart';
 import 'package:tripStory/presentation/common/button/app_button.dart';
 import 'package:tripStory/presentation/common/button/outline/outline_button.dart';
 import 'package:tripStory/presentation/common/image/cached_image.dart';
-import 'package:tripStory/presentation/common/text/common_text_form_field.dart';
+import 'package:tripStory/presentation/common/text/input/input_text_form_field.dart';
 
 class TripDestinationBottomSheetContent extends StatefulWidget {
   const TripDestinationBottomSheetContent({super.key});
@@ -169,8 +167,10 @@ class _BottomContent extends StatelessWidget {
         const SizedBox(height: 33),
         TabBar(
           controller: tabController,
-          unselectedLabelStyle: f16gray300w600,
-          indicatorColor: gray900,
+          unselectedLabelStyle: context.style.body1Normal.copyWith(
+            color: context.color.gray400,
+          ),
+          indicatorColor: context.color.gray900,
           indicatorWeight: 2,
           indicatorSize: TabBarIndicatorSize.tab,
           overlayColor: const WidgetStatePropertyAll(Colors.transparent),
@@ -178,13 +178,21 @@ class _BottomContent extends StatelessWidget {
             Tab(
               child: Text(
                 "여행지 검색",
-                style: tripDestinationTabType == TripDestinationTabType.search ? f16gray900w700 : f16gray400w700,
+                style: tripDestinationTabType == TripDestinationTabType.search
+                    ? context.style.body1Normal
+                    : context.style.body1Normal.copyWith(
+                        color: context.color.gray400,
+                      ),
               ),
             ),
             Tab(
               child: Text(
                 "직접 입력",
-                style: tripDestinationTabType == TripDestinationTabType.direct ? f16gray900w700 : f16gray400w700,
+                style: tripDestinationTabType == TripDestinationTabType.direct
+                    ? context.style.body1Normal
+                    : context.style.body1Normal.copyWith(
+                        color: context.color.gray400,
+                      ),
               ),
             ),
           ],
@@ -235,19 +243,12 @@ class _TripSearch extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CommonTextField(
+        InputTextField(
           controller: countrySearchCon,
-          textStyle: f16gray800w600,
           hintText: "여행방 제목을 입력해주세요 :)",
           onChanged: onSearchChanged,
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: SvgPicture.asset(
-              "assets/icon/search.svg",
-              fit: BoxFit.none,
-              colorFilter: ColorFilter.mode(gray800, BlendMode.srcIn),
-            ),
-          ),
+          leadingIconPath: IconConstants.search,
+          leadingIconColor: context.color.gray800,
         ),
         const SizedBox(height: 16),
         Expanded(
@@ -263,7 +264,9 @@ class _TripSearch extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       region.region,
-                      style: f12gray400W700,
+                      style: context.style.caption1.copyWith(
+                        color: context.color.gray600,
+                      ),
                     ),
                   ),
                   ...region.countries.map(
@@ -275,16 +278,16 @@ class _TripSearch extends StatelessWidget {
                         groupValue: selectedCountry,
                         onChanged: (newValue) => onCountryPressed?.call(newValue!),
                         dense: true,
-                        hoverColor: gray900,
+                        hoverColor: context.color.gray900,
                         controlAffinity: ListTileControlAffinity.trailing,
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         fillColor: WidgetStateProperty.resolveWith<Color>(
                           (states) {
                             final isSelected = states.contains(WidgetState.selected);
 
-                            if (!isSelected) return gray400.withValues(alpha: 0.32);
-                            if (isSelected) return gray900;
-                            return gray400.withValues(alpha: 0.32);
+                            if (!isSelected) return context.color.gray400.withValues(alpha: 0.32);
+                            if (isSelected) return context.color.gray900;
+                            return context.color.gray400.withValues(alpha: 0.32);
                           },
                         ),
                       ),
@@ -322,7 +325,9 @@ class _CountryListTile extends StatelessWidget {
         const SizedBox(width: 24),
         Text(
           country.name,
-          style: f16gray800w500,
+          style: context.style.body1Normal.copyWith(
+            color: context.color.gray800,
+          ),
         ),
       ],
     );
@@ -348,7 +353,12 @@ class _TripDirect extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 32),
-        Text("여행지 선택", style: f12gray600w600),
+        Text(
+          "여행지 선택",
+          style: context.style.caption1.copyWith(
+            color: context.color.gray600,
+          ),
+        ),
         const SizedBox(height: 8),
         Row(
           children: [
@@ -370,21 +380,19 @@ class _TripDirect extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 32),
-        Text("여행지 이름", style: f12gray600w600),
+        Text(
+          "여행지 이름",
+          style: context.style.caption1.copyWith(
+            color: context.color.gray600,
+          ),
+        ),
         const SizedBox(height: 8),
-        CommonTextField(
+        InputTextField(
           controller: tripDirectController,
-          textStyle: f16gray800w600,
           hintText: "여행지를 직접 입력해주세요",
           onChanged: onSearchChanged,
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: SvgPicture.asset(
-              "assets/icon/search.svg",
-              fit: BoxFit.none,
-              colorFilter: ColorFilter.mode(gray800, BlendMode.srcIn),
-            ),
-          ),
+          leadingIconPath: IconConstants.search,
+          leadingIconColor: context.color.gray800,
         ),
       ],
     );

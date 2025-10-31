@@ -58,7 +58,7 @@ class BaseTextFormField extends StatelessWidget {
       onTapOutside: isFocusOnTapOutside ?? true ? (_) => FocusManager.instance.primaryFocus?.unfocus() : null,
       decoration: InputDecoration(
         isDense: true,
-        contentPadding: contentPadding ?? const EdgeInsets.all(16),
+        contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 6, vertical: 15),
         enabledBorder: enabledBorder ?? OutlineInputBorder(borderSide: BorderSide.none),
         focusedBorder: focusedBorder ?? OutlineInputBorder(borderSide: BorderSide.none),
         hintText: hintText,

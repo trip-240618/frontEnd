@@ -8,8 +8,7 @@ import 'package:tripStory/core/util/upper_case.dart';
 import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/icon_button.dart';
 import 'package:tripStory/presentation/common/dialog/base_dialog.dart';
-import 'package:tripStory/presentation/common/icon/svg_icon.dart';
-import 'package:tripStory/presentation/common/text/common_text_form_field.dart';
+import 'package:tripStory/presentation/common/text/input/error_text_form_field.dart';
 
 class CodeInsertDialog extends StatefulWidget {
   final Future<bool> Function(String inviteCode) onConfirmPressed;
@@ -65,46 +64,25 @@ class _CodeInsertDialogState extends State<CodeInsertDialog> {
             ),
           ),
           const SizedBox(height: 10),
-          CommonTextField(
+          ErrorTextFormField(
             controller: _invitedCodeCon,
-            backgroundColor: context.color.gray50,
-            textStyle: context.style.body2Normal.copyWith(
-              color: context.color.gray800,
-            ),
-            leading: SvgIcon(assetPath: IconConstants.mail),
             hintText: "영문+숫자 8자리를 입력해 주세요",
-            onChanged: (text) {
-              setState(() {
-                isRegCheck = text.length == 8 && RegexConstants.alphanumeric.hasMatch(text);
-                isEmptyRoom = false;
-              });
-            },
+            showError: _invitedCodeCon.text.isNotEmpty && (isEmptyRoom || !isRegCheck),
+            errorText: isEmptyRoom ? "존재하지 않는 초대 코드입니다" : "초대 코드는 영문+숫자 8자리입니다",
+            textStyle: context.style.body2Normal,
+            leadingIconPath: IconConstants.mail,
+            leadingIconColor: context.color.gray900,
+            backgroundColor: context.color.gray50,
+            contentPadding: const EdgeInsets.all(16),
+            onChanged: (text) => setState(() {
+              isRegCheck = text.length == 8 && RegexConstants.alphanumeric.hasMatch(text);
+              isEmptyRoom = false;
+            }),
             inputFormatters: [
               LengthLimitingTextInputFormatter(8),
               UpperCaseTextFormatter(),
             ],
-            borderColor: _invitedCodeCon.text.isNotEmpty ? context.color.gray900 : null,
           ),
-          if (_invitedCodeCon.text.isNotEmpty && !isRegCheck)
-            Padding(
-              padding: const EdgeInsets.only(left: 16, top: 4),
-              child: Text(
-                "초대 코드는 영문+숫자 8자리입니다",
-                style: context.style.caption1.copyWith(
-                  color: context.color.red,
-                ),
-              ),
-            ),
-          if (isRegCheck && isEmptyRoom)
-            Padding(
-              padding: const EdgeInsets.only(left: 16, top: 4),
-              child: Text(
-                "존재하지 않는 초대 코드입니다",
-                style: context.style.caption1.copyWith(
-                  color: context.color.red,
-                ),
-              ),
-            ),
           const SizedBox(height: 80),
         ],
       ),
@@ -114,7 +92,8 @@ class _CodeInsertDialogState extends State<CodeInsertDialog> {
           child: BottomButton(
             padding: EdgeInsets.zero,
             text: "연결하기",
-            enabled: _invitedCodeCon.text.trim().length == 8,
+            enabled: _invitedCodeCon.text.trim().length == 8 &&
+                RegexConstants.alphanumeric.hasMatch(_invitedCodeCon.text.trim()),
             onTap: () async {
               final result = await widget.onConfirmPressed(_invitedCodeCon.text);
               if (!result) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
-import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/button/tab/tab_box.dart';
 import 'package:tripStory/presentation/common/divider/common_divider.dart';
@@ -100,7 +99,9 @@ class _NoticesListViewState extends State<NoticesListView> {
                               ),
                               Text(
                                 "${notice.createDate}",
-                                style: f12gray400w500,
+                                style: context.style.caption1.copyWith(
+                                  color: context.color.gray400,
+                                ),
                               ),
                               const SizedBox(
                                 height: 16,

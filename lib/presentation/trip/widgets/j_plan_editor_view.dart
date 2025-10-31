@@ -19,7 +19,7 @@ import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/tile/deleted_tile_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 import 'package:tripStory/presentation/common/text/area/text_area_form_field.dart';
-import 'package:tripStory/presentation/common/text/common_text_form_field.dart';
+import 'package:tripStory/presentation/common/text/input/input_text_form_field.dart';
 import 'package:tripStory/presentation/trip/controllers/j_plan_editor_controller.dart';
 import 'package:tripStory/presentation/trip/models/j_plan_editor_state.dart';
 
@@ -258,7 +258,7 @@ class _JPlanEditorViewState extends State<JPlanEditorView> {
                   const SizedBox(
                     height: 8,
                   ),
-                  CommonTextField(
+                  InputTextField(
                     controller: _planTitleCon,
                     hintText: "여행 일정을 작성해주세요",
                     backgroundColor: context.color.gray50,
@@ -269,24 +269,7 @@ class _JPlanEditorViewState extends State<JPlanEditorView> {
                     scrollPadding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom + 20,
                     ),
-                    trailing: Row(
-                      children: [
-                        Text(
-                          "${controller.state.planTitle.length}",
-                          style: controller.state.planTitleEmpty
-                              ? context.style.caption2.copyWith(
-                                  color: context.color.gray400,
-                                )
-                              : context.style.caption2,
-                        ),
-                        Text(
-                          "/20",
-                          style: context.style.caption2.copyWith(
-                            color: context.color.gray400,
-                          ),
-                        ),
-                      ],
-                    ),
+                    maxCountText: 20,
                   ),
                   const SizedBox(
                     height: 20,

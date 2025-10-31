@@ -6,7 +6,6 @@ import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/enum/trip_type.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
-import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/bottom/trip_search_bottom_sheet.dart';
 import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
@@ -16,7 +15,7 @@ import 'package:tripStory/presentation/common/button/picture_image_button.dart';
 import 'package:tripStory/presentation/common/button/tile/leading_icon_tile_button.dart';
 import 'package:tripStory/presentation/common/dialog/code_dialog.dart';
 import 'package:tripStory/presentation/common/dialog/loading_dialog.dart';
-import 'package:tripStory/presentation/common/text/common_text_form_field.dart';
+import 'package:tripStory/presentation/common/text/input/input_text_form_field.dart';
 import 'package:tripStory/presentation/hoom/controller/trip_rooms_create_controller.dart';
 
 class TripRoomCreateView extends StatefulWidget {
@@ -97,16 +96,15 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                         pickedImage: controller.state.roomImage,
                       ),
                       const SizedBox(height: 16),
-                      CommonTextField(
+                      InputTextField(
                         controller: _tripNameCon,
-                        textStyle: f16gray800w600,
+                        textStyle: context.style.body2Normal.copyWith(
+                          color: context.color.gray800,
+                        ),
                         hintText: "여행방 제목을 입력해주세요 :)",
                         onChanged: (text) => controller.onTextChanged(text),
                         inputFormatters: [LengthLimitingTextInputFormatter(15)],
-                        trailing: Text(
-                          "${_tripNameCon.text.length}/15",
-                          style: f11Gray400w600,
-                        ),
+                        maxCountText: 15,
                       ),
                       const SizedBox(height: 30),
                     ],
@@ -124,7 +122,9 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                       children: [
                         Text(
                           "아이콘 컬러",
-                          style: f12gray600w600,
+                          style: context.style.caption1.copyWith(
+                            color: context.color.gray600,
+                          ),
                         ),
                         const SizedBox(height: 12),
                         ColorSelectButton(
@@ -136,7 +136,9 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                         const SizedBox(height: 30),
                         Text(
                           "여행방 타입",
-                          style: f12gray600w600,
+                          style: context.style.caption1.copyWith(
+                            color: context.color.gray600,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -159,9 +161,11 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        const Text(
+                        Text(
                           "여행 날짜",
-                          style: f12gray600w600,
+                          style: context.style.caption1.copyWith(
+                            color: context.color.gray600,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         LeadingIconTileButton(
@@ -176,7 +180,9 @@ class _TripRoomCreateViewState extends State<TripRoomCreateView> {
                         const SizedBox(height: 20),
                         Text(
                           "여행지",
-                          style: f12gray600w600,
+                          style: context.style.caption1.copyWith(
+                            color: context.color.gray600,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         LeadingIconTileButton(

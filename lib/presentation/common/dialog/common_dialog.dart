@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/core/enum/button_type.dart';
-import 'package:tripStory/core/util/font.dart';
+import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/button/app_button.dart';
 import 'package:tripStory/presentation/common/dialog/base_dialog.dart';
 
@@ -84,12 +84,19 @@ class CommonDialog extends StatelessWidget {
           children: [
             Text(
               alertState.title,
-              style: f18Gray800w600,
+              style: context.style.headline3.copyWith(
+                color: context.color.gray800,
+              ),
               textAlign: TextAlign.center,
             ),
             if (alertState.message != null) ...[
               const SizedBox(height: 4),
-              Text(alertState.message ?? "", style: f14Gray400w500, textAlign: TextAlign.center),
+              Text(alertState.message ?? "",
+                  style: context.style.label1Normal.copyWith(
+                    color: context.color.gray400,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center),
             ],
           ],
         ),

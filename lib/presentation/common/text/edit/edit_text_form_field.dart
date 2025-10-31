@@ -7,7 +7,7 @@ import 'package:tripStory/core/util/helper/text_span_helper.dart';
 import 'package:tripStory/presentation/common/button/base/base_button.dart';
 import 'package:tripStory/presentation/common/button/box/box_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
-import 'package:tripStory/presentation/common/text/common_text_form_field.dart';
+import 'package:tripStory/presentation/common/text/input/input_text_form_field.dart';
 
 class EditTextFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -49,7 +49,7 @@ class EditTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CommonTextField(
+    return InputTextField(
       controller: controller,
       isFocusOnTapOutside: isFocusOnTapOutside,
       hintText: hintText,

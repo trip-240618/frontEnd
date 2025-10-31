@@ -161,7 +161,6 @@ class TripRoomsCreateController extends GetxController with GetSingleTickerProvi
     });
   }
 
-  /// TODO : 방생성 후 -> Join이랑 enter둘다 보내야하는지
   Future<void> onNavigateToRoomPressed() async {
     if (_inviteCode == null) return;
     final result = await _firstEnterTripRoomUsecase(_inviteCode!);

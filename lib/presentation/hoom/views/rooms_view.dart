@@ -7,11 +7,9 @@ import 'package:get/get.dart';
 import 'package:popover/popover.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/router/router_observer.dart';
-import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
-import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/domain/entities/trip_room_entity.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/bottom/base_bottom_sheet.dart';
@@ -83,7 +81,7 @@ class _TripRoomListViewState extends State<TripRoomListView> with RouteAware {
           },
           child: Scaffold(
             resizeToAvoidBottomInset: false,
-            backgroundColor: gray50,
+            backgroundColor: context.color.gray50,
             appBar: AppAppbar(
               isLeadingIcon: false,
               backgroundColor: context.color.gray50,
@@ -356,6 +354,7 @@ class _TripRoomTile extends StatelessWidget {
               top: 8,
               right: 16,
               child: _buildHeader(
+                context,
                 labelColor,
                 dateRange,
               ),
@@ -377,7 +376,7 @@ class _TripRoomTile extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(Color labelColor, String dateRange) {
+  Widget _buildHeader(BuildContext context, Color labelColor, String dateRange) {
     late final Widget leading;
     Widget? trailing;
 
@@ -400,7 +399,7 @@ class _TripRoomTile extends StatelessWidget {
             onTap: onSendTap,
             child: Padding(
               padding: const EdgeInsets.all(6.0),
-              child: SvgPicture.asset("assets/icon/send.svg", color: gray900),
+              child: SvgPicture.asset("assets/icon/send.svg", color: context.color.gray900),
             ),
           ),
         );
@@ -454,7 +453,13 @@ class _TripHeader extends StatelessWidget {
       children: [
         leadingWidget,
         const SizedBox(width: 6),
-        Text(dateRange, style: f12Gray800w500),
+        Text(
+          dateRange,
+          style: context.style.caption1.copyWith(
+            color: context.color.gray800,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const Spacer(),
         if (trailingWidget != null) trailingWidget!,
       ],
@@ -481,7 +486,7 @@ class _TripContent extends StatelessWidget {
           imageUrl: tripRoom.thumbnail,
         ),
         const SizedBox(width: 12),
-        _buildTripInfo(),
+        _buildTripInfo(context),
         const Spacer(),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -499,7 +504,7 @@ class _TripContent extends StatelessWidget {
     );
   }
 
-  Widget _buildTripInfo() {
+  Widget _buildTripInfo(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -515,7 +520,9 @@ class _TripContent extends StatelessWidget {
               child: Center(
                 child: Text(
                   tripRoom.type.name.toUpperCase(),
-                  style: f12Whitew700,
+                  style: context.style.caption1.copyWith(
+                    color: context.color.white,
+                  ),
                 ),
               ),
             ),
@@ -524,12 +531,19 @@ class _TripContent extends StatelessWidget {
             ),
             Text(
               tripRoom.name,
-              style: f15gray800w600,
+              style: context.style.body2Normal.copyWith(
+                color: context.color.gray800,
+              ),
             ),
           ],
         ),
         const Spacer(),
-        Text(tripRoom.country, style: f12gray600w600),
+        Text(
+          tripRoom.country,
+          style: context.style.caption1.copyWith(
+            color: context.color.gray600,
+          ),
+        ),
       ],
     );
   }

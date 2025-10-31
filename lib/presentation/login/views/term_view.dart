@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
-import 'package:tripStory/core/util/color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
-import 'package:tripStory/core/util/font.dart';
 import 'package:tripStory/core/util/helper/url_launcher_helper.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/button/base/base_tile_button.dart';
@@ -52,14 +50,14 @@ class TermView extends StatelessWidget {
                 ),
                 Text(
                   "가입을 완료하려면\n서비스 약관 동의가 필요해요",
-                  style: f22gray900w700,
+                  style: context.style.heading1,
                 ),
                 const SizedBox(height: 35),
                 _CheckTileButton(
                   text: "서비스 이용약관 전체 동의",
                   isActive: controller.state.isAllTerms,
-                  tileColor: gray50,
-                  borderColor: controller.state.isAllTerms ? gray900 : null,
+                  tileColor: context.color.gray50,
+                  borderColor: controller.state.isAllTerms ? context.color.gray900 : null,
                   onTap: () => controller.onAllTermPressed(),
                   onTrailingTap: () async => await UrlLauncherHelper.launch("https://trip-story.site/policy/service"),
                 ),
@@ -130,7 +128,11 @@ class _CheckTileButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseTileButton(
       text: text,
-      textStyle: isActive ? f15gray900w600 : f15gray800w500,
+      textStyle: isActive
+          ? context.style.body2Normal
+          : context.style.body2Normal.copyWith(
+              color: context.color.gray800,
+            ),
       onTap: onTap,
       tileColor: tileColor,
       borderColor: borderColor,
