@@ -18,16 +18,15 @@ class FCM {
   final bodyCtlr = StreamController<String>.broadcast();
 
   var channel = const AndroidNotificationChannel(
-    'trips', 'trips',
-    description: '트립스토리 알림 채널', // description
+    'trips',
+    'trips',
+    description: '트립스토리 알림 채널',
     importance: Importance.high,
   );
 
   setNotifications() {
     foregroundNotification();
-
     backgroundNotification();
-    //
     terminateNotification();
   }
 

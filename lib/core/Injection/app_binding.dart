@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:tripStory/core/cache/custom_cache_manager.dart';
 import 'package:tripStory/core/services/kakao_share_service.dart';
+import 'package:tripStory/core/services/notification_service.dart';
 import 'package:tripStory/core/services/session_service.dart';
 import 'package:tripStory/data/datasources/local/share_preferences_token_storage.dart';
 import 'package:tripStory/data/datasources/local/token_storage.dart';
@@ -66,6 +67,7 @@ class AppBinding extends Bindings {
     Get.put<SocketService>(SocketService(Get.find<SessionService>()), permanent: true);
     Get.put<CloudFrontHttpFileService>(CloudFrontHttpFileService(Get.find<SessionService>()), permanent: true);
     Get.put<KakaoShareService>(KakaoShareService(), permanent: true);
+    Get.lazyPut<NotificationService>(() => NotificationService(), fenix: true);
 
     // DioClient
     Get.put<DioClient>(DioClient(sessionService: Get.find<SessionService>()), permanent: true);

@@ -15,6 +15,7 @@ import 'package:tripStory/domain/usecases/fetch_enter_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_last_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/first_enter_trip_room_usecase.dart';
 import 'package:tripStory/domain/usecases/kakao_share_usecase.dart';
+import 'package:tripStory/domain/usecases/notification_listen_usecase.dart';
 import 'package:tripStory/domain/usecases/update_bookmark_usecase.dart';
 import 'package:tripStory/presentation/common/popup/popup_item_model.dart';
 import 'package:tripStory/presentation/hoom/enum/trip_rooms_type.dart';
@@ -30,6 +31,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
   final TripRoomService _tripRoomService;
   final KakaoShareUsecase _kakaoShareUsecase;
   final FirstEnterTripRoomUsecase _firstEnterTripRoomUsecase;
+  final NotificationListenUsecase _listenNotificationUsecase;
 
   RoomsController(
     this._tripRoomService, {
@@ -40,17 +42,21 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     required FetchEnterRoomUsecase fetchEnterRoomUsecase,
     required KakaoShareUsecase kakaoShareUsecase,
     required FirstEnterTripRoomUsecase firstEnterTripRoomUsecase,
+    required NotificationListenUsecase listenNotificationUsecase,
   })  : _fetchComingTrips = fetchComingTrips,
         _fetchLastTrips = fetchLastTrips,
         _fetchBookmarkedTrips = fetchBookmarkedTrips,
         _bookmarkUseCase = updateBookmarkUseCase,
         _fetchEnterRoomUsecase = fetchEnterRoomUsecase,
         _kakaoShareUsecase = kakaoShareUsecase,
-        _firstEnterTripRoomUsecase = firstEnterTripRoomUsecase;
+        _firstEnterTripRoomUsecase = firstEnterTripRoomUsecase,
+        _listenNotificationUsecase = listenNotificationUsecase;
 
   TripRoomsState tripRoomsState = TripRoomsState();
 
   TripRoomsState get state => tripRoomsState;
+
+  StreamSubscription<Map<String, dynamic>>? _notificationSub;
 
   DateTime? _lastBackPressTime;
   int notificationCount = 0;
@@ -84,6 +90,7 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
     super.onInit();
     _getComingTrips();
     _handleKakaoEntry();
+    _initializeNotificationListener();
   }
 
   Future<void> _handleKakaoEntry() async {
@@ -97,6 +104,18 @@ class RoomsController extends GetxController with GetSingleTickerProviderStateMi
         _enterKakaoTrip(url);
       }
     });
+  }
+
+  Future<void> _initializeNotificationListener() async {
+    final result = await _listenNotificationUsecase.call(NoParams());
+    result.fold(
+      (failure) => print("❌ 알림 리스너 구독 실패: ${failure.message}"),
+      (stream) {
+        _notificationSub = stream.listen((data) {
+          print("🚀 알림 수신: $data");
+        });
+      },
+    );
   }
 
   Future<void> _enterKakaoTrip(String url) async {

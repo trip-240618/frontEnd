@@ -31,6 +31,7 @@ class RoomsBinding extends Bindings {
           fetchEnterRoomUsecase: Get.find(),
           kakaoShareUsecase: Get.find(),
           firstEnterTripRoomUsecase: Get.find(),
+          listenNotificationUsecase: Get.find(),
         ));
   }
 }

@@ -6,10 +6,10 @@ import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:store_redirect/store_redirect.dart';
-import 'package:tripStory/app/notification/local_notification_setting.dart';
 import 'package:tripStory/core/constants/app_constants.dart';
 import 'package:tripStory/core/enum/app_update_type.dart';
 import 'package:tripStory/core/router/routes.dart';
+import 'package:tripStory/core/services/notification_service.dart';
 import 'package:tripStory/domain/base/usecase.dart';
 import 'package:tripStory/domain/usecases/auto_login_usecase.dart';
 import 'package:tripStory/domain/usecases/check_app_version_usecase.dart';
@@ -23,12 +23,14 @@ class SplashController extends GetxController {
   final CheckAppVersionUsecase _checkAppVersionUsecase;
   final SkipAppUpdateUsecase _skipAppUpdateUsecase;
   final LoginUserService userService;
+  final NotificationService _notificationService;
 
   SplashController(
     this.autoLoginUseCase,
     this._checkAppVersionUsecase,
     this._skipAppUpdateUsecase,
     this.userService,
+    this._notificationService,
   );
 
   @override
@@ -93,9 +95,8 @@ class SplashController extends GetxController {
     );
   }
 
-  Future<void> _checkPermissions() async {
-    requestNotificationPermissions();
-    await LocalNotifyCation().initializeNotification();
+  Future<void> _checkFcmPermissions() async {
+    await _notificationService.initialize();
   }
 
   Future<void> _checkJailbreak() async {
@@ -114,8 +115,8 @@ class SplashController extends GetxController {
   }
 
   Future<void> _navigateNext() async {
-    await _checkPermissions();
     await _getUserInfo();
+    await _checkFcmPermissions();
     FlutterNativeSplash.remove();
     if (_isJailBroken) {
       if (Platform.isAndroid) {
