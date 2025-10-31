@@ -10,7 +10,7 @@ class AutoLoginUsecase implements UseCase<UserEntity, String> {
 
   @override
   ResultFuture<UserEntity> call(String fcmToken) async {
-    final result = await repository.updateFcmToken(
+    await repository.updateFcmToken(
       fcmToken: fcmToken,
     );
     return await repository.fetchUserInfo();

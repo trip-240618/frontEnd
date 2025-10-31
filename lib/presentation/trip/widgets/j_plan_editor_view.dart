@@ -10,11 +10,9 @@ import 'package:tripStory/core/util/extension/date_extension.dart';
 import 'package:tripStory/core/util/extension/string_extension.dart';
 import 'package:tripStory/core/util/helper/maker_helper.dart';
 import 'package:tripStory/domain/entities/j_plan_entity.dart';
-import 'package:tripStory/domain/entities/location_entity.dart';
 import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
 import 'package:tripStory/presentation/common/bottom/select_day_bottom_sheet.dart';
 import 'package:tripStory/presentation/common/bottom/time_picker_bottom_sheet.dart';
-import 'package:tripStory/presentation/common/button/base/base_tile_button.dart';
 import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
 import 'package:tripStory/presentation/common/button/tile/deleted_tile_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
@@ -349,61 +347,5 @@ class _JPlanEditorViewState extends State<JPlanEditorView> {
     _planTitleCon.dispose();
     _planMemoCon.dispose();
     super.dispose();
-  }
-}
-
-class _LocationTile extends StatelessWidget {
-  final Color? iconColor;
-  final LocationEntity? locationEntity;
-  final VoidCallback onTilePressed;
-  final VoidCallback onDeletePressed;
-
-  const _LocationTile({
-    required this.iconColor,
-    required this.locationEntity,
-    required this.onTilePressed,
-    required this.onDeletePressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final hasLocation = locationEntity != null;
-
-    return BaseTileButton(
-      text: hasLocation ? locationEntity?.displayName ?? "" : "여행 장소를 지도에 입력해 보세요",
-      textStyle: context.style.body2Normal.copyWith(
-        color: hasLocation ? context.color.gray800 : context.color.gray400,
-      ),
-      onTap: hasLocation ? null : () => onTilePressed(),
-      tileColor: context.color.gray50,
-      borderColor: context.color.gray200,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 15,
-      ),
-      leading: hasLocation
-          ? null
-          : SizedBox(
-              width: 20,
-              height: 20,
-              child: SvgIcon(
-                assetPath: IconConstants.search,
-                color: iconColor,
-              ),
-            ),
-      trailing: hasLocation
-          ? GestureDetector(
-              onTap: () => onDeletePressed(),
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: SvgIcon(
-                  assetPath: IconConstants.clear,
-                  color: context.color.gray900,
-                ),
-              ),
-            )
-          : null,
-    );
   }
 }
