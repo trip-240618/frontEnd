@@ -343,11 +343,10 @@ class _TripRoomTile extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            SvgPicture.asset(
-              "assets/icon/ticket.svg",
+            SvgIcon(
+              assetPath: IconConstants.ticket,
               width: Get.width,
               height: Get.height,
-              fit: BoxFit.fill,
             ),
             Positioned(
               left: 16,

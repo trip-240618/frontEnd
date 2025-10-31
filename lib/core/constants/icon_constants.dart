@@ -80,4 +80,5 @@ class IconConstants {
   static const String googleIcon = "$_icon/google.svg";
   static const String check = "$_icon/check.svg";
   static const String logo = "$_icon/logo.svg";
+  static const String ticket = "$_icon/ticket.svg";
 }

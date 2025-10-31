@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/button/base/base_button.dart';
 import 'package:tripStory/presentation/common/icon/svg_icon.dart';
@@ -41,17 +42,17 @@ class LoginView extends GetView<LoginController> {
             _SnsButton(
               label: "카카오로 시작하기",
               labelColor: Color(0xff381E21),
-              icon: "assets/sns/kakao2.svg",
+              icon: IconConstants.kakao2Icon,
               onPressed: () => controller.onKakaoPressed(),
               backgroundColor: Color(0xffFEE500),
             ),
             const SizedBox(height: 12),
             _SnsButton(
-              label: "구글로 시작하기",
+              label: "Google로 시작하기",
               labelColor: context.color.gray800,
               backgroundColor: context.color.white,
               borderColor: context.color.gray300,
-              icon: "assets/sns/google.svg",
+              icon: IconConstants.googleIcon,
               onPressed: () => controller.onGooglePressed(),
             ),
             if (!Platform.isAndroid) ...[
@@ -61,7 +62,7 @@ class LoginView extends GetView<LoginController> {
                 labelColor: context.color.white,
                 backgroundColor: context.color.black,
                 borderColor: context.color.gray300,
-                icon: "assets/sns/apple.svg",
+                icon: IconConstants.appleIcon,
                 onPressed: () => controller.onApplePressed(),
               ),
             ],
