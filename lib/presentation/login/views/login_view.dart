@@ -41,7 +41,7 @@ class LoginView extends GetView<LoginController> {
             _SnsButton(
               label: "카카오로 시작하기",
               labelColor: Color(0xff381E21),
-              icon: "assets/sns/kakao.svg",
+              icon: "assets/sns/kakao2.svg",
               onPressed: () => controller.onKakaoPressed(),
               backgroundColor: Color(0xffFEE500),
             ),

@@ -344,7 +344,7 @@
 //                                               border: Border.all(color: gray900, width: 2),
 //                                               color: colorList[index]),
 //                                           child: SvgPicture.asset(
-//                                             'assets/icon/checkIcon.svg',
+//                                             'assets/icon/check.svg',
 //                                             fit: BoxFit.none,
 //                                           ),
 //                                         )

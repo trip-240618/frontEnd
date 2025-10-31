@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
+import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 
 class SnackBarHelper {
   static void show(
@@ -21,8 +23,8 @@ class SnackBarHelper {
                 color: Colors.white,
               ),
               padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-              child: SvgPicture.asset(
-                'assets/icon/logo.svg',
+              child: SvgIcon(
+                assetPath: IconConstants.logo,
                 width: 24,
                 height: 24,
               ),

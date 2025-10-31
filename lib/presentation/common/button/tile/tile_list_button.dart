@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/button/base/base_tile_button.dart';
+import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 
 class TileListButton extends StatelessWidget {
   final String text;
@@ -43,7 +45,9 @@ class TileListButton extends StatelessWidget {
           ? trailing ??
               GestureDetector(
                 onTap: onTrailingTap,
-                child: SvgPicture.asset("assets/icon/arrow.svg"),
+                child: SvgIcon(
+                  assetPath: IconConstants.leftArrow,
+                ),
               )
           : null,
     );

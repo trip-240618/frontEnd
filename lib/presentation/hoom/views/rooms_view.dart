@@ -382,7 +382,7 @@ class _TripRoomTile extends StatelessWidget {
 
     switch (tripRoomType) {
       case TripRoomType.lastTrip:
-        leading = SvgPicture.asset("assets/icon/calender.svg");
+        leading = SvgIcon(assetPath: IconConstants.calendar);
         trailing = _buildTrailingWidget();
         break;
 
@@ -399,7 +399,10 @@ class _TripRoomTile extends StatelessWidget {
             onTap: onSendTap,
             child: Padding(
               padding: const EdgeInsets.all(6.0),
-              child: SvgPicture.asset("assets/icon/send.svg", color: context.color.gray900),
+              child: SvgIcon(
+                assetPath: IconConstants.send,
+                color: context.color.gray900,
+              ),
             ),
           ),
         );
@@ -426,8 +429,8 @@ class _TripRoomTile extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: tripRoom.bookmark
-              ? SvgPicture.asset("assets/icon/checkBookmark.svg")
-              : SvgPicture.asset("assets/icon/bookmark.svg"),
+              ? SvgIcon(assetPath: IconConstants.checkBookMark)
+              : SvgIcon(assetPath: IconConstants.bookmark),
         ),
       ),
     );

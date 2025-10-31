@@ -168,7 +168,7 @@
 //                                                 },
 //                                                 child: ss.scrapList[index]['bookmark']
 //                                                     ? SvgPicture.asset(
-//                                                         'assets/icon/checkBookmark.svg',
+//                                                         'assets/icon/check_bookmark.svg',
 //                                                       )
 //                                                     : SvgPicture.asset(
 //                                                         'assets/icon/bookmark.svg',

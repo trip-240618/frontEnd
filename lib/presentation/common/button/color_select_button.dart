@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/enum/trip_color.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/button/base/base_button.dart';
+import 'package:tripStory/presentation/common/icon/svg_icon.dart';
 
 class ColorSelectButton extends StatelessWidget {
   final TripColor selectedColor;
@@ -44,12 +46,7 @@ class ColorSelectButton extends StatelessWidget {
                       )
                     : null,
               ),
-              child: isSelected
-                  ? SvgPicture.asset(
-                      'assets/icon/checkIcon.svg',
-                      fit: BoxFit.none,
-                    )
-                  : null,
+              child: isSelected ? SvgIcon(assetPath: IconConstants.check) : null,
             ),
           );
         },
