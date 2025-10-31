@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:tripStory/core/services/kakao_share_service.dart';
+import 'package:tripStory/core/services/notification_service.dart';
 import 'package:tripStory/domain/repositories/trip_repository.dart';
 import 'package:tripStory/domain/usecases/fetch_bookmarked_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_coming_trips_usecase.dart';
@@ -7,6 +8,7 @@ import 'package:tripStory/domain/usecases/fetch_enter_room_usecase.dart';
 import 'package:tripStory/domain/usecases/fetch_last_trips_usecase.dart';
 import 'package:tripStory/domain/usecases/first_enter_trip_room_usecase.dart';
 import 'package:tripStory/domain/usecases/kakao_share_usecase.dart';
+import 'package:tripStory/domain/usecases/notification_listen_usecase.dart';
 import 'package:tripStory/domain/usecases/update_bookmark_usecase.dart';
 import 'package:tripStory/presentation/hoom/controller/rooms_controller.dart';
 import 'package:tripStory/presentation/trip/controllers/trip_room_service.dart';
@@ -21,6 +23,7 @@ class RoomsBinding extends Bindings {
     Get.lazyPut(() => FetchEnterRoomUsecase(Get.find<TripRepository>()));
     Get.lazyPut(() => KakaoShareUsecase(Get.find<KakaoShareService>()));
     Get.lazyPut(() => FirstEnterTripRoomUsecase(Get.find<TripRepository>()));
+    Get.lazyPut(() => NotificationListenUsecase(Get.find<NotificationService>()));
 
     Get.lazyPut(() => RoomsController(
           Get.find<TripRoomService>(),

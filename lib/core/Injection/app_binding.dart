@@ -66,8 +66,9 @@ class AppBinding extends Bindings {
     Get.put<SocketService>(SocketService(Get.find<SessionService>()), permanent: true);
     Get.put<SocketService>(SocketService(Get.find<SessionService>()), permanent: true);
     Get.put<CloudFrontHttpFileService>(CloudFrontHttpFileService(Get.find<SessionService>()), permanent: true);
+    Get.put<CloudFrontHttpFileService>(CloudFrontHttpFileService(Get.find<SessionService>()), permanent: true);
     Get.put<KakaoShareService>(KakaoShareService(), permanent: true);
-    Get.lazyPut<NotificationService>(() => NotificationService(), fenix: true);
+    Get.put<NotificationService>(NotificationService(), permanent: true);
 
     // DioClient
     Get.put<DioClient>(DioClient(sessionService: Get.find<SessionService>()), permanent: true);

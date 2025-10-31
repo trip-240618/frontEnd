@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tripStory/core/constants/icon_constants.dart';
 import 'package:tripStory/core/util/extension/context_extension.dart';
 import 'package:tripStory/presentation/common/button/base/base_tile_button.dart';
@@ -46,7 +45,7 @@ class TileListButton extends StatelessWidget {
               GestureDetector(
                 onTap: onTrailingTap,
                 child: SvgIcon(
-                  assetPath: IconConstants.leftArrow,
+                  assetPath: IconConstants.rightArrowTick,
                 ),
               )
           : null,

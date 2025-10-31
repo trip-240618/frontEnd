@@ -284,7 +284,7 @@ class _JPlanEditorViewState extends State<JPlanEditorView> {
                   TextAreaFormField(
                     controller: _planMemoCon,
                     height: 180,
-                    hintText: "자기소개를 작성해 주세요",
+                    hintText: "일정 간편 메모를 이용해보세요",
                     backgroundColor: context.color.gray50,
                     contentPadding: const EdgeInsets.all(16),
                     maxTextLength: 100,

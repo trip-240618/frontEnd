@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
@@ -347,10 +346,11 @@ class _TripRoomTile extends StatelessWidget {
               assetPath: IconConstants.ticket,
               width: Get.width,
               height: Get.height,
+              fit: BoxFit.fill,
             ),
             Positioned(
               left: 16,
-              top: 8,
+              top: 4,
               right: 16,
               child: _buildHeader(
                 context,
@@ -393,17 +393,19 @@ class _TripRoomTile extends StatelessWidget {
           dayType: tripRoom.dDay < 1 ? TagDayType.duringTrip : TagDayType.dDay,
         );
         trailing = _buildTrailingWidget(
-          prefixIcon: GestureDetector(
-            behavior: HitTestBehavior.opaque,
+          prefixIcon: AppIconButton(
+            assetPath: IconConstants.send,
+            color: context.color.gray900,
             onTap: onSendTap,
-            child: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: SvgIcon(
-                assetPath: IconConstants.send,
-                color: context.color.gray900,
-              ),
-            ),
           ),
+          // GestureDetector(
+          //   behavior: HitTestBehavior.opaque,
+          //   onTap: onSendTap,
+          //   child: SvgIcon(
+          //     assetPath: IconConstants.send,
+          //     color: context.color.gray900,
+          //   ),
+          // ),
         );
         break;
     }
@@ -423,14 +425,9 @@ class _TripRoomTile extends StatelessWidget {
     if (prefixIcon != null) children.add(prefixIcon);
 
     children.add(
-      InkWell(
+      AppIconButton(
+        assetPath: tripRoom.bookmark ? IconConstants.checkBookMark : IconConstants.bookmark,
         onTap: onBookmarkTap,
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: tripRoom.bookmark
-              ? SvgIcon(assetPath: IconConstants.checkBookMark)
-              : SvgIcon(assetPath: IconConstants.bookmark),
-        ),
       ),
     );
 
