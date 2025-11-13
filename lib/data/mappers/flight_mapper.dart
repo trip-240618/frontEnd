@@ -8,10 +8,10 @@ class FlightMapper {
       flightId: response.flightId,
       airlineCode: response.airlineCode,
       airlineNumber: response.airlineNumber,
-      departureDateTime: DateTime.parse(response.departureDate),
+      departureDateTime: DateTime.parse(response.departureDate).toLocal(),
       departureAirport: response.departureAirport,
       departureAirportKr: response.departureAirport_kr,
-      arrivalDateTime: DateTime.parse(response.arrivalDate),
+      arrivalDateTime: DateTime.parse(response.arrivalDate).toLocal(),
       arrivalAirport: response.arrivalAirport,
       arrivalAirportKr: response.arrivalAirport_kr,
     );

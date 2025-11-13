@@ -32,12 +32,10 @@ class LocationSearchController extends GetxController {
       return;
     }
 
-    /// TODO: includedRegionCodes 여행방 생성시 domain kr로 고정
     final request = LocationAutoRequest(
       input: input,
       languageCode: "ko",
-      // includedRegionCodes: tripRoomInfo?.domain.split(",").toList() ?? [],
-      includedRegionCodes: ["jp"],
+      includedRegionCodes: tripRoomInfo?.domain.split(",").toList() ?? [],
     );
 
     final result = await _autoCompleteUseCase.call(request);
