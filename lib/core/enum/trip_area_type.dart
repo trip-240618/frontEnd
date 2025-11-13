@@ -1,0 +1,4 @@
+enum TripAreaType {
+  domestic,
+  international,
+}

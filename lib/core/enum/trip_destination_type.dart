@@ -1,0 +1,4 @@
+enum TripDestinationTabType {
+  search,
+  direct,
+}

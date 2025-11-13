@@ -1,0 +1,1 @@
+enum ButtonLevel { primary, secondary }

@@ -1,0 +1,4 @@
+enum HistorySearchType {
+  tag,
+  nickName,
+}

@@ -1,0 +1,136 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tripStory/core/util/extension/context_extension.dart';
+import 'package:tripStory/presentation/common/appbar/app_appbar.dart';
+import 'package:tripStory/presentation/common/button/bottom/bottom_button.dart';
+import 'package:tripStory/presentation/common/dialog/common_dialog.dart';
+import 'package:tripStory/presentation/hoom/controller/trip_room_calendar_controller.dart';
+
+class TripRoomCalendarView extends StatefulWidget {
+  final bool? edit;
+  final Color selectedColor;
+
+  const TripRoomCalendarView({
+    super.key,
+    this.edit,
+    required this.selectedColor,
+  });
+
+  @override
+  State<TripRoomCalendarView> createState() => _TripRoomCalendarViewState();
+}
+
+class _TripRoomCalendarViewState extends State<TripRoomCalendarView> {
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<TripRoomCalendarController>(
+      init: Get.find<TripRoomCalendarController>(),
+      builder: (controller) {
+        final showDialog = controller.state.showDialog?.consume();
+        if (showDialog == true) {
+          Future.microtask(() {
+            if (context.mounted) {
+              _showDialog();
+            }
+          });
+        }
+        return Scaffold(
+          appBar: AppAppbar(),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 8,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "여행 시작일과 종료일을\n설정해 주세요",
+                      style: context.style.heading2,
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      "당일 일정도 선택 가능해요:)",
+                      style: context.style.caption1.copyWith(
+                        color: context.color.gray400,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Expanded(
+                child: Container(
+                  color: context.color.gray50,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: CalendarDatePicker2(
+                      config: CalendarDatePicker2Config(
+                        dayTextStyle: context.style.label1Normal.copyWith(
+                          color: context.color.gray800,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        selectedRangeHighlightColor: context.color.gray200,
+                        dayMaxWidth: 64,
+                        dayBorderRadius: BorderRadius.circular(4),
+                        controlsHeight: 0,
+                        todayTextStyle: context.style.label1Normal.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                        selectedDayTextStyle: context.style.label1Normal.copyWith(
+                          color: context.color.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        controlsTextStyle: context.style.body1Normal.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: context.color.gray800,
+                        ),
+                        selectedDayHighlightColor: widget.selectedColor,
+
+                        /// TODO:
+                        // todayColor: widget.selectedColor,
+                        hideScrollViewTopHeader: true,
+                        weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"],
+                        weekdayLabelTextStyle: context.style.caption1.copyWith(
+                          color: context.color.gray400,
+                        ),
+                        calendarViewScrollPhysics: const ScrollPhysics(),
+                        calendarType: CalendarDatePicker2Type.range,
+                        calendarViewMode: CalendarDatePicker2Mode.scroll,
+                      ),
+                      onValueChanged: (dates) => controller.onCalendarDatesChange(dates),
+                      value: controller.state.selectedDates,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+          bottomNavigationBar: BottomButton(
+            text: "저장",
+            onTap: () => controller.onSavePressed(),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDialog() {
+    CommonDialog.showConfirm(
+      title: "날짜를 선택해주세요",
+      confirmText: "확인",
+      onConfirm: () => Get.back(),
+    );
+  }
+}
